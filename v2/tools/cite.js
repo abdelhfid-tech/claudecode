@@ -192,7 +192,7 @@ async function avancer(p, n = 120) {
     // ---------- 3b. 2.47 (D238) : de la mosquée aux quartiers, par la porte puis la ruelle ; Maître Yûnus reste dans la mosquée ----------
     {
       const q = await E(() => window.__t.auxQuartiers()), e = await E(() => ({ carte: window.ISNAD.world.map.id, ch: window.ISNAD.world.ch.id, y: (window.__t.yunus() || {}).map, cible: !!(window.ISNAD.world.target() || {}).passage, obj: document.querySelector('#hud .obj').textContent }));
-      si(q && e.ch === 'c_quartiers' && e.y === 'archives' && /vieille mosquée/.test(e.obj), `${nom} · de la mosquée, la porte puis la ruelle mènent aux quartiers ; Maître Yûnus reste dans la mosquée ; l’objectif dit le chemin du retour`, `${nom} · vers les quartiers : ${JSON.stringify({ q, e })}`, 'BLOQUÉ');
+      si(q && e.ch === 'c_quartiers' && e.y === 'archives' && e.cible && /vieille mosquée/.test(e.obj), `${nom} · de la mosquée, la porte puis la ruelle mènent aux quartiers ; Maître Yûnus reste dans la mosquée ; l’objectif dit le chemin du retour`, `${nom} · vers les quartiers : ${JSON.stringify({ q, e })}`, 'BLOQUÉ');
       await E(() => window.__t.endormir());
     }
     // ---------- 4. chaque lieu, à pied (en hauteur) et au doigt ----------
@@ -910,7 +910,12 @@ async function avancer(p, n = 120) {
         if (pt) await P.touchscreen.tap(pt[0], pt[1]); await P.waitForTimeout(1200); } }
       else { await E(([x, y]) => window.__t.marcher(x, y, 20000), [x + (touche === 'ArrowRight' ? -24 : touche === 'ArrowLeft' ? 24 : 0), y + (touche === 'ArrowDown' ? -14 : touche === 'ArrowUp' ? 14 : 0)]); await P.keyboard.down(touche); for (let i = 0; i < 20 && (await ici()) === carte; i++) await P.waitForTimeout(150); await P.keyboard.up(touche); }
       for (let i = 0; i < 20 && (await ici()) === carte; i++) await P.waitForTimeout(200); return (await ici()) !== carte; };
-    const etat = () => E(() => { const I = window.ISNAD, W = I.world, s = I.save.data, y = W.npcs.find(n => n.hero === 'yunus'); return Object.assign(window.__t.etat(), { cps: Object.keys(s.cps || {}), recus: Object.keys((s.lecons || {}).recus || {}), lj: I.lecons.journal.map(x => x.id).join(), yunus: y ? y.map : null, cible: !!(W.target() || {}).passage, dit: (document.querySelector('#hud .obj') || {}).textContent || '' }); });
+    const etat = () => E(() => { const I = window.ISNAD, W = I.world, s = I.save.data, y = W.npcs.find(n => n.hero === 'yunus'); return Object.assign(window.__t.etat(), { cps: Object.keys(s.cps || {}), recus: Object.keys((s.lecons || {}).recus || {}), lj: I.lecons.journal.map(x => x.id).join(), yunus: y ? y.map : null, yunusIci: W.npcs.some(n => n.hero === 'yunus' && !n.hidden && n.placed && n.placedMap === W.map.id && n.map === W.map.id), cible: !!(W.target() || {}).passage, dit: (document.querySelector('#hud .obj') || {}).textContent || '' }); });
+    // a0. au premier objectif du prologue, au vrai joueur (ni debug.auto ni debug.walk), la rue ne mène pas aux quartiers : seul le prologue y mène
+    await E(() => { window.__t.poser(900, 237); window.ISNAD.world.player.dir = 2; }); await P.waitForTimeout(300);
+    const j0 = await E(() => window.ISNAD.passages.journal.length), ferme = await versBord(952, 237, 'ArrowRight', 'cite'), e00 = await etat(), j1 = await E(() => window.ISNAD.passages.journal.length);
+    si(!ferme && e00.carte === 'cite' && e00.ch === 'p1' && e00.obj <= 1 && j1 === j0, `${nom} · au début du prologue, la rue ne mène pas aux quartiers par un passage : seul l’objectif du prologue y mène`, `${nom} · la rue, au début du prologue : ${JSON.stringify({ ferme, e00, j0, j1 })}`, 'ÉCART');
+    await E(() => window.__t.poser(72, 221)); await P.waitForTimeout(200);
     // a. le prologue mène lui-même par le chemin de 2084 : la rue, les quartiers, la ruelle abandonnée, la vieille mosquée (le joueur
     //    de test du moteur, à pied) ; dans les quartiers, rien ne rôde encore ; aucun passage ne s'y prend, rien n'est rangé
     await E(() => { const I = window.ISNAD, W = I.world, T = window.__t; T.cartes = []; T.rodeursVus = 0; const ol = W.loadMap; W.loadMap = function (id) { T.cartes.push(id); if (id === 'archives') { I.debug.auto = false; I.debug.walk = false; } return ol.apply(this, arguments); };   // (le joueur de test s'arrête à la porte de la mosquée)
@@ -942,7 +947,7 @@ async function avancer(p, n = 120) {
     const s4 = await versBord(634, 120, 'ArrowRight', 'impasse'); await E(() => window.__t.attendre(() => window.ISNAD.world.map.id === 'archives' && window.__t.calme(), 10000)); await avancer(P);
     const r4 = await etat(), pres4 = await E(() => window.__t.pres());
     await P.screenshot({ path: path.join(out, `mosquee-retour-${w}x${h}.png`) });
-    si(r0.ch === 'c_quartiers' && r0.carte === 'archives' && pres > 0 && pres < 40 && s1 && r1.carte === 'impasse' && dP < 30 && s2 && r2.carte === 'quartiers' && dR < 30 && r2.yunus === 'archives' && r2.cible && /vieille mosquée/.test(r2.dit)
+    si(r0.ch === 'c_quartiers' && r0.carte === 'archives' && pres > 0 && pres < 40 && s1 && r1.carte === 'impasse' && dP < 30 && s2 && r2.carte === 'quartiers' && dR < 30 && r2.yunus === 'archives' && !r2.yunusIci && r2.cible && /vieille mosquée/.test(r2.dit)
       && s3 && r3.carte === 'impasse' && s4 && r4.carte === 'archives' && pres4 > 0 && pres4 < 200 && [r1, r2, r3, r4].every(e => e.ch === 'c_quartiers') && ![r0, r1, r2, r3, r4].some(e => e.cps.includes('idris:11')),
       `${nom} · le refuge : la vieille mosquée, à ${pres} points de Maître Yûnus ; ${haut ? 'au doigt' : 'au clavier'}, la porte mène à la ruelle, la ruelle aux quartiers (Maître Yûnus n’y est pas ; la flèche et l’objectif disent le chemin de la mosquée), puis la ruelle et la porte ramènent à la mosquée — le même chapitre, rien de rangé`,
       `${nom} · le refuge à pied : ${JSON.stringify({ r0, pres, s1, r1, dP, s2, r2, dR, s3, r3, s4, r4, pres4 })}`, 'INACCESSIBLE');

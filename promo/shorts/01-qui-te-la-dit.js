@@ -32,7 +32,7 @@ module.exports = {
     await s.tourner(18 * T - PASSE); await s.passage(PASSE, 2.6);
     /* 3 — sous la ville, les Archives basses : la Chaîne. Des noms, et après chaque nom : « d'après » */
     s.marque('chaine');
-    await s.chapitre('idris', 0, { carte: 'archives', lieu: ['chaine', 0, 3], obj: 3 }); await s.cadre('carre'); await s.zoom(1.7);
+    await s.chapitre('idris', 0, { carte: 'archives', lieu: ['chaine', 0, 3], obj: 5 }); await s.cadre('carre'); await s.zoom(1.7);
     await s.arrivee(1.7, 0.5);
     await s.legende('Sous la ville : les Archives basses', { zone: 'sur', style: 'titre', duree: 1.9, dans: 0.05 });
     const ch = await s.ev(() => { const W = window.ISNAD.world; return W.resolve('chaine', W.map.id, W.player); });

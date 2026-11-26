@@ -198,7 +198,10 @@
   W.regard = function () {
     const ac = I.activites && I.activites.regard ? I.activites.regard() : 0;   // 2.28 (D217) : la grande roue, l'écran géant (activites.js)
     if (ac) return ac;
-    const e = W.map && W.map.env, rg = e && e.regard, V = G.view; if (!rg) return 0;
+    const e = W.map && W.map.env, rg = e && e.regard, V = G.view;
+    const zi = e && e.regardIci, pz = W.player;   // 2.47 (D238) : dans un coin de la carte (la Chaîne, dans la mosquée), la vue monte jusqu'à une ligne
+    if (zi && pz.x >= zi[0] && pz.x <= zi[2] && pz.y >= zi[1] && pz.y <= zi[3]) return Math.max(0, pz.y - V.h / 2 - 10 - zi[4]);
+    if (!rg) return 0;
     const lv = e.leve && (W.leve || (I.maps.eteinte && e.time === 'cite' && S.busy)), enHaut = document.body.classList.contains('portrait');
     const y = W.player.y, haut0 = y - V.h / 2 - 10, voulu = lv ? Math.max(e.leve[0], y - e.leve[1] * V.h) : Math.max(rg[0], y - (enHaut ? rg[1] : rg[2]) * V.h);
     return Math.max(0, haut0 - voulu);
@@ -244,11 +247,14 @@
     W.npcs = (ch.npcs || []).map(n => { const def = n.hero && saga.heroes[n.hero]; const look = def ? lookOf(def) : Object.assign({ kind: 'homme', robe: '#8a7355', head: '#e6dcc4' }, n.look); if (!def && (look.kind === 'soldat' || look.kind === 'romain') && !look.item && !look.coiffe) look.sel = I.hash(n.id || n.name || '') % 97; return Object.assign({}, n, { map: n.map || ch.map, hidden: !!n.hidden, placed: false, dir: n.face !== undefined && G.DIRS[n.face] !== undefined ? G.DIRS[n.face] : 0, sheet: G.planche(look), aura: def ? (lueur(def.look) || '#ffe9a8') : (look.kind === 'compagnon' ? (lueur(look) || '#ffe9a8') : null) }); });
     W.foes = (ch.foes || []).map(f => Object.assign({}, f, { map: f.map || ch.map, done: false, placed: false, ph: Math.random() * 6 }));
     W.chests = (ch.chests || []).map(c => Object.assign({}, c, { map: c.map || ch.map, open: false, placed: false }));
-    W.objIndex = cp ? cp.obj : 0;
+    // 2.47 (D238) : le prologue d'une partie d'avant — ses objectifs « Maître Yûnus » et « la Chaîne » étaient le 2 et le 3 ; ils
+    // sont le 4 et le 5 depuis que la rue, les quartiers et la ruelle y mènent (un point pris aux Archives, ou en haut de l'ascenseur)
+    const vieux = cp && sagaId === 'idris' && ci === 0 && (cp.obj === 2 || cp.obj === 3) && (cp.map === 'archives' || (cp.flags && cp.flags._ascenseur));
+    W.objIndex = cp ? cp.obj + (vieux ? 2 : 0) : 0;
     if (cp) {
       (cp.foes || []).forEach(id => { const f = W.foes.find(f => f.id === id); if (f) f.done = true; });
       (cp.chests || []).forEach(i => { if (W.chests[i]) W.chests[i].open = true; });
-      W.npcs.forEach(n => { const s = cp.npcs && cp.npcs[n.id]; if (s) { n.hidden = !!s.h; } });
+      W.npcs.forEach(n => { const s = cp.npcs && cp.npcs[n.id]; if (s) { n.hidden = !!s.h && !(I.cite && I.cite.refuge(ch) && n.hero === 'yunus'); } });   // (2.47 : dans le refuge, Maître Yûnus n'est plus jamais caché)
     }
     const depart = !cp && I.cite && I.cite.depart ? I.cite.depart(ch) : null;   // 2.28 (D218) : arrivé à pied par la rue, Idris entre dans les quartiers par l'entrée de la rue (cite.js)
     S.depth++;
@@ -262,6 +268,7 @@
     W.loadMap(asc ? 'archives' : cp ? cp.map : depart ? depart.carte : ch.map, asc ? (asc.opts || {}) : cp ? cp.opts : (ch.opts || {}), asc ? [asc.x, asc.y] : cp ? cp.pos : depart ? depart.lieu : ch.start);
     if (depart) W.player.dir = depart.dir;
     if (cp) { W.npcs.forEach(n => { const s = cp.npcs && cp.npcs[n.id]; if (s && s.x !== undefined && n.map === W.map.id) { n.x = s.x; n.y = s.y; n.placed = true; n.placedMap = W.map.id; } }); if (W.degager()) W.resetTrail(); }
+    if (cp && !boxFree(W.player.x, W.player.y)) { const p = W.player, q = W.resolve([null, 0, 0], W.map.id, p, [Math.floor(p.x / T), Math.floor((p.y - 2) / T)]); if (q) { p.x = q[0]; p.y = q[1]; W.resetTrail(); } }   // (2.47 : une case devenue pleine — la mosquée redessinée)
     W.hud(); $('#hud').hidden = false;
     S.depth++; W.lock = false; // verrouille le déplacement pendant l'ouverture
     try {
@@ -281,7 +288,7 @@
   };
   W.hud = function () {
     const o = W.cur();
-    $('#hud .chap').textContent = W.ch ? W.ch.title : '';
+    $('#hud .chap').textContent = W.ch ? ((I.cite && I.cite.ici() && W.map && (W.map.id === 'impasse' || W.map.id === 'archives')) ? D.MAPS[W.map.id].label : W.ch.title) : '';   // (2.47 : la ruelle, la vieille mosquée)
     const tm = W.map && ({ dawn: I.t('Fajr'), day: I.t('Dhuhr'), dusk: I.t('Maghrib'), night: I.t("'Ishâ") })[W.map.env.time];
     $('#hud .sub').textContent = ((I.monde && I.monde.sousTitre()) || (W.ch ? W.ch.sub : '')) + (tm ? '  ·  ◠ ' + tm : '');   // (2.30 : dans une ville de passage, son nom — monde.js)
     const P = W.pillars(); $('#hud .pil').innerHTML = Object.keys(D.PILLARS).map(k => `<span title="${D.PILLARS[k].name}"><i>${D.PILLARS[k].glyph}</i>${P[k] || 0}</span>`).join('') + (I.trade && W.saga ? `<span title="${I.t('Dirhams')}"><i>◎</i>${I.trade.dirhams()}</span>` : '') + `<span title="${I.t('Provision du cœur')}" class="zad"><i>♥</i>${I.oeuvres.zad()}${I.oeuvres.fasting() ? ' <i>☾</i>' + I.t('jeûne') : ''}</span>`;

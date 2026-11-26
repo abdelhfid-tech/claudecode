@@ -83,7 +83,7 @@ module.exports = {
     /* 2 — ce qu'elle est : la réplique de Maître Yûnus, aux Archives basses */
     s.marque('yunus');
     await s.neuf();
-    await s.chapitre('idris', 0, { carte: 'archives', lieu: ['bureau', 2, 1], obj: 3 }); await s.cadre({ haut: 0, scene: 232 }); await s.propre({ cible: false }); await s.zoom(1.8);   // une scène moins haute : la réplique, longue, tient au-dessus de ce que les applications recouvrent
+    await s.chapitre('idris', 0, { carte: 'archives', lieu: ['bureau', 2, 1], obj: 5 }); await s.cadre({ haut: 0, scene: 232 }); await s.propre({ cible: false }); await s.zoom(1.8);   // une scène moins haute : la réplique, longue, tient au-dessus de ce que les applications recouvrent
     await s.ev(() => { window.ISNAD.save.data.opts.vitesse = 'vive'; });   // la vitesse « vive » du jeu (Réglages) : la réplique s'écrit en 4,8 secondes
     await s.arrivee(1.8, 0.5);
     await s.dire('idris', "Tu sais ce qu'est la");

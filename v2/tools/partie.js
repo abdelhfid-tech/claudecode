@@ -172,18 +172,21 @@ let anomalies = 0; const ok = m => console.log('OK  ' + m), ko = m => { anomalie
   else ok('une copie gardée abîmée sur l’appareil se relit sans trébucher : ce qui n’a pas de forme est écarté, la pièce inconnue va à la réserve, on reprend à la Chaîne');
   sansErreur('sur les emplacements'); await page.close();
 
-  // 2.47 (D238) : une partie d'avant laissée en haut de l'ancien ascenseur (au milieu du prologue, sur la Cité-Miroir, la place
-  // d'en bas gardée dans `_ascenseur`) : « Continuer » la reprend dans la vieille mosquée, à cette place, au même objectif
-  { const p = await ouvrir();
-    await p.evaluate(() => { const I = window.ISNAD, sv = I.save.data; I.save.reset(); sv.started = true;
-      sv.cp = { saga: 'idris', ci: 0, obj: 4, map: 'cite', opts: {}, pos: [904, 160], party: ['idris'], npcs: {}, foes: [], chests: [], flags: { _ascenseur: { x: 230, y: 300, opts: {} } } };
-      I.save.auto('essai'); });
+  // 2.47 (D238) : une partie de la 2.46, au milieu du prologue (il avait 4 objectifs : 2 « Maître Yûnus », 3 « la Chaîne » ; ils sont
+  // le 4 et le 5 depuis que la rue, les quartiers et la ruelle y mènent) — laissée en haut de l'ancien ascenseur (la place d'en bas
+  // gardée dans `_ascenseur`), ou aux Archives : « Continuer » la reprend dans la vieille mosquée, à son objectif d'aujourd'hui
+  for (const [quoi, cp, attendu] of [
+    ['en haut de l’ancien ascenseur, à l’objectif « Maître Yûnus »', { saga: 'idris', ci: 0, obj: 2, map: 'cite', opts: {}, pos: [904, 160], party: ['idris'], npcs: {}, foes: [], chests: [], flags: { _ascenseur: { x: 230, y: 300, opts: {} } } }, { obj: 4, x: 230, y: 300 }],
+    ['aux Archives, à l’objectif « la Chaîne », sur une case devenue pleine (une colonne)', { saga: 'idris', ci: 0, obj: 3, map: 'archives', opts: {}, pos: [168, 136], party: ['idris'], npcs: {}, foes: [], chests: [], flags: {} }, { obj: 5 }]]) {
+    const p = await ouvrir();
+    await p.evaluate(cp => { const I = window.ISNAD, sv = I.save.data; I.save.reset(); sv.started = true; sv.cp = cp; I.save.auto('essai'); }, cp);
     await p.reload(); await p.waitForTimeout(1700);
     await bouton(p, '#title .vmenu', 'Continuer').click(); await p.waitForTimeout(2500);
-    const e = await p.evaluate(() => { const W = window.ISNAD.world; return { ch: W.ch && W.ch.id, obj: W.objIndex, carte: W.map && W.map.id, x: Math.round(W.player.x), y: Math.round(W.player.y), asc: !!window.ISNAD.script.flags._ascenseur }; });
-    if (e.ch !== 'p1' || e.obj !== 4 || e.carte !== 'archives' || Math.abs(e.x - 230) > 12 || Math.abs(e.y - 300) > 12 || e.asc) ko(`ÉCART une partie d'avant, en haut de l'ancien ascenseur, ne reprend pas dans la mosquée : ${JSON.stringify(e)}`);
-    else ok(`une partie d'avant laissée en haut de l'ancien ascenseur reprend dans la vieille mosquée, là où Idris était en bas (${e.x}, ${e.y}), au même objectif`);
-    sansErreur('une partie d’avant, en haut de l’ascenseur'); await p.close(); }
+    const e = await p.evaluate(() => { const I = window.ISNAD, W = I.world, x = W.player.x, y = W.player.y, libre = !(W.solidAt(x - 4, y - 5) || W.solidAt(x + 4, y - 5) || W.solidAt(x - 4, y) || W.solidAt(x + 4, y)); return { ch: W.ch && W.ch.id, obj: W.objIndex, carte: W.map && W.map.id, x: Math.round(x), y: Math.round(y), libre, asc: !!I.script.flags._ascenseur, cible: !!W.target() }; });
+    const bon = e.ch === 'p1' && e.obj === attendu.obj && e.carte === 'archives' && e.libre && !e.asc && e.cible && (attendu.x === undefined || (Math.abs(e.x - attendu.x) < 12 && Math.abs(e.y - attendu.y) < 12));
+    if (!bon) ko(`ÉCART une partie de la 2.46, ${quoi}, ne reprend pas comme il faut dans la vieille mosquée : ${JSON.stringify(e)} (attendu ${JSON.stringify(attendu)})`);
+    else ok(`une partie de la 2.46, ${quoi}, reprend dans la vieille mosquée, à l’objectif ${e.obj} d’aujourd’hui, sur une case libre (${e.x}, ${e.y})`);
+    sansErreur('une partie de la 2.46'); await p.close(); }
 
   await browser.close(); if (fichier) { try { fs.unlinkSync(fichier); } catch (x) { /* déjà parti */ } }
   console.log(anomalies ? `✗ ${anomalies} anomalie(s)` : `✓ PARTIE : exportée, effacée, réimportée à l'identique — aucune anomalie (captures dans ${path.relative(process.cwd(), out)})`);

@@ -33,7 +33,7 @@
   let cctx = null, lastKey = '';
   Tr.drawCompass = function (t) {
     const el = $('#compass'); if (!el) return;
-    const show = I.scene === W && !S.busy && !$('#hud').hidden && W.map && !I.build.on; el.hidden = !show; if (!show) return;
+    const show = I.scene === W && !S.busy && !$('#hud').hidden && W.map && !I.build.on && W.map.id !== 'archives'; el.hidden = !show; if (!show) return;   // (2.47 : ni ciel ni boussole dans la vieille mosquée)
     const cv = el.querySelector('canvas'); if (!cctx) { cv.width = cv.height = 128; cctx = cv.getContext('2d'); }
     const c = cctx, st = Tr.bearing(), night = W.map.env.time !== 'day', lit = night ? 1 : 0.55;
     c.clearRect(0, 0, 128, 128); c.save(); c.translate(64, 64);

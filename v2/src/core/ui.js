@@ -411,7 +411,7 @@
     const sv = I.save.data; W.ranger(); if (ailleurs) sv.retours = (sv.retours || 0) + 1;
     $('#hud').hidden = true; S.depth++; try { await S.fade('out', 300); } finally { S.depth--; }
     const ri = ailleurs ? rebond() : -1;
-    if (ri >= 0) { W.roster = {}; W.saga = null; return W.startChapter('idris', ri); }
+    if (ri >= 0) { W.roster = {}; W.saga = null; const cp = W.reprise('idris', ri); return W.startChapter('idris', ri, cp || undefined); }   // (2.47 : un retour rangé par la porte de la mosquée reprend à sa place)
     if (ailleurs && I.cite && I.cite.offert()) return I.cite.arriver(); // 2.23 (D212) : Idris remonte dans les quartiers de la Cité, à côté de Maître Yûnus
     U.showChain(ailleurs ? I.perso.dire(I.t('Idris rouvre les yeux. La vieille mosquée, la lampe, la Chaîne. Chaque récit attend là où tu l’as laissé.')) : undefined); return S.fade('in', 300);
   };

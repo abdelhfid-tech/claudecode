@@ -109,7 +109,9 @@
     try {
       W.stop(); I.input.clearHeld(); P.journal.push({ quoi: 'vers', carte, de: W.map.id, ch: W.ch.id });
       await S.fade('out', 260);
-      W.loadMap(carte, {}, lieu); W.player.dir = dir; W.resetTrail(); W.updateCam(true); W.hud(); W.checkpoint();
+      W.loadMap(carte, {}, lieu); W.player.dir = dir; W.resetTrail(); W.updateCam(true);
+      if (carte === 'quartiers' && I.circuit) I.circuit.ouvre();   // (Sâlim, s'il est déjà venu, et sa moto garée : circuit.js)
+      W.hud(); W.checkpoint();
       await S.fade('in', 260);
     } finally { S.depth--; P.occupe = false; }
   };

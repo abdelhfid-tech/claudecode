@@ -55,7 +55,7 @@ module.exports = {
     await s.tourner(12 * T - PASSE); await s.passage(PASSE, 2.4);
     /* ce qu'en dit Maître Yûnus, aux Archives basses */
     s.marque('yunus');
-    await s.chapitre('idris', 0, { carte: 'archives', lieu: ['bureau', 2, 1], obj: 3 }); await s.cadre('carre'); await s.propre({ cible: false }); await s.zoom(1.8);
+    await s.chapitre('idris', 0, { carte: 'archives', lieu: ['bureau', 2, 1], obj: 5 }); await s.cadre('carre'); await s.propre({ cible: false }); await s.zoom(1.8);
     await s.arrivee(1.8, 0.5);
     await s.dire('idris', 'On ne détruit pas une idole');
     await s.tourner(16 * T);

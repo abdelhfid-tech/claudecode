@@ -706,7 +706,7 @@
     // 2.28 (D218) : au nord-ouest, le trottoir continue vers la rue de la Cité-Miroir — l'entrée de la rue (passages.js)
     b.fill(0, 8, 1, 3, 'cdalle', false);
     // 2.47 (D238) : au bord est, l'entrée de la ruelle abandonnée, qui mène à la vieille mosquée (passages.js)
-    b.fill(63, 20, 1, 3, 'cdalle', false); b.light(63, 21, 44, '#b8a8ff', 0.09);   // (une lueur froide au seuil, pour qu'on la voie)
+    b.fill(63, 20, 1, 3, 'cdalle', false); b.light(62, 21, 52, '#b8a8ff', 0.22);   // (une lueur froide au seuil, pour qu'on la voie ; la bouche de la ruelle est peinte : peindreQuartiers)
     // la galerie marchande : un passage couvert, ses vitrines au fond ; la salle de jeux, ouverte sur la rue
     b.fill(8, 6, 20, 2, 'qparvis', false); b.fill(38, 5, 12, 3, 'qsalle', false);
     // les avenues : une boucle à sens unique (vers l'ouest au nord, vers l'est au sud)
@@ -849,7 +849,12 @@
     rect('#4a3c48', 496, 544, 16, 32); rect('#a8874e', 496, 544, 16, 0.75);
     // les bords de la carte : des murs de verre sombre
     // (2.28, D218 : à l'ouest, le mur s'ouvre au niveau du trottoir du nord — la rue de la Cité-Miroir continue par là)
-    [[0, 16, 176], [1008, 16, 128]].forEach(([x, w, y0]) => { c.fillStyle = grad(0, 128, 0, 736, [[0, '#2a2038'], [1, '#1a1428']]); c.fillRect(x, y0, w, 720 - y0); rect('rgba(236,192,112,.25)', x + (x ? 0 : 15.5), y0, 0.5, 720 - y0); });
+    [[0, 16, 176, 720], [1008, 16, 128, 320], [1008, 16, 368, 720]].forEach(([x, w, y0, y1]) => { c.fillStyle = grad(0, 128, 0, 736, [[0, '#2a2038'], [1, '#1a1428']]); c.fillRect(x, y0, w, y1 - y0); rect('rgba(236,192,112,.25)', x + (x ? 0 : 15.5), y0, 0.5, y1 - y0); });
+    // 2.47 (D238) : à l'est, la bouche de la ruelle abandonnée — l'asphalte sombre qui s'enfonce entre deux murs aveugles, un linteau,
+    // une ombre ; aucune case ne change (les trois cases 63 × 20–22 sont ouvertes dans quartiers())
+    { c.fillStyle = grad(1008, 0, 1024, 0, [[0, '#24243a'], [1, '#0c0c16']]); c.fillRect(1008, 320, 16, 48);
+      rect('#3a3a4c', 1008, 316, 16, 4); rect('rgba(236,192,112,.35)', 1008, 319.5, 16, 0.75); rect('#2c2c3c', 1008, 368, 16, 3);
+      rect('rgba(184,168,255,.18)', 1008, 322, 1, 44); rect('#1c1c28', 1016, 330, 6, 6); rect('#2a2a38', 1017, 331, 4, 4); }
     rect('rgba(236,192,112,.35)', 0, 175.5, 16, 0.75); c.fillStyle = grad(0, 0, 16, 0, [[0, 'rgba(20,12,30,.5)'], [1, 'rgba(20,12,30,0)']]); c.fillRect(0, 128, 16, 48);
     /* --- la flaque de lumière au pied des lampadaires --- */
     (b.lampes || []).forEach(([px, py, col]) => { c.save(); c.translate(px, py); c.scale(1, 0.4); const g = c.createRadialGradient(0, 0, 2, 0, 0, 26); g.addColorStop(0, rgba(col, 0.26)); g.addColorStop(0.5, rgba(col, 0.1)); g.addColorStop(1, rgba(col, 0)); c.fillStyle = g; c.fillRect(-26, -26, 52, 52); c.restore(); });
@@ -869,7 +874,7 @@
   function archives(id, o, L, graine) {
     const b = new MB(id, 34, 24, 'carpet', o, graine);
     b.ring(0, 0, 34, 24, 'cpierre'); b.fill(1, 1, 32, 2, 'cpierre', true);
-    b.set(17, 2, 'mihrab', true);                                                    // la niche, nue
+    b.set(17, 2, 'niche', true);                                                     // la niche, nue (gfx.js : un arc creusé dans la pierre)
     b.fill(1, 20, 32, 3, 'zellij', false); b.set(16, 23, 'zellij', false); b.set(17, 23, 'zellij', false);   // le seuil, et la porte
     [5, 10, 24, 29].forEach(x => { b.obj('column', x, 8); b.obj('column', x, 14); });   // deux rangées de colonnes, l'allée du milieu libre
     b.obj('mat', 17, 5); b.spot('priere', 17, 5); b.light(17, 4, 70, '#ffe8b8', 0.04);
@@ -879,7 +884,7 @@
     // la Chaîne des sagas, à l'est, dans sa pénombre
     b.fill(21, 9, 9, 7, 'nfloor', false); b.obj('isnad', 26, 11); b.light(26, 11, 110, '#ffd27a', 0.2); b.spot('chaine', 26, 14);
     b.spot('entree', 17, 21); b.light(17, 22, 50, '#fff0c0', 0.05);
-    return b.finish({ time: 'archives', ambient: '#7a6a8a', grade: ['#ffb45a', 0.16], particles: 'dust', rate: 4, bg: 'cite', rays: { a: 0.06, color: '#ffe0a0' }, lightA: 1, bloom: 0.26, music: 'chaine' });
+    return b.finish({ time: 'archives', ambient: '#7a6a8a', grade: ['#ffb45a', 0.16], particles: 'dust', rate: 4, bg: 'cite', rays: { a: 0.06, color: '#ffe0a0' }, lightA: 1, bloom: 0.26, music: 'chaine', regardIci: [21 * T, 9 * T, 30 * T, 16 * T, 112] });   // (près de la Chaîne, la vue monte : world.js, W.regard)
   }
 
   /* ---------- 2.47 (D238) — la ruelle abandonnée ----------
@@ -893,8 +898,8 @@
     [3, 8, 14, 21, 27, 33].forEach(x => b.set(x, 3, 'cmure', true)); [5, 11, 18, 24, 30, 36].forEach(x => b.set(x, 10, 'cmure', true));
     b.fill(40, 0, 4, 13, 'cpierre', true);                                               // la façade de la mosquée
     [[7, 5], [8, 5], [25, 8], [34, 5]].forEach(([x, y]) => b.obj('ccaisse', x, y)); b.obj('sack', 16, 8);
-    [[12, 5, '#3a2c44'], [29, 5, '#2c3a44']].forEach(([x, y, color]) => b.obj('neon', x, y, { color }));   // des enseignes éteintes, sans une lettre
-    b.obj('qlampe', 20, 5); b.light(20, 4, 70, '#9fb8ff', 0.5);                          // le seul lampadaire, qui clignote
+    [[12, 5, '#3a2c44'], [29, 5, '#2c3a44']].forEach(([x, y, color]) => b.obj('neon', x, y, { color, eteint: true }));   // des enseignes éteintes, sans une lettre ni une marque
+    b.obj('qlampe', 20, 8); b.light(20, 7, 70, '#9fb8ff', 0.5);                          // le seul lampadaire, qui clignote, contre le mur du bas
     b.light(38, 6, 80, '#ffd27a', 0.08); b.light(38, 7, 60, '#ffb45a', 0.08);            // la lumière de la mosquée
     b.spot('quartiers', 1, 7); b.spot('milieu', 20, 7); b.spot('porte', 38, 7);
     b.peint = c => {   // la porte de bois de la mosquée, en arc, sur la façade (rangs 6 et 7)

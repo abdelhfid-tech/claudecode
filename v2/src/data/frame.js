@@ -232,7 +232,7 @@ ISNAD.registerSaga({
     { id: 'r_admire', cat: 'Noosphère', title: 'L’Admiré', text: 'Sous le grand écran, un homme que des millions de comptes applaudissent. Derrière ces comptes, il n’y a personne. Il ne sait plus qui il serait sans ce bruit. Descendre du socle demande plus de courage que d’y monter : nul n’applaudit celui qui descend. Personnage de fiction.' },
     { id: 'r_compteur', cat: 'Noosphère', title: 'Le Compteur', text: 'Il achète des regards quand personne n’en veut et les garde dans un coffre, sans jamais en poser un sur quelqu’un. Ce qu’on donne, on sait où il est ; ce qu’on amasse, on le perd de vue. Personnage de fiction.' },
     { id: 'r_cartographe', cat: 'Noosphère', title: 'Le Cartographe', text: 'Il dessine la Cité sans y marcher, d’après des millions de relevés. Il demande « combien ça a fait de vues ? » et jamais « qui ? ». Sa carte porte un mur là où un enfant sait qu’il y a une porte. Un savoir se corrige en allant voir, et se garde avec le nom de celui qui a vu. Personnage de fiction.' },
-    { id: 'x_veiller', cat: 'Noosphère', title: 'Veiller la vieille mosquée', text: 'Chaque fois qu’Idris remonte la Chaîne, là-haut, un écran s’aperçoit qu’on ne le regarde plus, et envoie voir. Les maillons se suivent ; on peut quitter un récit en chemin, il attend là où on l’a laissé. Mais des archives qu’on ne veille pas, un autre les raconte à votre place. Fiction.' },
+    { id: 'x_veiller', cat: 'Noosphère', title: 'Veiller la vieille mosquée', text: 'Chaque fois qu’Idris remonte la Chaîne, là-haut, un écran s’aperçoit qu’on ne le regarde plus, et envoie voir. Les maillons se suivent ; on peut quitter un récit en chemin, il attend là où on l’a laissé. Mais des récits qu’on ne veille pas, un autre les raconte à votre place. Fiction.' },
     { id: 'x_question', cat: 'Noosphère', title: '« Tu pars où ? »', text: 'L’enfant du parvis a suivi la ruelle jusqu’à la vieille mosquée pour poser sa question. Idris lui a montré un nom, puis celui qui vient après : c’est ainsi que Maître Yûnus avait commencé avec lui. Personnage de fiction.' },
     { id: 'x_avis', cat: 'Noosphère', title: 'L’agent du relevé', text: 'Il mesure un lieu au nombre de ceux qui le regardent. Il n’est pas un ennemi : il fait son relevé, et voudrait rentrer chez lui. Mais il est venu voir, ce que ne font pas ceux qui décident d’en haut. On ne garde pas un lieu en le cachant : on y amène quelqu’un. Personnage de fiction.' },
     { id: 'citadelle_2084', cat: 'Lieu', title: 'La Citadelle, où Idris est né', text: 'Idris est né à la Citadelle, au bord du désert, des siècles après le Caïd dont il entend les veillées. C’est de là qu’on l’envoya apprendre auprès de Maître Yûnus, dans la vieille mosquée. Ce que le Caïd décide dans les veillées s’y lit encore : la prière, le savoir, la justice et le lien y tiennent, ou y manquent. Le lieu, le Caïd et Idris sont de fiction.' },
@@ -451,11 +451,11 @@ ISNAD.registerSaga({
         { text: 'Un homme attend dans la rue : lui parler', talk: 'salim_n', then: [
           // 2.27 (D216) : si Idris a couru avec Sâlim (le moteur pose _2084_salim), des retrouvailles ; sinon, la rencontre de toujours
           ['if', '_2084_salim', [
-            ['say', 'salim_n', 'Idris ! Mon passager des virages. Alors l’archiviste, c’était toi.'],
+            ['say', 'salim_n', 'Idris ! Mon passager des virages. Alors le râwî, c’était toi.'],
             ['say', 'idris', 'Sâlim. Tu disais fabriquer ce qu’on regarde sur les écrans.'],
             ['say', 'salim_n', 'Je ne disais pas tout. J’ai passé dix ans à nourrir l’Agrégor. Je sais où est son cœur, et je ne veux plus le servir.']
           ], [
-            ['say', 'salim_n', 'Tu es l’archiviste ? Je m’appelle Sâlim. J’ai passé dix ans à nourrir l’Agrégor. Je sais où est son cœur, et je ne veux plus le servir.']
+            ['say', 'salim_n', 'Tu es le râwî ? Je m’appelle Sâlim. J’ai passé dix ans à nourrir l’Agrégor. Je sais où est son cœur, et je ne veux plus le servir.']
           ]],
           ['say', 'idris', 'Pourquoi maintenant ?'],
           ['say', 'salim_n', 'Mon fils m’a demandé ce que je fabriquais. Je n’ai pas su répondre sans mentir.'],
@@ -928,7 +928,7 @@ ISNAD.registerSaga({
           // Textes de l'agent, à valider.
           ['say', 'yunus_x', 'Elles ne t’ont pas trouvé, toi. Elles ont trouvé que tu n’étais devant aucun écran. Pour ce qui règne là-haut, c’est déjà une faute.'],
           ['say', 'yunus_x', 'Les maillons se suivent, l’un après l’autre. Mais tu peux laisser une trace en chemin : elle t’attendra là où tu l’as quittée.'],
-          ['say', 'yunus_x', 'Mais reviens. Des archives qu’on ne veille pas, un autre les raconte à ta place.'],
+          ['say', 'yunus_x', 'Mais reviens. Des récits qu’on ne veille pas, un autre les raconte à ta place.'],
           ['codex', 'x_veiller']
         ] },
         { text: 'Rallumer la lampe, au bureau', goto: 'bureau', then: [
@@ -1017,7 +1017,7 @@ ISNAD.registerSaga({
         ] },
         { text: 'Parler à Maître Yûnus', talk: 'yunus_x', then: [
           ['say', 'yunus_x', 'Qu’il ait signé ou non, il est venu voir. C’est plus que n’en font ceux qui décident.'],
-          ['say', 'yunus_x', 'On ne garde pas des archives en les cachant. On les garde en y amenant quelqu’un. Tu viens d’en amener un.'],
+          ['say', 'yunus_x', 'On ne garde pas un lieu en le cachant. On le garde en y amenant quelqu’un. Tu viens d’en amener un.'],
           ['codex', 'x_avis']
         ] }
       ]
@@ -1067,9 +1067,9 @@ ISNAD.registerSaga({
     {
       id: 'c_quartiers', visite: 'quartiers', title: 'Les quartiers de la Cité', sub: 'An 1507 de l’Hégire · Cité-Miroir', minLvl: 1, last: true,
       // 2.47 (D238) : le refuge commence dans la vieille mosquée, à côté de Maître Yûnus ; la ruelle mène aux quartiers
-      map: 'archives', start: 'entree', party: ['idris'],
+      map: 'archives', start: 'bureau', party: ['idris'],
       npcs: [
-        { id: 'yunus_c', name: 'Maître Yûnus', hero: 'yunus', at: ['entree', -2, -1], face: 'right', talk: [['say', 'yunus_c', 'Je suis là, Idris.']] },
+        { id: 'yunus_c', name: 'Maître Yûnus', hero: 'yunus', at: ['bureau', -1, 0], face: 'right', talk: [['say', 'yunus_c', 'Je suis là, Idris.']] },
         ...PASSANTS_Q
       ],
       // 2.28 (D218) : arrivé à pied par la rue (`_2084_rue`, posé par le moteur : cite.js), Idris entre par l'entrée de la rue ;
