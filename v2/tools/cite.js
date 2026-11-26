@@ -942,7 +942,7 @@ async function avancer(p, n = 120) {
     const s2 = await versBord(4, 120, 'ArrowLeft', 'impasse'); await E(() => window.__t.attendre(() => window.ISNAD.world.map.id === 'quartiers' && window.__t.calme(), 10000)); await avancer(P); await E(() => window.__t.endormir());
     const r2 = await etat(), dR = await E(() => { const W = window.ISNAD.world, s = W.map.id === 'quartiers' && W.spotPx('ruelle'); return s ? Math.round(Math.hypot(W.player.x - s[0], W.player.y - s[1])) : -1; });
     await P.screenshot({ path: path.join(out, `ruelle-quartiers-${w}x${h}.png`) });
-    const s3 = await versBord(1020, 344, 'ArrowRight', 'quartiers'); await E(() => window.__t.attendre(() => window.ISNAD.world.map.id === 'impasse' && window.__t.calme(), 10000)); await avancer(P);
+    const s3 = await versBord(1020, 200, 'ArrowRight', 'quartiers'); await E(() => window.__t.attendre(() => window.ISNAD.world.map.id === 'impasse' && window.__t.calme(), 10000)); await avancer(P);
     const r3 = await etat();
     const s4 = await versBord(634, 120, 'ArrowRight', 'impasse'); await E(() => window.__t.attendre(() => window.ISNAD.world.map.id === 'archives' && window.__t.calme(), 10000)); await avancer(P);
     const r4 = await etat(), pres4 = await E(() => window.__t.pres());

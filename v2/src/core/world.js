@@ -620,7 +620,9 @@
     { const ac = I.activites && I.activites.touche ? I.activites.touche(wx, wy) : null; if (ac) { W.goTo(ac.x, ac.y, { stop: 4, then() { p.dir = ac.dir; W.interact(); } }); return true; } }
     // 2.x, dans le labyrinthe d'un chapitre : toucher le vide en direction de l'objectif, c'est demander d'y être conduit (la même
     // aide que « M'y conduire ») — sans quoi, au doigt, on irait buter au fond de l'impasse la plus proche de l'objectif
-    if (m.env.dedale && !W.excursion && W.solidAt(wx, wy)) { const tg = W.target(); if (tg) { const ax = wx - p.x, ay = wy - p.y, bx = tg.gx - p.x, by = tg.gy - p.y, na = Math.hypot(ax, ay), nb = Math.hypot(bx, by);
+    // (2.47, D238 : de même dans les lieux de 2084 — la rue, les quartiers, la ruelle, la mosquée —, où un mur ou une haie se trouve
+    // souvent entre Idris et l'objectif)
+    if ((m.env.dedale || ['cite', 'quartiers', 'impasse', 'archives'].includes(m.id)) && !W.excursion && W.solidAt(wx, wy)) { const tg = W.target(); if (tg) { const ax = wx - p.x, ay = wy - p.y, bx = tg.gx - p.x, by = tg.gy - p.y, na = Math.hypot(ax, ay), nb = Math.hypot(bx, by);
       if (na > 24 && nb > 24 && (ax * bx + ay * by) / (na * nb) > 0.8) { W.wayT = W.t + 8; W.lead(); return true; } } }
     if (W.solidAt(wx, wy)) W.goTo(wx, wy, { then() { face(wx, wy); W.interact(); } }); // un palmier, un rocher, un puits : on s'en approche et l'on s'y adresse
     else W.goTo(wx, wy);

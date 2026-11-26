@@ -705,8 +705,9 @@
     b.fill(0, 0, 64, 8, 'qbat', true); b.fill(0, 0, 1, 46, 'qbat', true); b.fill(63, 0, 1, 46, 'qbat', true); b.fill(0, 45, 64, 1, 'qhaie', true);
     // 2.28 (D218) : au nord-ouest, le trottoir continue vers la rue de la Cité-Miroir — l'entrée de la rue (passages.js)
     b.fill(0, 8, 1, 3, 'cdalle', false);
-    // 2.47 (D238) : au bord est, l'entrée de la ruelle abandonnée, qui mène à la vieille mosquée (passages.js)
-    b.fill(63, 20, 1, 3, 'cdalle', false); b.light(62, 21, 52, '#b8a8ff', 0.22);   // (une lueur froide au seuil, pour qu'on la voie ; la bouche de la ruelle est peinte : peindreQuartiers)
+    // 2.47 (D238) : au bord est, au bout de l'avenue du nord, l'entrée de la ruelle abandonnée, qui mène à la vieille mosquée
+    // (passages.js) — dans le prolongement de la rue qu'on vient de traverser : le chemin est droit, il ne passe pas par le coin calme
+    b.fill(63, 11, 1, 3, 'cdalle', false); b.light(62, 12, 52, '#b8a8ff', 0.22);   // (une lueur froide au seuil, pour qu'on la voie ; la bouche de la ruelle est peinte : peindreQuartiers)
     // la galerie marchande : un passage couvert, ses vitrines au fond ; la salle de jeux, ouverte sur la rue
     b.fill(8, 6, 20, 2, 'qparvis', false); b.fill(38, 5, 12, 3, 'qsalle', false);
     // les avenues : une boucle à sens unique (vers l'ouest au nord, vers l'est au sud)
@@ -721,7 +722,7 @@
     b.fill(31, 34, 32, 11, 'qpiste', true); b.fill(35, 34, 20, 2, 'qgradin', false); b.fill(32, 34, 3, 2, 'cdalle', false); b.fill(29, 34, 2, 11, 'cdalle', false);
     // les lieux nommés
     b.spot('parvis', 12, 19); b.spot('galerie', 17, 7); b.spot('jeux', 44, 7); b.spot('ecran', 32, 21); b.spot('priere', 51, 24);
-    b.spot('parc', 15, 37); b.spot('roue', 8, 43); b.spot('circuit', 33, 35); b.spot('tribune', 45, 34); b.spot('traverse', 2, 9); b.spot('ruelle', 62, 21);
+    b.spot('parc', 15, 37); b.spot('roue', 8, 43); b.spot('circuit', 33, 35); b.spot('tribune', 45, 34); b.spot('traverse', 2, 9); b.spot('ruelle', 62, 12);
     // les lampadaires (la lumière tombe à leur pied)
     const lampe = (x, y, col) => { b.obj('qlampe', x, y); b.light(x, y - 1, v15 ? 64 : 54, col, 0.08); (b.lampes || (b.lampes = [])).push([x * T2 + 11, y * T2 + 15, col]); };
     [6, 13, 20, 27, 34, 41, 48, 55].forEach((x, i) => lampe(x, 10, i % 3 ? '#ffd9a0' : '#ffc0e0'));
@@ -849,12 +850,12 @@
     rect('#4a3c48', 496, 544, 16, 32); rect('#a8874e', 496, 544, 16, 0.75);
     // les bords de la carte : des murs de verre sombre
     // (2.28, D218 : à l'ouest, le mur s'ouvre au niveau du trottoir du nord — la rue de la Cité-Miroir continue par là)
-    [[0, 16, 176, 720], [1008, 16, 128, 320], [1008, 16, 368, 720]].forEach(([x, w, y0, y1]) => { c.fillStyle = grad(0, 128, 0, 736, [[0, '#2a2038'], [1, '#1a1428']]); c.fillRect(x, y0, w, y1 - y0); rect('rgba(236,192,112,.25)', x + (x ? 0 : 15.5), y0, 0.5, y1 - y0); });
+    [[0, 16, 176, 720], [1008, 16, 128, 176], [1008, 16, 224, 720]].forEach(([x, w, y0, y1]) => { c.fillStyle = grad(0, 128, 0, 736, [[0, '#2a2038'], [1, '#1a1428']]); c.fillRect(x, y0, w, y1 - y0); rect('rgba(236,192,112,.25)', x + (x ? 0 : 15.5), y0, 0.5, y1 - y0); });
     // 2.47 (D238) : à l'est, la bouche de la ruelle abandonnée — l'asphalte sombre qui s'enfonce entre deux murs aveugles, un linteau,
-    // une ombre ; aucune case ne change (les trois cases 63 × 20–22 sont ouvertes dans quartiers())
-    { c.fillStyle = grad(1008, 0, 1024, 0, [[0, '#24243a'], [1, '#0c0c16']]); c.fillRect(1008, 320, 16, 48);
-      rect('#3a3a4c', 1008, 316, 16, 4); rect('rgba(236,192,112,.35)', 1008, 319.5, 16, 0.75); rect('#2c2c3c', 1008, 368, 16, 3);
-      rect('rgba(184,168,255,.18)', 1008, 322, 1, 44); rect('#1c1c28', 1016, 330, 6, 6); rect('#2a2a38', 1017, 331, 4, 4); }
+    // une ombre ; aucune case ne change (les trois cases 63 × 11–13 sont ouvertes dans quartiers())
+    { c.fillStyle = grad(1008, 0, 1024, 0, [[0, '#24243a'], [1, '#0c0c16']]); c.fillRect(1008, 176, 16, 48);
+      rect('#3a3a4c', 1008, 172, 16, 4); rect('rgba(236,192,112,.35)', 1008, 175.5, 16, 0.75); rect('#2c2c3c', 1008, 224, 16, 3);
+      rect('rgba(184,168,255,.18)', 1008, 178, 1, 44); rect('#1c1c28', 1016, 186, 6, 6); rect('#2a2a38', 1017, 187, 4, 4); }
     rect('rgba(236,192,112,.35)', 0, 175.5, 16, 0.75); c.fillStyle = grad(0, 0, 16, 0, [[0, 'rgba(20,12,30,.5)'], [1, 'rgba(20,12,30,0)']]); c.fillRect(0, 128, 16, 48);
     /* --- la flaque de lumière au pied des lampadaires --- */
     (b.lampes || []).forEach(([px, py, col]) => { c.save(); c.translate(px, py); c.scale(1, 0.4); const g = c.createRadialGradient(0, 0, 2, 0, 0, 26); g.addColorStop(0, rgba(col, 0.26)); g.addColorStop(0.5, rgba(col, 0.1)); g.addColorStop(1, rgba(col, 0)); c.fillStyle = g; c.fillRect(-26, -26, 52, 52); c.restore(); });

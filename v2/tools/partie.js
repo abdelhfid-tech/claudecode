@@ -179,7 +179,7 @@ let anomalies = 0; const ok = m => console.log('OK  ' + m), ko = m => { anomalie
     ['en haut de l’ancien ascenseur, à l’objectif « Maître Yûnus »', { saga: 'idris', ci: 0, obj: 2, map: 'cite', opts: {}, pos: [904, 160], party: ['idris'], npcs: {}, foes: [], chests: [], flags: { _ascenseur: { x: 230, y: 300, opts: {} } } }, { obj: 4, x: 230, y: 300 }],
     ['aux Archives, à l’objectif « la Chaîne », sur une case devenue pleine (une colonne)', { saga: 'idris', ci: 0, obj: 3, map: 'archives', opts: {}, pos: [168, 136], party: ['idris'], npcs: {}, foes: [], chests: [], flags: {} }, { obj: 5 }]]) {
     const p = await ouvrir();
-    await p.evaluate(cp => { const I = window.ISNAD, sv = I.save.data; I.save.reset(); sv.started = true; sv.cp = cp; I.save.auto('essai'); }, cp);
+    await p.evaluate(cp => { const I = window.ISNAD; I.save.reset(); const sv = I.save.data; sv.started = true; sv.cp = cp; I.save.auto('essai'); }, cp);
     await p.reload(); await p.waitForTimeout(1700);
     await bouton(p, '#title .vmenu', 'Continuer').click(); await p.waitForTimeout(2500);
     const e = await p.evaluate(() => { const I = window.ISNAD, W = I.world, x = W.player.x, y = W.player.y, libre = !(W.solidAt(x - 4, y - 5) || W.solidAt(x + 4, y - 5) || W.solidAt(x - 4, y) || W.solidAt(x + 4, y)); return { ch: W.ch && W.ch.id, obj: W.objIndex, carte: W.map && W.map.id, x: Math.round(x), y: Math.round(y), libre, asc: !!I.script.flags._ascenseur, cible: !!W.target() }; });

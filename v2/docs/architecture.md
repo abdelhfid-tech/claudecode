@@ -1164,7 +1164,8 @@ CITÉ-MIROIR (cite)  →  QUARTIERS (quartiers)  →  RUELLE ABANDONNÉE (impass
   `Tr.drawCompass`). Près de la Chaîne, la vue monte pour la montrer entière (`env.regardIci` de la carte,
   `[x0, y0, x1, y1, ligne]` : tant que celui qui mène se tient dans ce rectangle, le haut de la vue ne descend pas sous cette
   ligne ; `W.regard`, `world.js`). Les quartiers gardent D206 et D212 (aucun édifice religieux) : leur bord est s'ouvre sur trois cases (la
-  ruelle), éclairées d'une lueur froide, et la bouche de la ruelle y est peinte (`peindreQuartiers` : le mur de verre de l'est
+  ruelle, au bout de l'avenue du nord, cases 63 × 11–13 : dans le prolongement de la rue qu'on vient de traverser, un chemin droit
+  qui ne passe pas par le coin calme), éclairées d'une lueur froide, et la bouche de la ruelle y est peinte (`peindreQuartiers` : le mur de verre de l'est
   en deux pans, et entre eux l'asphalte sombre qui s'enfonce, un linteau, une ombre), sans changer une case. Les deux ascenseurs dessinés sont devenus une porte
   de bronze close (au bout de la rue) et une fontaine (sur le parvis) ; aucune case des cartes `cite` et `quartiers` n'a
   changé de nature, sinon les trois de l'ouverture est.
@@ -1179,7 +1180,8 @@ CITÉ-MIROIR (cite)  →  QUARTIERS (quartiers)  →  RUELLE ABANDONNÉE (impass
   `map: 'quartiers'`) ; `regles.js` admet qu'une `visite` nomme une carte où le chapitre pose des personnages. À la reprise
   d'une partie, Maître Yûnus n'y est jamais caché, quoi que dise le point de reprise (`W.startChapter`).
   Passages du même chapitre, d'une carte à l'autre (`P.vers` : un fondu, `W.loadMap`, `W.checkpoint`) : la porte de la mosquée
-  (`sortir`) → la ruelle (`porte`) ; le bout ouest de la ruelle (`ruelle-retour`) → les quartiers (`ruelle`) ; le bord est des
+  (`sortir`) → la ruelle (`porte`) ; au doigt, dans ces lieux de 2084 comme dans un labyrinthe, toucher un mur ou une haie dans la
+  direction de l'objectif y conduit (`toucher`, `W.lead`, `world.js`) ; le bout ouest de la ruelle (`ruelle-retour`) → les quartiers (`ruelle`) ; le bord est des
   quartiers (`ruelle`) → la ruelle (`quartiers`) ; la porte au bout de la ruelle (`mosquee`) → la mosquée (`entree`). Entrer
   dans les quartiers par la ruelle y fait paraître Sâlim, s'il est déjà venu, et sa moto garée, comme une arrivée
   (`P.vers` rappelle `CI.ouvre`, `circuit.js`). Loin de Maître Yûnus, l'objectif dit le chemin (`C.objectif` : « Te promener

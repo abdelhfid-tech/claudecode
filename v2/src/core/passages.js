@@ -45,8 +45,8 @@
     { id: 'rue-retour', ok: () => W.map.id === 'quartiers' && refuge(), dir: 1,
       dans: p => p.x <= 14 && p.y >= 8 * T && p.y <= 11 * T, devant: p => p.x <= 32 && p.y >= 8 * T && p.y <= 11 * T, fn: () => P.revenir() },
     // 2.47 (D238) — les quartiers ⇄ la ruelle abandonnée ⇄ la vieille mosquée
-    { id: 'ruelle', ok: () => W.map.id === 'quartiers' && refuge(), dir: 2,
-      dans: p => p.x >= W.map.w * T - 14 && p.y >= 20 * T && p.y <= 23 * T, devant: p => p.x >= W.map.w * T - 30 && p.y >= 20 * T && p.y <= 23 * T, fn: () => P.vers('impasse', 'quartiers', 2) },
+    { id: 'ruelle', ok: () => W.map.id === 'quartiers' && refuge(), dir: 2,   // (au bout de l'avenue du nord : les cases 63 × 11–13)
+      dans: p => p.x >= W.map.w * T - 14 && p.y >= 11 * T && p.y <= 14 * T, devant: p => p.x >= W.map.w * T - 30 && p.y >= 11 * T && p.y <= 14 * T, fn: () => P.vers('impasse', 'quartiers', 2) },
     { id: 'ruelle-retour', ok: () => W.map.id === 'impasse' && refuge(), dir: 1,
       dans: p => p.x <= 14, devant: p => p.x <= 32, fn: () => P.vers('quartiers', 'ruelle', 1) },
     { id: 'mosquee', ok: () => W.map.id === 'impasse' && refuge(), dir: 2,
