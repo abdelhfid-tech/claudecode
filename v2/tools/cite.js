@@ -927,11 +927,12 @@ async function avancer(p, n = 120) {
     await E(() => { const b = window.__t.pied('La Cité-Miroir'); if (b) b.click(); });
     await E(() => window.__t.attendre(() => window.ISNAD.world.ch && window.ISNAD.world.ch.id === 'c_quartiers' && window.__t.calme(), 15000)); await avancer(P);
     const r0 = await etat(), pres = await E(() => window.__t.pres());
+    await P.screenshot({ path: path.join(out, `refuge-arrivee-${w}x${h}.png`) });
     const s1 = await versBord(272, 382, 'ArrowDown', 'archives'); await E(() => window.__t.attendre(() => window.ISNAD.world.map.id === 'impasse' && window.__t.calme(), 10000)); await avancer(P);
-    const r1 = await etat(), dP = await E(() => { const W = window.ISNAD.world, s = W.spotPx('porte'); return Math.round(Math.hypot(W.player.x - s[0], W.player.y - s[1])); });
+    const r1 = await etat(), dP = await E(() => { const W = window.ISNAD.world, s = W.map.id === 'impasse' && W.spotPx('porte'); return s ? Math.round(Math.hypot(W.player.x - s[0], W.player.y - s[1])) : -1; });
     await P.screenshot({ path: path.join(out, `ruelle-${w}x${h}.png`) });
     const s2 = await versBord(4, 120, 'ArrowLeft', 'impasse'); await E(() => window.__t.attendre(() => window.ISNAD.world.map.id === 'quartiers' && window.__t.calme(), 10000)); await avancer(P); await E(() => window.__t.endormir());
-    const r2 = await etat(), dR = await E(() => { const W = window.ISNAD.world, s = W.spotPx('ruelle'); return Math.round(Math.hypot(W.player.x - s[0], W.player.y - s[1])); });
+    const r2 = await etat(), dR = await E(() => { const W = window.ISNAD.world, s = W.map.id === 'quartiers' && W.spotPx('ruelle'); return s ? Math.round(Math.hypot(W.player.x - s[0], W.player.y - s[1])) : -1; });
     await P.screenshot({ path: path.join(out, `ruelle-quartiers-${w}x${h}.png`) });
     const s3 = await versBord(1020, 344, 'ArrowRight', 'quartiers'); await E(() => window.__t.attendre(() => window.ISNAD.world.map.id === 'impasse' && window.__t.calme(), 10000)); await avancer(P);
     const r3 = await etat();
