@@ -31,7 +31,7 @@ Abréviations : *Ihyâ'* = al-Ghazâlî, *Ihyâ' 'ulûm ad-dîn* ; WP-ar = Wikip
 |---|---|---|
 | Récits des Compagnons (an 11 à 40 H) : narration, répliques, recueil | arabe littéraire de la sîra et des chroniques : phrase verbale, liaisons en فـ / ثم / و, peu d'adjectifs, aucun néologisme | Ibn Hishâm, *as-Sîra an-nabawiyya* ; at-Tabarî, *Târîkh ar-rusul wa-l-mulûk* ; Ibn Kathîr, *al-Bidâya wa-n-nihâya* |
 | Veillées du Caïd (la Citadelle) | le même arabe littéraire, plus méditatif ; phrases courtes, images concrètes (le puits, le rempart, la sentinelle) | le ton des « nuits » d'Abû Hayyân at-Tawhîdî, *al-Imtâ' wa-l-mu'ânasa* (voir « veillée », § 2.3) |
-| 2084 (Cité-Miroir, Archives basses) | arabe littéraire moderne et sobre (فصحى معاصرة) : celui d'un bon roman ou d'un essai, jamais le dialecte, jamais l'anglais translittéré quand un mot arabe existe (إشعار، شاشة، مصعد، تطبيق) | la prose d'essai de Malek Bennabi en traduction arabe (*Mushkilat al-afkâr*) pour les notions ; la presse littéraire pour les objets |
+| 2084 (Cité-Miroir, ses quartiers, la ruelle abandonnée, la vieille mosquée ; les Archives basses jusqu'à la 2.46) | arabe littéraire moderne et sobre (فصحى معاصرة) : celui d'un bon roman ou d'un essai, jamais le dialecte, jamais l'anglais translittéré quand un mot arabe existe (إشعار، شاشة، مصعد، تطبيق) | la prose d'essai de Malek Bennabi en traduction arabe (*Mushkilat al-afkâr*) pour les notions ; la presse littéraire pour les objets |
 | Écrans du jeu (menus, boutons, aides) | arabe moderne court : impératif au singulier (« اضغط »، « المس »), noms verbaux pour les rubriques | — |
 
 Jamais de dialecte, même pour un enfant, un soldat ou un marchand : la condition sociale passe par le choix des mots et
@@ -746,9 +746,9 @@ Prendre une figure **اتّخاذ موقف** (D184, § 2.6 ; à valider).
 car « الجدي » est aussi le Capricorne). Les caps : الشرق، الجنوب الشرقي، الجنوب، الجنوب الغربي، الغرب، الشمال الغربي،
 الشمال، الشمال الشرقي ; « à main gauche » : « عن يسارك ».
 
-**Tenues du râwî** (`D.TENUES`, 2084, fiction) : Manteau des Archives **معطف الخزانة** · Capuche d'encre **قلنسوة الحبر**
-· Veste de la ruelle **سترة الزقاق** · Écharpe du copiste **وشاح الناسخ** · Manteau du veilleur **معطف الساهر** · Calotte
-du lettré **كُمّة الأديب**.
+**Tenues du râwî** (`D.TENUES`, 2084, fiction) : Manteau du râwî **معطف الراوي** (« Manteau des Archives » **معطف الخزانة**
+jusqu'à la 2.46), à valider (D238) · Capuche d'encre **قلنسوة الحبر** · Veste de la ruelle **سترة الزقاق** · Écharpe du
+copiste **وشاح الناسخ** · Manteau du veilleur **معطف الساهر** · Calotte du lettré **كُمّة الأديب**.
 
 ### 2.9 Le dessin et 2084
 
@@ -756,7 +756,7 @@ du lettré **كُمّة الأديب**.
 |---|---|---|
 | le voile de lumière (des Compagnons) | **غُلالةٌ من نور** | **à valider**. Jamais « حجابٌ من نور » : « حجابه النور » se dit d'Allah dans un hadith (Muslim, n° 179 d'Abd al-Bâqî ; CDN 445 [M]). |
 | un visage (exigence 2) | **وجه** | Aucun texte ne décrit de traits, pour personne. |
-| écran · notification · le grand écran · ascenseur | **شاشة · إشعار · الشاشة الكبرى · مِصعد** | arabe moderne ; jamais l'anglais translittéré. |
+| écran · notification · le grand écran · ascenseur | **شاشة · إشعار · الشاشة الكبرى · مِصعد** | arabe moderne ; jamais l'anglais translittéré. L'ascenseur n'est plus dans le jeu depuis la 2.47 (D238) : son lieu est la « Porte de la tour », **باب البرج** (§ 3.4). |
 | le relevé (L'agent du relevé) | **الإحصاء** (« موظّف الإحصاء ») | |
 | An 1507 de l'Hégire (« 1508 » jusqu'à D184, 2.22) | **سنة 1507 للهجرة** ; « الحلقة الأخيرة · 1507 هـ · 2084 م » | § 1.5 ; à valider (D184) |
 | des millions de vues · d'abonnés · de comptes (D184, 2.1 et 2.2 ; plus « de regards », « de fenêtres », sauf dans la bouche de l'enfant) | **ملايين المشاهدات · المتابِعين · الحسابات** | les mots courants. « حسابات » se dit au pluriel, dans une phrase : il ne nomme aucune chimère (« Le Compte » est **الرَّصيد**, § 3.6 ; **الحساب** seul se lit « le Jugement », § 2.2). À valider (D184). |
@@ -846,7 +846,7 @@ Règles :
 | Zayd ibn Thâbit — Le Scribe | **زيد بن ثابت · كاتبُ الوحي** | زيد بن ثابت بن الضحاك الأنصاري | « زيد بن ثابت » : « صحابي وكاتب الوحي ». |
 | Hudhayfa — Le Gardien du secret | **حُذَيفة · صاحبُ السِّرّ** | حذيفة بن اليمان العبسي | « حذيفة بن اليمان ». « صاحب سرّ رسول الله ﷺ » : surnom connu, référence non vérifiée en ligne. |
 | Idris — le Râwî | **إدريس · الراوي** | fiction | `langue.js` le pose déjà (`rawi: 'إدريس'`). C'est aussi le nom d'un prophète : jamais « عليه السلام » après ce personnage, et le joueur peut le renommer (`perso.js`). |
-| Maître Yûnus — le Gardien | **الشيخ يونس · الخازن** | fiction | **à valider**. « le Gardien » des Archives : الخازن, le garde d'une bibliothèque (خزانة الكتب). |
+| Maître Yûnus — le Gardien | **الشيخ يونس · الخازن** | fiction | **à valider**. « le Gardien » (des Archives basses, jusqu'à la 2.46) : الخازن, le garde d'une bibliothèque (خزانة الكتب). Depuis la 2.47 (D238), Maître Yûnus se tient près de ses livres, dans la vieille mosquée ; الخازن reste : الخِزانة est toujours le mot d'une bibliothèque, mais ne désigne plus un lieu du jeu. |
 | Sâlim — le Repenti | **سالم · التائب** | fiction | |
 | Le Caïd — Seigneur de la Citadelle | **القائد · صاحبُ القلعة** | fiction | Sceau déjà dans le jeu : القائد. |
 | Maître Bahrâm — le Géomètre | **المعلّم بَهرام · المهندس** | fiction | المهندس : le géomètre (la *handasa* est la géométrie). |
@@ -956,8 +956,10 @@ sources) · « Marchand de X » **تاجرٌ من X** · « Soldat de X » **ج�
 **Cartes** : Médine **المدينة** (WP-ar, « المدينة المنورة » ; dans un récit de l'an 11, « المدينة » suffit) · Koufa
 **الكوفة** (« الكوفة ») · Désert **البادية** · Camp **المعسكر** · Cité romaine **المدينة الروميّة** (les Byzantins sont
 **الروم**) · Palais **القصر** · Navire **السفينة** · Noosphère **عالم الأفكار** · La Citadelle **القلعة** · Cité-Miroir
-**مدينة المرايا** · Archives basses **الخزانة السُّفلى** (à valider : la *khizâna* est la bibliothèque-archive ; d'où
-Yûnus, الخازن).
+**مدينة المرايا** · La ruelle abandonnée (`impasse` ; le gabarit : Ruelle abandonnée) **الزقاق المهجور** · La vieille
+mosquée (`archives`, qui garde son identifiant ; le gabarit : Vieille mosquée) **المسجد القديم** — les deux depuis la 2.47,
+à valider (D238). Jusqu'à la 2.46, la carte `archives` était les Archives basses, **الخزانة السُّفلى** (la *khizâna* est
+la bibliothèque-archive ; d'où Yûnus, الخازن).
 
 **Lieux** (étiquettes de la carte de la halte ; un ou deux mots) :
 
@@ -983,14 +985,25 @@ Yûnus, الخازن).
 | Crête | الذِّروة | Quartier | الحيّ | Greniers | الأهراء |
 | Ruines | الأطلال | Nef | البهو | Poterne | الباب الخفيّ |
 | Arrivée | المُنتهى | Rue | الشارع | Grand écran | الشاشة الكبرى |
-| Ruelle | الزقاق | Ascenseur | المِصعد | Parvis | الباحة |
+| Ruelle | الزقاق | Porte de la tour (« Ascenseur » jusqu'à la 2.46) | باب البرج (المِصعد jusqu'à la 2.46) | Parvis | الباحة |
 | Rayonnages | الرفوف | Bureau | المكتب | La Chaîne | السلسلة |
 
 Notes : « Esplanade » est, dans le récit d'Umar, le lieu du Temple à Jérusalem : l'étiquette reste neutre, **الساحة** ;
 le récit, lui, suit ses sources. « Halle » est la Saqîfa des Banû Sâ'ida : **السقيفة**, et en toutes lettres dans un
 récit, **سقيفة بني ساعدة** (WP-ar, « سقيفة بني ساعدة »). La « Faille » de la noosphère (un lieu) est **الصَّدع**, la faille
 d'une chimère (une faiblesse) **الثُّلمة** (§ 2.4). « Nœud » est **المُلتقى**, non « العُقدة » (les nœuds sur lesquels on souffle sont, au Coran 113:4, ceux de la
-sorcellerie). « Trésor » est **الكَنز** : الخِزانة est déjà l'archive de 2084.
+sorcellerie). « Trésor » est **الكَنز** : الخِزانة était l'archive de 2084 (les Archives basses, jusqu'à la 2.46) ; elle
+reste le mot d'une bibliothèque, mais ne désigne plus un lieu du jeu.
+
+**Le chemin de 2084** (2.47, D238 ; arabe moderne, § 1.1) : la ruelle de l'est (le lieu `ruelle`, au bord est des
+quartiers, d'où part la ruelle abandonnée) **الزقاق الشرقي** ; La ruelle abandonnée **الزقاق المهجور** ; La vieille
+mosquée **المسجد القديم**, que le bandeau du refuge nomme quand on y est, comme la ruelle ; Porte de la tour **باب البرج**
+(la porte de bronze close au bout de la rue, là où était l'ascenseur). Le retour `x_descendu` s'appelle « Ce qui est
+entré », **ما دخل** (« Ce qui est descendu », **ما هبط**, jusqu'à la 2.46), du même verbe que la réplique de Maître Yûnus,
+« شيءٌ دخل من الزقاق » (§ 3.8, **ما نزل**). Trois textes suivent le français : Sâlim, au dernier maillon, dit « le
+râwî », **الراوي** (« l'archiviste », **أمين الخزانة**, jusqu'à la 2.46) ; « des récits qu'on ne veille pas » (le
+feuillet `x_veiller` et la réplique de `x_descendu`), **الحكايات** ; « On ne garde pas un lieu en le cachant » (`x_avis`),
+**المكان** — l'un et l'autre disaient **الخزانة** jusqu'à la 2.46. Noms et textes de l'agent, à valider (D238).
 
 ### 3.5 Les lieux nommés dans les récits
 
@@ -1242,7 +1255,7 @@ contenu commun (`coeur`) ou une suite le reprend tel quel.
 | **الرَّتَل، الأرتال** | mot militaire d'aujourd'hui : « les colonnes » (les onze armées) **الجيوش** ; « la colonne » (une troupe) **الكتيبة** (« رجالُ الكتيبة », rang de la Traversée) |
 | **مرسوم، مخيّم، إجازة، بالفعل، طبعًا، عملية طرح، فضوليّ، يستهدف، الرهانات** | mots d'aujourd'hui ou de chancellerie : « par décret » **بأمرٍ يُمضيه** ; « deux campements » **مضارب قومين** ; « en permission » **أُذن لها في الانصراف** ; « curieux » **النظّارة** ; « مرسوم » ne reste que dans le récit de ‘Umar (les édits de Rûm, et « Décret », compétence du Trône vide) |
 | **المدينة** seule | se lit « Médine » : la Cité-Miroir **مدينة المرايا** ; une autre ville **البلد** ou **هذه المدينة** (Îliyâ') ; « une cité » en général **المدن** |
-| **ما نزل** | se lit « ce qui fut révélé » : « Ce qui est descendu » **ما هبط** |
+| **ما نزل** | se lit « ce qui fut révélé » : « Ce qui est descendu » **ما هبط** (le titre du retour `x_descendu` jusqu'à la 2.46) ; depuis la 2.47, le titre est « Ce qui est entré », **ما دخل**, à valider (D238) |
 
 **La fiction et les sources, dans les feuillets**
 
@@ -1326,7 +1339,8 @@ son verset tiré du registre, si un récit le demande un jour.
 8. **Les termes inventés, à valider un par un** : chimère (« égrégore » jusqu'à D183) **خيال** (ou وهم) ; idées noires **الخواطر السود** (*décidé, D182*) ; Constance
    **الثبات** ; Souffle **النَّفَس** ; éprouvé **مُنهَك** ; voile **حجاب** et dévoilé **انكشف** ; lames **النصال** et le
    verbe **صقل** ; compagnons de lumière **رفاق النور** ; halte **الاستراحة** ; veillée **ليلة / السمر** ; Cité-Miroir **مدينة
-   المرايا** ; Archives basses **الخزانة السفلى** ; pourparler **المحاورة** ; bataille déclarée **المصافّة** ; secours
+   المرايا** ; la vieille mosquée **المسجد القديم** et la ruelle abandonnée **الزقاق المهجور** (2.47, D238 ; Archives
+   basses **الخزانة السفلى** jusqu'à la 2.46) ; pourparler **المحاورة** ; bataille déclarée **المصافّة** ; secours
    **الفرج** ; les degrés du mal **مراتب الشر** ; enracinement **التجذّر** ; faille **الثلمة** ; le groupe **الركب** ; le recueil
    **الكرّاسة** ; Vertus **الخصال** ; voile de lumière **غلالة من نور** ; l'Agrégor **المجمّع** ; et les noms de chimères
    du § 3.6.

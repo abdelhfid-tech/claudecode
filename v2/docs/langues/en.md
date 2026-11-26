@@ -64,7 +64,7 @@ Les pages de Wikipedia lues pour un terme sont nommées dans la ligne du terme (
   au joueur de son propre cœur, de sa prière, de sa descente ni de sa vie : la descente est celle du râwî, dite à la
   troisième personne, et l'anglais le nomme *the rawi* (minuscule dans le texte courant, § 2.1) : « *The rawi has
   prayed in this chapter* », « *the rawi’s descent* », « *None will return in the rawi’s lifetime* », « *All {n} Lights
-  are gathered. The last link remains: the rawi’s* », « *The rawi opens his eyes again in the Lower Archives* ». Là où
+  are gathered. The last link remains: the rawi’s* », « *The rawi opens his eyes again in the old mosque* ». Là où
   le français dit « on » autour de la prière, des œuvres, du cœur ou du mal, l'anglais dit *one*, ou tourne au passif,
   jamais *you* : « *Here one prays, and the party rests* », « *On a mosque’s prayer mat, one prays and does the day’s
   deeds* », « *The provision is {n} short* » (« Il manque {n} »), « *the heart’s provision* » (jamais *your heart’s
@@ -614,7 +614,8 @@ Ni Scheler ni son essai ne sont nommés dans le jeu (exigence 24).
 | soigneur | **Healer** |
 | stratège | **Strategist** |
 
-Le titre de Maître Yûnus, « le Gardien » (des Archives), se dit **the Keeper**, pour ne pas le confondre avec le rôle.
+Le titre de Maître Yûnus, « le Gardien » (des Archives basses, jusqu'à la 2.46 ; depuis la 2.47, D238, il se tient près
+de ses livres, dans la vieille mosquée), se dit **the Keeper**, pour ne pas le confondre avec le rôle.
 
 ### 2.12 L'équipement (`D.SLOTS`, `D.GEAR_TYPES`, `D.GEAR`)
 
@@ -719,8 +720,9 @@ Biographie **Biography** · Événement **Event** · Noosphère **Noosphere** ·
 
 ### 2.18 Les tenues du râwî (`D.TENUES`)
 
-Manteau des Archives **Archives Coat** · Capuche d'encre **Ink Hood** · Veste de la ruelle **Alley Jacket** · Écharpe du
-copiste **Copyist's Scarf** · Manteau du veilleur **Watchman's Coat** · Calotte du lettré **Scholar's Cap**.
+Manteau du râwî **Rawi’s Coat** (« Manteau des Archives », **Archives Coat**, jusqu'à la 2.46), à valider (D238) · Capuche
+d'encre **Ink Hood** · Veste de la ruelle **Alley Jacket** · Écharpe du copiste **Copyist's Scarf** · Manteau du veilleur
+**Watchman's Coat** · Calotte du lettré **Scholar's Cap**.
 
 ## 3. Les noms propres
 
@@ -911,8 +913,13 @@ garde son nom inventé et sobre (exigence 11).
 
 | Cartes | Anglais retenu |
 |---|---|
-| Médine ; Koufa ; Désert ; Camp ; Cité romaine ; Palais ; Navire ; Noosphère ; La Citadelle ; Cité-Miroir ; Archives basses | **Medina** ; **Kufa** ; **Desert** ; **Camp** ; **Roman City** ; **Palace** ; **Ship** ; **Noosphere** ; **The Citadel** ; **Mirror City** ; **Lower Archives** |
+| Médine ; Koufa ; Désert ; Camp ; Cité romaine ; Palais ; Navire ; Noosphère ; La Citadelle ; Cité-Miroir ; La ruelle abandonnée ; La vieille mosquée | **Medina** ; **Kufa** ; **Desert** ; **Camp** ; **Roman City** ; **Palace** ; **Ship** ; **Noosphere** ; **The Citadel** ; **Mirror City** ; **The Abandoned Alley** ; **The Old Mosque** |
 | Gabarit « Ville d'Arabie » | **Arabian Town** |
+| Gabarits « Ruelle abandonnée » · « Vieille mosquée » | **Abandoned Alley** · **Old Mosque** |
+
+La ruelle abandonnée (`impasse`) et la vieille mosquée (`archives`, qui garde son identifiant) datent de la 2.47 ; noms à
+valider (D238). Jusqu'à la 2.46, la carte `archives` était les Archives basses, **Lower Archives**. Dans le texte courant,
+*the old mosque* ; *The Old Mosque* en titre (le bandeau, un sous-titre de chapitre, le titre d'un feuillet).
 
 *Roman City* : le jeu nomme « romaine » la ville de Rûm, comme les sources arabes (*al-Rum*, « les Romains », pour
 l'Empire d'Orient) ; l'anglais garde l'image (§ 3.6, *Rum*).
@@ -927,12 +934,22 @@ l'Empire d'Orient) ; l'anglais garde l'image (§ 3.6, *Rum*).
 | Poupe · Pont · Mât · Proue · Passerelle · Entrepont | **Stern** · **Deck** · **Mast** · **Prow** · **Gangway** · **Lower Deck** |
 | Seuil · Nœud · Faille · Miroir · Cœur | **Threshold** · **Node** · **Rift** · **Mirror** · **Heart** |
 | Cour · Tour · Grande salle · Greniers · Poterne | **Courtyard** · **Tower** · **Great Hall** · **Granaries** · **Postern** |
-| Rue · Grand écran · Ruelle · Ascenseur · Parvis | **Street** · **Big Screen** · **Alley** · **Elevator** · **Forecourt** |
+| Rue · Grand écran · Ruelle · Porte de la tour · Parvis | **Street** · **Big Screen** · **Alley** · **Tower Door** · **Forecourt** |
 | Rayonnages · Bureau · La Chaîne | **Stacks** · **Office** · **The Chain** |
 
 Notes : *Prow*, non *Bow* (c'est une arme, § 2.12) ; *Rift*, non *Weak Point* (§ 2.1) ; *Pont* du navire : *Deck*,
-mais les ponts du labyrinthe : *bridges* (§ 2.9) ; *Elevator*, *Stacks* : américain (§ 1.2). « Souk » : mot reçu en
-anglais (IJMES dirait *suq* ; *souk* est la forme courante, référence non vérifiée).
+mais les ponts du labyrinthe : *bridges* (§ 2.9) ; *Stacks* : américain (§ 1.2). « Porte de la tour » (**Tower Door**,
+la porte de bronze close au bout de la rue) est, depuis la 2.47 (D238), le lieu qui s'appelait « Ascenseur »,
+**Elevator** (américain, § 1.2), jusqu'à la 2.46 : il n'y a plus d'ascenseur. « Souk » : mot reçu en anglais (IJMES
+dirait *suq* ; *souk* est la forme courante, référence non vérifiée).
+
+**Le chemin de 2084** (2.47, D238) : la ruelle de l'est (le lieu `ruelle`, au bord est des quartiers, d'où part la ruelle
+abandonnée) **the east alley** ; « Traverser les quartiers jusqu'à la ruelle de l'est » *Cross the quarters to the east
+alley*. Le retour `x_descendu` s'appelle « Ce qui est entré », **What Came In** (« Ce qui est descendu », *What Came
+Down*, jusqu'à la 2.46). Trois textes suivent le français : Sâlim, au dernier maillon, dit **the rawi** (*the
+archivist* jusqu'à la 2.46) ; « des récits qu'on ne veille pas » (le feuillet `x_veiller` et la réplique de
+`x_descendu`), **the stories** (naguère *the archives*) ; « On ne garde pas un lieu en le cachant » (`x_avis`), **a
+place** (naguère *Archives*). Noms et textes de l'agent, à valider (D238).
 
 ### 3.6 Les lieux et les faits de l'histoire (titres et sous-titres des chapitres, recueil)
 

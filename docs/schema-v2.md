@@ -148,10 +148,13 @@ de Constance ôtée à l'adversaire, 0.08 par défaut ; `veil: 0` laisse ses voi
 
 Deux marques de plus sur un chapitre de l'histoire-cadre (`v2/src/data/frame.js`), toujours `last: true`, jamais `after` :
 
-- `retour: n` — ce qui s'est passé aux Archives basses pendant qu'Idris suivait un récit. Le chapitre se joue quand le
-  joueur revient en 2084 par la halte pour la n-ième fois (ou à un retour suivant), une seule fois ; puis la Chaîne.
+- `retour: n` — ce qui s'est passé à la vieille mosquée (naguère les Archives basses ; 2.47, D238) pendant qu'Idris suivait
+  un récit. Le chapitre se joue quand le joueur revient en 2084 par la halte pour la n-ième fois (ou à un retour suivant), une
+  seule fois ; puis la Chaîne.
 - `visite: '<lieu>'` — un lieu où Idris se rend depuis la Chaîne (`'citadelle'` : la Citadelle, où il est né, offerte dès
-  la première veillée entendue). Le chapitre se rejoue à volonté ; sa carte est ce lieu.
+  la première veillée entendue ; `'quartiers'` : les quartiers de la Cité-Miroir, le refuge de 2084, D212). Le chapitre se
+  rejoue à volonté ; sa carte est ce lieu, ou une carte où le chapitre pose ses personnages — le refuge, D238 : il commence
+  dans la vieille mosquée, et ses passants sont dans les quartiers (`regles.js`).
 
 À leur ouverture, le moteur pose l'état de 2084 en drapeaux, que le récit lit par `['if', …]` et n'écrit jamais :
 `_2084_veillee_<saga>`, `_2084_maillon_<saga>`, `_2084_pilier_<priere|savoir|justice|lien>` (pilier de la Citadelle à 3

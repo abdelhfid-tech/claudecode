@@ -224,10 +224,11 @@ Le jeu en développement est la **2.x**, dans `v2/` : `v2/src/`, `v2/tools/`, `v
   les quartiers de la Cité-Miroir, qui gardent leur nom ; choix de l'agent, validés par le décideur le 22 novembre), **la rue et l'ascenseur**
   (`v2/src/core/passages.js`) : sur la carte `cite`, au bout de la rue, à l'est (le lieu `traverse` ; la carte `cite` et son
   masque n'ont pas changé d'une case), Idris passe à pied dans les quartiers, par leur entrée de rue (le lieu `traverse`, au
-  nord-ouest), loin du parvis, où Maître Yûnus n'est pas ; le chapitre quitté (le prologue, une rencontre, un retour) se range
-  parmi les récits quittés (`W.ranger`, `cps`) et retraverser le reprend exactement, du même côté de la rue ; le refuge ne se
-  range jamais (`C.estPoint`). L'ascenseur des Archives basses, qui faisait aussi partie de ce lot, n'existe plus depuis la
-  2.47 (D238, ci-dessous). Pas dans le dernier maillon, ni dans les sagas, ni dans les
+  nord-ouest), loin du parvis, où Maître Yûnus n'est pas ; le chapitre quitté, une rencontre (jusqu'à la 2.46, aussi le
+  prologue et un retour remonté par l'ascenseur), se range parmi les récits quittés (`W.ranger`, `cps`) et retraverser le
+  reprend exactement, du même côté de la rue ; le refuge ne se range jamais (`C.estPoint`). L'ascenseur des Archives basses,
+  qui faisait aussi partie de ce lot, n'existe plus depuis la 2.47 : un retour se range par la porte de la vieille mosquée
+  (`P.sortir`, D238, ci-dessous). Pas dans le dernier maillon, ni dans les sagas, ni dans les
   veillées, ni pendant une scène ; le joueur de test du moteur ne passe jamais ; aucun outil de plus. « Revenir en 2084 » et
   « La Cité-Miroir » de la Chaîne ne changent pas (D212). Pendant le prologue, la rue ne se prend pas (depuis la 2.47, le
   prologue y mène lui-même), aucune chimère ne rôde dans les rues, la halte des quartiers n'offre pas la Chaîne, et la leçon
@@ -239,19 +240,26 @@ Le jeu en développement est la **2.x**, dans `v2/` : `v2/src/`, `v2/tools/`, `v
   où se trouve le maître et les sagas » ; « Plus d'ascenseur ça devient inutile on accède à la noosphere par la prière » ; au
   retour en 2084 : « Dans la mosquée, près du maître » ; noms, textes et dessin de l'agent, à valider), **le chemin de 2084** :
   la rue de la Cité-Miroir, les quartiers du centre (sans mosquée : D206 et D212 y valent toujours), la ruelle abandonnée
-  (`impasse`, `maps.js` : des murs aveugles, des fenêtres murées, des néons éteints sans lettre, un lampadaire qui clignote ;
-  rien n'y rôde, personne n'y est), et au bout la vieille mosquée (`archives` : la carte des Archives basses, redessinée, garde
-  son identifiant, et une partie d'avant se charge ; des tapis, des piliers, une niche nue, des lanternes, les livres de
-  Maître Yûnus, la Chaîne au fond, le tapis de la prière, qui ouvre la noosphère comme avant ; ni minaret, ni coupole, ni
-  inscription, ni Nom écrit). Il n'y a plus d'ascenseur : les deux qu'on voyait sont une porte de bronze close (au bout de la
-  rue) et une fontaine (sur le parvis), sans changer une case de leurs cartes. Le prologue mène Idris lui-même par ce chemin (ses
-  objectifs : la rue, les quartiers, la ruelle, la mosquée) ; aucun passage ne s'y prend, la porte de la mosquée ne s'y ouvre
-  pas. Le refuge (`c_quartiers`) commence dans la mosquée, à côté de Maître Yûnus : sa porte mène à la ruelle, la ruelle au bord
-  est des quartiers (le lieu `ruelle`), et retour — le même chapitre, une autre carte (`P.vers`, `passages.js`) ; loin de Maître
-  Yûnus, l'objectif dit le chemin et la flèche le montre (`P.cible`). Dans un autre chapitre qui se joue dans la mosquée (un
-  retour), la porte range ce chapitre (`P.sortir`) et ouvre le refuge dans la ruelle (`C.parRuelle`) ; Maître Yûnus le reprend.
-  Une partie d'avant laissée en haut de l'ancien ascenseur (`_ascenseur`) reprend dans la mosquée (`world.js`). Le format reste
-  le 2. `v2/docs/architecture.md`, « Le chemin de 2084 ». Contrôle : `node v2/tools/cite.js passages` (partie 17), puis
+  (`impasse`, `maps.js` : des murs aveugles, des fenêtres murées, des néons éteints, sans lettre ni marque (`neon`, `eteint`),
+  un lampadaire qui clignote ; rien n'y rôde, personne n'y est), et au bout la vieille mosquée (`archives` : la carte des
+  Archives basses, redessinée, garde son identifiant, et une partie d'avant se charge ; des tapis, des piliers, une niche nue
+  (la tuile `niche`, `gfx.js` : un arc creusé dans la pierre, sans faïence, sans losange, sans or ; `mihrab` reste aux sagas),
+  des lanternes, les livres de Maître Yûnus, la Chaîne au fond, le tapis de la prière, qui ouvre la noosphère comme avant ; ni
+  minaret, ni coupole, ni inscription, ni Nom écrit ; ni boussole : un intérieur sans ciel, `trade.js`). Il n'y a plus
+  d'ascenseur : les deux qu'on voyait sont une porte de bronze close (au bout de la rue) et une fontaine (sur le parvis), sans
+  changer une case de leurs cartes. Le prologue mène Idris lui-même par ce chemin (ses objectifs : la rue, les quartiers, la
+  ruelle, la mosquée) ; aucun passage ne s'y prend, la porte de la mosquée ne s'y ouvre pas. Le refuge (`c_quartiers`) commence
+  dans la mosquée, au lieu `bureau`, à côté de Maître Yûnus, qui se tient près de sa table et de ses livres (`frame.js`) et n'y
+  est jamais caché, même à la reprise d'une partie : sa porte mène à la ruelle, la ruelle au bord est des quartiers (le lieu
+  `ruelle`), et retour — le même chapitre, une autre carte (`P.vers`, `passages.js`, qui rappelle à chaque entrée dans les
+  quartiers Sâlim et sa moto garée, s'il est déjà venu : `CI.ouvre`) ; loin de Maître Yûnus, l'objectif dit le chemin et la
+  flèche le montre (`P.cible`) ; le bandeau du haut nomme « La ruelle abandonnée » ou « La vieille mosquée » quand on y est
+  (`W.hud`). Dans un autre chapitre qui se joue dans la mosquée (un retour), la porte range ce chapitre (`P.sortir`) et ouvre
+  le refuge dans la ruelle (`C.parRuelle`) ; Maître Yûnus le reprend, et le « Revenir en 2084 » suivant aussi, à sa place
+  (`U.partir`). Une partie de la 2.46 laissée au milieu du prologue (aux objectifs 2 ou 3, aux Archives ou en haut de l'ancien
+  ascenseur, `_ascenseur`) reprend dans la mosquée, aux objectifs 4 ou 5 d'aujourd'hui (`W.startChapter`) ; une reprise sur
+  une case devenue pleine est posée sur la case libre la plus proche. Le format reste le 2. `v2/docs/architecture.md`, « Le
+  chemin de 2084 ». Contrôle : `node v2/tools/cite.js passages` (partie 17), puis `partie.js` (une partie de la 2.46),
   `retours.js`, `progression.js`, `doigt.js`, `doigt.js loin 844x390`, `smoke.js auto`, `walk` et `tap`.
 - Dans la 2.x (2.29, D220 ; le décideur, 23 novembre : « une carte global ou les points d'intérêt sont accessibles en sortant de
   chaque ville par sa porte » ; ses choix : les villes des sagas, La Mecque et Tâ'if, Jérusalem, Bassora et Fustât ; La Mecque,

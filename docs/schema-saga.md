@@ -12,6 +12,8 @@ humaine — fabrique des idoles à la chaîne (tendances, marques, cultes de la 
 (transmetteur) des Archives basses, découvre la **Chaîne** (*isnâd*) : de témoin en témoin, elle remonte
 jusqu'aux Compagnons. Il ne « devient » pas les Compagnons : il marche dans la trace de leurs actes, tels que
 les transmetteurs les ont rapportés. Chaque saga lui rend une **Lumière** (une valeur) pour briser l'Agrégor.
+*(Ce paragraphe est celui de la 1.32. Dans la 2.x, depuis la 2.47 (D238), il n'y a plus d'Archives basses : le jeu dit
+d'Idris qu'il est « un transmetteur, l'élève de Maître Yûnus », dans la vieille mosquée, au bout de la ruelle abandonnée.)*
 
 **Noosphère / égrégore (doctrine du jeu).** La *noosphère* est la sphère des pensées humaines, l'envers
 invisible de chaque lieu. Ce que beaucoup de cœurs regardent ensemble y prend corps : c'est un *égrégore*.

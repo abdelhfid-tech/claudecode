@@ -2592,6 +2592,35 @@ pages privées de son compte.
     « Les quartiers de la Cité »), la leçon « cite » (« Je t'attendrai ici, près de mes livres »), six textes du moteur (la
     Chaîne, la halte, l'aide « Mener plusieurs récits »), trois noms (« La ruelle abandonnée », « La vieille mosquée », la
     « Porte de la tour ») et la tenue d'Idris (« Manteau du râwî », naguère « Manteau des Archives »).
+  - **Corrigé après la relecture** (la relecture et le regard sur les captures, le 26 novembre ; le dessin est de l'agent, à
+    valider (D238)) :
+    - Le refuge s'ouvre au lieu `bureau` de la mosquée, à côté de Maître Yûnus, qui se tient près de sa table et de ses
+      livres (`frame.js`), et non plus à l'entrée.
+    - La niche est vraiment nue : une tuile nouvelle, `niche` (`gfx.js` : un arc creusé dans la pierre, sans faïence, sans
+      losange, sans or), à la place de `mihrab`, qui reste aux sagas.
+    - Les enseignes de la ruelle sont éteintes, sans aucune marque (`neon`, `eteint`).
+    - La boussole ne paraît pas dans la vieille mosquée : un intérieur sans ciel (`trade.js`).
+    - Près de la Chaîne, quand l'image ne la montre pas entière (un téléphone tenu en hauteur), la vue monte pour la montrer
+      (`env.regardIci` de la carte, lu par `W.regard`).
+    - Dans le refuge, le bandeau du haut nomme « La ruelle abandonnée » ou « La vieille mosquée » quand on y est (`W.hud`).
+    - La bouche de la ruelle se voit depuis les quartiers : au bord est, le mur de verre est peint en deux pans, et entre eux
+      l'asphalte sombre qui s'enfonce, un linteau, une ombre (`peindreQuartiers`) ; sa lueur est plus forte. Aucune case ne
+      change.
+    - Le lampadaire de la ruelle est contre le mur du bas.
+    - Sâlim, s'il est déjà venu, et sa moto garée paraissent aussi quand on entre dans les quartiers par la ruelle (`P.vers`
+      rappelle `CI.ouvre`).
+    - Une partie de la 2.46 laissée au milieu du prologue (aux objectifs 2 ou 3, « Maître Yûnus » et « la Chaîne », aux
+      Archives ou en haut de l'ascenseur) reprend dans la vieille mosquée à ces mêmes objectifs, qui sont aujourd'hui le 4 et
+      le 5 (`W.startChapter`) ; une reprise sur une case devenue pleine est posée sur la case libre la plus proche. Preuve :
+      `partie.js` (une partie de la 2.46, à chacune des deux places, reprise par « Continuer »).
+    - Un retour quitté par la porte de la mosquée reprend à sa place au « Revenir en 2084 » suivant (`U.partir`).
+    - Dans le refuge, Maître Yûnus n'est plus jamais caché à la reprise d'une partie.
+    - Les textes (propositions de l'agent, à valider (D238)), en français, en arabe — avec sa forme vocalisée — et en
+      anglais : Sâlim, au dernier maillon, dit « le râwî » (« Alors le râwî, c'était toi », « Tu es le râwî ? »), et non plus
+      « l'archiviste » (الراوي, the rawi) ; « des récits qu'on ne veille pas », et non plus « des archives » (la fiche
+      « Veiller la vieille mosquée » et la réplique de Maître Yûnus au retour « Ce qui est entré » ; الحكايات, the stories) ;
+      « On ne garde pas un lieu en le cachant. On le garde en y amenant quelqu'un. », et non plus « des archives » (sa
+      réplique au retour « L'avis » ; المكان, a place).
   - **À ton regard** : l'agent du relevé, qui mesure l'audience d'un lieu, pose désormais son avis de « réaffectation à
     l'étude » contre la porte d'une mosquée (et non plus des Archives). Le récit le dit sans hostilité (« il n'est pas un
     ennemi », « il est venu voir »), mais c'est à toi de dire si la scène te convient dans ce lieu.
