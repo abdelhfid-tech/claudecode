@@ -209,7 +209,7 @@ async function avancer(p, n = 120) {
           // (comme un joueur : on touche le lieu s'il se voit ; sinon un point du chemin qui y mène, quelques cases plus loin — un
           // bâtiment entre les deux se contourne)
           const st = await E(k => { const T = window.__t, W = window.ISNAD.world, s = W.spotPx(k); const d = Math.hypot(s[0] - W.player.x, s[1] - W.player.y); if (d < 22) return { d };
-            const ch = W.route(s[0], s[1]), q = ch.length ? ch[Math.min(ch.length - 1, 7)] : s; return { d, pt: T.ecran(q[0], q[1] + 2) || T.ecran(s[0], s[1]), calme: T.calme() }; }, k);
+            const ch = W.route(s[0], s[1]), q = ch.length ? ch[Math.min(ch.length - 1, 7)] : s; return { d, pt: T.ecran(q[0], q[1] + 2) || T.ecran(s[0], s[1]) || T.ecran(s[0] - 96, s[1]) || T.ecran(s[0] - 192, s[1]), calme: T.calme() }; }, k);   // (2.47 : un lieu au bord est, sous les boutons A et B en largeur, s'approche par la gauche, comme le ferait un joueur)
           d = st.d; if (d < 22) break;
           if (!st.calme) { await avancer(P, 20); await E(() => window.ISNAD.input.emit('retour')); await P.waitForTimeout(200); continue; } // un passant touché en chemin : on l'écoute, puis on repart
           if (st.pt) await P.touchscreen.tap(st.pt[0], st.pt[1]);
