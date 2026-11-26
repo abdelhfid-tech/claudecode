@@ -452,7 +452,7 @@
     b.scatter('ccaisse', 5, 2, 9, 56, 8);
     // 2.28 (D218) : au bout de la rue, à l'est, on passe à pied dans les quartiers (passages.js). Posé après le tirage des
     // caisses (un lieu en réserve les cases voisines) : elles tombent aux mêmes cases, et aucune case ne change
-    b.spot('traverse', 59, 14);
+    b.spot('traverse', 52, 14);   // (2.47 : sept cases avant le bord — en largeur, le bord passe sous le bouton A ; le passage de la rue, lui, reste au bord : passages.js)
     // après le tirage : ce qui ne bloque rien (posé sur des cases déjà pleines, ou au ras du sol) — dattiers du quai, barques,
     // un boutre, les jets du miroir d'eau (chacun sa lueur bleue), les rames du métro
     [6, 13, 26, 35, 52, 58].forEach(x => { b.obj('cpalmier', x, 17); b.light(x, 17, 54, '#ffb46a', 0.08); });

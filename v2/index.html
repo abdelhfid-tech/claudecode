@@ -993,7 +993,7 @@ body.touch #course .tour, body.touch #course .rangs { font-size: max(.78em, 11px
 <div id="fade"></div>
 <div id="secours" hidden><p data-t>Le jeu semble arrêté.</p><button type="button" data-t>Reprendre au dernier objectif</button><small></small></div>
 <script>
-window.ISNAD_VERSION = "2.47 · 2026-11-26 22:33 UTC · 45cdfc0+";
+window.ISNAD_VERSION = "2.47 · 2026-11-26 22:43 UTC · b07faaa+";
 window.ISNAD_PROMO = {"NOM":"ISNAD","SOUS_TITRE":"Chroniques des Compagnons","ADRESSE":"www.isnad-game.org","RESERVE":"Version bêta. La relecture historique et religieuse par un spécialiste reste à faire."};
 /* ==== src/core/defs.js ==== */
 /* ISNAD — définitions partagées (navigateur + validateur node). Source de vérité du schéma de données. */
@@ -7285,7 +7285,7 @@ window.ISNAD_PROMO = {"NOM":"ISNAD","SOUS_TITRE":"Chroniques des Compagnons","AD
     b.scatter('ccaisse', 5, 2, 9, 56, 8);
     // 2.28 (D218) : au bout de la rue, à l'est, on passe à pied dans les quartiers (passages.js). Posé après le tirage des
     // caisses (un lieu en réserve les cases voisines) : elles tombent aux mêmes cases, et aucune case ne change
-    b.spot('traverse', 59, 14);
+    b.spot('traverse', 52, 14);   // (2.47 : sept cases avant le bord — en largeur, le bord passe sous le bouton A ; le passage de la rue, lui, reste au bord : passages.js)
     // après le tirage : ce qui ne bloque rien (posé sur des cases déjà pleines, ou au ras du sol) — dattiers du quai, barques,
     // un boutre, les jets du miroir d'eau (chacun sa lueur bleue), les rames du métro
     [6, 13, 26, 35, 52, 58].forEach(x => { b.obj('cpalmier', x, 17); b.light(x, 17, 54, '#ffb46a', 0.08); });
