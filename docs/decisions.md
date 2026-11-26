@@ -2559,6 +2559,12 @@ pages privées de son compte.
   l'agent, à valider). Tempo, saturation et volumes sont de l'agent : à juger à l'oreille par le décideur. Preuve :
   `cite.js` (la piste voulue pendant chaque activité, puis celle du lieu). Cela remplace, pour la course, « sans voix ni
   musique » (D216).
+- [x] **D237. Plus de carton « ISNAD » au début d'une partie (version 2.46 ; le décideur, 26 novembre).** « Inutile de
+  mettre une image isnad quand on clic sur commencer ». Le prologue (`frame.js`, chapitre `p1`) s'ouvrait sur un carton de
+  trois secondes, « ISNAD » et « An 1507 de l'Hégire · 2084 · Cité-Miroir ». Il est retiré : après « Commencer », la Cité
+  paraît aussitôt, avec la première phrase du prologue. La date et le lieu restent dans le bandeau du haut (« La
+  Cité-Miroir », « An 1507 de l'Hégire · 2084 »). Les deux textes sortent des listes de l'arabe et de l'anglais, et leurs
+  formes vocalisées avec eux. Le nom du jeu reste sur l'écran-titre.
 - [ ] **Proposition de reformulation de l'exigence 2 (formulation de l'agent, à valider ; l'exigence elle-même n'est pas
   réécrite).** Après D205, on propose d'ajouter à l'exigence 2 : « L'émotion d'un Compagnon passe par l'attitude du corps
   et les bulles ; celle des autres peut aussi passer par le visage. » (aujourd'hui, l'exigence dit : « Le caractère et

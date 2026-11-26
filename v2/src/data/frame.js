@@ -329,7 +329,6 @@ ISNAD.registerSaga({
       ],
       chests: [{ map: 'archives', at: ['bureau', 1, 1], gear: 'lampe' }, { map: 'archives', at: ['rayonnages', 2, 1], item: 'dattes', n: 2 }],
       intro: [
-        ['title', 'ISNAD', 'An 1507 de l’Hégire · 2084 · Cité-Miroir'],
         ['nar', 'Dans la Cité-Miroir, on ne lève plus les yeux. Le ciel est un écran, et l’écran regarde en retour.'],
         ['nar', 'Les anciens avaient un mot pour une chose fabriquée par les hommes et qui finit par les commander. Ils disaient : une *idole*.']
       ],
