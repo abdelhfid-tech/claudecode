@@ -66,7 +66,9 @@
   P.tic = function () {
     if (!W.map) return; if (P.carte !== W.map) { P.carte = W.map; P.arme = false; }
     const p = W.player, x = ouverts().find(z => z.dans(p)); if (!x) { P.arme = true; return; }
-    if (!P.arme || !main() || (x.dir != null && p.dir !== x.dir) || !(p.moving || (x.dir != null ? I.input.held[POUSSE[x.dir]] : POUSSE.some(k => I.input.held[k])))) return;
+    // (2.47 : au doigt, le toucher qui vise le passage lui-même y fait entrer, quel que soit le sens du dernier pas — on arrive souvent en biais)
+    const vise = !!(W.dest && x.dans({ x: W.dest.x, y: W.dest.y }));
+    if (!P.arme || !main() || (x.dir != null && p.dir !== x.dir && !vise) || !(p.moving || (x.dir != null ? I.input.held[POUSSE[x.dir]] : POUSSE.some(k => I.input.held[k])))) return;
     P.arme = false; P.journal.push({ quoi: 'pas', id: x.id }); x.fn();
   };
   const devant = () => { if (!main()) return null; const p = W.player; return ouverts().find(z => (z.dir == null || p.dir === z.dir) && z.devant(p)) || null; };
