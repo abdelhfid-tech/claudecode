@@ -904,7 +904,10 @@ async function avancer(p, n = 120) {
     // aller jusqu'à un point au bord, au doigt (des touchers sur la scène, vers lui) ou au clavier (marcher, puis pousser vers le bord)
     // (au doigt : on touche le bord lui-même, là où il se voit sur la scène — tout près du bord de l'écran, mais sur la scène)
     const versBord = async (x, y, touche, carte) => { const ici = () => E(() => window.ISNAD.world.map && window.ISNAD.world.map.id);
-      if (haut) { for (let i = 0; i < 12; i++) { if ((await ici()) !== carte) return true; const pt = await E(([x, y]) => window.__t.calme() ? window.__t.brut(x, y) : null, [x, y]); if (pt) await P.touchscreen.tap(pt[0], pt[1]); await P.waitForTimeout(1200); } }
+      if (haut) { for (let i = 0; i < 20; i++) { if ((await ici()) !== carte) return true;
+        // (le bord lui-même s'il se voit sur la scène ; sinon un point de la scène dans sa direction, comme un joueur qui s'en approche)
+        const pt = await E(([x, y]) => { const T = window.__t; if (!T.calme()) return null; const b = T.brut(x, y), s = document.querySelector('#stage').getBoundingClientRect(); return b[0] > s.left + 4 && b[0] < s.right - 4 && b[1] > s.top + 4 && b[1] < s.bottom - 4 ? b : T.ecran(x, y); }, [x, y]);
+        if (pt) await P.touchscreen.tap(pt[0], pt[1]); await P.waitForTimeout(1200); } }
       else { await E(([x, y]) => window.__t.marcher(x, y, 20000), [x + (touche === 'ArrowRight' ? -24 : touche === 'ArrowLeft' ? 24 : 0), y + (touche === 'ArrowDown' ? -14 : touche === 'ArrowUp' ? 14 : 0)]); await P.keyboard.down(touche); for (let i = 0; i < 20 && (await ici()) === carte; i++) await P.waitForTimeout(150); await P.keyboard.up(touche); }
       for (let i = 0; i < 20 && (await ici()) === carte; i++) await P.waitForTimeout(200); return (await ici()) !== carte; };
     const etat = () => E(() => { const I = window.ISNAD, W = I.world, s = I.save.data, y = W.npcs.find(n => n.hero === 'yunus'); return Object.assign(window.__t.etat(), { cps: Object.keys(s.cps || {}), recus: Object.keys((s.lecons || {}).recus || {}), lj: I.lecons.journal.map(x => x.id).join(), yunus: y ? y.map : null, cible: !!(W.target() || {}).passage, dit: (document.querySelector('#hud .obj') || {}).textContent || '' }); });
