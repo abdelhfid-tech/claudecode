@@ -565,10 +565,10 @@
     rect('#2a1a30', 392, 139, 184, 5); rect('#a8874e', 392, 139, 184, 0.75);
     [[397, 24], [553, 20]].forEach(([x, w]) => { rect('#2a1a30', x - 2, 116, w + 4, 28); rect('#a8874e', x - 2, 116, w + 4, 0.75); c.fillStyle = grad(0, 118, 0, 144, [[0, '#ffdca0'], [1, '#d07a44']]); c.fillRect(x, 118, w, 26);
       for (let k = x; k <= x + w; k += w / 3) rect('#8a6a40', k, 118, 0.75, 26); rect('rgba(60,30,40,.35)', x, 130, w, 0.5); lumiere(x + w / 2, 134, 40, '#ffc880', 0.05); });
-    // l'ascenseur : une grille de bronze au pied de la tour, au bout de la rue
-    rect('#2a1a30', 884, 114, 40, 30); rect('#9a7c4c', 886, 116, 36, 28); rect('#1e1424', 889, 119, 30, 25);
-    c.fillStyle = grad(0, 120, 0, 128, [[0, '#ffe4b0'], [1, '#c87a3e']]); c.fillRect(891, 120, 26, 7); rect('#9a7c4c', 889, 127.5, 30, 0.5);
-    c.drawImage(G.tile('cgrille', 0, 0), 896, 128); rect('#fff0c0', 913.5, 133, 1.5, 1.5);
+    // au pied de la tour, au bout de la rue : une porte de bronze, close (2.47, D238 : il n'y a plus d'ascenseur)
+    rect('#2a1a30', 884, 114, 40, 30); rect('#9a7c4c', 886, 116, 36, 28); rect('#3a2a22', 889, 119, 30, 25);
+    rect('#6a5236', 891, 121, 12, 21); rect('#6a5236', 905, 121, 12, 21); rect('#2a1a18', 903.5, 119, 1, 25);
+    [[893, 123], [907, 123], [893, 132], [907, 132]].forEach(([x, y]) => rect('#8a6c44', x, y, 8, 7)); rect('#c9a13f', 901, 131, 1, 2); rect('#c9a13f', 906, 131, 1, 2);
     /* --- le vieux quartier : maisons de pierre de corail, tours à vent, claustras, portes de bois --- */
     const TONS = ['#786352', '#725e4d', '#7e6957', '#6e5a49']; // à contre-jour : le couchant est derrière les tours
     const claustra = (x, y, w, h, allume) => { rect('#8a7056', x - 1, y - 1, w + 2, h + 2); rect(allume ? '#ffc878' : '#3a2a26', x, y, w, h);
@@ -705,6 +705,8 @@
     b.fill(0, 0, 64, 8, 'qbat', true); b.fill(0, 0, 1, 46, 'qbat', true); b.fill(63, 0, 1, 46, 'qbat', true); b.fill(0, 45, 64, 1, 'qhaie', true);
     // 2.28 (D218) : au nord-ouest, le trottoir continue vers la rue de la Cité-Miroir — l'entrée de la rue (passages.js)
     b.fill(0, 8, 1, 3, 'cdalle', false);
+    // 2.47 (D238) : au bord est, l'entrée de la ruelle abandonnée, qui mène à la vieille mosquée (passages.js)
+    b.fill(63, 20, 1, 3, 'cdalle', false);
     // la galerie marchande : un passage couvert, ses vitrines au fond ; la salle de jeux, ouverte sur la rue
     b.fill(8, 6, 20, 2, 'qparvis', false); b.fill(38, 5, 12, 3, 'qsalle', false);
     // les avenues : une boucle à sens unique (vers l'ouest au nord, vers l'est au sud)
@@ -719,7 +721,7 @@
     b.fill(31, 34, 32, 11, 'qpiste', true); b.fill(35, 34, 20, 2, 'qgradin', false); b.fill(32, 34, 3, 2, 'cdalle', false); b.fill(29, 34, 2, 11, 'cdalle', false);
     // les lieux nommés
     b.spot('parvis', 12, 19); b.spot('galerie', 17, 7); b.spot('jeux', 44, 7); b.spot('ecran', 32, 21); b.spot('priere', 51, 24);
-    b.spot('parc', 15, 37); b.spot('roue', 8, 43); b.spot('circuit', 33, 35); b.spot('tribune', 45, 34); b.spot('traverse', 2, 9);
+    b.spot('parc', 15, 37); b.spot('roue', 8, 43); b.spot('circuit', 33, 35); b.spot('tribune', 45, 34); b.spot('traverse', 2, 9); b.spot('ruelle', 61, 21);
     // les lampadaires (la lumière tombe à leur pied)
     const lampe = (x, y, col) => { b.obj('qlampe', x, y); b.light(x, y - 1, v15 ? 64 : 54, col, 0.08); (b.lampes || (b.lampes = [])).push([x * T2 + 11, y * T2 + 15, col]); };
     [6, 13, 20, 27, 34, 41, 48, 55].forEach((x, i) => lampe(x, 10, i % 3 ? '#ffd9a0' : '#ffc0e0'));
@@ -730,8 +732,8 @@
     // la salle de jeux : une rangée de bornes contre le mur du fond, chacune sa lueur
     [['#ff4fd8', '#39e6ff'], ['#ffd84a', '#ff5a3a'], ['#39e6ff', '#7dffb0'], ['#c49bff', '#ff4fd8'], ['#7dffb0', '#ffd84a'], ['#ff5a3a', '#39e6ff']].forEach(([col, alt], i) => { const x = 39 + i * 2; b.obj('qborne', x, 5, { color: col, alt }); b.light(x, 5, 30, col, 0.15); });
     b.light(44, 6, 90, '#7a5cff', 0.1);
-    // le parvis : l'ascenseur qui remonte des Archives basses, des dattiers dans leurs vasques, deux bancs
-    b.obj('qkiosque', 12, 16).x = 13 * T2; b.light(12, 15, 60, '#ffd8a0', 0.08);
+    // le parvis : une fontaine (2.47, D238 : il n'y a plus d'ascenseur), des dattiers dans leurs vasques, deux bancs
+    b.obj('fountain', 12, 16).x = 13 * T2; b.light(12, 15, 60, '#ffd8a0', 0.08);
     [[6, 15], [19, 15], [6, 27], [19, 27]].forEach(([x, y]) => { b.obj('cpalmier', x, y); b.light(x, y, 40, '#ffb46a', 0.08); });
     b.obj('qbanc', 9, 24); b.obj('qbanc', 16, 24);
     // la place du grand écran : l'écran sur la façade du pavillon, ses bancs
@@ -808,7 +810,7 @@
     // le sens de la boucle : des flèches au sol, simples traits
     const fleche = (x, y, dx, dy) => { c.fillStyle = 'rgba(236,226,210,.3)'; c.beginPath(); c.moveTo(x + dx * 6, y + dy * 6); c.lineTo(x - dy * 4 - dx * 2, y + dx * 4 - dy * 2); c.lineTo(x + dy * 4 - dx * 2, y - dx * 4 - dy * 2); c.closePath(); c.fill(); };
     [[400, 192, -1, 0], [800, 192, -1, 0], [300, 496, 1, 0], [720, 496, 1, 0], [48, 260, 0, 1], [976, 420, 0, -1]].forEach(a => fleche(...a));
-    /* --- le parvis : un cercle de laiton incrusté autour de l'ascenseur --- */
+    /* --- le parvis : un cercle de laiton incrusté autour de la fontaine --- */
     c.save(); c.strokeStyle = 'rgba(236,200,130,.28)'; c.lineWidth = hd1 ? 1 : 0.5; [40, 64, 88].forEach(rr => { c.beginPath(); c.ellipse(208, 290, rr, rr * 0.62, 0, 0, 6.3); c.stroke(); }); c.restore();
     rect('rgba(110,80,60,.3)', 80, 222, 256, 1.5);
     /* --- le pavillon du grand écran : du verre, des étages éclairés, deux portes au pied --- */
@@ -857,17 +859,56 @@
   }
 
   /* ---------- Archives basses ---------- */
+  /* ---------- 2.47 (D238) — la vieille mosquée (elle prend la place des Archives basses et garde leur identifiant) ----------
+     Le décideur, 26 novembre : « une mosquée finalement où se trouve le maître et les sagas ». Au bout de la ruelle
+     abandonnée : une salle de prière sobre, ses tapis, deux rangées de colonnes, une niche nue dans le mur du fond, des
+     lanternes ; le coin de Maître Yûnus, sa table basse et ses livres (« bureau », « rayonnages ») ; la Chaîne des sagas,
+     à l'est, dans sa pénombre (« chaine ») ; la place de la prière devant la niche (« priere » : la porte de la noosphère,
+     valeurs.js) ; la porte, en bas (« entree »), par où l'on sort dans la ruelle (passages.js). Ni minaret, ni coupole, ni
+     inscription, ni Nom écrit, ni image d'un lieu saint (comme la petite mosquée de quartier de D226). Les lieux nommés et
+     les cases que les récits emploient (« bureau » + 1, « rayonnages » + 1, « chaine » − 2, « entree » − 1) restent libres. */
   function archives(id, o, L, graine) {
-    const b = new MB(id, 34, 24, 'metal', o, graine);
-    b.ring(0, 0, 34, 24, 'cwall'); b.fill(1, 1, 32, 2, 'cwall', true); b.set(16, 23, 'metal', false); b.set(17, 23, 'metal', false);
-    for (let x = 4; x < 16; x += 4) { b.obj('shelf', x, 5); b.obj('shelf', x, 10); }
-    for (let x = 5; x < 15; x += 3) b.obj('rack', x, 17);
-    b.obj('desk', 8, 20); b.spot('bureau', 9, 21);
-    b.fill(22, 6, 9, 9, 'nfloor', false); b.obj('isnad', 26, 9); b.light(26, 9, 110, '#ffd27a', 0.2); b.spot('chaine', 26, 12);
-    b.obj('rack', 30, 4); b.obj('rack', 21, 4); b.obj('rack', 30, 19); b.obj('lamp', 20, 12); b.light(20, 11, 60, '#39e6ff', 0.1); b.light(8, 8, 80, '#ffb45a', 0.1);
-    b.spot('entree', 17, 21); b.spot('rayonnages', 14, 13); b.obj('mat', 27, 19); b.spot('priere', 27, 20); b.light(27, 19, 50, '#fff0c0', 0.05);
-    return b.finish({ time: 'archives', ambient: '#6a66a0', grade: ['#ffb45a', 0.14], particles: 'dust', rate: 5, bg: 'cite', rays: { a: 0.05, color: '#ffe0a0' }, lightA: 1, bloom: 0.26, music: 'chaine' });
+    const b = new MB(id, 34, 24, 'carpet', o, graine);
+    b.ring(0, 0, 34, 24, 'cpierre'); b.fill(1, 1, 32, 2, 'cpierre', true);
+    b.set(17, 2, 'mihrab', true);                                                    // la niche, nue
+    b.fill(1, 20, 32, 3, 'zellij', false); b.set(16, 23, 'zellij', false); b.set(17, 23, 'zellij', false);   // le seuil, et la porte
+    [5, 10, 24, 29].forEach(x => { b.obj('column', x, 8); b.obj('column', x, 14); });   // deux rangées de colonnes, l'allée du milieu libre
+    b.obj('mat', 17, 5); b.spot('priere', 17, 5); b.light(17, 4, 70, '#ffe8b8', 0.04);
+    [[7, 6], [27, 6], [7, 12], [27, 12]].forEach(([x, y]) => { b.obj('lantern', x, y); b.light(x, y - 1, 56, '#ffd27a', 0.12); });
+    // le coin de Maître Yûnus : sa table basse, ses livres
+    b.obj('shelf', 3, 17); b.obj('shelf', 3, 11); b.obj('desk', 8, 20); b.spot('bureau', 9, 21); b.spot('rayonnages', 6, 13); b.light(8, 18, 70, '#ffb45a', 0.1);
+    // la Chaîne des sagas, à l'est, dans sa pénombre
+    b.fill(21, 9, 9, 7, 'nfloor', false); b.obj('isnad', 26, 11); b.light(26, 11, 110, '#ffd27a', 0.2); b.spot('chaine', 26, 14);
+    b.spot('entree', 17, 21); b.light(17, 22, 50, '#fff0c0', 0.05);
+    return b.finish({ time: 'archives', ambient: '#7a6a8a', grade: ['#ffb45a', 0.16], particles: 'dust', rate: 4, bg: 'cite', rays: { a: 0.06, color: '#ffe0a0' }, lightA: 1, bloom: 0.26, music: 'chaine' });
   }
+
+  /* ---------- 2.47 (D238) — la ruelle abandonnée ----------
+     Entre les quartiers (à l'ouest : « quartiers ») et la vieille mosquée (à l'est : « porte ») : un passage étroit entre
+     deux murs aveugles, des fenêtres murées de planches, des néons éteints (sans une lettre), des caisses, des flaques ; un
+     seul lampadaire, qui clignote ; au bout, la façade de pierre et la porte de bois de la mosquée, d'où sort une lumière
+     chaude. Rien n'y rôde (aucun `rues`), personne n'y est posé. */
+  function impasse(id, o, L, graine) {
+    const b = new MB(id, 44, 13, 'asphalt', o, graine);
+    b.fill(0, 0, 40, 5, 'cmur', true); b.fill(0, 9, 40, 4, 'cmur', true);                // les deux murs ; la ruelle, rangs 5 à 8
+    [3, 8, 14, 21, 27, 33].forEach(x => b.set(x, 3, 'cmure', true)); [5, 11, 18, 24, 30, 36].forEach(x => b.set(x, 10, 'cmure', true));
+    b.fill(40, 0, 4, 13, 'cpierre', true);                                               // la façade de la mosquée
+    [[7, 5], [8, 5], [25, 8], [34, 5]].forEach(([x, y]) => b.obj('ccaisse', x, y)); b.obj('sack', 16, 8);
+    [[12, 5, '#3a2c44'], [29, 5, '#2c3a44']].forEach(([x, y, color]) => b.obj('neon', x, y, { color }));   // des enseignes éteintes, sans une lettre
+    b.obj('qlampe', 20, 5); b.light(20, 4, 70, '#9fb8ff', 0.5);                          // le seul lampadaire, qui clignote
+    b.light(38, 6, 80, '#ffd27a', 0.08); b.light(38, 7, 60, '#ffb45a', 0.08);            // la lumière de la mosquée
+    b.spot('quartiers', 1, 7); b.spot('milieu', 20, 7); b.spot('porte', 38, 7);
+    b.peint = c => {   // la porte de bois de la mosquée, en arc, sur la façade (rangs 6 et 7)
+      const rect = aplat(c), x = 40 * T, y = 6 * T;
+      rect('#2a1c12', x + 1, y - 6, 14, 38); c.fillStyle = '#2a1c12'; c.beginPath(); c.arc(x + 8, y - 4, 7, Math.PI, 0); c.fill();
+      rect('#6b4a2a', x + 2.5, y - 3, 11, 34); c.fillStyle = '#6b4a2a'; c.beginPath(); c.arc(x + 8, y - 3, 5.5, Math.PI, 0); c.fill();
+      rect('#4e3420', x + 7.75, y - 8, 0.5, 39); [y + 4, y + 14, y + 24].forEach(yy => rect('#4e3420', x + 2.5, yy, 11, 0.5));
+      rect('#c9a13f', x + 6, y + 13, 1, 1.5); rect('#c9a13f', x + 9, y + 13, 1, 1.5);
+      rect('rgba(255,210,122,.35)', x - 1, y - 6, 1.5, 38);                              // un filet de lumière par l'entrebâillement
+    };
+    return b.finish({ time: 'cite', ambient: '#2a2c48', grade: ['#3a2cff', 0.1], particles: 'brume', rate: 3, bg: 'cite', bloom: 0.2, lightA: 1, music: 'silence' });
+  }
+
 
   /* ---------- 2.29 (D220) — la carte du monde ----------
      D.MONDE, projeté : de la longitude et de la latitude à la case, équirectangulaire, corrigée au parallèle de D.MONDE.
@@ -989,7 +1030,7 @@
   }
 
   M.drawRosette = drawRosette;
-  const GEN = { ville, desert, camp, romaine, palais, navire, noos, citadelle, cite, quartiers, archives, monde };
+  const GEN = { ville, desert, camp, romaine, palais, navire, noos, citadelle, cite, quartiers, archives, impasse, monde };
   // Tous les lieux nommés d'une carte se rejoignent-ils à pied ? Même parcours que les tests (cases libres voisines).
   function libre(m, s) {
     for (let rad = 0; rad < 9; rad++) for (let dy = -rad; dy <= rad; dy++) for (let dx = -rad; dx <= rad; dx++) {

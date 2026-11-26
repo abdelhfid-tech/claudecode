@@ -22,6 +22,34 @@
 /* Depuis la version du cœur : chaque rencontre porte, à sa deuxième manche, l'idée noire de celui à qui l'on
    parle (« noir »), et s'achève devant le mal du cœur qui se tenait derrière lui. Le dernier chapitre fait se
    dresser ceux qui n'ont pas été tranchés (['vices', …]). Textes des maux et des lames : src/data/coeur.js. */
+// 2.47 (D238) — les gens des quartiers : ceux du refuge, et ceux que le prologue croise en allant vers la mosquée (chacun seul,
+// au milieu de ce qu'on fait ici ; aucun ne voit les chimères). Sâlim, l'organisateur et les parieurs du circuit en sont.
+const PASSANTS_Q = [
+  // les passants : chacun seul, au milieu de ce qu'on fait ici (aucun ne voit les chimères)
+  { map: 'quartiers', id: 'q_joueur', name: 'Un joueur', at: ['jeux', -3, 0], face: 'up', pose: 'triste', look: { kind: 'citadin', robe: '#3a5a8a', head: '#24385a', cloak: '#4a6a9a' }, talk: [['say', 'q_joueur', 'J’ai battu mon record. Il n’y avait personne pour le voir.']] },
+  { map: 'quartiers', id: 'q_joueuse', name: 'Une joueuse', at: ['jeux', 3, 0], face: 'up', pose: 'accable', look: { kind: 'femme', robe: '#7a4862', head: '#4a2c40', cloak: '#8a5a74' }, talk: [['say', 'q_joueuse', 'Je joue avec des milliers de gens, tous les soirs. Je ne connais le nom d’aucun.']] },
+  { map: 'quartiers', id: 'q_cliente', name: 'Une cliente', at: ['galerie', -5, 0], pose: 'triste', look: { kind: 'femme', robe: '#c8a060', head: '#7a5a30', cloak: '#d8b070' }, talk: [['say', 'q_cliente', 'J’ai acheté ce que l’écran m’a montré ce matin.'], ['say', 'q_cliente', 'Ce soir, il m’en montre un autre.']] },
+  { map: 'quartiers', id: 'q_vitrine', name: 'Un passant', at: ['galerie', 5, 1], face: 'up', pose: 'triste', look: { kind: 'citadin', robe: '#7a5a3a', head: '#4a3420', cloak: '#8a6a4a' }, talk: [['say', 'q_vitrine', 'Les vitrines restent allumées toute la nuit. On dirait qu’elles attendent quelqu’un.']] },
+  { map: 'quartiers', id: 'q_ancien', name: 'Un vieil homme', at: ['ecran', -5, 4], face: 'up', pose: 'assis', look: { kind: 'ancien', robe: '#4a4038', head: '#bdb6a8' }, talk: [['say', 'q_ancien', 'Autrefois, sur cette place, on se saluait.'], ['say', 'q_ancien', 'Maintenant, on regarde tous l’écran, et personne ne se voit.']] },
+  { map: 'quartiers', id: 'q_passante', name: 'Une passante', at: ['ecran', 4, 5], pose: 'triste', look: { kind: 'femme', robe: '#6a5a8a', head: '#3e3458', cloak: '#7a6a9a' }, talk: [['say', 'q_passante', 'Il y a tant de monde ici, chaque soir. Je ne sais pas à qui parler.']] },
+  { map: 'quartiers', id: 'q_employe', name: 'Un employé', at: ['ecran', 7, 3], face: 'up', pose: 'assis', look: { kind: 'citadin', robe: '#7a7a6a', head: '#4a4a3e', cloak: '#8a8a7a' }, talk: [['say', 'q_employe', 'Je viens m’asseoir ici après le travail. L’écran parle, au moins.']] },
+  { map: 'quartiers', id: 'q_enfant', name: 'Un enfant', at: ['parc', 5, 4], face: 'up', pose: 'triste', look: { kind: 'enfant', robe: '#3d6a5a', head: '#28403a' }, talk: [['say', 'q_enfant', 'Le manège tourne tout seul. Je n’ai personne à qui faire signe.']] },
+  { map: 'quartiers', id: 'q_promeneuse', name: 'Une promeneuse', at: ['parc', -2, -2], pose: 'triste', look: { kind: 'femme', robe: '#8a6a4a', head: '#5a4230', cloak: '#9a7a5a' }, talk: [['say', 'q_promeneuse', 'Je viens ici tous les soirs. Personne ne m’a jamais demandé pourquoi.']] },
+  { map: 'quartiers', id: 'q_roue', name: 'Un passant', at: ['roue', 3, 0], face: 'up', pose: 'triste', look: { kind: 'citadin', robe: '#8a7a2a', head: '#5a4e18', cloak: '#9a8a3a' }, talk: [['say', 'q_roue', 'La grande roue tourne à vide depuis des mois.'], ['say', 'q_roue', 'Monter seul, à quoi bon ?']] },
+  { map: 'quartiers', id: 'q_spectateur', name: 'Un spectateur', at: ['tribune', -5, 0], pose: 'assis', look: { kind: 'citadin', robe: '#9a4a3a', head: '#6a3024', cloak: '#aa5a4a' }, talk: [['say', 'q_spectateur', 'Ils vont très vite. Je ne sais même pas qui gagne.'], ['say', 'q_spectateur', 'Je viens pour le bruit.']] },
+  { map: 'quartiers', id: 'q_spectatrice', name: 'Une spectatrice', at: ['tribune', 5, 1], pose: 'assis', look: { kind: 'femme', robe: '#3a7a7a', head: '#245050', cloak: '#4a8a8a' }, talk: [['say', 'q_spectatrice', 'Tout le monde regarde la même course. Chacun la regarde seul.']] },
+  { map: 'quartiers', id: 'q_mecano', name: 'Un mécanicien', at: ['circuit', 0, -1], pose: 'accable', look: { kind: 'citadin', robe: '#3a5a3a', head: '#243a24', manteau: 'aucun' }, talk: [['say', 'q_mecano', 'Je prépare des voitures toute la journée. Personne ne me demande comment je vais.']] },
+  { map: 'quartiers', id: 'q_voisine', name: 'Une passante', at: ['parvis', -6, 6], pose: 'triste', look: { kind: 'femme', robe: '#7a4a5a', head: '#4e2e3a', cloak: '#8a5a6a' }, talk: [['say', 'q_voisine', 'Mon téléphone sait tout de moi. Mes voisins ne savent pas mon nom.']] },
+  { map: 'quartiers', id: 'q_livreur', name: 'Un livreur', at: ['parvis', 6, 4], pose: 'accable', look: { kind: 'citadin', robe: '#c86a2a', head: '#7a3e18', cloak: '#d87a3a', coiffe: 'calotte' }, talk: [['say', 'q_livreur', 'Je livre des paquets à des portes qui ne s’ouvrent pas.'], ['say', 'q_livreur', 'On me laisse un pourboire, jamais un mot.']] },
+  // 2.27 (D216) — le circuit : Sâlim (il paraît quand il arrive en moto, circuit.js), l'organisateur et ses cinq circuits ;
+  // dans la tribune, des parieurs, chacun seul devant son écran (aucun ne propose rien à Idris ; Le Pari rôde parmi eux)
+  { map: 'quartiers', id: 'salim_q', name: 'Sâlim', hero: 'salim', at: ['circuit', -1, -2], hidden: true, talk: [['say', 'salim_q', 'La moto est là.']] },
+  { map: 'quartiers', id: 'q_organisateur', name: 'L’organisateur', at: ['circuit', 2, -2], face: 'left', look: { kind: 'citadin', robe: '#3a7aa8', head: '#24506e', cloak: '#4a8ab8' }, talk: [['say', 'q_organisateur', 'La piste est libre.']] },
+  { map: 'quartiers', id: 'q_parieur', name: 'Un parieur', at: ['tribune', -3, 1], face: 'up', pose: 'assis', look: { kind: 'citadin', robe: '#9a6a2a', head: '#5e4018', cloak: '#aa7a3a' }, talk: [['say', 'q_parieur', 'Je ne regarde pas la course. Je regarde les chiffres sur mon écran.'], ['say', 'q_parieur', 'Ils montent, ils descendent. Moi aussi.']] },
+  { map: 'quartiers', id: 'q_parieuse', name: 'Une parieuse', at: ['tribune', 2, 0], face: 'up', pose: 'triste', look: { kind: 'femme', robe: '#5a6a4a', head: '#3a4630', cloak: '#6a7a5a' }, talk: [['say', 'q_parieuse', 'Je me dis que la prochaine fois, je rattraperai tout. Je me le dis chaque soir.']] },
+  { map: 'quartiers', id: 'q_parieur2', name: 'Un parieur', at: ['tribune', 7, 1], face: 'up', pose: 'accable', look: { kind: 'citadin', robe: '#8a3a5a', head: '#5a2238', cloak: '#9a4a6a' }, talk: [['say', 'q_parieur2', 'Ce que j’ai perdu, je n’ose le dire à personne. Alors je reviens, seul.']] }
+];
+
 ISNAD.registerSaga({
   id: 'idris', order: 0, frame: true,
   name: 'Idris', epithet: 'Le Râwî', arabic: 'إدريس', years: '1507 H · 2084',
@@ -325,7 +353,8 @@ ISNAD.registerSaga({
         { id: 'passant2', name: 'Employé', at: ['ecran', -3, 2], look: { kind: 'citadin', robe: '#808a4a', head: '#5a6232', cloak: '#9aa45c' }, talk: [['say', 'passant2', 'Mon score a baissé de trois points. Je ne sais pas ce que j’ai fait. Je ne sais jamais.']] },
         { id: 'vieux', name: 'Vieil homme', at: ['ruelle', 0, -1], look: { kind: 'ancien', robe: '#4a4038', head: '#bdb6a8' }, talk: [['say', 'vieux', 'Autrefois on demandait : « De qui tiens-tu cela ? » Maintenant on demande : « Combien ça a fait de vues ? »']] },
         { id: 'gamin', name: 'Enfant', at: ['ecran', 3, 2], look: { kind: 'enfant', robe: '#3d5a6a', head: '#28343c' }, talk: [['say', 'gamin', 'Monsieur, c’est vrai qu’avant le ciel était noir, la nuit, avec des étoiles ?']] },
-        { id: 'yunus_n', name: 'Maître Yûnus', hero: 'yunus', map: 'archives', at: 'bureau', talk: [['say', 'yunus_n', 'La Chaîne t’attend au fond de la salle, Idris.']] }
+        { id: 'yunus_n', name: 'Maître Yûnus', hero: 'yunus', map: 'archives', at: 'bureau', talk: [['say', 'yunus_n', 'La Chaîne t’attend au fond de la salle, Idris.']] },
+        ...PASSANTS_Q   // 2.47 (D238) : les gens des quartiers, qu'Idris croise en allant vers la mosquée
       ],
       chests: [{ map: 'archives', at: ['bureau', 1, 1], gear: 'lampe' }, { map: 'archives', at: ['rayonnages', 2, 1], item: 'dattes', n: 2 }],
       intro: [
@@ -337,12 +366,21 @@ ISNAD.registerSaga({
           ['sfx', 'glitch'],
           ['say', 'Le Flux', 'Aujourd’hui, quarante et un millions de vues. Aujourd’hui, vous aimez ceci. Demain, vous l’aurez oublié. Regardez encore.'],
           ['say', 'idris', 'Chaque matin une idole neuve. Chaque soir on la brise pour en dresser une autre. Et personne ne se souvient de la veille.'],
-          ['nar', 'Idris est *râwî* aux Archives basses : un transmetteur. Un métier presque disparu, qui consiste à savoir de qui l’on tient ce que l’on sait.']
+          ['nar', 'Idris est *râwî* : un transmetteur, l’élève de Maître Yûnus. Un métier presque disparu, qui consiste à savoir de qui l’on tient ce que l’on sait.']
         ] },
-        { text: 'Descendre aux Archives basses (au bout de la rue)', goto: 'ascenseur', then: [
+        // 2.47 (D238) : le chemin de 2084 — la rue, les quartiers du centre, la ruelle abandonnée, la vieille mosquée
+        { text: 'Traverser la rue jusqu’aux quartiers', goto: 'traverse', then: [
+          ['map', 'quartiers', 'traverse'],
+          ['nar', 'Les quartiers du centre ne dorment jamais : des vitrines, des jeux, des voitures qui brillent. Tout le monde y est ensemble, et chacun y est seul.']
+        ] },
+        { text: 'Traverser les quartiers jusqu’à la ruelle de l’est', goto: 'ruelle', then: [
+          ['map', 'impasse', 'quartiers'],
+          ['nar', 'Derrière les quartiers, une ruelle que les écrans n’éclairent plus. Les fenêtres sont murées, les enseignes éteintes. Au bout, une lumière chaude.']
+        ] },
+        { text: 'Suivre la ruelle jusqu’à la vieille mosquée', goto: 'porte', then: [
           ['sfx', 'door'], ['map', 'archives', 'entree'],
-          ['nar', 'Quarante étages sous la rue, là où le Flux ne descend pas : les Archives basses.'],
-          ['nar', 'Dans un angle, un tapis tourné vers La Mecque. Ici comme dans chaque mosquée de la Chaîne, on peut prier : le groupe s’y *repose*. La partie, elle, se garde toute seule.']
+          ['nar', 'La vieille mosquée, au bout de la ruelle abandonnée : là où le Flux n’entre pas.'],
+          ['nar', 'Devant la niche, un tapis tourné vers La Mecque. Ici comme dans chaque mosquée de la Chaîne, on peut prier : le groupe s’y *repose*. La partie, elle, se garde toute seule.']
         ] },
         { text: 'Parler à Maître Yûnus', talk: 'yunus_n', then: [
           ['say', 'yunus_n', 'Te voilà, Idris. Assieds-toi. Ce soir, je te remets ce qu’on m’a remis.'],
@@ -1028,45 +1066,26 @@ ISNAD.registerSaga({
     /* ---------- 2.23 (D212) : les quartiers de la Cité, où Idris remonte à tout moment, à côté de Maître Yûnus ---------- */
     {
       id: 'c_quartiers', visite: 'quartiers', title: 'Les quartiers de la Cité', sub: 'An 1507 de l’Hégire · Cité-Miroir', minLvl: 1, last: true,
-      map: 'quartiers', start: 'parvis', party: ['idris'],
+      // 2.47 (D238) : le refuge commence dans la vieille mosquée, à côté de Maître Yûnus ; la ruelle mène aux quartiers
+      map: 'archives', start: 'entree', party: ['idris'],
       npcs: [
-        { id: 'yunus_c', name: 'Maître Yûnus', hero: 'yunus', at: ['parvis', 2, 0], face: 'left', talk: [['say', 'yunus_c', 'Je suis là, Idris.']] },
-        // les passants : chacun seul, au milieu de ce qu'on fait ici (aucun ne voit les chimères)
-        { id: 'q_joueur', name: 'Un joueur', at: ['jeux', -3, 0], face: 'up', pose: 'triste', look: { kind: 'citadin', robe: '#3a5a8a', head: '#24385a', cloak: '#4a6a9a' }, talk: [['say', 'q_joueur', 'J’ai battu mon record. Il n’y avait personne pour le voir.']] },
-        { id: 'q_joueuse', name: 'Une joueuse', at: ['jeux', 3, 0], face: 'up', pose: 'accable', look: { kind: 'femme', robe: '#7a4862', head: '#4a2c40', cloak: '#8a5a74' }, talk: [['say', 'q_joueuse', 'Je joue avec des milliers de gens, tous les soirs. Je ne connais le nom d’aucun.']] },
-        { id: 'q_cliente', name: 'Une cliente', at: ['galerie', -5, 0], pose: 'triste', look: { kind: 'femme', robe: '#c8a060', head: '#7a5a30', cloak: '#d8b070' }, talk: [['say', 'q_cliente', 'J’ai acheté ce que l’écran m’a montré ce matin.'], ['say', 'q_cliente', 'Ce soir, il m’en montre un autre.']] },
-        { id: 'q_vitrine', name: 'Un passant', at: ['galerie', 5, 1], face: 'up', pose: 'triste', look: { kind: 'citadin', robe: '#7a5a3a', head: '#4a3420', cloak: '#8a6a4a' }, talk: [['say', 'q_vitrine', 'Les vitrines restent allumées toute la nuit. On dirait qu’elles attendent quelqu’un.']] },
-        { id: 'q_ancien', name: 'Un vieil homme', at: ['ecran', -5, 4], face: 'up', pose: 'assis', look: { kind: 'ancien', robe: '#4a4038', head: '#bdb6a8' }, talk: [['say', 'q_ancien', 'Autrefois, sur cette place, on se saluait.'], ['say', 'q_ancien', 'Maintenant, on regarde tous l’écran, et personne ne se voit.']] },
-        { id: 'q_passante', name: 'Une passante', at: ['ecran', 4, 5], pose: 'triste', look: { kind: 'femme', robe: '#6a5a8a', head: '#3e3458', cloak: '#7a6a9a' }, talk: [['say', 'q_passante', 'Il y a tant de monde ici, chaque soir. Je ne sais pas à qui parler.']] },
-        { id: 'q_employe', name: 'Un employé', at: ['ecran', 7, 3], face: 'up', pose: 'assis', look: { kind: 'citadin', robe: '#7a7a6a', head: '#4a4a3e', cloak: '#8a8a7a' }, talk: [['say', 'q_employe', 'Je viens m’asseoir ici après le travail. L’écran parle, au moins.']] },
-        { id: 'q_enfant', name: 'Un enfant', at: ['parc', 5, 4], face: 'up', pose: 'triste', look: { kind: 'enfant', robe: '#3d6a5a', head: '#28403a' }, talk: [['say', 'q_enfant', 'Le manège tourne tout seul. Je n’ai personne à qui faire signe.']] },
-        { id: 'q_promeneuse', name: 'Une promeneuse', at: ['parc', -2, -2], pose: 'triste', look: { kind: 'femme', robe: '#8a6a4a', head: '#5a4230', cloak: '#9a7a5a' }, talk: [['say', 'q_promeneuse', 'Je viens ici tous les soirs. Personne ne m’a jamais demandé pourquoi.']] },
-        { id: 'q_roue', name: 'Un passant', at: ['roue', 3, 0], face: 'up', pose: 'triste', look: { kind: 'citadin', robe: '#8a7a2a', head: '#5a4e18', cloak: '#9a8a3a' }, talk: [['say', 'q_roue', 'La grande roue tourne à vide depuis des mois.'], ['say', 'q_roue', 'Monter seul, à quoi bon ?']] },
-        { id: 'q_spectateur', name: 'Un spectateur', at: ['tribune', -5, 0], pose: 'assis', look: { kind: 'citadin', robe: '#9a4a3a', head: '#6a3024', cloak: '#aa5a4a' }, talk: [['say', 'q_spectateur', 'Ils vont très vite. Je ne sais même pas qui gagne.'], ['say', 'q_spectateur', 'Je viens pour le bruit.']] },
-        { id: 'q_spectatrice', name: 'Une spectatrice', at: ['tribune', 5, 1], pose: 'assis', look: { kind: 'femme', robe: '#3a7a7a', head: '#245050', cloak: '#4a8a8a' }, talk: [['say', 'q_spectatrice', 'Tout le monde regarde la même course. Chacun la regarde seul.']] },
-        { id: 'q_mecano', name: 'Un mécanicien', at: ['circuit', 0, -1], pose: 'accable', look: { kind: 'citadin', robe: '#3a5a3a', head: '#243a24', manteau: 'aucun' }, talk: [['say', 'q_mecano', 'Je prépare des voitures toute la journée. Personne ne me demande comment je vais.']] },
-        { id: 'q_voisine', name: 'Une passante', at: ['parvis', -6, 6], pose: 'triste', look: { kind: 'femme', robe: '#7a4a5a', head: '#4e2e3a', cloak: '#8a5a6a' }, talk: [['say', 'q_voisine', 'Mon téléphone sait tout de moi. Mes voisins ne savent pas mon nom.']] },
-        { id: 'q_livreur', name: 'Un livreur', at: ['parvis', 6, 4], pose: 'accable', look: { kind: 'citadin', robe: '#c86a2a', head: '#7a3e18', cloak: '#d87a3a', coiffe: 'calotte' }, talk: [['say', 'q_livreur', 'Je livre des paquets à des portes qui ne s’ouvrent pas.'], ['say', 'q_livreur', 'On me laisse un pourboire, jamais un mot.']] },
-        // 2.27 (D216) — le circuit : Sâlim (il paraît quand il arrive en moto, circuit.js), l'organisateur et ses cinq circuits ;
-        // dans la tribune, des parieurs, chacun seul devant son écran (aucun ne propose rien à Idris ; Le Pari rôde parmi eux)
-        { id: 'salim_q', name: 'Sâlim', hero: 'salim', at: ['circuit', -1, -2], hidden: true, talk: [['say', 'salim_q', 'La moto est là.']] },
-        { id: 'q_organisateur', name: 'L’organisateur', at: ['circuit', 2, -2], face: 'left', look: { kind: 'citadin', robe: '#3a7aa8', head: '#24506e', cloak: '#4a8ab8' }, talk: [['say', 'q_organisateur', 'La piste est libre.']] },
-        { id: 'q_parieur', name: 'Un parieur', at: ['tribune', -3, 1], face: 'up', pose: 'assis', look: { kind: 'citadin', robe: '#9a6a2a', head: '#5e4018', cloak: '#aa7a3a' }, talk: [['say', 'q_parieur', 'Je ne regarde pas la course. Je regarde les chiffres sur mon écran.'], ['say', 'q_parieur', 'Ils montent, ils descendent. Moi aussi.']] },
-        { id: 'q_parieuse', name: 'Une parieuse', at: ['tribune', 2, 0], face: 'up', pose: 'triste', look: { kind: 'femme', robe: '#5a6a4a', head: '#3a4630', cloak: '#6a7a5a' }, talk: [['say', 'q_parieuse', 'Je me dis que la prochaine fois, je rattraperai tout. Je me le dis chaque soir.']] },
-        { id: 'q_parieur2', name: 'Un parieur', at: ['tribune', 7, 1], face: 'up', pose: 'accable', look: { kind: 'citadin', robe: '#8a3a5a', head: '#5a2238', cloak: '#9a4a6a' }, talk: [['say', 'q_parieur2', 'Ce que j’ai perdu, je n’ose le dire à personne. Alors je reviens, seul.']] }
+        { id: 'yunus_c', name: 'Maître Yûnus', hero: 'yunus', at: ['entree', -3, -1], face: 'right', talk: [['say', 'yunus_c', 'Je suis là, Idris.']] },
+        ...PASSANTS_Q
       ],
       // 2.28 (D218) : arrivé à pied par la rue (`_2084_rue`, posé par le moteur : cite.js), Idris entre par l'entrée de la rue ;
-      // Maître Yûnus n'est pas monté avec lui
+      // 2.47 (D238) : sorti de la mosquée pendant un retour (`_2084_porte`), il est dans la ruelle ; sinon, il est dans la mosquée,
+      // à côté de Maître Yûnus
       intro: [
         ['if', '_2084_rue', [['nar', 'Idris traverse la rue. De l’autre côté de l’avenue s’ouvrent les quartiers de la Cité-Miroir : des vitrines, des jeux, des manèges, et chacun seul.'], ['codex', 'quartiers']],
-          [['title', 'Les quartiers de la Cité', 'An 1507 de l’Hégire · Cité-Miroir'],
-            ['if', '_2084_cite', [['nar', 'L’ascenseur remonte des Archives basses. Maître Yûnus attend sur le parvis.']],
-              [['nar', 'L’ascenseur remonte des Archives basses jusqu’aux quartiers de la Cité-Miroir. Maître Yûnus est monté avec Idris.'],
-                ['nar', 'Des voitures qui brillent, des jeux partout, des vitrines, un écran grand comme une façade. Et, au milieu de tout cela, chacun seul.'],
-                ['codex', 'quartiers']]]]]
+          [['if', '_2084_porte', [['nar', 'Idris sort dans la ruelle. Derrière lui, la porte de la vieille mosquée reste entrouverte.']],
+            [['title', 'La vieille mosquée', 'An 1507 de l’Hégire · Cité-Miroir'],
+              ['if', '_2084_cite', [['nar', 'Maître Yûnus est à sa place, près de ses livres. Dehors, la ruelle mène aux quartiers.']],
+                [['nar', 'La vieille mosquée, au bout de la ruelle abandonnée. Maître Yûnus est là, près de ses livres.'],
+                  ['nar', 'Dehors, la ruelle mène aux quartiers de la Cité-Miroir : des voitures qui brillent, des jeux partout, des vitrines, un écran grand comme une façade. Et, au milieu de tout cela, chacun seul.'],
+                  ['codex', 'quartiers']]]]]]]
       ],
       objectives: [
-        { text: 'Te promener dans les quartiers · Maître Yûnus attend au parvis', talk: 'yunus_c', then: [['say', 'yunus_c', 'Va, Idris. La Chaîne t’attend.']] }
+        { text: 'Parler à Maître Yûnus, près de ses livres · la ruelle mène aux quartiers', talk: 'yunus_c', then: [['say', 'yunus_c', 'Va, Idris. La Chaîne t’attend.']] }
       ]
     }
   ]

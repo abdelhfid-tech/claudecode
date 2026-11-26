@@ -331,8 +331,14 @@
     // 2.23 (D212) — les quartiers de la Cité-Miroir : la même ville de verre, ses voitures, ses activités, et ceux qui s'y
     // promènent seuls ; le refuge d'Idris en 2084 (frame.js, visite « quartiers »), à côté de Maître Yûnus. 2.28 (D218) :
     // « traverse », l'entrée de la rue, au nord-ouest, par où l'on arrive à pied de la Cité-Miroir et par où l'on y retourne
-    quartiers: { nom: 'Quartiers de la Cité', theme: 'cyber', dehors: false, piste: 'cite',   spots: ['parvis', 'priere', 'galerie', 'jeux', 'ecran', 'circuit', 'tribune', 'parc', 'roue', 'traverse'] },
-    archives:  { nom: 'Archives basses', theme: 'cyber',  dehors: false, piste: 'chaine',    spots: ['entree', 'rayonnages', 'bureau', 'chaine', 'priere'] },
+    // 2.47 (D238) : « ruelle », au bord est, d'où part la ruelle abandonnée qui mène à la vieille mosquée
+    quartiers: { nom: 'Quartiers de la Cité', theme: 'cyber', dehors: false, piste: 'cite',   spots: ['parvis', 'priere', 'galerie', 'jeux', 'ecran', 'circuit', 'tribune', 'parc', 'roue', 'traverse', 'ruelle'] },
+    // 2.47 (D238 ; le décideur, 26 novembre : « ruelle | quartiers du centre ville sans mosquée | autre ruelle sombre abandonnée
+    // qui mène à une mosquée finalement où se trouve le maître et les sagas » ; « Plus d'ascenseur ») — la ruelle abandonnée,
+    // entre les quartiers (à l'ouest) et la porte de la vieille mosquée (à l'est) ; la vieille mosquée, où sont Maître Yûnus et
+    // la Chaîne : elle prend la place des Archives basses et garde leur identifiant (les parties d'avant s'y chargent)
+    impasse:   { nom: 'Ruelle abandonnée', theme: 'cyber', dehors: false, piste: 'silence',   reserve: true, spots: ['quartiers', 'milieu', 'porte'] },
+    archives:  { nom: 'Vieille mosquée', theme: 'cyber',  dehors: false, piste: 'chaine',    spots: ['entree', 'rayonnages', 'bureau', 'chaine', 'priere'] },
     // 2.29 (D220) — la carte du monde : les villes de D.MONDE, chacune un lieu nommé (son identifiant) ; réservée au jeu (un
     // paquet n'y bâtit pas de lieu)
     monde:     { nom: 'Carte du monde',  theme: 'orient', dehors: false, piste: 'desert',    reserve: true, spots: ['medine', 'mecque', 'taif', 'quds', 'damas', 'homs', 'qinnasrin', 'yarmouk', 'hira', 'bassora', 'koufa', 'fustat'] }
@@ -357,7 +363,8 @@
     citadelle: D.lieu('La Citadelle', 'citadelle'),
     cite:      D.lieu('Cité-Miroir', 'cite'),
     quartiers: D.lieu('Les quartiers de la Cité', 'quartiers'),
-    archives:  D.lieu('Archives basses', 'archives'),
+    impasse:   D.lieu('La ruelle abandonnée', 'impasse'),
+    archives:  D.lieu('La vieille mosquée', 'archives'),
     // 2.29 (D220) — la carte du monde, et les villes où l'on passe sans qu'un récit s'y joue (les visites). Médine et Koufa s'y
     // visitent sous la graine de leurs récits (la même ville, case pour case), mais sous un autre identifiant : aucun
     // personnage, aucun objectif d'un chapitre ne s'y trouve. `visite` : une ville de passage — on n'y bâtit pas (build.js), on

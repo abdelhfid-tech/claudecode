@@ -174,6 +174,11 @@
     metal(c, r) { speck(c, r, P.metal, 10); c.fillStyle = '#1a1d28'; c.fillRect(0, 15, 16, 1); c.fillRect(15, 0, 1, 16); R(c, '#454d68', 0, 0, 15, 1); R(c, '#5ad', 2, 2, 1, 1); },
     cwall(c, r) { speck(c, r, CITE.mur, 10); R(c, CITE.murHaut, 0, 0, 16, 1); c.fillStyle = CITE.murJoint; c.fillRect(0, 8, 16, 1); if (r() < 0.6) R(c, r() < 0.5 ? '#39e6ff' : '#ffb347', 3 + Math.floor(r() * 8), 3, 3, 2); },
     croof(c, r) { speck(c, r, CITE.toit, 8); R(c, CITE.toitBord, 0, 14, 16, 2); },
+    // 2.47 (D238) — la ruelle abandonnée : un mur aveugle, une fenêtre murée de planches (aucune lumière derrière) ; la vieille
+    // mosquée : une pierre ancienne, chaude, aux joints marqués (sa porte de bois est peinte sur la carte : maps.js, impasse)
+    cmur(c, r) { speck(c, r, ['#15161f', '#111219', '#1a1b25', '#0e0f16'], 12); R(c, '#22243a', 0, 0, 16, 1); c.fillStyle = '#0a0b10'; c.fillRect(0, 8, 16, 1); if (r() < 0.25) R(c, '#2a2230', 2 + Math.floor(r() * 10), 10, 3, 4); },
+    cmure(c, r) { TILE.cmur(c, r); R(c, '#07080c', 3, 3, 10, 10); c.fillStyle = '#4a3a2a'; c.fillRect(2, 4, 12, 2); c.fillRect(2, 8.5, 12, 2); c.fillStyle = '#2e2418'; c.fillRect(2, 6, 12, 0.5); c.fillRect(2, 10.5, 12, 0.5); R(c, '#5e4a36', 4, 4, 1, 1); R(c, '#5e4a36', 11, 9, 1, 1); },
+    cpierre(c, r) { speck(c, r, ['#5e5146', '#574a40', '#66584c', '#4f4339'], 14); c.fillStyle = '#3a3029'; c.fillRect(0, 7, 16, 1); c.fillRect(0, 15, 16, 1); c.fillRect(r() < 0.5 ? 5 : 10, 0, 1, 7); c.fillRect(r() < 0.5 ? 3 : 12, 8, 1, 7); },
     // Prototype « deux villes » : la Cité-Miroir est un vieux quartier de pierre au pied de tours de verre. Ces cases ne
     // servent qu'à elle ; le gros du décor (façades, tours, quai) est peint d'un tenant par la carte (maps.js, peindreCite).
     // cdalle : de grandes dalles couleur sable, carrées ou fendues en deux, aux joints doux, piquées comme la pierre de corail
@@ -246,7 +251,7 @@
     mont(c, r) { speck(c, r, ['#d2b276', '#c7a66c', '#d9bb80', '#b8986a'], 26); for (let i = 0; i < 5; i++) R(c, '#9c825f', Math.floor(r() * 14), Math.floor(r() * 14), 2, 1); }
   });
   const SANS_GRAIN = new Set(['dark', 'void', 'nfloor', 'nabri', 'npont', 'nbridge', 'neonline', 'mosaic', 'zellij', 'glaze', 'carpet', 'cgrille', 'ctour', 'cride', 'qbat', 'qpiste', 'qsalle', 'qgradin']); // lumière, vide et carreaux vernis restent nets
-  const SOLID = new Set(['mont', 'bwall', 'gwall', 'mihrab', 'water', 'sea', 'wall', 'roof', 'roofedge', 'window', 'thatch', 'rwall', 'rroof', 'rroofedge', 'pwall', 'cwall', 'croof', 'void', 'dark', 'hull', 'ctour', 'cfacade', 'ccrique', 'cgrille', 'cquai', 'ceau', 'qbat', 'qpiste', 'qhaie']);
+  const SOLID = new Set(['mont', 'bwall', 'gwall', 'mihrab', 'water', 'sea', 'wall', 'roof', 'roofedge', 'window', 'thatch', 'rwall', 'rroof', 'rroofedge', 'pwall', 'cwall', 'croof', 'cmur', 'cmure', 'cpierre', 'void', 'dark', 'hull', 'ctour', 'cfacade', 'ccrique', 'cgrille', 'cquai', 'ceau', 'qbat', 'qpiste', 'qhaie']);
   // une eau peinte qui bouge : la case qu'on pose par-dessus, image après image (maps.js, finish)
   G.ANIME = { ccrique: 'cride' };
   G.isSolidTile = n => SOLID.has(n);

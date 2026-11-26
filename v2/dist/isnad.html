@@ -1,4 +1,4 @@
-<title>ISNAD 2.46</title>
+<title>ISNAD 2.47</title>
 <meta name="claude:viewport-fit-sides" content="cover">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Alegreya:ital,wght@0,400;0,700;1,400&family=Amiri&family=Cinzel:wght@500;700&family=Reem+Kufi:wght@500;700&family=Share+Tech+Mono&family=Noto+Naskh+Arabic:wght@400;700&family=Amiri+Quran&display=swap">
 <style>
@@ -985,7 +985,7 @@ body.touch #course .tour, body.touch #course .rangs { font-size: max(.78em, 11px
 <div id="fade"></div>
 <div id="secours" hidden><p data-t>Le jeu semble arrêté.</p><button type="button" data-t>Reprendre au dernier objectif</button><small></small></div>
 <script>
-window.ISNAD_VERSION = "2.46 · 2026-11-26 04:36 UTC · ce03a51+";
+window.ISNAD_VERSION = "2.47 · 2026-11-26 17:42 UTC · d4b0e1e+";
 window.ISNAD_PROMO = {"NOM":"ISNAD","SOUS_TITRE":"Chroniques des Compagnons","ADRESSE":"www.isnad-game.org","RESERVE":"Version bêta. La relecture historique et religieuse par un spécialiste reste à faire."};
 /* ==== src/core/defs.js ==== */
 /* ISNAD — définitions partagées (navigateur + validateur node). Source de vérité du schéma de données. */
@@ -1321,8 +1321,14 @@ window.ISNAD_PROMO = {"NOM":"ISNAD","SOUS_TITRE":"Chroniques des Compagnons","AD
     // 2.23 (D212) — les quartiers de la Cité-Miroir : la même ville de verre, ses voitures, ses activités, et ceux qui s'y
     // promènent seuls ; le refuge d'Idris en 2084 (frame.js, visite « quartiers »), à côté de Maître Yûnus. 2.28 (D218) :
     // « traverse », l'entrée de la rue, au nord-ouest, par où l'on arrive à pied de la Cité-Miroir et par où l'on y retourne
-    quartiers: { nom: 'Quartiers de la Cité', theme: 'cyber', dehors: false, piste: 'cite',   spots: ['parvis', 'priere', 'galerie', 'jeux', 'ecran', 'circuit', 'tribune', 'parc', 'roue', 'traverse'] },
-    archives:  { nom: 'Archives basses', theme: 'cyber',  dehors: false, piste: 'chaine',    spots: ['entree', 'rayonnages', 'bureau', 'chaine', 'priere'] },
+    // 2.47 (D238) : « ruelle », au bord est, d'où part la ruelle abandonnée qui mène à la vieille mosquée
+    quartiers: { nom: 'Quartiers de la Cité', theme: 'cyber', dehors: false, piste: 'cite',   spots: ['parvis', 'priere', 'galerie', 'jeux', 'ecran', 'circuit', 'tribune', 'parc', 'roue', 'traverse', 'ruelle'] },
+    // 2.47 (D238 ; le décideur, 26 novembre : « ruelle | quartiers du centre ville sans mosquée | autre ruelle sombre abandonnée
+    // qui mène à une mosquée finalement où se trouve le maître et les sagas » ; « Plus d'ascenseur ») — la ruelle abandonnée,
+    // entre les quartiers (à l'ouest) et la porte de la vieille mosquée (à l'est) ; la vieille mosquée, où sont Maître Yûnus et
+    // la Chaîne : elle prend la place des Archives basses et garde leur identifiant (les parties d'avant s'y chargent)
+    impasse:   { nom: 'Ruelle abandonnée', theme: 'cyber', dehors: false, piste: 'silence',   reserve: true, spots: ['quartiers', 'milieu', 'porte'] },
+    archives:  { nom: 'Vieille mosquée', theme: 'cyber',  dehors: false, piste: 'chaine',    spots: ['entree', 'rayonnages', 'bureau', 'chaine', 'priere'] },
     // 2.29 (D220) — la carte du monde : les villes de D.MONDE, chacune un lieu nommé (son identifiant) ; réservée au jeu (un
     // paquet n'y bâtit pas de lieu)
     monde:     { nom: 'Carte du monde',  theme: 'orient', dehors: false, piste: 'desert',    reserve: true, spots: ['medine', 'mecque', 'taif', 'quds', 'damas', 'homs', 'qinnasrin', 'yarmouk', 'hira', 'bassora', 'koufa', 'fustat'] }
@@ -1347,7 +1353,8 @@ window.ISNAD_PROMO = {"NOM":"ISNAD","SOUS_TITRE":"Chroniques des Compagnons","AD
     citadelle: D.lieu('La Citadelle', 'citadelle'),
     cite:      D.lieu('Cité-Miroir', 'cite'),
     quartiers: D.lieu('Les quartiers de la Cité', 'quartiers'),
-    archives:  D.lieu('Archives basses', 'archives'),
+    impasse:   D.lieu('La ruelle abandonnée', 'impasse'),
+    archives:  D.lieu('La vieille mosquée', 'archives'),
     // 2.29 (D220) — la carte du monde, et les villes où l'on passe sans qu'un récit s'y joue (les visites). Médine et Koufa s'y
     // visitent sous la graine de leurs récits (la même ville, case pour case), mais sous un autre identifiant : aucun
     // personnage, aucun objectif d'un chapitre ne s'y trouve. `visite` : une ville de passage — on n'y bâtit pas (build.js), on
@@ -2371,7 +2378,7 @@ window.ISNAD_PROMO = {"NOM":"ISNAD","SOUS_TITRE":"Chroniques des Compagnons","AD
         if (c.hajj && !s.veillees) E.push(`${w}: le pèlerinage n'est proposé que dans la fiction des veillées`);
         // 2.x : ce qui se joue au retour en 2084 (« retour: n ») et une visite ouverte depuis la Chaîne (« visite ») — l'histoire-cadre seulement
         if (c.retour !== undefined && !(Number.isInteger(c.retour) && c.retour >= 1 && s.frame && !s.veillees && c.last === true && !c.after)) E.push(`${w}: « retour » est un entier ≥ 1, sur un chapitre « last » de l'histoire-cadre, sans « after »`);
-        if (c.visite !== undefined && !(typeof c.visite === 'string' && c.visite === c.map && s.frame && !s.veillees && c.last === true && !c.after && c.retour === undefined)) E.push(`${w}: « visite » nomme le lieu du chapitre (sa carte), sur un chapitre « last » de l'histoire-cadre, sans « after » ni « retour »`);
+        if (c.visite !== undefined && !(typeof c.visite === 'string' && (c.visite === c.map || (c.npcs || []).some(n => n && n.map === c.visite)) && s.frame && !s.veillees && c.last === true && !c.after && c.retour === undefined)) E.push(`${w}: « visite » nomme un lieu du chapitre (sa carte, ou celle où il pose des personnages), sur un chapitre « last » de l'histoire-cadre, sans « after » ni « retour »`);
         // la bataille déclarée : les rangs que la mission aligne, les ordres qu'elle permet. Aucun effectif (exigence 19).
         if (c.bataille !== undefined) { const Bt = c.bataille || {}, wb = `${w}.bataille`;
           if (!Array.isArray(Bt.rangs) || Bt.rangs.length > 4) E.push(`${wb}: « rangs » attend un tableau de 0 à 4 rangs`);
@@ -4347,6 +4354,11 @@ window.ISNAD_PROMO = {"NOM":"ISNAD","SOUS_TITRE":"Chroniques des Compagnons","AD
     metal(c, r) { speck(c, r, P.metal, 10); c.fillStyle = '#1a1d28'; c.fillRect(0, 15, 16, 1); c.fillRect(15, 0, 1, 16); R(c, '#454d68', 0, 0, 15, 1); R(c, '#5ad', 2, 2, 1, 1); },
     cwall(c, r) { speck(c, r, CITE.mur, 10); R(c, CITE.murHaut, 0, 0, 16, 1); c.fillStyle = CITE.murJoint; c.fillRect(0, 8, 16, 1); if (r() < 0.6) R(c, r() < 0.5 ? '#39e6ff' : '#ffb347', 3 + Math.floor(r() * 8), 3, 3, 2); },
     croof(c, r) { speck(c, r, CITE.toit, 8); R(c, CITE.toitBord, 0, 14, 16, 2); },
+    // 2.47 (D238) — la ruelle abandonnée : un mur aveugle, une fenêtre murée de planches (aucune lumière derrière) ; la vieille
+    // mosquée : une pierre ancienne, chaude, aux joints marqués (sa porte de bois est peinte sur la carte : maps.js, impasse)
+    cmur(c, r) { speck(c, r, ['#15161f', '#111219', '#1a1b25', '#0e0f16'], 12); R(c, '#22243a', 0, 0, 16, 1); c.fillStyle = '#0a0b10'; c.fillRect(0, 8, 16, 1); if (r() < 0.25) R(c, '#2a2230', 2 + Math.floor(r() * 10), 10, 3, 4); },
+    cmure(c, r) { TILE.cmur(c, r); R(c, '#07080c', 3, 3, 10, 10); c.fillStyle = '#4a3a2a'; c.fillRect(2, 4, 12, 2); c.fillRect(2, 8.5, 12, 2); c.fillStyle = '#2e2418'; c.fillRect(2, 6, 12, 0.5); c.fillRect(2, 10.5, 12, 0.5); R(c, '#5e4a36', 4, 4, 1, 1); R(c, '#5e4a36', 11, 9, 1, 1); },
+    cpierre(c, r) { speck(c, r, ['#5e5146', '#574a40', '#66584c', '#4f4339'], 14); c.fillStyle = '#3a3029'; c.fillRect(0, 7, 16, 1); c.fillRect(0, 15, 16, 1); c.fillRect(r() < 0.5 ? 5 : 10, 0, 1, 7); c.fillRect(r() < 0.5 ? 3 : 12, 8, 1, 7); },
     // Prototype « deux villes » : la Cité-Miroir est un vieux quartier de pierre au pied de tours de verre. Ces cases ne
     // servent qu'à elle ; le gros du décor (façades, tours, quai) est peint d'un tenant par la carte (maps.js, peindreCite).
     // cdalle : de grandes dalles couleur sable, carrées ou fendues en deux, aux joints doux, piquées comme la pierre de corail
@@ -4419,7 +4431,7 @@ window.ISNAD_PROMO = {"NOM":"ISNAD","SOUS_TITRE":"Chroniques des Compagnons","AD
     mont(c, r) { speck(c, r, ['#d2b276', '#c7a66c', '#d9bb80', '#b8986a'], 26); for (let i = 0; i < 5; i++) R(c, '#9c825f', Math.floor(r() * 14), Math.floor(r() * 14), 2, 1); }
   });
   const SANS_GRAIN = new Set(['dark', 'void', 'nfloor', 'nabri', 'npont', 'nbridge', 'neonline', 'mosaic', 'zellij', 'glaze', 'carpet', 'cgrille', 'ctour', 'cride', 'qbat', 'qpiste', 'qsalle', 'qgradin']); // lumière, vide et carreaux vernis restent nets
-  const SOLID = new Set(['mont', 'bwall', 'gwall', 'mihrab', 'water', 'sea', 'wall', 'roof', 'roofedge', 'window', 'thatch', 'rwall', 'rroof', 'rroofedge', 'pwall', 'cwall', 'croof', 'void', 'dark', 'hull', 'ctour', 'cfacade', 'ccrique', 'cgrille', 'cquai', 'ceau', 'qbat', 'qpiste', 'qhaie']);
+  const SOLID = new Set(['mont', 'bwall', 'gwall', 'mihrab', 'water', 'sea', 'wall', 'roof', 'roofedge', 'window', 'thatch', 'rwall', 'rroof', 'rroofedge', 'pwall', 'cwall', 'croof', 'cmur', 'cmure', 'cpierre', 'void', 'dark', 'hull', 'ctour', 'cfacade', 'ccrique', 'cgrille', 'cquai', 'ceau', 'qbat', 'qpiste', 'qhaie']);
   // une eau peinte qui bouge : la case qu'on pose par-dessus, image après image (maps.js, finish)
   G.ANIME = { ccrique: 'cride' };
   G.isSolidTile = n => SOLID.has(n);
@@ -7376,10 +7388,10 @@ window.ISNAD_PROMO = {"NOM":"ISNAD","SOUS_TITRE":"Chroniques des Compagnons","AD
     rect('#2a1a30', 392, 139, 184, 5); rect('#a8874e', 392, 139, 184, 0.75);
     [[397, 24], [553, 20]].forEach(([x, w]) => { rect('#2a1a30', x - 2, 116, w + 4, 28); rect('#a8874e', x - 2, 116, w + 4, 0.75); c.fillStyle = grad(0, 118, 0, 144, [[0, '#ffdca0'], [1, '#d07a44']]); c.fillRect(x, 118, w, 26);
       for (let k = x; k <= x + w; k += w / 3) rect('#8a6a40', k, 118, 0.75, 26); rect('rgba(60,30,40,.35)', x, 130, w, 0.5); lumiere(x + w / 2, 134, 40, '#ffc880', 0.05); });
-    // l'ascenseur : une grille de bronze au pied de la tour, au bout de la rue
-    rect('#2a1a30', 884, 114, 40, 30); rect('#9a7c4c', 886, 116, 36, 28); rect('#1e1424', 889, 119, 30, 25);
-    c.fillStyle = grad(0, 120, 0, 128, [[0, '#ffe4b0'], [1, '#c87a3e']]); c.fillRect(891, 120, 26, 7); rect('#9a7c4c', 889, 127.5, 30, 0.5);
-    c.drawImage(G.tile('cgrille', 0, 0), 896, 128); rect('#fff0c0', 913.5, 133, 1.5, 1.5);
+    // au pied de la tour, au bout de la rue : une porte de bronze, close (2.47, D238 : il n'y a plus d'ascenseur)
+    rect('#2a1a30', 884, 114, 40, 30); rect('#9a7c4c', 886, 116, 36, 28); rect('#3a2a22', 889, 119, 30, 25);
+    rect('#6a5236', 891, 121, 12, 21); rect('#6a5236', 905, 121, 12, 21); rect('#2a1a18', 903.5, 119, 1, 25);
+    [[893, 123], [907, 123], [893, 132], [907, 132]].forEach(([x, y]) => rect('#8a6c44', x, y, 8, 7)); rect('#c9a13f', 901, 131, 1, 2); rect('#c9a13f', 906, 131, 1, 2);
     /* --- le vieux quartier : maisons de pierre de corail, tours à vent, claustras, portes de bois --- */
     const TONS = ['#786352', '#725e4d', '#7e6957', '#6e5a49']; // à contre-jour : le couchant est derrière les tours
     const claustra = (x, y, w, h, allume) => { rect('#8a7056', x - 1, y - 1, w + 2, h + 2); rect(allume ? '#ffc878' : '#3a2a26', x, y, w, h);
@@ -7516,6 +7528,8 @@ window.ISNAD_PROMO = {"NOM":"ISNAD","SOUS_TITRE":"Chroniques des Compagnons","AD
     b.fill(0, 0, 64, 8, 'qbat', true); b.fill(0, 0, 1, 46, 'qbat', true); b.fill(63, 0, 1, 46, 'qbat', true); b.fill(0, 45, 64, 1, 'qhaie', true);
     // 2.28 (D218) : au nord-ouest, le trottoir continue vers la rue de la Cité-Miroir — l'entrée de la rue (passages.js)
     b.fill(0, 8, 1, 3, 'cdalle', false);
+    // 2.47 (D238) : au bord est, l'entrée de la ruelle abandonnée, qui mène à la vieille mosquée (passages.js)
+    b.fill(63, 20, 1, 3, 'cdalle', false);
     // la galerie marchande : un passage couvert, ses vitrines au fond ; la salle de jeux, ouverte sur la rue
     b.fill(8, 6, 20, 2, 'qparvis', false); b.fill(38, 5, 12, 3, 'qsalle', false);
     // les avenues : une boucle à sens unique (vers l'ouest au nord, vers l'est au sud)
@@ -7530,7 +7544,7 @@ window.ISNAD_PROMO = {"NOM":"ISNAD","SOUS_TITRE":"Chroniques des Compagnons","AD
     b.fill(31, 34, 32, 11, 'qpiste', true); b.fill(35, 34, 20, 2, 'qgradin', false); b.fill(32, 34, 3, 2, 'cdalle', false); b.fill(29, 34, 2, 11, 'cdalle', false);
     // les lieux nommés
     b.spot('parvis', 12, 19); b.spot('galerie', 17, 7); b.spot('jeux', 44, 7); b.spot('ecran', 32, 21); b.spot('priere', 51, 24);
-    b.spot('parc', 15, 37); b.spot('roue', 8, 43); b.spot('circuit', 33, 35); b.spot('tribune', 45, 34); b.spot('traverse', 2, 9);
+    b.spot('parc', 15, 37); b.spot('roue', 8, 43); b.spot('circuit', 33, 35); b.spot('tribune', 45, 34); b.spot('traverse', 2, 9); b.spot('ruelle', 61, 21);
     // les lampadaires (la lumière tombe à leur pied)
     const lampe = (x, y, col) => { b.obj('qlampe', x, y); b.light(x, y - 1, v15 ? 64 : 54, col, 0.08); (b.lampes || (b.lampes = [])).push([x * T2 + 11, y * T2 + 15, col]); };
     [6, 13, 20, 27, 34, 41, 48, 55].forEach((x, i) => lampe(x, 10, i % 3 ? '#ffd9a0' : '#ffc0e0'));
@@ -7541,8 +7555,8 @@ window.ISNAD_PROMO = {"NOM":"ISNAD","SOUS_TITRE":"Chroniques des Compagnons","AD
     // la salle de jeux : une rangée de bornes contre le mur du fond, chacune sa lueur
     [['#ff4fd8', '#39e6ff'], ['#ffd84a', '#ff5a3a'], ['#39e6ff', '#7dffb0'], ['#c49bff', '#ff4fd8'], ['#7dffb0', '#ffd84a'], ['#ff5a3a', '#39e6ff']].forEach(([col, alt], i) => { const x = 39 + i * 2; b.obj('qborne', x, 5, { color: col, alt }); b.light(x, 5, 30, col, 0.15); });
     b.light(44, 6, 90, '#7a5cff', 0.1);
-    // le parvis : l'ascenseur qui remonte des Archives basses, des dattiers dans leurs vasques, deux bancs
-    b.obj('qkiosque', 12, 16).x = 13 * T2; b.light(12, 15, 60, '#ffd8a0', 0.08);
+    // le parvis : une fontaine (2.47, D238 : il n'y a plus d'ascenseur), des dattiers dans leurs vasques, deux bancs
+    b.obj('fountain', 12, 16).x = 13 * T2; b.light(12, 15, 60, '#ffd8a0', 0.08);
     [[6, 15], [19, 15], [6, 27], [19, 27]].forEach(([x, y]) => { b.obj('cpalmier', x, y); b.light(x, y, 40, '#ffb46a', 0.08); });
     b.obj('qbanc', 9, 24); b.obj('qbanc', 16, 24);
     // la place du grand écran : l'écran sur la façade du pavillon, ses bancs
@@ -7619,7 +7633,7 @@ window.ISNAD_PROMO = {"NOM":"ISNAD","SOUS_TITRE":"Chroniques des Compagnons","AD
     // le sens de la boucle : des flèches au sol, simples traits
     const fleche = (x, y, dx, dy) => { c.fillStyle = 'rgba(236,226,210,.3)'; c.beginPath(); c.moveTo(x + dx * 6, y + dy * 6); c.lineTo(x - dy * 4 - dx * 2, y + dx * 4 - dy * 2); c.lineTo(x + dy * 4 - dx * 2, y - dx * 4 - dy * 2); c.closePath(); c.fill(); };
     [[400, 192, -1, 0], [800, 192, -1, 0], [300, 496, 1, 0], [720, 496, 1, 0], [48, 260, 0, 1], [976, 420, 0, -1]].forEach(a => fleche(...a));
-    /* --- le parvis : un cercle de laiton incrusté autour de l'ascenseur --- */
+    /* --- le parvis : un cercle de laiton incrusté autour de la fontaine --- */
     c.save(); c.strokeStyle = 'rgba(236,200,130,.28)'; c.lineWidth = hd1 ? 1 : 0.5; [40, 64, 88].forEach(rr => { c.beginPath(); c.ellipse(208, 290, rr, rr * 0.62, 0, 0, 6.3); c.stroke(); }); c.restore();
     rect('rgba(110,80,60,.3)', 80, 222, 256, 1.5);
     /* --- le pavillon du grand écran : du verre, des étages éclairés, deux portes au pied --- */
@@ -7668,17 +7682,56 @@ window.ISNAD_PROMO = {"NOM":"ISNAD","SOUS_TITRE":"Chroniques des Compagnons","AD
   }
 
   /* ---------- Archives basses ---------- */
+  /* ---------- 2.47 (D238) — la vieille mosquée (elle prend la place des Archives basses et garde leur identifiant) ----------
+     Le décideur, 26 novembre : « une mosquée finalement où se trouve le maître et les sagas ». Au bout de la ruelle
+     abandonnée : une salle de prière sobre, ses tapis, deux rangées de colonnes, une niche nue dans le mur du fond, des
+     lanternes ; le coin de Maître Yûnus, sa table basse et ses livres (« bureau », « rayonnages ») ; la Chaîne des sagas,
+     à l'est, dans sa pénombre (« chaine ») ; la place de la prière devant la niche (« priere » : la porte de la noosphère,
+     valeurs.js) ; la porte, en bas (« entree »), par où l'on sort dans la ruelle (passages.js). Ni minaret, ni coupole, ni
+     inscription, ni Nom écrit, ni image d'un lieu saint (comme la petite mosquée de quartier de D226). Les lieux nommés et
+     les cases que les récits emploient (« bureau » + 1, « rayonnages » + 1, « chaine » − 2, « entree » − 1) restent libres. */
   function archives(id, o, L, graine) {
-    const b = new MB(id, 34, 24, 'metal', o, graine);
-    b.ring(0, 0, 34, 24, 'cwall'); b.fill(1, 1, 32, 2, 'cwall', true); b.set(16, 23, 'metal', false); b.set(17, 23, 'metal', false);
-    for (let x = 4; x < 16; x += 4) { b.obj('shelf', x, 5); b.obj('shelf', x, 10); }
-    for (let x = 5; x < 15; x += 3) b.obj('rack', x, 17);
-    b.obj('desk', 8, 20); b.spot('bureau', 9, 21);
-    b.fill(22, 6, 9, 9, 'nfloor', false); b.obj('isnad', 26, 9); b.light(26, 9, 110, '#ffd27a', 0.2); b.spot('chaine', 26, 12);
-    b.obj('rack', 30, 4); b.obj('rack', 21, 4); b.obj('rack', 30, 19); b.obj('lamp', 20, 12); b.light(20, 11, 60, '#39e6ff', 0.1); b.light(8, 8, 80, '#ffb45a', 0.1);
-    b.spot('entree', 17, 21); b.spot('rayonnages', 14, 13); b.obj('mat', 27, 19); b.spot('priere', 27, 20); b.light(27, 19, 50, '#fff0c0', 0.05);
-    return b.finish({ time: 'archives', ambient: '#6a66a0', grade: ['#ffb45a', 0.14], particles: 'dust', rate: 5, bg: 'cite', rays: { a: 0.05, color: '#ffe0a0' }, lightA: 1, bloom: 0.26, music: 'chaine' });
+    const b = new MB(id, 34, 24, 'carpet', o, graine);
+    b.ring(0, 0, 34, 24, 'cpierre'); b.fill(1, 1, 32, 2, 'cpierre', true);
+    b.set(17, 2, 'mihrab', true);                                                    // la niche, nue
+    b.fill(1, 20, 32, 3, 'zellij', false); b.set(16, 23, 'zellij', false); b.set(17, 23, 'zellij', false);   // le seuil, et la porte
+    [5, 10, 24, 29].forEach(x => { b.obj('column', x, 8); b.obj('column', x, 14); });   // deux rangées de colonnes, l'allée du milieu libre
+    b.obj('mat', 17, 5); b.spot('priere', 17, 5); b.light(17, 4, 70, '#ffe8b8', 0.04);
+    [[7, 6], [27, 6], [7, 12], [27, 12]].forEach(([x, y]) => { b.obj('lantern', x, y); b.light(x, y - 1, 56, '#ffd27a', 0.12); });
+    // le coin de Maître Yûnus : sa table basse, ses livres
+    b.obj('shelf', 3, 17); b.obj('shelf', 3, 11); b.obj('desk', 8, 20); b.spot('bureau', 9, 21); b.spot('rayonnages', 6, 13); b.light(8, 18, 70, '#ffb45a', 0.1);
+    // la Chaîne des sagas, à l'est, dans sa pénombre
+    b.fill(21, 9, 9, 7, 'nfloor', false); b.obj('isnad', 26, 11); b.light(26, 11, 110, '#ffd27a', 0.2); b.spot('chaine', 26, 14);
+    b.spot('entree', 17, 21); b.light(17, 22, 50, '#fff0c0', 0.05);
+    return b.finish({ time: 'archives', ambient: '#7a6a8a', grade: ['#ffb45a', 0.16], particles: 'dust', rate: 4, bg: 'cite', rays: { a: 0.06, color: '#ffe0a0' }, lightA: 1, bloom: 0.26, music: 'chaine' });
   }
+
+  /* ---------- 2.47 (D238) — la ruelle abandonnée ----------
+     Entre les quartiers (à l'ouest : « quartiers ») et la vieille mosquée (à l'est : « porte ») : un passage étroit entre
+     deux murs aveugles, des fenêtres murées de planches, des néons éteints (sans une lettre), des caisses, des flaques ; un
+     seul lampadaire, qui clignote ; au bout, la façade de pierre et la porte de bois de la mosquée, d'où sort une lumière
+     chaude. Rien n'y rôde (aucun `rues`), personne n'y est posé. */
+  function impasse(id, o, L, graine) {
+    const b = new MB(id, 44, 13, 'asphalt', o, graine);
+    b.fill(0, 0, 40, 5, 'cmur', true); b.fill(0, 9, 40, 4, 'cmur', true);                // les deux murs ; la ruelle, rangs 5 à 8
+    [3, 8, 14, 21, 27, 33].forEach(x => b.set(x, 3, 'cmure', true)); [5, 11, 18, 24, 30, 36].forEach(x => b.set(x, 10, 'cmure', true));
+    b.fill(40, 0, 4, 13, 'cpierre', true);                                               // la façade de la mosquée
+    [[7, 5], [8, 5], [25, 8], [34, 5]].forEach(([x, y]) => b.obj('ccaisse', x, y)); b.obj('sack', 16, 8);
+    [[12, 5, '#3a2c44'], [29, 5, '#2c3a44']].forEach(([x, y, color]) => b.obj('neon', x, y, { color }));   // des enseignes éteintes, sans une lettre
+    b.obj('qlampe', 20, 5); b.light(20, 4, 70, '#9fb8ff', 0.5);                          // le seul lampadaire, qui clignote
+    b.light(38, 6, 80, '#ffd27a', 0.08); b.light(38, 7, 60, '#ffb45a', 0.08);            // la lumière de la mosquée
+    b.spot('quartiers', 1, 7); b.spot('milieu', 20, 7); b.spot('porte', 38, 7);
+    b.peint = c => {   // la porte de bois de la mosquée, en arc, sur la façade (rangs 6 et 7)
+      const rect = aplat(c), x = 40 * T, y = 6 * T;
+      rect('#2a1c12', x + 1, y - 6, 14, 38); c.fillStyle = '#2a1c12'; c.beginPath(); c.arc(x + 8, y - 4, 7, Math.PI, 0); c.fill();
+      rect('#6b4a2a', x + 2.5, y - 3, 11, 34); c.fillStyle = '#6b4a2a'; c.beginPath(); c.arc(x + 8, y - 3, 5.5, Math.PI, 0); c.fill();
+      rect('#4e3420', x + 7.75, y - 8, 0.5, 39); [y + 4, y + 14, y + 24].forEach(yy => rect('#4e3420', x + 2.5, yy, 11, 0.5));
+      rect('#c9a13f', x + 6, y + 13, 1, 1.5); rect('#c9a13f', x + 9, y + 13, 1, 1.5);
+      rect('rgba(255,210,122,.35)', x - 1, y - 6, 1.5, 38);                              // un filet de lumière par l'entrebâillement
+    };
+    return b.finish({ time: 'cite', ambient: '#2a2c48', grade: ['#3a2cff', 0.1], particles: 'brume', rate: 3, bg: 'cite', bloom: 0.2, lightA: 1, music: 'silence' });
+  }
+
 
   /* ---------- 2.29 (D220) — la carte du monde ----------
      D.MONDE, projeté : de la longitude et de la latitude à la case, équirectangulaire, corrigée au parallèle de D.MONDE.
@@ -7800,7 +7853,7 @@ window.ISNAD_PROMO = {"NOM":"ISNAD","SOUS_TITRE":"Chroniques des Compagnons","AD
   }
 
   M.drawRosette = drawRosette;
-  const GEN = { ville, desert, camp, romaine, palais, navire, noos, citadelle, cite, quartiers, archives, monde };
+  const GEN = { ville, desert, camp, romaine, palais, navire, noos, citadelle, cite, quartiers, archives, impasse, monde };
   // Tous les lieux nommés d'une carte se rejoignent-ils à pied ? Même parcours que les tests (cases libres voisines).
   function libre(m, s) {
     for (let rad = 0; rad < 9; rad++) for (let dy = -rad; dy <= rad; dy++) for (let dx = -rad; dx <= rad; dx++) {
@@ -8683,8 +8736,11 @@ window.ISNAD_PROMO = {"NOM":"ISNAD","SOUS_TITRE":"Chroniques des Compagnons","AD
     I.setScene(W);
     W.player.dir = 0; // avant le chargement : les siens sont semés derrière lui (W.resetTrail)
     W.leve = !cp;   // 2.18 : pendant l'ouverture, la vue lève les yeux (W.regard : la Cité-Miroir)
-    W.loadMap(cp ? cp.map : ch.map, cp ? cp.opts : (ch.opts || {}), cp ? cp.pos : (depart || ch.start));
-    if (depart) W.player.dir = 2;
+    // 2.47 (D238) : il n'y a plus d'ascenseur — une partie d'avant laissée en haut (S.flags._ascenseur) reprend dans la mosquée,
+    // là où Idris l'avait quittée ; l'arrivée du refuge peut se faire sur une autre carte (cite.js, C.depart)
+    const asc = cp && S.flags._ascenseur; if (asc) delete S.flags._ascenseur;
+    W.loadMap(asc ? 'archives' : cp ? cp.map : depart ? depart.carte : ch.map, asc ? (asc.opts || {}) : cp ? cp.opts : (ch.opts || {}), asc ? [asc.x, asc.y] : cp ? cp.pos : depart ? depart.lieu : ch.start);
+    if (depart) W.player.dir = depart.dir;
     if (cp) { W.npcs.forEach(n => { const s = cp.npcs && cp.npcs[n.id]; if (s && s.x !== undefined && n.map === W.map.id) { n.x = s.x; n.y = s.y; n.placed = true; n.placedMap = W.map.id; } }); if (W.degager()) W.resetTrail(); }
     W.hud(); $('#hud').hidden = false;
     S.depth++; W.lock = false; // verrouille le déplacement pendant l'ouverture
@@ -14096,7 +14152,8 @@ window.ISNAD_PROMO = {"NOM":"ISNAD","SOUS_TITRE":"Chroniques des Compagnons","AD
    - Le refuge est un chapitre de l'histoire-cadre marqué `visite: 'quartiers'` (frame.js) : il se rejoue, et reste sobre
      (oeuvres.js, O.sobre : aucune œuvre comptée, aucune descente). On y arrive par « Revenir en 2084 » (ui.js, U.partir), une
      fois joués les retours dus (`retour: n`), ou par le bouton « La Cité-Miroir » du pied de la Chaîne, dès le prologue joué.
-     Chaque arrivée est neuve : Idris paraît au parvis, à côté de Maître Yûnus. Le point de reprise du refuge n'est jamais
+     Chaque arrivée est neuve : Idris paraît à côté de Maître Yûnus — depuis la 2.47 (D238), dans la vieille mosquée, au bout de
+     la ruelle abandonnée ; il en sort à pied vers les quartiers (passages.js). Le point de reprise du refuge n'est jamais
      rangé parmi les récits quittés (world.js, W.ranger, W.rangees) : on en sort par Maître Yûnus ou par la halte —
      « Reprendre le récit » (le dernier récit quitté, repris exactement à sa place) ou « La Chaîne ».
    - Ce qui rôde (rodeurs.js, les rues) : les chimères de D.CITE.rodent, qu'Idris est seul à voir. Après chaque combat avec
@@ -14124,6 +14181,8 @@ window.ISNAD_PROMO = {"NOM":"ISNAD","SOUS_TITRE":"Chroniques des Compagnons","AD
   C.reprendreDit = c => { const sg = I.sagas[c.saga], ch = sg && sg.chapters[c.ci]; if (!sg || !ch) return I.t('Reprendre le récit');
     return sg.veillees ? I.t('Reprendre la veillée : {chapitre}', { chapitre: I.esc(ch.title) }) : I.t('Reprendre le récit : {recit} · {chapitre}', { recit: I.esc(sg.frame ? I.perso.dit() : sg.name), chapitre: I.esc(ch.title) }); };
   const yunus = () => W.npcs.find(n => n.hero === 'yunus' && !n.hidden && W.map && n.map === W.map.id && n.placed) || null;
+  // (2.47 : Maître Yûnus reste dans la mosquée ; ailleurs dans le refuge, il est là-bas)
+  const yunusLoin = () => W.npcs.find(n => n.hero === 'yunus' && !n.hidden) || null;
 
   // arriver : un chapitre neuf, au parvis, à côté de Maître Yûnus
   C.arriver = async function () {
@@ -14134,20 +14193,23 @@ window.ISNAD_PROMO = {"NOM":"ISNAD","SOUS_TITRE":"Chroniques des Compagnons","AD
     e.arrivees = (e.arrivees | 0) + 1; I.save.store(); C.journal.push({ quoi: 'arrivee', n: e.arrivees });
     W.roster = {}; W.saga = null; await W.startChapter('idris', ri); return true;
   };
-  /* 2.28 (D218) — arrivé à pied par la rue (passages.js : C.parRue, posé avant C.arriver) : Idris entre par l'entrée de la rue
-     (le lieu « traverse », au nord-ouest), et non au parvis ; Maître Yûnus n'y est pas — il n'est pas monté avec lui (pendant le
-     prologue, Idris ne l'a d'ailleurs pas encore rencontré) : la leçon de l'outil « cite », qu'il dit, attend une arrivée à
-     côté de lui. Le récit d'ouverture le dit (frame.js : `_2084_rue`, posé ici). world.js l'appelle à l'ouverture de tout
-     chapitre, après avoir posé ses personnages ; → le lieu d'arrivée, ou null. */
-  C.parRue = false;
+  /* 2.28 (D218) — arrivé à pied par la rue (passages.js : C.parRue, posé avant C.arriver) : Idris entre dans les quartiers par
+     l'entrée de la rue (le lieu « traverse », au nord-ouest). 2.47 (D238) — sorti de la mosquée pendant un retour (C.parRuelle) :
+     Idris est dans la ruelle, devant la porte. Maître Yûnus, lui, est resté dans la mosquée : la leçon de l'outil « cite », qu'il
+     dit, attend une arrivée à côté de lui. Le récit d'ouverture le dit (frame.js : `_2084_rue`, `_2084_porte`, posés ici). world.js l'appelle à
+     l'ouverture de tout chapitre, après avoir posé ses personnages ; → { carte, lieu, dir }, ou null (à côté de lui). */
+  C.parRue = false; C.parRuelle = false;
   C.depart = function (ch) {
-    if (!C.refuge(ch)) return null; const rue = !!C.parRue; C.parRue = false; C.journal.push({ quoi: rue ? 'par-la-rue' : 'au-parvis' });
-    if (!rue) { delete I.script.flags._2084_rue; return null; }
-    I.script.flags._2084_rue = true; W.npcs.forEach(n => { if (n.hero === 'yunus') n.hidden = true; });
-    return 'traverse';
+    if (!C.refuge(ch)) return null; const rue = !!C.parRue, ruelle = !rue && !!C.parRuelle; C.parRue = false; C.parRuelle = false;
+    C.journal.push({ quoi: rue ? 'par-la-rue' : ruelle ? 'par-la-porte' : 'a-la-mosquee' });
+    delete I.script.flags._2084_rue; delete I.script.flags._2084_porte;
+    if (!rue && !ruelle) return null;
+    I.script.flags[rue ? '_2084_rue' : '_2084_porte'] = true;
+    return rue ? { carte: 'quartiers', lieu: 'traverse', dir: 2 } : { carte: 'impasse', lieu: 'porte', dir: 1 };
   };
   // l'objectif du refuge, quand Maître Yûnus n'y est pas (world.js, W.hud)
-  C.objectif = o => (C.ici() && o && o.talk && !yunus() && W.npcs.some(n => n.id === o.talk && n.hero === 'yunus') ? I.t('Te promener dans les quartiers · la rue ramène à la Cité-Miroir') : null);
+  C.objectif = o => (C.ici() && o && o.talk && !yunus() && W.npcs.some(n => n.id === o.talk && n.hero === 'yunus') && W.map
+    ? (W.map.id === 'impasse' ? I.t('La vieille mosquée est au bout de la ruelle · la ruelle ramène aux quartiers') : I.t('Te promener dans les quartiers · la ruelle de l’est mène à la vieille mosquée')) : null);   // (2.47, D238)
   // au début d'une visite (world.js, startChapter) : ce qui rôde se tire de nouveau ; rien de la visite d'avant
   C.neuf = function (F) { Object.keys(F).forEach(k => { if (k === '_rues' || k.indexOf('_rue_') === 0 || k === '_primes') delete F[k]; }); };   // (2.27 : et les primes de la visite d'avant — circuit.js)
   // l'ouverture faite : la première fois, Maître Yûnus dit qu'on peut revenir ici (la leçon de l'outil « cite »)
@@ -14179,7 +14241,7 @@ window.ISNAD_PROMO = {"NOM":"ISNAD","SOUS_TITRE":"Chroniques des Compagnons","AD
       await C.replique(y);
       const c = C.recit(), opts = [];
       if (c) opts.push({ t: C.reprendreDit(c), k: 'recit' });
-      if (I.save.data.prologue) opts.push({ t: I.t('La Chaîne, aux Archives basses'), k: 'chaine' });   // (2.28 : pas avant que le prologue ne l'ait ouverte)
+      if (I.save.data.prologue) opts.push({ t: I.t('La Chaîne, au fond de la mosquée'), k: 'chaine' });   // (2.28 : pas avant que le prologue ne l'ait ouverte)
       opts.push({ t: I.t('Rester dans la Cité'), k: '', retour: true });
       S.hideDialog(); const i = await S.menuPick(I.t('Où vas-tu, Idris ?'), opts); k = opts[i] ? opts[i].k : '';
     } finally { S.depth--; S.hideDialog(); C._menu = false; }
@@ -14192,7 +14254,7 @@ window.ISNAD_PROMO = {"NOM":"ISNAD","SOUS_TITRE":"Chroniques des Compagnons","AD
   C.versChaine = async function () {
     C.quitter(); C.journal.push({ quoi: 'chaine' });
     S.depth++; try { await S.fade('out', 300); } finally { S.depth--; }
-    await I.ui.showChain(I.perso.dire(I.t('Idris est revenu aux Archives basses. La Chaîne tourne dans la pénombre.'))); return S.fade('in', 300);
+    await I.ui.showChain(I.perso.dire(I.t('Idris est au fond de la vieille mosquée. La Chaîne tourne dans la pénombre.'))); return S.fade('in', 300);
   };
   // la première fois qu'une chimère des rues approche : personne d'autre ne la voit (rodeurs.js)
   C.vue = function (f) { if (f && f.group && f.group[0] === 'pari' && W.saga && W.saga.id === 'idris') I.ui.unlockCodex('le_pari');   // 2.27 : la fiche « Le Pari », la première fois qu'on le voit
@@ -14205,8 +14267,8 @@ window.ISNAD_PROMO = {"NOM":"ISNAD","SOUS_TITRE":"Chroniques des Compagnons","AD
     let oui = false; S.depth++;
     try {
       await S.run([['nar', L[k]]]); S.hideDialog();
-      // (2.28 : arrivé par la rue, Maître Yûnus n'est pas monté : la prière est rappelée, et rien n'est proposé)
-      const i = I.debug.auto || !yunus() ? 1 : await S.menuPick(T.question || '', [{ t: I.t('Revoir Maître Yûnus') }, { t: I.t('Plus tard'), retour: true }]);
+      // (2.47 : Maître Yûnus est dans la mosquée ; « Revoir Maître Yûnus » y mène Idris)
+      const i = I.debug.auto || !yunusLoin() ? 1 : await S.menuPick(T.question || '', [{ t: I.t('Revoir Maître Yûnus') }, { t: I.t('Plus tard'), retour: true }]);
       oui = i === 0;
     } finally { S.depth--; S.hideDialog(); }
     C.journal.push({ quoi: oui ? 'revoir' : 'plus-tard' });
@@ -14214,9 +14276,10 @@ window.ISNAD_PROMO = {"NOM":"ISNAD","SOUS_TITRE":"Chroniques des Compagnons","AD
   };
   // Idris est mené à côté de Maître Yûnus, qui lui rappelle son rôle de râwî
   C.revoir = async function () {
-    const y = yunus(); if (!y) return; S.depth++;
+    let y = yunusLoin(); if (!y) return; S.depth++;
     try {
       await S.fade('out', 300); if (I.rodeurs) I.rodeurs.finFuite();
+      if (y.map !== W.map.id) { W.loadMap(y.map, {}, 'bureau'); W.hud(); y = yunus() || y; }   // (2.47 : jusqu'à la mosquée)
       const p = W.resolve([null, 0, 0], W.map.id, W.player, [Math.floor(y.x / 16) + 1, Math.floor((y.y - 2) / 16)]);
       if (p) { W.player.x = p[0]; W.player.y = p[1]; } W.player.dir = W.player.x > y.x ? 1 : 2; W.stop(); W.resetTrail(); W.updateCam(true);
       await S.fade('in', 300);
@@ -15249,8 +15312,8 @@ window.ISNAD_PROMO = {"NOM":"ISNAD","SOUS_TITRE":"Chroniques des Compagnons","AD
 })();
 
 /* ==== src/core/passages.js ==== */
-/* ISNAD 2.28 (D218) — les passages à pied de 2084 : la rue (la Cité-Miroir ↔ les quartiers) et l'ascenseur (les Archives basses
-   ↔ la Cité-Miroir). Demandes du décideur, 22 novembre : « Dans la 2.28 je veux pouvoir accéder à la "cité vivante" sans devoir
+/* ISNAD 2.28 (D218) — les passages à pied de 2084 : la rue (la Cité-Miroir ↔ les quartiers) ; depuis la 2.47 (D238), la ruelle
+   abandonnée (les quartiers ↔ la vieille mosquée), qui remplace l'ascenseur des Archives basses. Demandes du décideur, 22 novembre : « Dans la 2.28 je veux pouvoir accéder à la "cité vivante" sans devoir
    rencontrer maître Yunus directement dans la suite du premier monde en franchissant la rue par exemple » (dès le prologue :
    « Pendant le prologue ») ; « Meme dans le sous-sol on doit pouvoir être libre de remonter ». La « cité vivante », ce sont
    les quartiers de la Cité-Miroir ; le « sous-sol », les Archives basses.
@@ -15262,10 +15325,15 @@ window.ISNAD_PROMO = {"NOM":"ISNAD","SOUS_TITRE":"Chroniques des Compagnons","AD
      ramène sur la carte `cite`, du même côté de la rue, et le chapitre quitté reprend là où il l'a laissé (cite.js,
      C.quitter ; ui.js, U.reprendre). « Revenir en 2084 » et « La Cité-Miroir » de la Chaîne ne changent pas : le parvis, à
      côté de Maître Yûnus (D212).
-   - L'ascenseur : aux Archives basses, sortir par l'ouverture du bas (le lieu « entree »), ou A devant elle, remonte Idris à la
-     Cité-Miroir, au pied de l'ascenseur (le lieu « ascenseur »). C'est le même chapitre : rien n'est rangé, l'objectif reste
-     où il est ; la flèche montre l'ascenseur tant qu'il est en bas (P.cible). Redescendre (marcher vers la porte de
-     l'ascenseur, ou A devant elle) le ramène aux Archives, là où il était (S.flags._ascenseur, gardé avec le point de reprise).
+   - 2.47 (D238 ; le décideur, 26 novembre : « ruelle | quartiers du centre ville sans mosquée | autre ruelle sombre abandonnée
+     qui mène à une mosquée finalement où se trouve le maître et les sagas » ; « Plus d'ascenseur ») : il n'y a plus
+     d'ascenseur. Le chemin de 2084 se marche : la rue de la Cité-Miroir, les quartiers, la ruelle abandonnée (`impasse`, par le
+     bord est des quartiers, le lieu « ruelle »), la vieille mosquée (`archives`, par sa porte, au bout de la ruelle). Dans le
+     refuge, qui commence dans la mosquée à côté de Maître Yûnus, Idris passe de l'un à l'autre dans les deux sens : c'est le
+     même chapitre, une autre carte (rien n'est rangé). Dans un autre chapitre qui se joue dans la mosquée (un retour), sortir
+     par la porte range ce chapitre parmi les récits quittés et ouvre le refuge dans la ruelle ; Maître Yûnus le reprend
+     (« Reprendre le récit »). Le prologue, lui, mène Idris par ce chemin de ses propres objectifs (frame.js) : aucun passage
+     ne s'y prend.
    - Où : l'histoire-cadre, quand Idris a la main (ni un récit qui se joue, ni un combat, ni un menu) ; jamais dans les sagas
      ni dans les veillées ; ni dans le dernier maillon (`fin`), qui se joue d'une traite. Le joueur de test du moteur ne passe
      jamais : il va à ses objectifs. Aucun outil de plus : c'est marcher. Rien n'est gardé dans la partie, sinon le point de
@@ -15279,19 +15347,26 @@ window.ISNAD_PROMO = {"NOM":"ISNAD","SOUS_TITRE":"Chroniques des Compagnons","AD
   const main = () => I.scene === W && !!W.map && !S.busy && !W.lock && !(I.ui && I.ui.menuOpen) && !I.battle.active && !W.excursion && !I.debug.auto && !I.debug.walk && !P.occupe && !(I.activites && (I.activites.occupe || I.activites.assis));
   P.main = main;   // (2.30 : les rencontres de la route ont les mêmes gardes — monde.js)
   const refuge = () => !!(I.cite && I.cite.ici());
+  const prologue = () => !!(W.ch && W.ch.id === 'p1');   // (2.47 : le prologue mène Idris par le chemin de 2084 de ses propres objectifs)
   // le récit quitté par la rue, qui attend sur la carte de la Cité-Miroir (le plus récent)
   P.recitRue = () => W.rangees().find(c => { const ch = c.saga === 'idris' && I.sagas.idris.chapters[c.ci]; return !!ch && c.map === 'cite' && !ch.fin && !(I.cite && I.cite.refuge(ch)); }) || null;
   /* Les passages : où se tenir (`dans`), vers où marcher ou se tourner (`dir` : 0 bas, 1 gauche, 2 droite, 3 haut), devant quoi
      A agit (`devant`), et ce qui se fait. */
   const PASSAGES = [
-    { id: 'rue', ok: () => W.map.id === 'cite' && cadre() && !refuge(), dir: 2,
+    { id: 'rue', ok: () => W.map.id === 'cite' && cadre() && !refuge() && !prologue(), dir: 2,
       dans: p => p.x >= W.map.w * T - 14 && p.y >= 9 * T && p.y <= 17 * T, devant: p => p.x >= W.map.w * T - 30 && p.y >= 9 * T && p.y <= 17 * T, fn: () => P.traverser() },
     { id: 'rue-retour', ok: () => W.map.id === 'quartiers' && refuge(), dir: 1,
       dans: p => p.x <= 14 && p.y >= 8 * T && p.y <= 11 * T, devant: p => p.x <= 32 && p.y >= 8 * T && p.y <= 11 * T, fn: () => P.revenir() },
-    { id: 'remonter', ok: () => W.map.id === 'archives' && cadre(), dir: 0,
-      dans: p => p.x >= 16 * T - 4 && p.x <= 18 * T + 4 && p.y >= 23 * T + 2, devant: p => p.x >= 16 * T - 6 && p.x <= 18 * T + 6 && p.y >= 22 * T + 4, fn: () => P.remonter() },
-    { id: 'descendre', ok: () => W.map.id === 'cite' && cadre() && !!S.flags._ascenseur, dir: 3,
-      dans: p => { const s = W.spotPx('ascenseur'); return !!s && Math.abs(p.x - s[0]) <= 12 && p.y <= s[1] - 16; }, devant: p => { const s = W.spotPx('ascenseur'); return !!s && Math.abs(p.x - s[0]) <= 14 && p.y <= s[1] - 6; }, fn: () => P.descendre() }
+    // 2.47 (D238) — les quartiers ⇄ la ruelle abandonnée ⇄ la vieille mosquée
+    { id: 'ruelle', ok: () => W.map.id === 'quartiers' && refuge(), dir: 2,
+      dans: p => p.x >= W.map.w * T - 14 && p.y >= 20 * T && p.y <= 23 * T, devant: p => p.x >= W.map.w * T - 30 && p.y >= 20 * T && p.y <= 23 * T, fn: () => P.vers('impasse', 'quartiers', 2) },
+    { id: 'ruelle-retour', ok: () => W.map.id === 'impasse' && refuge(), dir: 1,
+      dans: p => p.x <= 14, devant: p => p.x <= 32, fn: () => P.vers('quartiers', 'ruelle', 1) },
+    { id: 'mosquee', ok: () => W.map.id === 'impasse' && refuge(), dir: 2,
+      dans: p => p.x >= 39 * T + 2, devant: p => p.x >= 38 * T + 4, fn: () => P.vers('archives', 'entree', 3) },
+    { id: 'sortir', ok: () => W.map.id === 'archives' && cadre() && !prologue(), dir: 0,
+      dans: p => p.x >= 16 * T - 4 && p.x <= 18 * T + 4 && p.y >= 23 * T + 2, devant: p => p.x >= 16 * T - 6 && p.x <= 18 * T + 6 && p.y >= 22 * T + 4,
+      fn: () => (refuge() ? P.vers('impasse', 'porte', 1) : P.sortir()) }
   ];
   P.PASSAGES = PASSAGES;
   // 2.29 (D220) : un autre module inscrit ses passages ici (monde.js : les portes des villes, la carte du monde) plutôt que de
@@ -15311,13 +15386,14 @@ window.ISNAD_PROMO = {"NOM":"ISNAD","SOUS_TITRE":"Chroniques des Compagnons","AD
   const devant = () => { if (!main()) return null; const p = W.player; return ouverts().find(z => (z.dir == null || p.dir === z.dir) && z.devant(p)) || null; };
   P.aPortee = () => !!devant();
   P.agir = function () { const x = devant(); if (!x) return false; P.journal.push({ quoi: 'a', id: x.id }); x.fn(); return true; };
-  // remonté des Archives basses, l'objectif resté en bas : la flèche montre la porte de l'ascenseur (world.js, W.target)
+  // 2.47 (D238) : dans le refuge, loin de Maître Yûnus, la flèche montre le chemin de la mosquée (world.js, W.target) — le bord
+  // est des quartiers, puis la porte au bout de la ruelle
   P.cible = function (o) {
     for (const x of PASSAGES) if (x.cible) { const r = x.cible(o); if (r) return r; }   // (2.29 : la carte du monde, une ville visitée — monde.js)
-    if (!o || !W.map || W.map.id !== 'cite' || !S.flags._ascenseur) return null;
-    const ici = o.goto ? !!W.map.spots[Array.isArray(o.goto) ? o.goto[0] : o.goto] : o.talk ? W.npcs.some(n => n.id === o.talk && n.map === 'cite') : o.foe ? W.foes.some(f => f.id === o.foe && f.map === 'cite') : true;
-    if (ici) return null;
-    const s = W.spotPx('ascenseur'); return s ? { x: s[0], y: s[1] - 18, gx: s[0], gy: s[1] - 18, kind: 'goto', passage: true } : null;
+    if (!o || !o.talk || !W.map || !refuge()) return null;
+    const n = W.npcs.find(x => x.id === o.talk); if (!n || n.map === W.map.id) return null;
+    const vers = ({ quartiers: 'ruelle', impasse: 'porte' })[W.map.id], s = vers && W.spotPx(vers);
+    return s ? { x: s[0], y: s[1], gx: s[0], gy: s[1], kind: 'goto', passage: true } : null;
   };
 
   /* ----- la rue ----- */
@@ -15341,26 +15417,25 @@ window.ISNAD_PROMO = {"NOM":"ISNAD","SOUS_TITRE":"Chroniques des Compagnons","AD
     } finally { P.occupe = false; }
   };
 
-  /* ----- l'ascenseur ----- */
-  P.remonter = async function () {
+  /* ----- 2.47 (D238) : marcher d'une carte de 2084 à l'autre, dans le même chapitre (le refuge) ----- */
+  P.vers = async function (carte, lieu, dir) {
     if (P.occupe) return; P.occupe = true; S.depth++;
     try {
-      const p = W.player; W.stop(); I.input.clearHeld();
-      S.flags._ascenseur = { x: Math.round(p.x), y: Math.min(Math.round(p.y), 22 * T + 2), opts: W.mapOpts || {} };
-      P.journal.push({ quoi: 'remonte', ch: W.ch.id, obj: W.objIndex });
-      I.audio.sfx('door'); await S.fade('out', 300);
-      W.loadMap('cite', {}, 'ascenseur'); W.player.dir = 0; W.checkpoint();
-      await S.fade('in', 300);
+      W.stop(); I.input.clearHeld(); P.journal.push({ quoi: 'vers', carte, de: W.map.id, ch: W.ch.id });
+      await S.fade('out', 260);
+      W.loadMap(carte, {}, lieu); W.player.dir = dir; W.resetTrail(); W.updateCam(true); W.hud(); W.checkpoint();
+      await S.fade('in', 260);
     } finally { S.depth--; P.occupe = false; }
   };
-  P.descendre = async function () {
-    const a = S.flags._ascenseur; if (!a || P.occupe) return; P.occupe = true; S.depth++;
+  // sortir de la mosquée pendant un autre chapitre (un retour) : il est rangé là, un pas avant la porte ; le refuge s'ouvre dans
+  // la ruelle, devant la porte (cite.js, C.parRuelle)
+  P.sortir = async function () {
+    if (P.occupe) return; P.occupe = true;
     try {
-      W.stop(); I.input.clearHeld(); P.journal.push({ quoi: 'descend', ch: W.ch.id, obj: W.objIndex });
-      I.audio.sfx('door'); await S.fade('out', 300);
-      delete S.flags._ascenseur; W.loadMap('archives', a.opts || {}, [a.x, a.y]); W.player.dir = 3; W.checkpoint();
-      await S.fade('in', 300);
-    } finally { S.depth--; P.occupe = false; }
+      const p = W.player; W.stop(); I.input.clearHeld(); p.y = Math.min(p.y, 22 * T + 2); p.dir = 3; W.resetTrail();
+      P.journal.push({ quoi: 'sort', ch: W.ch.id, obj: W.objIndex });
+      W.checkpoint(); I.cite.parRuelle = true; await I.cite.arriver();
+    } finally { P.occupe = false; }
   };
 })();
 
@@ -16453,6 +16528,34 @@ window.ISNAD_PROMO = {"NOM":"ISNAD","SOUS_TITRE":"Chroniques des Compagnons","AD
 /* Depuis la version du cœur : chaque rencontre porte, à sa deuxième manche, l'idée noire de celui à qui l'on
    parle (« noir »), et s'achève devant le mal du cœur qui se tenait derrière lui. Le dernier chapitre fait se
    dresser ceux qui n'ont pas été tranchés (['vices', …]). Textes des maux et des lames : src/data/coeur.js. */
+// 2.47 (D238) — les gens des quartiers : ceux du refuge, et ceux que le prologue croise en allant vers la mosquée (chacun seul,
+// au milieu de ce qu'on fait ici ; aucun ne voit les chimères). Sâlim, l'organisateur et les parieurs du circuit en sont.
+const PASSANTS_Q = [
+  // les passants : chacun seul, au milieu de ce qu'on fait ici (aucun ne voit les chimères)
+  { map: 'quartiers', id: 'q_joueur', name: 'Un joueur', at: ['jeux', -3, 0], face: 'up', pose: 'triste', look: { kind: 'citadin', robe: '#3a5a8a', head: '#24385a', cloak: '#4a6a9a' }, talk: [['say', 'q_joueur', 'J’ai battu mon record. Il n’y avait personne pour le voir.']] },
+  { map: 'quartiers', id: 'q_joueuse', name: 'Une joueuse', at: ['jeux', 3, 0], face: 'up', pose: 'accable', look: { kind: 'femme', robe: '#7a4862', head: '#4a2c40', cloak: '#8a5a74' }, talk: [['say', 'q_joueuse', 'Je joue avec des milliers de gens, tous les soirs. Je ne connais le nom d’aucun.']] },
+  { map: 'quartiers', id: 'q_cliente', name: 'Une cliente', at: ['galerie', -5, 0], pose: 'triste', look: { kind: 'femme', robe: '#c8a060', head: '#7a5a30', cloak: '#d8b070' }, talk: [['say', 'q_cliente', 'J’ai acheté ce que l’écran m’a montré ce matin.'], ['say', 'q_cliente', 'Ce soir, il m’en montre un autre.']] },
+  { map: 'quartiers', id: 'q_vitrine', name: 'Un passant', at: ['galerie', 5, 1], face: 'up', pose: 'triste', look: { kind: 'citadin', robe: '#7a5a3a', head: '#4a3420', cloak: '#8a6a4a' }, talk: [['say', 'q_vitrine', 'Les vitrines restent allumées toute la nuit. On dirait qu’elles attendent quelqu’un.']] },
+  { map: 'quartiers', id: 'q_ancien', name: 'Un vieil homme', at: ['ecran', -5, 4], face: 'up', pose: 'assis', look: { kind: 'ancien', robe: '#4a4038', head: '#bdb6a8' }, talk: [['say', 'q_ancien', 'Autrefois, sur cette place, on se saluait.'], ['say', 'q_ancien', 'Maintenant, on regarde tous l’écran, et personne ne se voit.']] },
+  { map: 'quartiers', id: 'q_passante', name: 'Une passante', at: ['ecran', 4, 5], pose: 'triste', look: { kind: 'femme', robe: '#6a5a8a', head: '#3e3458', cloak: '#7a6a9a' }, talk: [['say', 'q_passante', 'Il y a tant de monde ici, chaque soir. Je ne sais pas à qui parler.']] },
+  { map: 'quartiers', id: 'q_employe', name: 'Un employé', at: ['ecran', 7, 3], face: 'up', pose: 'assis', look: { kind: 'citadin', robe: '#7a7a6a', head: '#4a4a3e', cloak: '#8a8a7a' }, talk: [['say', 'q_employe', 'Je viens m’asseoir ici après le travail. L’écran parle, au moins.']] },
+  { map: 'quartiers', id: 'q_enfant', name: 'Un enfant', at: ['parc', 5, 4], face: 'up', pose: 'triste', look: { kind: 'enfant', robe: '#3d6a5a', head: '#28403a' }, talk: [['say', 'q_enfant', 'Le manège tourne tout seul. Je n’ai personne à qui faire signe.']] },
+  { map: 'quartiers', id: 'q_promeneuse', name: 'Une promeneuse', at: ['parc', -2, -2], pose: 'triste', look: { kind: 'femme', robe: '#8a6a4a', head: '#5a4230', cloak: '#9a7a5a' }, talk: [['say', 'q_promeneuse', 'Je viens ici tous les soirs. Personne ne m’a jamais demandé pourquoi.']] },
+  { map: 'quartiers', id: 'q_roue', name: 'Un passant', at: ['roue', 3, 0], face: 'up', pose: 'triste', look: { kind: 'citadin', robe: '#8a7a2a', head: '#5a4e18', cloak: '#9a8a3a' }, talk: [['say', 'q_roue', 'La grande roue tourne à vide depuis des mois.'], ['say', 'q_roue', 'Monter seul, à quoi bon ?']] },
+  { map: 'quartiers', id: 'q_spectateur', name: 'Un spectateur', at: ['tribune', -5, 0], pose: 'assis', look: { kind: 'citadin', robe: '#9a4a3a', head: '#6a3024', cloak: '#aa5a4a' }, talk: [['say', 'q_spectateur', 'Ils vont très vite. Je ne sais même pas qui gagne.'], ['say', 'q_spectateur', 'Je viens pour le bruit.']] },
+  { map: 'quartiers', id: 'q_spectatrice', name: 'Une spectatrice', at: ['tribune', 5, 1], pose: 'assis', look: { kind: 'femme', robe: '#3a7a7a', head: '#245050', cloak: '#4a8a8a' }, talk: [['say', 'q_spectatrice', 'Tout le monde regarde la même course. Chacun la regarde seul.']] },
+  { map: 'quartiers', id: 'q_mecano', name: 'Un mécanicien', at: ['circuit', 0, -1], pose: 'accable', look: { kind: 'citadin', robe: '#3a5a3a', head: '#243a24', manteau: 'aucun' }, talk: [['say', 'q_mecano', 'Je prépare des voitures toute la journée. Personne ne me demande comment je vais.']] },
+  { map: 'quartiers', id: 'q_voisine', name: 'Une passante', at: ['parvis', -6, 6], pose: 'triste', look: { kind: 'femme', robe: '#7a4a5a', head: '#4e2e3a', cloak: '#8a5a6a' }, talk: [['say', 'q_voisine', 'Mon téléphone sait tout de moi. Mes voisins ne savent pas mon nom.']] },
+  { map: 'quartiers', id: 'q_livreur', name: 'Un livreur', at: ['parvis', 6, 4], pose: 'accable', look: { kind: 'citadin', robe: '#c86a2a', head: '#7a3e18', cloak: '#d87a3a', coiffe: 'calotte' }, talk: [['say', 'q_livreur', 'Je livre des paquets à des portes qui ne s’ouvrent pas.'], ['say', 'q_livreur', 'On me laisse un pourboire, jamais un mot.']] },
+  // 2.27 (D216) — le circuit : Sâlim (il paraît quand il arrive en moto, circuit.js), l'organisateur et ses cinq circuits ;
+  // dans la tribune, des parieurs, chacun seul devant son écran (aucun ne propose rien à Idris ; Le Pari rôde parmi eux)
+  { map: 'quartiers', id: 'salim_q', name: 'Sâlim', hero: 'salim', at: ['circuit', -1, -2], hidden: true, talk: [['say', 'salim_q', 'La moto est là.']] },
+  { map: 'quartiers', id: 'q_organisateur', name: 'L’organisateur', at: ['circuit', 2, -2], face: 'left', look: { kind: 'citadin', robe: '#3a7aa8', head: '#24506e', cloak: '#4a8ab8' }, talk: [['say', 'q_organisateur', 'La piste est libre.']] },
+  { map: 'quartiers', id: 'q_parieur', name: 'Un parieur', at: ['tribune', -3, 1], face: 'up', pose: 'assis', look: { kind: 'citadin', robe: '#9a6a2a', head: '#5e4018', cloak: '#aa7a3a' }, talk: [['say', 'q_parieur', 'Je ne regarde pas la course. Je regarde les chiffres sur mon écran.'], ['say', 'q_parieur', 'Ils montent, ils descendent. Moi aussi.']] },
+  { map: 'quartiers', id: 'q_parieuse', name: 'Une parieuse', at: ['tribune', 2, 0], face: 'up', pose: 'triste', look: { kind: 'femme', robe: '#5a6a4a', head: '#3a4630', cloak: '#6a7a5a' }, talk: [['say', 'q_parieuse', 'Je me dis que la prochaine fois, je rattraperai tout. Je me le dis chaque soir.']] },
+  { map: 'quartiers', id: 'q_parieur2', name: 'Un parieur', at: ['tribune', 7, 1], face: 'up', pose: 'accable', look: { kind: 'citadin', robe: '#8a3a5a', head: '#5a2238', cloak: '#9a4a6a' }, talk: [['say', 'q_parieur2', 'Ce que j’ai perdu, je n’ose le dire à personne. Alors je reviens, seul.']] }
+];
+
 ISNAD.registerSaga({
   id: 'idris', order: 0, frame: true,
   name: 'Idris', epithet: 'Le Râwî', arabic: 'إدريس', years: '1507 H · 2084',
@@ -16756,7 +16859,8 @@ ISNAD.registerSaga({
         { id: 'passant2', name: 'Employé', at: ['ecran', -3, 2], look: { kind: 'citadin', robe: '#808a4a', head: '#5a6232', cloak: '#9aa45c' }, talk: [['say', 'passant2', 'Mon score a baissé de trois points. Je ne sais pas ce que j’ai fait. Je ne sais jamais.']] },
         { id: 'vieux', name: 'Vieil homme', at: ['ruelle', 0, -1], look: { kind: 'ancien', robe: '#4a4038', head: '#bdb6a8' }, talk: [['say', 'vieux', 'Autrefois on demandait : « De qui tiens-tu cela ? » Maintenant on demande : « Combien ça a fait de vues ? »']] },
         { id: 'gamin', name: 'Enfant', at: ['ecran', 3, 2], look: { kind: 'enfant', robe: '#3d5a6a', head: '#28343c' }, talk: [['say', 'gamin', 'Monsieur, c’est vrai qu’avant le ciel était noir, la nuit, avec des étoiles ?']] },
-        { id: 'yunus_n', name: 'Maître Yûnus', hero: 'yunus', map: 'archives', at: 'bureau', talk: [['say', 'yunus_n', 'La Chaîne t’attend au fond de la salle, Idris.']] }
+        { id: 'yunus_n', name: 'Maître Yûnus', hero: 'yunus', map: 'archives', at: 'bureau', talk: [['say', 'yunus_n', 'La Chaîne t’attend au fond de la salle, Idris.']] },
+        ...PASSANTS_Q   // 2.47 (D238) : les gens des quartiers, qu'Idris croise en allant vers la mosquée
       ],
       chests: [{ map: 'archives', at: ['bureau', 1, 1], gear: 'lampe' }, { map: 'archives', at: ['rayonnages', 2, 1], item: 'dattes', n: 2 }],
       intro: [
@@ -16768,12 +16872,21 @@ ISNAD.registerSaga({
           ['sfx', 'glitch'],
           ['say', 'Le Flux', 'Aujourd’hui, quarante et un millions de vues. Aujourd’hui, vous aimez ceci. Demain, vous l’aurez oublié. Regardez encore.'],
           ['say', 'idris', 'Chaque matin une idole neuve. Chaque soir on la brise pour en dresser une autre. Et personne ne se souvient de la veille.'],
-          ['nar', 'Idris est *râwî* aux Archives basses : un transmetteur. Un métier presque disparu, qui consiste à savoir de qui l’on tient ce que l’on sait.']
+          ['nar', 'Idris est *râwî* : un transmetteur, l’élève de Maître Yûnus. Un métier presque disparu, qui consiste à savoir de qui l’on tient ce que l’on sait.']
         ] },
-        { text: 'Descendre aux Archives basses (au bout de la rue)', goto: 'ascenseur', then: [
+        // 2.47 (D238) : le chemin de 2084 — la rue, les quartiers du centre, la ruelle abandonnée, la vieille mosquée
+        { text: 'Traverser la rue jusqu’aux quartiers', goto: 'traverse', then: [
+          ['map', 'quartiers', 'traverse'],
+          ['nar', 'Les quartiers du centre ne dorment jamais : des vitrines, des jeux, des voitures qui brillent. Tout le monde y est ensemble, et chacun y est seul.']
+        ] },
+        { text: 'Traverser les quartiers jusqu’à la ruelle de l’est', goto: 'ruelle', then: [
+          ['map', 'impasse', 'quartiers'],
+          ['nar', 'Derrière les quartiers, une ruelle que les écrans n’éclairent plus. Les fenêtres sont murées, les enseignes éteintes. Au bout, une lumière chaude.']
+        ] },
+        { text: 'Suivre la ruelle jusqu’à la vieille mosquée', goto: 'porte', then: [
           ['sfx', 'door'], ['map', 'archives', 'entree'],
-          ['nar', 'Quarante étages sous la rue, là où le Flux ne descend pas : les Archives basses.'],
-          ['nar', 'Dans un angle, un tapis tourné vers La Mecque. Ici comme dans chaque mosquée de la Chaîne, on peut prier : le groupe s’y *repose*. La partie, elle, se garde toute seule.']
+          ['nar', 'La vieille mosquée, au bout de la ruelle abandonnée : là où le Flux n’entre pas.'],
+          ['nar', 'Devant la niche, un tapis tourné vers La Mecque. Ici comme dans chaque mosquée de la Chaîne, on peut prier : le groupe s’y *repose*. La partie, elle, se garde toute seule.']
         ] },
         { text: 'Parler à Maître Yûnus', talk: 'yunus_n', then: [
           ['say', 'yunus_n', 'Te voilà, Idris. Assieds-toi. Ce soir, je te remets ce qu’on m’a remis.'],
@@ -17459,45 +17572,26 @@ ISNAD.registerSaga({
     /* ---------- 2.23 (D212) : les quartiers de la Cité, où Idris remonte à tout moment, à côté de Maître Yûnus ---------- */
     {
       id: 'c_quartiers', visite: 'quartiers', title: 'Les quartiers de la Cité', sub: 'An 1507 de l’Hégire · Cité-Miroir', minLvl: 1, last: true,
-      map: 'quartiers', start: 'parvis', party: ['idris'],
+      // 2.47 (D238) : le refuge commence dans la vieille mosquée, à côté de Maître Yûnus ; la ruelle mène aux quartiers
+      map: 'archives', start: 'entree', party: ['idris'],
       npcs: [
-        { id: 'yunus_c', name: 'Maître Yûnus', hero: 'yunus', at: ['parvis', 2, 0], face: 'left', talk: [['say', 'yunus_c', 'Je suis là, Idris.']] },
-        // les passants : chacun seul, au milieu de ce qu'on fait ici (aucun ne voit les chimères)
-        { id: 'q_joueur', name: 'Un joueur', at: ['jeux', -3, 0], face: 'up', pose: 'triste', look: { kind: 'citadin', robe: '#3a5a8a', head: '#24385a', cloak: '#4a6a9a' }, talk: [['say', 'q_joueur', 'J’ai battu mon record. Il n’y avait personne pour le voir.']] },
-        { id: 'q_joueuse', name: 'Une joueuse', at: ['jeux', 3, 0], face: 'up', pose: 'accable', look: { kind: 'femme', robe: '#7a4862', head: '#4a2c40', cloak: '#8a5a74' }, talk: [['say', 'q_joueuse', 'Je joue avec des milliers de gens, tous les soirs. Je ne connais le nom d’aucun.']] },
-        { id: 'q_cliente', name: 'Une cliente', at: ['galerie', -5, 0], pose: 'triste', look: { kind: 'femme', robe: '#c8a060', head: '#7a5a30', cloak: '#d8b070' }, talk: [['say', 'q_cliente', 'J’ai acheté ce que l’écran m’a montré ce matin.'], ['say', 'q_cliente', 'Ce soir, il m’en montre un autre.']] },
-        { id: 'q_vitrine', name: 'Un passant', at: ['galerie', 5, 1], face: 'up', pose: 'triste', look: { kind: 'citadin', robe: '#7a5a3a', head: '#4a3420', cloak: '#8a6a4a' }, talk: [['say', 'q_vitrine', 'Les vitrines restent allumées toute la nuit. On dirait qu’elles attendent quelqu’un.']] },
-        { id: 'q_ancien', name: 'Un vieil homme', at: ['ecran', -5, 4], face: 'up', pose: 'assis', look: { kind: 'ancien', robe: '#4a4038', head: '#bdb6a8' }, talk: [['say', 'q_ancien', 'Autrefois, sur cette place, on se saluait.'], ['say', 'q_ancien', 'Maintenant, on regarde tous l’écran, et personne ne se voit.']] },
-        { id: 'q_passante', name: 'Une passante', at: ['ecran', 4, 5], pose: 'triste', look: { kind: 'femme', robe: '#6a5a8a', head: '#3e3458', cloak: '#7a6a9a' }, talk: [['say', 'q_passante', 'Il y a tant de monde ici, chaque soir. Je ne sais pas à qui parler.']] },
-        { id: 'q_employe', name: 'Un employé', at: ['ecran', 7, 3], face: 'up', pose: 'assis', look: { kind: 'citadin', robe: '#7a7a6a', head: '#4a4a3e', cloak: '#8a8a7a' }, talk: [['say', 'q_employe', 'Je viens m’asseoir ici après le travail. L’écran parle, au moins.']] },
-        { id: 'q_enfant', name: 'Un enfant', at: ['parc', 5, 4], face: 'up', pose: 'triste', look: { kind: 'enfant', robe: '#3d6a5a', head: '#28403a' }, talk: [['say', 'q_enfant', 'Le manège tourne tout seul. Je n’ai personne à qui faire signe.']] },
-        { id: 'q_promeneuse', name: 'Une promeneuse', at: ['parc', -2, -2], pose: 'triste', look: { kind: 'femme', robe: '#8a6a4a', head: '#5a4230', cloak: '#9a7a5a' }, talk: [['say', 'q_promeneuse', 'Je viens ici tous les soirs. Personne ne m’a jamais demandé pourquoi.']] },
-        { id: 'q_roue', name: 'Un passant', at: ['roue', 3, 0], face: 'up', pose: 'triste', look: { kind: 'citadin', robe: '#8a7a2a', head: '#5a4e18', cloak: '#9a8a3a' }, talk: [['say', 'q_roue', 'La grande roue tourne à vide depuis des mois.'], ['say', 'q_roue', 'Monter seul, à quoi bon ?']] },
-        { id: 'q_spectateur', name: 'Un spectateur', at: ['tribune', -5, 0], pose: 'assis', look: { kind: 'citadin', robe: '#9a4a3a', head: '#6a3024', cloak: '#aa5a4a' }, talk: [['say', 'q_spectateur', 'Ils vont très vite. Je ne sais même pas qui gagne.'], ['say', 'q_spectateur', 'Je viens pour le bruit.']] },
-        { id: 'q_spectatrice', name: 'Une spectatrice', at: ['tribune', 5, 1], pose: 'assis', look: { kind: 'femme', robe: '#3a7a7a', head: '#245050', cloak: '#4a8a8a' }, talk: [['say', 'q_spectatrice', 'Tout le monde regarde la même course. Chacun la regarde seul.']] },
-        { id: 'q_mecano', name: 'Un mécanicien', at: ['circuit', 0, -1], pose: 'accable', look: { kind: 'citadin', robe: '#3a5a3a', head: '#243a24', manteau: 'aucun' }, talk: [['say', 'q_mecano', 'Je prépare des voitures toute la journée. Personne ne me demande comment je vais.']] },
-        { id: 'q_voisine', name: 'Une passante', at: ['parvis', -6, 6], pose: 'triste', look: { kind: 'femme', robe: '#7a4a5a', head: '#4e2e3a', cloak: '#8a5a6a' }, talk: [['say', 'q_voisine', 'Mon téléphone sait tout de moi. Mes voisins ne savent pas mon nom.']] },
-        { id: 'q_livreur', name: 'Un livreur', at: ['parvis', 6, 4], pose: 'accable', look: { kind: 'citadin', robe: '#c86a2a', head: '#7a3e18', cloak: '#d87a3a', coiffe: 'calotte' }, talk: [['say', 'q_livreur', 'Je livre des paquets à des portes qui ne s’ouvrent pas.'], ['say', 'q_livreur', 'On me laisse un pourboire, jamais un mot.']] },
-        // 2.27 (D216) — le circuit : Sâlim (il paraît quand il arrive en moto, circuit.js), l'organisateur et ses cinq circuits ;
-        // dans la tribune, des parieurs, chacun seul devant son écran (aucun ne propose rien à Idris ; Le Pari rôde parmi eux)
-        { id: 'salim_q', name: 'Sâlim', hero: 'salim', at: ['circuit', -1, -2], hidden: true, talk: [['say', 'salim_q', 'La moto est là.']] },
-        { id: 'q_organisateur', name: 'L’organisateur', at: ['circuit', 2, -2], face: 'left', look: { kind: 'citadin', robe: '#3a7aa8', head: '#24506e', cloak: '#4a8ab8' }, talk: [['say', 'q_organisateur', 'La piste est libre.']] },
-        { id: 'q_parieur', name: 'Un parieur', at: ['tribune', -3, 1], face: 'up', pose: 'assis', look: { kind: 'citadin', robe: '#9a6a2a', head: '#5e4018', cloak: '#aa7a3a' }, talk: [['say', 'q_parieur', 'Je ne regarde pas la course. Je regarde les chiffres sur mon écran.'], ['say', 'q_parieur', 'Ils montent, ils descendent. Moi aussi.']] },
-        { id: 'q_parieuse', name: 'Une parieuse', at: ['tribune', 2, 0], face: 'up', pose: 'triste', look: { kind: 'femme', robe: '#5a6a4a', head: '#3a4630', cloak: '#6a7a5a' }, talk: [['say', 'q_parieuse', 'Je me dis que la prochaine fois, je rattraperai tout. Je me le dis chaque soir.']] },
-        { id: 'q_parieur2', name: 'Un parieur', at: ['tribune', 7, 1], face: 'up', pose: 'accable', look: { kind: 'citadin', robe: '#8a3a5a', head: '#5a2238', cloak: '#9a4a6a' }, talk: [['say', 'q_parieur2', 'Ce que j’ai perdu, je n’ose le dire à personne. Alors je reviens, seul.']] }
+        { id: 'yunus_c', name: 'Maître Yûnus', hero: 'yunus', at: ['entree', -3, -1], face: 'right', talk: [['say', 'yunus_c', 'Je suis là, Idris.']] },
+        ...PASSANTS_Q
       ],
       // 2.28 (D218) : arrivé à pied par la rue (`_2084_rue`, posé par le moteur : cite.js), Idris entre par l'entrée de la rue ;
-      // Maître Yûnus n'est pas monté avec lui
+      // 2.47 (D238) : sorti de la mosquée pendant un retour (`_2084_porte`), il est dans la ruelle ; sinon, il est dans la mosquée,
+      // à côté de Maître Yûnus
       intro: [
         ['if', '_2084_rue', [['nar', 'Idris traverse la rue. De l’autre côté de l’avenue s’ouvrent les quartiers de la Cité-Miroir : des vitrines, des jeux, des manèges, et chacun seul.'], ['codex', 'quartiers']],
-          [['title', 'Les quartiers de la Cité', 'An 1507 de l’Hégire · Cité-Miroir'],
-            ['if', '_2084_cite', [['nar', 'L’ascenseur remonte des Archives basses. Maître Yûnus attend sur le parvis.']],
-              [['nar', 'L’ascenseur remonte des Archives basses jusqu’aux quartiers de la Cité-Miroir. Maître Yûnus est monté avec Idris.'],
-                ['nar', 'Des voitures qui brillent, des jeux partout, des vitrines, un écran grand comme une façade. Et, au milieu de tout cela, chacun seul.'],
-                ['codex', 'quartiers']]]]]
+          [['if', '_2084_porte', [['nar', 'Idris sort dans la ruelle. Derrière lui, la porte de la vieille mosquée reste entrouverte.']],
+            [['title', 'La vieille mosquée', 'An 1507 de l’Hégire · Cité-Miroir'],
+              ['if', '_2084_cite', [['nar', 'Maître Yûnus est à sa place, près de ses livres. Dehors, la ruelle mène aux quartiers.']],
+                [['nar', 'La vieille mosquée, au bout de la ruelle abandonnée. Maître Yûnus est là, près de ses livres.'],
+                  ['nar', 'Dehors, la ruelle mène aux quartiers de la Cité-Miroir : des voitures qui brillent, des jeux partout, des vitrines, un écran grand comme une façade. Et, au milieu de tout cela, chacun seul.'],
+                  ['codex', 'quartiers']]]]]]]
       ],
       objectives: [
-        { text: 'Te promener dans les quartiers · Maître Yûnus attend au parvis', talk: 'yunus_c', then: [['say', 'yunus_c', 'Va, Idris. La Chaîne t’attend.']] }
+        { text: 'Parler à Maître Yûnus, près de ses livres · la ruelle mène aux quartiers', talk: 'yunus_c', then: [['say', 'yunus_c', 'Va, Idris. La Chaîne t’attend.']] }
       ]
     }
   ]

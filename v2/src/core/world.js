@@ -256,8 +256,11 @@
     I.setScene(W);
     W.player.dir = 0; // avant le chargement : les siens sont semés derrière lui (W.resetTrail)
     W.leve = !cp;   // 2.18 : pendant l'ouverture, la vue lève les yeux (W.regard : la Cité-Miroir)
-    W.loadMap(cp ? cp.map : ch.map, cp ? cp.opts : (ch.opts || {}), cp ? cp.pos : (depart || ch.start));
-    if (depart) W.player.dir = 2;
+    // 2.47 (D238) : il n'y a plus d'ascenseur — une partie d'avant laissée en haut (S.flags._ascenseur) reprend dans la mosquée,
+    // là où Idris l'avait quittée ; l'arrivée du refuge peut se faire sur une autre carte (cite.js, C.depart)
+    const asc = cp && S.flags._ascenseur; if (asc) delete S.flags._ascenseur;
+    W.loadMap(asc ? 'archives' : cp ? cp.map : depart ? depart.carte : ch.map, asc ? (asc.opts || {}) : cp ? cp.opts : (ch.opts || {}), asc ? [asc.x, asc.y] : cp ? cp.pos : depart ? depart.lieu : ch.start);
+    if (depart) W.player.dir = depart.dir;
     if (cp) { W.npcs.forEach(n => { const s = cp.npcs && cp.npcs[n.id]; if (s && s.x !== undefined && n.map === W.map.id) { n.x = s.x; n.y = s.y; n.placed = true; n.placedMap = W.map.id; } }); if (W.degager()) W.resetTrail(); }
     W.hud(); $('#hud').hidden = false;
     S.depth++; W.lock = false; // verrouille le déplacement pendant l'ouverture

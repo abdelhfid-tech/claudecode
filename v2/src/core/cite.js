@@ -6,7 +6,8 @@
    - Le refuge est un chapitre de l'histoire-cadre marqué `visite: 'quartiers'` (frame.js) : il se rejoue, et reste sobre
      (oeuvres.js, O.sobre : aucune œuvre comptée, aucune descente). On y arrive par « Revenir en 2084 » (ui.js, U.partir), une
      fois joués les retours dus (`retour: n`), ou par le bouton « La Cité-Miroir » du pied de la Chaîne, dès le prologue joué.
-     Chaque arrivée est neuve : Idris paraît au parvis, à côté de Maître Yûnus. Le point de reprise du refuge n'est jamais
+     Chaque arrivée est neuve : Idris paraît à côté de Maître Yûnus — depuis la 2.47 (D238), dans la vieille mosquée, au bout de
+     la ruelle abandonnée ; il en sort à pied vers les quartiers (passages.js). Le point de reprise du refuge n'est jamais
      rangé parmi les récits quittés (world.js, W.ranger, W.rangees) : on en sort par Maître Yûnus ou par la halte —
      « Reprendre le récit » (le dernier récit quitté, repris exactement à sa place) ou « La Chaîne ».
    - Ce qui rôde (rodeurs.js, les rues) : les chimères de D.CITE.rodent, qu'Idris est seul à voir. Après chaque combat avec
@@ -34,6 +35,8 @@
   C.reprendreDit = c => { const sg = I.sagas[c.saga], ch = sg && sg.chapters[c.ci]; if (!sg || !ch) return I.t('Reprendre le récit');
     return sg.veillees ? I.t('Reprendre la veillée : {chapitre}', { chapitre: I.esc(ch.title) }) : I.t('Reprendre le récit : {recit} · {chapitre}', { recit: I.esc(sg.frame ? I.perso.dit() : sg.name), chapitre: I.esc(ch.title) }); };
   const yunus = () => W.npcs.find(n => n.hero === 'yunus' && !n.hidden && W.map && n.map === W.map.id && n.placed) || null;
+  // (2.47 : Maître Yûnus reste dans la mosquée ; ailleurs dans le refuge, il est là-bas)
+  const yunusLoin = () => W.npcs.find(n => n.hero === 'yunus' && !n.hidden) || null;
 
   // arriver : un chapitre neuf, au parvis, à côté de Maître Yûnus
   C.arriver = async function () {
@@ -44,20 +47,23 @@
     e.arrivees = (e.arrivees | 0) + 1; I.save.store(); C.journal.push({ quoi: 'arrivee', n: e.arrivees });
     W.roster = {}; W.saga = null; await W.startChapter('idris', ri); return true;
   };
-  /* 2.28 (D218) — arrivé à pied par la rue (passages.js : C.parRue, posé avant C.arriver) : Idris entre par l'entrée de la rue
-     (le lieu « traverse », au nord-ouest), et non au parvis ; Maître Yûnus n'y est pas — il n'est pas monté avec lui (pendant le
-     prologue, Idris ne l'a d'ailleurs pas encore rencontré) : la leçon de l'outil « cite », qu'il dit, attend une arrivée à
-     côté de lui. Le récit d'ouverture le dit (frame.js : `_2084_rue`, posé ici). world.js l'appelle à l'ouverture de tout
-     chapitre, après avoir posé ses personnages ; → le lieu d'arrivée, ou null. */
-  C.parRue = false;
+  /* 2.28 (D218) — arrivé à pied par la rue (passages.js : C.parRue, posé avant C.arriver) : Idris entre dans les quartiers par
+     l'entrée de la rue (le lieu « traverse », au nord-ouest). 2.47 (D238) — sorti de la mosquée pendant un retour (C.parRuelle) :
+     Idris est dans la ruelle, devant la porte. Maître Yûnus, lui, est resté dans la mosquée : la leçon de l'outil « cite », qu'il
+     dit, attend une arrivée à côté de lui. Le récit d'ouverture le dit (frame.js : `_2084_rue`, `_2084_porte`, posés ici). world.js l'appelle à
+     l'ouverture de tout chapitre, après avoir posé ses personnages ; → { carte, lieu, dir }, ou null (à côté de lui). */
+  C.parRue = false; C.parRuelle = false;
   C.depart = function (ch) {
-    if (!C.refuge(ch)) return null; const rue = !!C.parRue; C.parRue = false; C.journal.push({ quoi: rue ? 'par-la-rue' : 'au-parvis' });
-    if (!rue) { delete I.script.flags._2084_rue; return null; }
-    I.script.flags._2084_rue = true; W.npcs.forEach(n => { if (n.hero === 'yunus') n.hidden = true; });
-    return 'traverse';
+    if (!C.refuge(ch)) return null; const rue = !!C.parRue, ruelle = !rue && !!C.parRuelle; C.parRue = false; C.parRuelle = false;
+    C.journal.push({ quoi: rue ? 'par-la-rue' : ruelle ? 'par-la-porte' : 'a-la-mosquee' });
+    delete I.script.flags._2084_rue; delete I.script.flags._2084_porte;
+    if (!rue && !ruelle) return null;
+    I.script.flags[rue ? '_2084_rue' : '_2084_porte'] = true;
+    return rue ? { carte: 'quartiers', lieu: 'traverse', dir: 2 } : { carte: 'impasse', lieu: 'porte', dir: 1 };
   };
   // l'objectif du refuge, quand Maître Yûnus n'y est pas (world.js, W.hud)
-  C.objectif = o => (C.ici() && o && o.talk && !yunus() && W.npcs.some(n => n.id === o.talk && n.hero === 'yunus') ? I.t('Te promener dans les quartiers · la rue ramène à la Cité-Miroir') : null);
+  C.objectif = o => (C.ici() && o && o.talk && !yunus() && W.npcs.some(n => n.id === o.talk && n.hero === 'yunus') && W.map
+    ? (W.map.id === 'impasse' ? I.t('La vieille mosquée est au bout de la ruelle · la ruelle ramène aux quartiers') : I.t('Te promener dans les quartiers · la ruelle de l’est mène à la vieille mosquée')) : null);   // (2.47, D238)
   // au début d'une visite (world.js, startChapter) : ce qui rôde se tire de nouveau ; rien de la visite d'avant
   C.neuf = function (F) { Object.keys(F).forEach(k => { if (k === '_rues' || k.indexOf('_rue_') === 0 || k === '_primes') delete F[k]; }); };   // (2.27 : et les primes de la visite d'avant — circuit.js)
   // l'ouverture faite : la première fois, Maître Yûnus dit qu'on peut revenir ici (la leçon de l'outil « cite »)
@@ -89,7 +95,7 @@
       await C.replique(y);
       const c = C.recit(), opts = [];
       if (c) opts.push({ t: C.reprendreDit(c), k: 'recit' });
-      if (I.save.data.prologue) opts.push({ t: I.t('La Chaîne, aux Archives basses'), k: 'chaine' });   // (2.28 : pas avant que le prologue ne l'ait ouverte)
+      if (I.save.data.prologue) opts.push({ t: I.t('La Chaîne, au fond de la mosquée'), k: 'chaine' });   // (2.28 : pas avant que le prologue ne l'ait ouverte)
       opts.push({ t: I.t('Rester dans la Cité'), k: '', retour: true });
       S.hideDialog(); const i = await S.menuPick(I.t('Où vas-tu, Idris ?'), opts); k = opts[i] ? opts[i].k : '';
     } finally { S.depth--; S.hideDialog(); C._menu = false; }
@@ -102,7 +108,7 @@
   C.versChaine = async function () {
     C.quitter(); C.journal.push({ quoi: 'chaine' });
     S.depth++; try { await S.fade('out', 300); } finally { S.depth--; }
-    await I.ui.showChain(I.perso.dire(I.t('Idris est revenu aux Archives basses. La Chaîne tourne dans la pénombre.'))); return S.fade('in', 300);
+    await I.ui.showChain(I.perso.dire(I.t('Idris est au fond de la vieille mosquée. La Chaîne tourne dans la pénombre.'))); return S.fade('in', 300);
   };
   // la première fois qu'une chimère des rues approche : personne d'autre ne la voit (rodeurs.js)
   C.vue = function (f) { if (f && f.group && f.group[0] === 'pari' && W.saga && W.saga.id === 'idris') I.ui.unlockCodex('le_pari');   // 2.27 : la fiche « Le Pari », la première fois qu'on le voit
@@ -115,8 +121,8 @@
     let oui = false; S.depth++;
     try {
       await S.run([['nar', L[k]]]); S.hideDialog();
-      // (2.28 : arrivé par la rue, Maître Yûnus n'est pas monté : la prière est rappelée, et rien n'est proposé)
-      const i = I.debug.auto || !yunus() ? 1 : await S.menuPick(T.question || '', [{ t: I.t('Revoir Maître Yûnus') }, { t: I.t('Plus tard'), retour: true }]);
+      // (2.47 : Maître Yûnus est dans la mosquée ; « Revoir Maître Yûnus » y mène Idris)
+      const i = I.debug.auto || !yunusLoin() ? 1 : await S.menuPick(T.question || '', [{ t: I.t('Revoir Maître Yûnus') }, { t: I.t('Plus tard'), retour: true }]);
       oui = i === 0;
     } finally { S.depth--; S.hideDialog(); }
     C.journal.push({ quoi: oui ? 'revoir' : 'plus-tard' });
@@ -124,9 +130,10 @@
   };
   // Idris est mené à côté de Maître Yûnus, qui lui rappelle son rôle de râwî
   C.revoir = async function () {
-    const y = yunus(); if (!y) return; S.depth++;
+    let y = yunusLoin(); if (!y) return; S.depth++;
     try {
       await S.fade('out', 300); if (I.rodeurs) I.rodeurs.finFuite();
+      if (y.map !== W.map.id) { W.loadMap(y.map, {}, 'bureau'); W.hud(); y = yunus() || y; }   // (2.47 : jusqu'à la mosquée)
       const p = W.resolve([null, 0, 0], W.map.id, W.player, [Math.floor(y.x / 16) + 1, Math.floor((y.y - 2) / 16)]);
       if (p) { W.player.x = p[0]; W.player.y = p[1]; } W.player.dir = W.player.x > y.x ? 1 : 2; W.stop(); W.resetTrail(); W.updateCam(true);
       await S.fade('in', 300);

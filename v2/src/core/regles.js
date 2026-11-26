@@ -387,7 +387,7 @@
         if (c.hajj && !s.veillees) E.push(`${w}: le pèlerinage n'est proposé que dans la fiction des veillées`);
         // 2.x : ce qui se joue au retour en 2084 (« retour: n ») et une visite ouverte depuis la Chaîne (« visite ») — l'histoire-cadre seulement
         if (c.retour !== undefined && !(Number.isInteger(c.retour) && c.retour >= 1 && s.frame && !s.veillees && c.last === true && !c.after)) E.push(`${w}: « retour » est un entier ≥ 1, sur un chapitre « last » de l'histoire-cadre, sans « after »`);
-        if (c.visite !== undefined && !(typeof c.visite === 'string' && c.visite === c.map && s.frame && !s.veillees && c.last === true && !c.after && c.retour === undefined)) E.push(`${w}: « visite » nomme le lieu du chapitre (sa carte), sur un chapitre « last » de l'histoire-cadre, sans « after » ni « retour »`);
+        if (c.visite !== undefined && !(typeof c.visite === 'string' && (c.visite === c.map || (c.npcs || []).some(n => n && n.map === c.visite)) && s.frame && !s.veillees && c.last === true && !c.after && c.retour === undefined)) E.push(`${w}: « visite » nomme un lieu du chapitre (sa carte, ou celle où il pose des personnages), sur un chapitre « last » de l'histoire-cadre, sans « after » ni « retour »`);
         // la bataille déclarée : les rangs que la mission aligne, les ordres qu'elle permet. Aucun effectif (exigence 19).
         if (c.bataille !== undefined) { const Bt = c.bataille || {}, wb = `${w}.bataille`;
           if (!Array.isArray(Bt.rangs) || Bt.rangs.length > 4) E.push(`${wb}: « rangs » attend un tableau de 0 à 4 rangs`);
