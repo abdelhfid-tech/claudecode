@@ -251,8 +251,8 @@ Le jeu en développement est la **2.x**, dans `v2/` : `v2/src/`, `v2/tools/`, `v
   ruelle, la mosquée) ; aucun passage ne s'y prend, la porte de la mosquée ne s'y ouvre pas. Le refuge (`c_quartiers`) commence
   dans la mosquée, au lieu `bureau`, à côté de Maître Yûnus, qui se tient près de sa table et de ses livres (`frame.js`) et n'y
   est jamais caché, même à la reprise d'une partie : sa porte mène à la ruelle, la ruelle au bord est des quartiers (le lieu
-  `ruelle`), et retour — le même chapitre, une autre carte (`P.vers`, `passages.js`, qui rappelle à chaque entrée dans les
-  quartiers Sâlim et sa moto garée, s'il est déjà venu : `CI.ouvre`) ; loin de Maître Yûnus, l'objectif dit le chemin et la
+  `ruelle`), et retour — le même chapitre, une autre carte (`P.vers`, `passages.js` ; quand on entre dans les
+  quartiers par la ruelle, Sâlim, s'il est déjà venu, et sa moto garée y paraissent : `CI.ouvre`) ; loin de Maître Yûnus, l'objectif dit le chemin et la
   flèche le montre (`P.cible`) ; le bandeau du haut nomme « La ruelle abandonnée » ou « La vieille mosquée » quand on y est
   (`W.hud`). Dans un autre chapitre qui se joue dans la mosquée (un retour), la porte range ce chapitre (`P.sortir`) et ouvre
   le refuge dans la ruelle (`C.parRuelle`) ; Maître Yûnus le reprend, et le « Revenir en 2084 » suivant aussi, à sa place

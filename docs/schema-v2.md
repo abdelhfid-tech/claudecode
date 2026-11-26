@@ -153,8 +153,8 @@ Deux marques de plus sur un chapitre de l'histoire-cadre (`v2/src/data/frame.js`
   seule fois ; puis la Chaîne.
 - `visite: '<lieu>'` — un lieu où Idris se rend depuis la Chaîne (`'citadelle'` : la Citadelle, où il est né, offerte dès
   la première veillée entendue ; `'quartiers'` : les quartiers de la Cité-Miroir, le refuge de 2084, D212). Le chapitre se
-  rejoue à volonté ; sa carte est ce lieu, ou une carte où le chapitre pose ses personnages — le refuge, D238 : il commence
-  dans la vieille mosquée, et ses passants sont dans les quartiers (`regles.js`).
+  rejoue à volonté ; ce lieu est sa carte, ou une carte où le chapitre pose des personnages (`regles.js`) — le refuge, D238 :
+  sa carte est la vieille mosquée, et ses passants sont dans les quartiers.
 
 À leur ouverture, le moteur pose l'état de 2084 en drapeaux, que le récit lit par `['if', …]` et n'écrit jamais :
 `_2084_veillee_<saga>`, `_2084_maillon_<saga>`, `_2084_pilier_<priere|savoir|justice|lien>` (pilier de la Citadelle à 3

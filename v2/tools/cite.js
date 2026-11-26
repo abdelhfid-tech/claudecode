@@ -687,9 +687,9 @@ async function avancer(p, n = 120) {
       const ligne = async avec => E(async avec => { const I = window.ISNAD, W = I.world, S = I.script, T = window.__t, dits = [];
         I.save.data.cite.course.salim = avec ? 2 : 0; const or = S.run; S.run = function (ops) { (ops || []).forEach(o => { if (Array.isArray(o) && o[0] === 'say') dits.push(o[2]); if (Array.isArray(o) && o[0] === 'if') dits.push('si ' + o[1] + ' : ' + !!S.flags[o[1]]); }); return or.apply(this, arguments); };
         document.querySelectorAll('.screen').forEach(e => { e.hidden = true; }); I.input.reset(); W.roster = {}; W.saga = null; const ci = I.sagas.idris.chapters.findIndex(c => c.id === 'e1'); W.startChapter('idris', ci);
-        await T.jusqua(1); S.run = or; I.debug.auto = false; return dits.filter(d => /archiviste|passager|^si _2084_salim/.test(d)); }, avec);
+        await T.jusqua(1); S.run = or; I.debug.auto = false; return dits.filter(d => /le râwî|passager|^si _2084_salim/.test(d)); }, avec);   // (2.47 : « l'archiviste » est devenu « le râwî »)
       const a = await ligne(true), b = await ligne(false);
-      si(a.some(d => /si _2084_salim : true/.test(d)) && a.some(d => /Mon passager des virages/.test(d)) && b.some(d => /si _2084_salim : false/.test(d)) && b.some(d => /^Tu es l’archiviste \? Je m’appelle Sâlim/.test(d)), `le dernier maillon : Idris a couru avec Sâlim — « ${(a.find(d => /passager/.test(d)) || '').slice(0, 50)}… » ; sinon, la rencontre de toujours — « ${(b.find(d => /archiviste/.test(d)) || '').slice(0, 50)}… »`, `le dernier maillon, les retrouvailles : ${JSON.stringify({ a, b })}`);
+      si(a.some(d => /si _2084_salim : true/.test(d)) && a.some(d => /Mon passager des virages/.test(d)) && b.some(d => /si _2084_salim : false/.test(d)) && b.some(d => /^Tu es le râwî \? Je m’appelle Sâlim/.test(d)), `le dernier maillon : Idris a couru avec Sâlim — « ${(a.find(d => /passager/.test(d)) || '').slice(0, 50)}… » ; sinon, la rencontre de toujours — « ${(b.find(d => /archiviste/.test(d)) || '').slice(0, 50)}… »`, `le dernier maillon, les retrouvailles : ${JSON.stringify({ a, b })}`);
     }
     toutesErreurs = toutesErreurs.concat(T.errors.map(e => 'course ' + nom + ' · ' + e)); await T.ctx.close();
   }

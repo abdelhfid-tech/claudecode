@@ -128,7 +128,7 @@ il redevient courant, et celui d'un autre récit est rangé —, `W.rangees()` l
 `W.checkpoint()` n'écrase jamais le point d'un autre récit : il le range d'abord. La halte offre **« Revenir en 2084 »**
 dans un récit des Compagnons ou une veillée (« Retour à la Chaîne » dans l'histoire-cadre) : `U.partir()` range le récit,
 compte le retour (`retours`), puis ouvre la Chaîne — ou, s'il s'est passé quelque chose en 2084, le chapitre de
-l'histoire-cadre marqué `retour: n` dont le tour est venu (`rebonds` note ceux qui ont été joués). *2.23 (D212) :* s'il n'y a pas de retour dû, et au sortir d'un retour, Idris arrive dans les quartiers de la Cité, à côté de Maître Yûnus (« Les quartiers de la Cité-Miroir », plus bas) ; c'est par lui, ou par la halte du refuge, qu'on regagne la Chaîne ou le récit quitté. La Chaîne lit
+l'histoire-cadre marqué `retour: n` dont le tour est venu (`rebonds` note ceux qui ont été joués). *2.23 (D212) :* s'il n'y a pas de retour dû, et au sortir d'un retour, Idris arrive dans le refuge des quartiers de la Cité, à côté de Maître Yûnus (« Les quartiers de la Cité-Miroir », plus bas ; depuis la 2.47, D238, dans la vieille mosquée : « Le chemin de 2084 ») ; c'est par lui, ou par la halte du refuge, qu'on regagne la Chaîne ou le récit quitté. La Chaîne lit
 `W.rangees()` : chaque maillon dit s'il est « en route », et le grand bouton reprend le récit quitté en dernier.
 `U.startSaga()` reprend le point rangé de la saga qu'on ouvre. Un chapitre marqué `visite` s'ouvre depuis le pied de la
 Chaîne (la Citadelle, dès qu'une veillée a été entendue) et se rejoue. À l'ouverture d'un retour ou d'une visite, le
@@ -769,8 +769,8 @@ façades du vieux quartier et le pied des tours dès le premier écran.*
 - **Le décor** (`maps.js`, `cite()`, `peindreCite()` ; `battle.js`, `citeBg()`) : au nord, le vieux quartier de pierre de
   corail, ses tours à vent trapues (jamais lisibles comme des minarets : trois fentes, la tête à la moitié de la maison au
   plus), ses claustras, ses portes de bois, ses échoppes ; derrière, le viaduc d'un métro, dont les rames passent, vides ;
-  puis des tours de verre géantes, à contre-jour ; deux descendent jusqu'à la rue (celle du grand écran, celle de
-  l'ascenseur). Le ciel luit comme un écran : une voûte de carreaux, sans astre ni étoile. La pierre polie de la rue renvoie
+  puis des tours de verre géantes, à contre-jour ; deux descendent jusqu'à la rue (celle du grand écran ; celle de la
+  porte de bronze close, au bout de la rue — l'ascenseur jusqu'à la 2.46, D238). Le ciel luit comme un écran : une voûte de carreaux, sans astre ni étoile. La pierre polie de la rue renvoie
   les tours ; devant le grand écran, un miroir d'eau et ses jets. Au sud, le quai, la crique, ses barques, un boutre au
   repos et l'embarcadère. Aucune réplique d'un monument, aucune lettre, aucun signe, aucun édifice religieux ; personne
   n'est ajouté au décor. Le jeu ne nomme pas la ville qui l'a inspiré, dans aucune langue.
@@ -884,7 +884,8 @@ activités (salle de jeux, galerie marchande, écran géant, parc et manèges). 
   roulent, s'arrêtent devant le joueur, repartent, ne le traversent pas, on n'y entre pas), quarante tirages de ce qui rôde
   sans une idée noire, une chimère au travers d'un passant, deux combats, le rappel, « Plus tard » (B) et « Revoir Maître
   Yûnus », « Reprendre le récit » à l'identique, la halte et la Chaîne, la partie ; puis le dessin des voitures dans les trois
-  réglages. `retours.js` traverse désormais les quartiers à chaque retour et regagne la Chaîne par Maître Yûnus.
+  réglages. `retours.js` passe désormais par le refuge à chaque retour (depuis la 2.47, il s'ouvre dans la vieille mosquée,
+  à côté de Maître Yûnus) et regagne la Chaîne par Maître Yûnus.
 - **Quel que soit l'avancement** (le décideur, 21 novembre : « Les activités de la cité miroir sont omniprésents dès le début et
   peuvent faire l'objet de jeux légers quelque soit l'avancement dans la saga ») : les quartiers s'ouvrent dès le prologue joué,
   sans autre condition — « La Cité-Miroir » au pied de la Chaîne, « Revenir en 2084 » depuis la halte de tout récit et de toute
@@ -1087,7 +1088,9 @@ aujourd'hui ; la ruelle abandonnée et la vieille mosquée sont décrites dans �
   sens), plus ceux qu'y inscrit la carte du monde (`P.ajouter`, 2.29), chacun avec sa
   zone (où se tenir), sa direction (vers où marcher ou se tourner) et ce qu'il fait : on passe en marchant vers le bord dans la
   zone — ou en poussant contre lui —, après en être sorti une fois depuis l'arrivée (`P.arme` : on n'y repart pas en y
-  arrivant), ou par A tourné vers lui (`P.agir`, depuis `W.interact`) ; la bulle paraît au-dessus d'Idris (`P.aPortee`). Jamais
+  arrivant), ou par A tourné vers lui (`P.agir`, depuis `W.interact`) ; depuis la 2.47, au doigt, un toucher qui vise la zone du
+  passage elle-même (`W.dest` dans `dans`) y fait entrer quel que soit le sens du dernier pas — on arrive souvent en biais (la porte
+  de la mosquée, depuis la table de Maître Yûnus) ; la bulle paraît au-dessus d'Idris (`P.aPortee`). Jamais
   quand une scène se joue (`S.busy`, `W.lock`), ni dans un menu, un combat, une descente ; le joueur de test du moteur (`auto`,
   à pied, au doigt) ne passe jamais.
 - **Où** : l'histoire-cadre seulement — les rencontres (`r_*`), les retours (`x_*`), le refuge —, ni les sagas, ni les
@@ -1162,7 +1165,7 @@ CITÉ-MIROIR (cite)  →  QUARTIERS (quartiers)  →  RUELLE ABANDONNÉE (impass
   `[x0, y0, x1, y1, ligne]` : tant que celui qui mène se tient dans ce rectangle, le haut de la vue ne descend pas sous cette
   ligne ; `W.regard`, `world.js`). Les quartiers gardent D206 et D212 (aucun édifice religieux) : leur bord est s'ouvre sur trois cases (la
   ruelle), éclairées d'une lueur froide, et la bouche de la ruelle y est peinte (`peindreQuartiers` : le mur de verre de l'est
-  en deux pans, un seuil, une ombre qui s'enfonce), sans changer une case. Les deux ascenseurs dessinés sont devenus une porte
+  en deux pans, et entre eux l'asphalte sombre qui s'enfonce, un linteau, une ombre), sans changer une case. Les deux ascenseurs dessinés sont devenus une porte
   de bronze close (au bout de la rue) et une fontaine (sur le parvis) ; aucune case des cartes `cite` et `quartiers` n'a
   changé de nature, sinon les trois de l'ouverture est.
 - **Le bandeau du haut** (`W.hud`) : dans le refuge, il nomme le lieu où l'on est, « La ruelle abandonnée » ou « La vieille
@@ -1199,7 +1202,7 @@ CITÉ-MIROIR (cite)  →  QUARTIERS (quartiers)  →  RUELLE ABANDONNÉE (impass
   « Ascenseur », المِصعد, *Elevator*) ; « Manteau du râwî », معطف الراوي, *Rawi’s Coat* (naguère « Manteau des Archives »,
   معطف الخزانة, *Archives Coat*) ; « Ce qui est entré », ما دخل, *What Came In* (le titre du retour `x_descendu`, naguère « Ce
   qui est descendu », ما هبط, *What Came Down*). الخِزانة reste le mot d'une bibliothèque, mais ne désigne plus un lieu du jeu.
-  Trois répliques ne parlent plus d'archives : Sâlim, au dernier maillon, dit « le râwî » (naguère « l'archiviste » ; الراوي,
+  Trois textes ne parlent plus d'archives : Sâlim, au dernier maillon, dit « le râwî » (naguère « l'archiviste » ; الراوي,
   *the rawi*) ; « des récits qu'on ne veille pas » (naguère « des archives… » ; الحكايات, *the stories*), dans la fiche
   `x_veiller` et une réplique du retour `x_descendu` ; « On ne garde pas un lieu en le cachant » (naguère « … des archives en
   les cachant » ; المكان, *a place*), dans la fiche et une réplique du retour `x_avis`.
@@ -1244,7 +1247,7 @@ chimères, les brigands, le voyageur) sont venues avec la 2.30 : « Les rencontr
   Idris a la main ; le joueur de test du moteur ne sort jamais). Seulement dans un chapitre de `D.MONDE.depuis`, sur sa carte,
   à partir de son objectif (`Mo.porte`) ; jamais dans l'histoire-cadre, les veillées, le dernier maillon, ni sur la mer, la
   noosphère, une route (le désert), ni à Dhû l-Qassa, Harûrâ', Nahrawân (`regles.js` le vérifie).
-- **Sortir** (`Mo.sortir`) : le schéma de l'ascenseur — le même chapitre, rien de rangé ; `S.flags._monde` garde la ville du
+- **Sortir** (`Mo.sortir`) : le schéma de l'ancien ascenseur (2.28 à 2.46) — le même chapitre, rien de rangé ; `S.flags._monde` garde la ville du
   récit et le retour (la carte, ses réglages, la place d'Idris un pas en deçà de la porte, son regard, celle des personnages) ;
   la carte du monde se charge à l'heure du chapitre (`Mo.opts`), Idris à côté de la ville, du côté de la porte, sur une case
   reliée à elle (`aCote`) ; le point de reprise est pris là. La flèche montre la ville du récit (`Mo.cible`, par `P.cible`,

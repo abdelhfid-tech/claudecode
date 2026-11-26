@@ -4,10 +4,11 @@
    « Pendant le prologue ») ; « Meme dans le sous-sol on doit pouvoir être libre de remonter ». La « cité vivante », ce sont
    les quartiers de la Cité-Miroir ; le « sous-sol », les Archives basses.
    - La rue : sur la carte `cite`, au bout de la rue, à l'est (le lieu « traverse »), Idris passe à pied dans les quartiers — en
-     marchant vers le bord, ou par A, tourné vers lui. Le chapitre qu'il quitte (le prologue, une rencontre, un retour) est
+     marchant vers le bord, ou par A, tourné vers lui ; depuis la 2.47, au doigt, un toucher qui vise le passage lui-même y fait
+     entrer, même en arrivant en biais. Le chapitre qu'il quitte (une rencontre ; jusqu'à la 2.46, aussi le prologue et un retour) est
      rangé parmi les récits quittés (world.js, W.ranger : le refuge des quartiers le fait à son ouverture), exactement où il
      est ; Idris entre dans les quartiers par l'entrée de la rue, au nord-ouest (le lieu « traverse » des quartiers) — loin du
-     parvis : Maître Yûnus n'y est pas, il est resté en bas (cite.js, C.depart). Retraverser (le même bord, vers l'ouest) le
+     parvis : Maître Yûnus n'y est pas, il est dans la vieille mosquée (2.47 ; cite.js, C.depart). Retraverser (le même bord, vers l'ouest) le
      ramène sur la carte `cite`, du même côté de la rue, et le chapitre quitté reprend là où il l'a laissé (cite.js,
      C.quitter ; ui.js, U.reprendre). « Revenir en 2084 » et « La Cité-Miroir » de la Chaîne ne changent pas : le parvis, à
      côté de Maître Yûnus (D212).
