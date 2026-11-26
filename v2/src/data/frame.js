@@ -1069,7 +1069,7 @@ ISNAD.registerSaga({
       // 2.47 (D238) : le refuge commence dans la vieille mosquée, à côté de Maître Yûnus ; la ruelle mène aux quartiers
       map: 'archives', start: 'entree', party: ['idris'],
       npcs: [
-        { id: 'yunus_c', name: 'Maître Yûnus', hero: 'yunus', at: ['entree', -3, -1], face: 'right', talk: [['say', 'yunus_c', 'Je suis là, Idris.']] },
+        { id: 'yunus_c', name: 'Maître Yûnus', hero: 'yunus', at: ['entree', -2, -1], face: 'right', talk: [['say', 'yunus_c', 'Je suis là, Idris.']] },
         ...PASSANTS_Q
       ],
       // 2.28 (D218) : arrivé à pied par la rue (`_2084_rue`, posé par le moteur : cite.js), Idris entre par l'entrée de la rue ;

@@ -985,7 +985,7 @@ body.touch #course .tour, body.touch #course .rangs { font-size: max(.78em, 11px
 <div id="fade"></div>
 <div id="secours" hidden><p data-t>Le jeu semble arrêté.</p><button type="button" data-t>Reprendre au dernier objectif</button><small></small></div>
 <script>
-window.ISNAD_VERSION = "2.47 · 2026-11-26 20:07 UTC · 957af96+";
+window.ISNAD_VERSION = "2.47 · 2026-11-26 20:38 UTC · ec926b7+";
 window.ISNAD_PROMO = {"NOM":"ISNAD","SOUS_TITRE":"Chroniques des Compagnons","ADRESSE":"www.isnad-game.org","RESERVE":"Version bêta. La relecture historique et religieuse par un spécialiste reste à faire."};
 /* ==== src/core/defs.js ==== */
 /* ISNAD — définitions partagées (navigateur + validateur node). Source de vérité du schéma de données. */
@@ -4951,7 +4951,7 @@ window.ISNAD_PROMO = {"NOM":"ISNAD","SOUS_TITRE":"Chroniques des Compagnons","AD
     qarbre: { w: 30, h: 46, fw: 8, fh: 4, draw(c, r) { Rc(c, '#4a3426', 14, 26, 3, 18); Rc(c, '#6a4c36', 14, 26, 0.75, 18);
       [[15, 19, 12, '#2c4428'], [9, 22, 7, '#2a4026'], [21, 22, 7.5, '#2a4026'], [15, 13, 9, '#355230'], [11, 16, 6, '#3c5a34'], [19, 15, 6.5, '#3c5a34']].forEach(([x, y, rr, col]) => { c.fillStyle = col; c.beginPath(); c.arc(x, y, rr, 0, 6.3); c.fill(); });
       c.fillStyle = 'rgba(255,200,150,.18)'; for (let i = 0; i < 14; i++) { const a = r() * 3.2 + 3.4, d = r() * 9; c.fillRect(13 + Math.cos(a) * d, 12 + Math.sin(a) * d, 1.5, 1); } } },
-    // l'ascenseur du parvis, qui remonte des Archives basses : une cage de verre au cadre de laiton, une cabine éclairée
+    // (jusqu'à la 2.46) l'ascenseur du parvis, qui remontait des Archives basses — il n'est plus posé (D238) : une cage de verre au cadre de laiton, une cabine éclairée
     qkiosque: { w: 44, h: 58, fw: 32, fh: 8, draw(c) { Rc(c, '#3a2e38', 3, 54, 38, 4); Rc(c, '#8a7056', 3, 54, 38, 0.75);
       const g = c.createLinearGradient(0, 8, 0, 54); g.addColorStop(0, 'rgba(120,150,200,.55)'); g.addColorStop(1, 'rgba(255,200,140,.6)'); Rc(c, g, 6, 8, 32, 46);
       Rc(c, 'rgba(255,224,170,.7)', 14, 22, 16, 32); Rc(c, '#9a7c4c', 21.75, 22, 0.5, 32); Rc(c, 'rgba(255,255,255,.25)', 8, 10, 2, 42); Rc(c, 'rgba(255,255,255,.15)', 32, 10, 1, 42);
@@ -8870,7 +8870,7 @@ window.ISNAD_PROMO = {"NOM":"ISNAD","SOUS_TITRE":"Chroniques des Compagnons","AD
     }
     const c = who && W.chests.includes(who) && !who.open && Math.hypot(who.x - p.x, who.y - p.y) < 30 ? who : W.chests.find(c => !c.open && c.map === W.map.id && c.placed && Math.hypot(c.x - px, c.y - py) < 18);
     if (c) { c.open = true; I.audio.sfx('door'); if (c.codex) { S.toast(I.t('Un feuillet. Tu le lis lentement.')); await S.run([['codex', c.codex]]); } else await S.run([['give', c.gear || c.item, c.n || 1]]); W.checkpoint(); return; }
-    if (I.passages && I.passages.agir()) return; // 2.28 (D218) : l'ascenseur des Archives basses, le bout de la rue (passages.js)
+    if (I.passages && I.passages.agir()) return; // 2.28 (D218), 2.47 (D238) : le bout de la rue, la ruelle, la porte de la mosquée (passages.js)
     if (I.activites && I.activites.agir()) return; // 2.28 (D217) : la borne, l'étal, un banc devant l'écran, la grande roue et les manèges (activites.js)
     if (I.rodeurs && I.rodeurs.faceAPorte()) { I.rodeurs.direPorte(); return; } // 2.x : la porte interdite — elle ne s'ouvre pas, on en parle
     if (W.nearPrayer()) {
@@ -8944,7 +8944,7 @@ window.ISNAD_PROMO = {"NOM":"ISNAD","SOUS_TITRE":"Chroniques des Compagnons","AD
     if (I.trafic) I.trafic.tic(dt); // 2.23 : les voitures des quartiers roulent, et s'arrêtent devant qui se tient sur leur voie
     if (I.gens) I.gens.maj(dt); // 2.32 : les bêtes qui marchent (gens.js)
     if (can && I.circuit) I.circuit.tic(dt); // 2.27 : au premier passage au circuit, Sâlim arrive en moto (circuit.js)
-    if (can && I.passages) I.passages.tic(dt); // 2.28 (D218) : la rue et l'ascenseur, à pied (passages.js)
+    if (can && I.passages) I.passages.tic(dt); // 2.28 (D218), 2.47 (D238) : la rue, la ruelle, la mosquée, à pied (passages.js)
     if (can && I.monde) I.monde.tic(dt); // 2.30 (D222) : les brigands, le voyageur, sur la route (monde.js)
     if (I.activites) I.activites.tic(dt, can); // 2.28 (D217) : assis devant l'écran, un pas le relève (activites.js)
     W.updateCam();
@@ -9169,7 +9169,7 @@ window.ISNAD_PROMO = {"NOM":"ISNAD","SOUS_TITRE":"Chroniques des Compagnons","AD
   W.target = function () {
     if (W.excursion) return I.rodeurs.cible();
     const o = W.cur(); if (!o) return null;
-    { const pc = I.passages && I.passages.cible ? I.passages.cible(o) : null; if (pc) return pc; } // 2.28 (D218) : remonté des Archives basses, l'objectif resté en bas — la flèche montre l'ascenseur
+    { const pc = I.passages && I.passages.cible ? I.passages.cible(o) : null; if (pc) return pc; } // 2.47 (D238) : dans le refuge, loin de Maître Yûnus — la flèche montre le chemin de la mosquée (passages.js)
     if (o.goto) { const s = W.spotPx(o.goto); return s && { x: s[0], y: s[1], gx: s[0], gy: s[1], kind: 'goto' }; }
     if (o.build) { const st = o.build.site && I.build.sites()[o.build.site]; return st && st.map === W.map.id ? { x: (st.x + st.w / 2) * T, y: (st.y + st.h / 2) * T, gx: (st.x + st.w / 2) * T, gy: (st.y + st.h) * T + 8, kind: 'goto', site: true } : null; }
     if (o.talk) { const n = W.npcs.find(n => n.id === o.talk); return n && !n.hidden && n.map === W.map.id && n.placed ? { x: n.x, y: n.y - 26, gx: n.x, gy: n.y, kind: 'talk', ent: n } : null; }
@@ -12661,7 +12661,7 @@ window.ISNAD_PROMO = {"NOM":"ISNAD","SOUS_TITRE":"Chroniques des Compagnons","AD
   // les réglages des rues des quartiers (D.CITE)
   function rues(m) {
     // 2.28 (D218) : arrivé par la rue pendant le prologue, Idris ne les voit pas encore — Maître Yûnus ne lui a pas encore ouvert
-    // les yeux sur la noosphère (le prologue, aux Archives basses)
+    // les yeux sur la noosphère (le prologue, dans la vieille mosquée — 2.47)
     if (!I.save.data.prologue) return null;
     const C = D.CITE || {}, RC = C.rodent || {}, E0 = W.saga.enemies || {}, T = 16, loin = (C.loin || 12) * T;
     const depart = W.spotPx('parvis') || [W.player.x, W.player.y], spots = Object.keys(m.spots).map(k => m.spots[k]);
@@ -15450,7 +15450,7 @@ window.ISNAD_PROMO = {"NOM":"ISNAD","SOUS_TITRE":"Chroniques des Compagnons","AD
      l'entrée) ; Koufa, retournée, suit son miroir. On sort en marchant vers le bord, ou par A, tourné vers lui (passages.js,
      P.ajouter : les mêmes gardes que la rue — Idris a la main, ni récit, ni combat, ni menu ; le joueur de test du moteur ne
      sort jamais). Jamais dans l'histoire-cadre, les veillées, le dernier maillon ; ni la mer, ni la noosphère, ni une route.
-   - Sortir, c'est le schéma de l'ascenseur (2.28) : le même chapitre, rien n'est rangé ; le point de retour (la carte, ses
+   - Sortir, c'est le schéma de l'ancien ascenseur (2.28 à 2.46) : le même chapitre, rien n'est rangé ; le point de retour (la carte, ses
      réglages, la place d'Idris un pas en deçà de la porte, celle des personnages) est gardé dans les drapeaux du chapitre
      (S.flags._monde), et le point de reprise est pris sur la carte du monde : une partie quittée là s'y rouvre. Idris paraît à
      côté de la ville du récit, du côté de la porte ; la flèche la montre. Y revenir (y marcher, ou A) recharge la carte du
@@ -16508,7 +16508,7 @@ window.ISNAD_PROMO = {"NOM":"ISNAD","SOUS_TITRE":"Chroniques des Compagnons","AD
    veillée, Idris remonte dans la rue et rencontre un habitant enfermé dans une idole. Il le dénoue par la parole ;
    les meilleurs arguments demandent un savoir appris chez le Compagnon ou à la Citadelle (need: 'saga/id').
    Tout y est de fiction. Les types sont anciens ; les images et les phrases sont originales. */
-/* 2.x — trois retours (x_*, marqués « retour: n ») : ce qui s'est passé aux Archives basses pendant qu'Idris suivait un
+/* 2.x — trois retours (x_*, marqués « retour: n ») : ce qui s'est passé à la vieille mosquée (2.47 ; avant, les Archives basses) pendant qu'Idris suivait un
    récit, joué une fois quand il revient en 2084 pour la n-ième fois (ou plus tard). Et une visite (« visite: 'citadelle' ») :
    la Citadelle du Caïd, où Idris est né, ouverte depuis la Chaîne dès la première veillée entendue. Le moteur pose
    l'état de 2084 en drapeaux (_2084_*) : un récit les lit, il ne les écrit pas. Textes proposés par l'agent, à relire. */
@@ -16518,7 +16518,7 @@ window.ISNAD_PROMO = {"NOM":"ISNAD","SOUS_TITRE":"Chroniques des Compagnons","AD
    Demande du décideur du 21 novembre ; textes proposés par l'agent, à valider. */
 /* 2.25 (D214) — la découverte de l'Agrégor (le décideur, 21 novembre : « On ne parle plus de l'agregore des le début de
    l'histoire il faut qu'il le découvre au fur et à mesure avec maître Yunus »). Le prologue ne le nomme plus ; à la fin de
-   chacune des cinq rencontres, Maître Yûnus monte des Archives (« yunus_r », caché, puis « show ») et Idris découvre une
+   chacune des cinq rencontres, Maître Yûnus vient de la vieille mosquée (« yunus_r », caché, puis « show ») et Idris découvre une
    chose de plus : I, quelque chose rassemble les regards ; II, ça ne commande pas, ça additionne ; III, son nom, et la fiche
    « agregor » du Recueil ; IV, il ne craint que ce qui passe de main en main sans passer par lui ; V, il a un cœur, sous le
    grand écran. Avant l'étape III, aucun texte ne le nomme (on dit « ce qui règne là-haut », « les écrans »). Une chimère,
@@ -17042,7 +17042,7 @@ ISNAD.registerSaga({
       npcs: [
         { id: 'gamin', name: 'L’enfant du parvis', at: ['ecran', 3, 2], look: { kind: 'enfant', robe: '#3d5a6a', head: '#28343c' }, talk: [['say', 'gamin', 'Je suis là tous les soirs.']] },
         { id: 'defileur', name: 'Celui qui défile', at: ['ruelle', 0, -1], look: { kind: 'citadin', robe: '#6a7ad0', head: '#4a58a8', cloak: '#8494e4' }, talk: [['say', 'defileur', '… encore un…']] },
-        // 2.25 (D214) : Maître Yûnus, monté des Archives à la fin de la rencontre (« show » l'écarte du joueur s'il paraît sur lui)
+        // 2.25 (D214) : Maître Yûnus, venu de la vieille mosquée (2.47) à la fin de la rencontre (« show » l'écarte du joueur s'il paraît sur lui)
         { id: 'yunus_r', name: 'Maître Yûnus', hero: 'yunus', at: ['ecran', -2, 3], hidden: true }
       ],
       intro: [
@@ -17117,7 +17117,7 @@ ISNAD.registerSaga({
       npcs: [
         { id: 'gamin', name: 'L’enfant du parvis', at: ['ecran', 3, 2], look: { kind: 'enfant', robe: '#3d5a6a', head: '#28343c' }, talk: [['say', 'gamin', 'Je suis là tous les soirs.']] },
         { id: 'regent', name: 'Le Régent', at: ['ascenseur', -2, 0], look: { kind: 'citadin', coiffe: 'tiare', robe: '#4a3a52', head: '#5a4a2a', cloak: '#2f2638', trim: '#d9b45a' }, talk: [['say', 'regent', 'Accordé.']] },
-        // 2.25 (D214) : Maître Yûnus, monté des Archives à la fin de la rencontre
+        // 2.25 (D214) : Maître Yûnus, venu de la vieille mosquée (2.47) à la fin de la rencontre
         { id: 'yunus_r', name: 'Maître Yûnus', hero: 'yunus', at: ['ecran', -2, 3], hidden: true }
       ],
       intro: [
@@ -17190,7 +17190,7 @@ ISNAD.registerSaga({
       npcs: [
         { id: 'gamin', name: 'L’enfant du parvis', at: ['ecran', 3, 2], look: { kind: 'enfant', robe: '#3d5a6a', head: '#28343c' }, talk: [['say', 'gamin', 'Je suis là tous les soirs.']] },
         { id: 'admire', name: 'L’Admiré', at: ['ecran', -3, 1], look: { kind: 'citadin', robe: '#b8449a', head: '#86306e', cloak: '#cc5aac', trim: '#f0e8f4' }, talk: [['say', 'admire', 'Tu m’as reconnu, bien sûr.']] },
-        // 2.25 (D214) : Maître Yûnus, monté des Archives à la fin de la rencontre
+        // 2.25 (D214) : Maître Yûnus, venu de la vieille mosquée (2.47) à la fin de la rencontre
         { id: 'yunus_r', name: 'Maître Yûnus', hero: 'yunus', at: ['ecran', -2, 3], hidden: true }
       ],
       intro: [
@@ -17266,7 +17266,7 @@ ISNAD.registerSaga({
       npcs: [
         { id: 'gamin', name: 'L’enfant du parvis', at: ['ecran', 3, 2], look: { kind: 'enfant', robe: '#3d5a6a', head: '#28343c' }, talk: [['say', 'gamin', 'Je suis là tous les soirs.']] },
         { id: 'compteur', name: 'Le Compteur', at: ['rue', 2, -1], look: { kind: 'citadin', robe: '#9a7838', head: '#6a5024', cloak: '#b28c46', trim: '#d9b45a', item: 'bourse' }, talk: [['say', 'compteur', 'Ne me dérange pas. Je compte.']] },
-        // 2.25 (D214) : Maître Yûnus, monté des Archives à la fin de la rencontre
+        // 2.25 (D214) : Maître Yûnus, venu de la vieille mosquée (2.47) à la fin de la rencontre
         { id: 'yunus_r', name: 'Maître Yûnus', hero: 'yunus', at: ['ecran', -2, 3], hidden: true }
       ],
       intro: [
@@ -17341,7 +17341,7 @@ ISNAD.registerSaga({
       npcs: [
         { id: 'gamin', name: 'L’enfant du parvis', at: ['ecran', 3, 2], look: { kind: 'enfant', robe: '#3d5a6a', head: '#28343c' }, talk: [['say', 'gamin', 'Je suis là tous les soirs.']] },
         { id: 'carto', name: 'Le Cartographe', at: ['ascenseur', -2, 0], look: { kind: 'citadin', robe: '#3a9a8a', head: '#267264', cloak: '#52b2a0', trim: '#34507a', item: 'feuillets' }, talk: [['say', 'carto', 'Combien ça a fait de vues ?']] },
-        // 2.25 (D214) : Maître Yûnus, monté des Archives à la fin de la rencontre
+        // 2.25 (D214) : Maître Yûnus, venu de la vieille mosquée (2.47) à la fin de la rencontre
         { id: 'yunus_r', name: 'Maître Yûnus', hero: 'yunus', at: ['ecran', -2, 3], hidden: true }
       ],
       intro: [
@@ -17574,7 +17574,7 @@ ISNAD.registerSaga({
       // 2.47 (D238) : le refuge commence dans la vieille mosquée, à côté de Maître Yûnus ; la ruelle mène aux quartiers
       map: 'archives', start: 'entree', party: ['idris'],
       npcs: [
-        { id: 'yunus_c', name: 'Maître Yûnus', hero: 'yunus', at: ['entree', -3, -1], face: 'right', talk: [['say', 'yunus_c', 'Je suis là, Idris.']] },
+        { id: 'yunus_c', name: 'Maître Yûnus', hero: 'yunus', at: ['entree', -2, -1], face: 'right', talk: [['say', 'yunus_c', 'Je suis là, Idris.']] },
         ...PASSANTS_Q
       ],
       // 2.28 (D218) : arrivé à pied par la rue (`_2084_rue`, posé par le moteur : cite.js), Idris entre par l'entrée de la rue ;
