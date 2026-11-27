@@ -4,7 +4,8 @@ Le paquet : `plateformes/sortie/poki/isnad-<numéro>-poki.zip` (`node v2/tools/p
 racine, rien d'autre. C'est le paquet « web » (le jeu en un fichier, polices embarquées) plus, avant la fin de `<head>`,
 la balise du SDK (`plateformes/poki/balise-sdk.html`) et le branchement (`plateformes/poki/poki.js`). Le jeu n'est pas
 modifié ; ôtés ces deux blocs, on retrouve le paquet web à l'octet (contrôlé à chaque fabrication).
-Essai : `node v2/tools/plateformes.js essai poki` (SDK faux ; `SANS_D=1` saute manette.js et loupe.js).
+Essai : `node v2/tools/plateformes.js essai poki` (SDK faux ; `SANS_D=1` saute manette.js et loupe.js, qui passent sur une
+copie du paquet où ne changent que la langue d'office, mise en français, et la balise du SDK, ôtée — comme CrazyGames).
 
 Pages lues le 27 novembre 2026 (developers.poki.com/guide/…). Tout texte de cette fiche destiné au public est une
 **proposition**, à valider par le décideur. Rien n'est déposé sur Poki, aucun compte n'est créé.

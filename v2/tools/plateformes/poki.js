@@ -265,8 +265,22 @@ async function essai(C, fait) {
     dit(appelsTous.filter(n => n === 'commercialBreak:debut').length === appelsTous.filter(n => n === 'commercialBreak:fin').length, `chaque commercialBreak a eu sa fin (${appelsTous.filter(n => n === 'commercialBreak:debut').length})`);
   } finally { await b.close(); jeu.close(); hote.close(); }
 
+  /* manette.js et loupe.js lisent les libellés français, et ouvriraient le vrai SDK depuis Internet (qui écrit dans la
+     console « Possible Unauthorized Game Hosting Detected » hors de Poki) : comme pour CrazyGames, on les passe sur une copie
+     du paquet où ne changent que la langue d'office (le français, sans suivre Poki) et la balise du SDK, ôtée (le SDK absent,
+     comme sous un bloqueur : un cas que le branchement sert déjà). Les trois changements sont contrôlés. */
+  let pageD = null;
+  if (!process.env.SANS_D) {
+    const balise = fs.readFileSync(path.join(C.DOSSIER, 'poki', 'balise-sdk.html'), 'utf8').trim();
+    const R = [["langueParDefaut: 'en'", "langueParDefaut: 'fr'"], ['suivreLaLangueDePoki: true', 'suivreLaLangueDePoki: false'], [balise, '<!-- SDK ôté pour manette.js et loupe.js -->']];
+    let h = fait.html; for (const [a, z] of R) { if (h.split(a).length !== 2) throw new Error(`ÉCART poki : « ${a.slice(0, 40)} » n’est pas une seule fois dans le paquet`); h = h.replace(a, () => z); }
+    let retour = h; for (const [a, z] of R.slice().reverse()) retour = retour.replace(z, () => a);
+    if (retour !== fait.html) throw new Error('ÉCART poki : la copie diffère du paquet par autre chose que la langue d’office et la balise du SDK');
+    const tmp = fs.mkdtempSync(path.join(os.tmpdir(), 'isnad-poki-fr-')); pageD = path.join(tmp, 'index.html'); fs.writeFileSync(pageD, h);
+    note(`manette.js et loupe.js : sur une copie du paquet, la langue d’office mise en français et la balise du SDK ôtée (seules différences, contrôlées) — ${pageD}`);
+  }
   for (const outil of process.env.SANS_D ? [] : ['manette.js', 'loupe.js']) {
-    const r = spawnSync('node', ['tools/' + outil], { cwd: C.V2, env: Object.assign({}, process.env, { JEU: path.relative(C.V2, fait.page) }), encoding: 'utf8', maxBuffer: 256e6, timeout: 1800000 });
+    const r = spawnSync('node', ['tools/' + outil], { cwd: C.V2, env: Object.assign({}, process.env, { JEU: path.relative(C.V2, pageD) }), encoding: 'utf8', maxBuffer: 256e6, timeout: 1800000 });
     const sortie = (r.stdout || '') + (r.stderr || ''), lignes = sortie.trim().split('\n'), alertes = [...new Set((sortie.match(/\b(REFUS|BLOQUÉ|ABSENT|INACCESSIBLE|INVISIBLE|TRAIT|ÉCART|RECOUVERT|DÉBORDE|SOMBRE|SUPERPOSÉ|COINCÉ|TEXTE CACHÉ)\b/g) || []))];
     dit(r.status === 0 && !alertes.length, `${outil} sur le paquet : code ${r.status}, alertes : ${alertes.join(', ') || 'aucune'}`);
   }
