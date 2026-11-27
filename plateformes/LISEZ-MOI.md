@@ -62,3 +62,22 @@ autre fichier. Il exporte `{ description, faire(C) }` : `C` est `commun.js` (lir
 sortie, faire un zip, les contrôles communs) ; `faire` rend au moins `{ page }` (le fichier HTML que l'essai éprouve), et
 `zip` / `entrees` pour un zip. `web.js` et `itch.js` en sont les modèles. `commun`, `polices` et `essai` ne sont pas des
 cibles.
+
+## Newgrounds et CrazyGames (Basic Launch)
+
+```sh
+node v2/tools/plateformes.js newgrounds                  # sortie/newgrounds/isnad-<numéro>-newgrounds.zip (le paquet web, index.html seul)
+SANS_D=1 node v2/tools/plateformes.js essai newgrounds   # l'essai générique, dans un cadre d'une autre origine
+node v2/tools/plateformes.js crazygames                  # sortie/crazygames/isnad-<numéro>-crazygames.zip : le paquet web + un préambule
+node v2/tools/plateformes/crazygames/essai.js            # l'essai propre : anglais d'office, langues, pas de plein écran, touchers comptés
+```
+
+Fiches : `newgrounds.md`, `newgrounds-textes-a-valider.md`, `crazygames.md`, `crazygames-textes-a-valider.md` (la lecture des pages officielles de
+CrazyGames est faite ; celle de Newgrounds a été refusée, HTTP 403 : tout y est « non vérifié »). Le préambule de CrazyGames est dans
+`v2/tools/plateformes/crazygames/` (`preambule.js`, `preambule.css`) ; ce dossier n'est pas une cible.
+
+## Poki (ajouté par l'agent Poki)
+
+`node v2/tools/plateformes.js poki` — `sortie/poki/isnad-<numéro>-poki.zip` : le paquet web + la balise du SDK de Poki
+(`poki/balise-sdk.html`) + son branchement (`poki/poki.js`, versionné). L'essai (`essai poki`, SDK faux) est dans
+`v2/tools/plateformes/poki.js` ; la fiche, avec les règles relevées et ce qu'il reste à décider : `poki.md`.
