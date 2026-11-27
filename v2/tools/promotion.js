@@ -1,7 +1,8 @@
 /* ISNAD 2.x — ce que disent tous les supports de promotion (shorts, démo jouable, livret) : écrit ici, et nulle part
    ailleurs. Changer l'adresse, c'est changer cette ligne, puis refaire les supports (v2/tools/shorts.js, jouable.js,
-   livret.js). La mention du soutien ne paraît, pour l'instant, que sur le plan final des shorts
-   (node v2/tools/shorts.js fin). */
+   livret.js). La mention du soutien paraît sur le plan final des shorts
+   (node v2/tools/shorts.js fin), la dernière page du livret court et, depuis le 27 novembre (D241, le décideur : la garder),
+   l'accueil du site (plateformes/site). */
 module.exports = {
   ADRESSE: 'www.isnad-game.org',
   NOM: 'ISNAD',

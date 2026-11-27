@@ -2713,6 +2713,16 @@ pages privées de son compte.
   `v2/docs/architecture.md`, « Mener plusieurs récits », « La découverte de l'Agrégor », « L'écran-titre » ; `AGENTS.md`.
   Contrôles : `retours.js` (les cinq maillons ouverts par leurs boutons, la liste de « Continuer », l'Agrégor dans un autre
   ordre, une partie de la 2.47), `paquet.js`, `manette.js` (la liste au joystick, A et B), puis la batterie.
+- [x] **D241. Le site : Netlify, l'APK de test gardé, le soutien de l'Institut sur l'accueil ; les textes relus d'abord (le
+  décideur, 27 novembre ; aucun changement du jeu).** « Fais moi le site pret a publier », puis ses choix, à nos questions :
+  l'hébergeur, « Netlify » ; l'APK de test sur la page « Tester », « Le garder » (il l'essaie sur son téléphone avant de
+  publier : `plateformes/android.md`, § 1) ; la mention « Une initiative soutenue par l'Institut Islam Actuel » et son logo
+  sur l'accueil, « Oui, les garder » — `promotion.js` les réservait aux shorts et au livret court : le site s'y ajoute ; les
+  textes, « Je relis d'abord » : ses 89 fiches (chaque texte public du site assemblé, mot pour mot, avec sa source ; les
+  questions à unifier entre supports ; ce qui est déjà décidé, pour mémoire) sont sur une page de validation privée, « Textes
+  du site ISNAD » ; le site se refait avec ses réponses. La fiche des gestes : `plateformes/site/netlify.md`, d'après la
+  documentation de Netlify lue le 27 novembre (dépôt par glisser-déposer du dossier, `_headers` et `404.html` pris d'eux-mêmes,
+  le domaine, la formule gratuite et son plafond). L'agent ne crée aucun compte et ne dépose rien.
 - [ ] **Proposition de reformulation de l'exigence 2 (formulation de l'agent, à valider ; l'exigence elle-même n'est pas
   réécrite).** Après D205, on propose d'ajouter à l'exigence 2 : « L'émotion d'un Compagnon passe par l'attitude du corps
   et les bulles ; celle des autres peut aussi passer par le visage. » (aujourd'hui, l'exigence dit : « Le caractère et

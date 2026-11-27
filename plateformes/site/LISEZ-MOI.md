@@ -48,6 +48,8 @@ isnad-site-<numéro>.zip        (le même dossier)
 
 ## Avant de le mettre en ligne
 
+Le décideur a choisi Netlify (D241) : les gestes, du premier dépôt au domaine, sont dans `netlify.md`.
+
 1. **Installer l'APK de test sur ton propre téléphone** (`plateformes/sortie/android/isnad-<numéro>-test.apk`), et y jouer
    quelques minutes : l'agent n'a pu le lancer ni sur un téléphone ni sur un émulateur. La page « Tester » le propose au
    public : elle ne doit le faire qu'une fois cet essai fait. Sinon, retire-le de `plateformes/sortie/android/` avant de

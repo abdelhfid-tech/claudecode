@@ -8,15 +8,16 @@ seul peux trancher, par ordre de priorité.
 ## 1. Avant tout dépôt
 
 - **Essayer l'APK sur ton téléphone.** Il n'a été lancé ni sur un téléphone ni sur un émulateur (la machine de l'agent
-  n'en fait pas tourner). Le site le propose au public : on ne le met en ligne qu'après cet essai.
-- **Les textes proposés** : la fiche itch.io (`itch-page.txt`), le site (`site/textes-a-valider.md`), l'application
+  n'en fait pas tourner). Le site le propose au public (ton choix, 27 novembre : il reste sur la page « Tester ») : on ne
+  met le site en ligne qu'après cet essai.
+- **Les textes proposés** : la fiche itch.io (`itch-page.txt`), le site (sur la page de validation « Textes du site ISNAD »,
+  89 fiches, depuis le 27 novembre ; `site/textes-a-valider.md` en garde l'origine), l'application
   (`application/textes-a-valider.md`), Newgrounds et CrazyGames (`*-textes-a-valider.md`). La réserve, la devise et
   l'adresse viennent toujours de `v2/tools/promotion.js`.
 - **À unifier une fois pour tous les supports** : « cinq récits » ou « cinq sagas » (l'écran-titre dit « sagas ») ;
   « JRPG » ou « jeu de rôle » ; tu ou vous ; un seul âge public (« dès dix ans » sur le site, PEGI 12 évoqué ailleurs) ;
   « la fin du califat bien guidé » (repris du livret), à relire au regard de l'exigence 5.
-- **Le soutien de l'Institut sur le site** : `promotion.js` le réserve aux shorts et au livret ; le mettre sur le site
-  est une extension, à décider.
+- ~~Le soutien de l'Institut sur le site~~ : décidé le 27 novembre, il y reste (D241).
 - **L'adresse de contact** est publiée en clair sur chaque page du site : une adresse dédiée vaudrait mieux.
 
 ## 2. Android
@@ -54,7 +55,8 @@ seul peux trancher, par ordre de priorité.
 
 ## 6. Le site
 
-- L'hébergement (prévu pour Cloudflare Pages ou Netlify, servi à la racine d'un domaine) et le domaine ;
+- L'hébergement : **Netlify** (ton choix, 27 novembre ; `site/netlify.md` dit les gestes, de la première mise en ligne au
+  domaine) ; le domaine ;
   `includeSubDomains` et `preload` pour HSTS ; l'indexation (coupée aujourd'hui).
 - Le lien TestFlight et la page itch.io, à renseigner dans `site/site.json` quand ils existent.
 - L'arabe et l'anglais du site, à écrire à la source dans chaque langue (la structure est prête).
