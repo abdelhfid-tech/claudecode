@@ -1,0 +1,4 @@
+/* CrazyGames : pas de bouton plein écran maison (le portail a le sien) ; user-select: none sur le corps, avec tous ses préfixes
+   (le jeu a déjà les deux premiers). */
+#pleinbtn, [data-plein] { display: none !important; }
+body { -webkit-user-select: none; -moz-user-select: none; -ms-user-select: none; user-select: none; }
