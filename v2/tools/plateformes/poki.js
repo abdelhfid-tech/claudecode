@@ -91,6 +91,9 @@ async function essai(C, fait) {
       await p.goto(oHote + '/index.html');
       await p.waitForSelector('iframe#jeu'); X.f = p.frames().find(f => f.url().startsWith(oJeu)) || await (await p.$('iframe#jeu')).contentFrame();
       await X.f.waitForFunction(() => { const t = document.querySelector('#title'); return t && !t.hidden && t.querySelectorAll('.vmenu button').length > 0; }, null, { timeout: 30000 });
+      // (2.48 : un bouton du jeu ignore un toucher dans les 600 premières ms de la page — tapable, ui.js, son compteur part de 0 ;
+      // avec les polices embarquées, le titre paraît avant : on touche, comme un joueur, une seconde au moins après le chargement)
+      await X.f.waitForFunction(() => performance.now() > 1000, null, { timeout: 10000 });
       X.t = s => X.f.evaluate(s => window.ISNAD.t(s), s);
       X.appels = () => X.f.evaluate(() => (window.__poki ? window.__poki.calls.map(c => c.n) : null));
       X.journal = () => X.f.evaluate(() => (window.__poki ? window.__poki.calls : []));
@@ -168,10 +171,13 @@ async function essai(C, fait) {
       // 5. rechargement : « Continuer » → publicité (reprise)
       await X.p.reload(); X.f = X.p.frames().find(fr => fr.url().startsWith(oJeu)); const g = X.f; X.attendre = (n, k) => g.waitForFunction(([n, k]) => window.__poki && window.__poki.calls.filter(c => c.n === n).length >= (k || 1), [n, k || 1], { timeout: 30000 }); X.appels = () => g.evaluate(() => (window.__poki ? window.__poki.calls.map(c => c.n) : null)); X.journal = () => g.evaluate(() => (window.__poki ? window.__poki.calls : []));
       await g.waitForFunction(() => { const t = document.querySelector('#title'); return t && !t.hidden && t.querySelectorAll('.vmenu button').length > 0; }, null, { timeout: 30000 });
+      await g.waitForFunction(() => performance.now() > 1000, null, { timeout: 10000 });   // (voir ouvrir : une seconde après le chargement)
       await X.attendre('gameLoadingFinished');
       const t = s => g.evaluate(s => window.ISNAD.t(s), s);
       const cont = g.locator('#title .vmenu button', { hasText: await t('Continuer') }).first();
       if (await cont.count()) {
+        const horloge = await g.evaluate(() => Math.round(performance.now()));
+        note(`${nom} · 5 : « Continuer » touché ${horloge} ms après le chargement de la page`);
         await cont.click(); await g.waitForTimeout(500);
         /* 2.48 (D240) : avec plusieurs récits en cours, « Continuer » en ouvre la liste — aucune publicité avant le choix ; on
            choisit alors le dernier de la liste (un récit quitté en chemin, s'il y en a un : il reprend par U.reprendre) */
@@ -181,7 +187,16 @@ async function essai(C, fait) {
           await g.locator('#title .vmenu.reprises button[data-reprise]').nth(liste.length - 1).click();
           note(`${nom} · 5 : choisi dans la liste — ${liste.length > 1 ? 'un récit quitté en chemin (U.reprendre)' : 'le récit en cours (U.resume)'}`);
         }
-        await X.attendre('commercialBreak:debut');
+        try { await X.attendre('commercialBreak:debut'); }
+        catch (e) {   // ce qu'on voit quand la publicité de reprise ne vient pas
+          const vu = await g.evaluate(() => ({ ecrans: [...document.querySelectorAll('.screen')].filter(s => !s.hidden).map(s => s.id), menu: (document.querySelector('#title .vmenu') || {}).className,
+            boutons: [...document.querySelectorAll('#title .vmenu button')].map(b => (b.dataset.reprise ? '[' + b.dataset.reprise + '] ' : '') + b.textContent.trim().slice(0, 40)),
+            appels: window.__poki ? window.__poki.calls.map(c => c.n) : null, recit: window.ISNAD.world.saga && window.ISNAD.world.saga.id, scene: window.ISNAD.scene === window.ISNAD.world ? 'monde' : 'autre',
+            choix: !document.querySelector('#choice').hidden ? document.querySelector('#choice').textContent.trim().slice(0, 120) : '' }));
+          await X.p.screenshot({ path: path.join(out, `reprise-${w}x${h}-sans-pub.png`) });
+          console.log(`ÉCART ${nom} · 5 : aucune publicité de reprise — ${JSON.stringify(vu)}`);
+          throw e;
+        }
         let a5 = await X.appels(); dit(a5[a5.length - 1] !== 'gameplayStart' && a5.includes('commercialBreak:debut') && !a5.includes('gameplayStart'), `${nom} · 5 « Continuer » : la publicité de reprise vient avant tout gameplayStart (${a5.join(' → ')})`);
         await g.evaluate(() => window.__poki.finirPub()); await X.attendre('commercialBreak:fin');
         for (let i = 0; i < 30 && !(await X.appels()).includes('gameplayStart'); i++) { await X.p.keyboard.press('Enter'); await g.waitForTimeout(300); }
