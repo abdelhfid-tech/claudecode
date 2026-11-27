@@ -1,0 +1,137 @@
+/* ISNAD — le site qui présente le jeu. Écrit à la main, sans cadre logiciel.
+   L'habit du jeu : ses couleurs (v2/src/style.css : --ink, --gold, --sand, --dim) et ses polices (plateformes/polices/,
+   servies par le site lui-même : la feuille des @font-face est posée en tête de ce fichier à l'assemblage).
+   Le téléphone tenu en hauteur d'abord (une gouttière de 16 points, rien ne défile en largeur), puis le grand écran.
+   Les propriétés logiques (inline, block) servent déjà l'arabe, qui se lira de droite à gauche. */
+:root {
+  color-scheme: dark;
+  --encre: #07060d; --page: #0c0a17; --panneau: #121024; --or: #e9c877; --sable: #f3e7cc; --terne: #b3a892; --clair: #fff6dc;
+  --trait: rgba(233, 200, 119, .34); --trait-fort: rgba(233, 200, 119, .7);
+  --f-titre: "Cinzel", "Trajan Pro", "Times New Roman", "Amiri", serif;
+  --f-texte: "Alegreya", "Iowan Old Style", Georgia, "Amiri", serif;
+  --f-ar: "Reem Kufi", "Amiri", "Geeza Pro", sans-serif;
+  --large: 68rem; --gouttiere: max(16px, env(safe-area-inset-left, 0px));
+}
+* { box-sizing: border-box; }
+html { -webkit-text-size-adjust: 100%; text-size-adjust: 100%; }
+body { margin: 0; background: var(--encre); color: var(--sable); font-family: var(--f-texte); font-size: 1.0625rem; line-height: 1.55; overflow-wrap: break-word; }
+img { max-width: 100%; height: auto; display: block; }
+a { color: var(--or); text-underline-offset: .18em; }
+a:hover { color: var(--clair); }
+a:focus-visible, .bouton:focus-visible { outline: 2px solid var(--clair); outline-offset: 3px; }
+h1, h2, h3 { font-family: var(--f-titre); font-weight: 700; color: var(--or); line-height: 1.18; letter-spacing: .04em; text-wrap: balance; margin: 0 0 .55em; }
+h1 { font-size: clamp(2.1rem, 9vw, 3.4rem); letter-spacing: .14em; color: var(--clair); }
+h2 { font-size: clamp(1.3rem, 5vw, 1.65rem); }
+h3 { font-size: 1.05rem; color: var(--sable); letter-spacing: .06em; margin-top: 1.4em; }
+p { margin: 0 0 .85em; text-wrap: pretty; }
+i { font-style: italic; }
+b, strong { color: var(--clair); }
+code { font-family: ui-monospace, "SFMono-Regular", Menlo, Consolas, monospace; font-size: .86em; }
+
+/* l'évitement (clavier, lecteurs d'écran) */
+.evitement { position: absolute; inset-inline-start: 8px; top: -40px; padding: .4em .8em; background: var(--or); color: var(--encre); z-index: 10; }
+.evitement:focus { top: 8px; }
+
+/* ---------- l'en-tête ---------- */
+.entete { display: flex; align-items: center; justify-content: space-between; gap: .6em 1em; flex-wrap: wrap; max-width: var(--large); margin: 0 auto;
+  padding: max(12px, env(safe-area-inset-top, 0px)) var(--gouttiere) 12px; border-bottom: 1px solid var(--trait); }
+.marque { display: inline-flex; align-items: baseline; gap: .5em; text-decoration: none; color: var(--clair); }
+.marque-ar { font-family: var(--f-ar); font-weight: 700; color: var(--or); font-size: 1.15rem; }
+.marque-nom { font-family: var(--f-titre); font-weight: 700; letter-spacing: .2em; font-size: 1.05rem; }
+.entete nav { display: flex; align-items: center; gap: .25em 1em; flex-wrap: wrap; }
+.entete nav a { font-family: var(--f-titre); font-size: .86rem; letter-spacing: .08em; text-decoration: none; color: var(--sable); padding: .45em .1em; }
+.entete nav a[aria-current="page"] { color: var(--or); box-shadow: inset 0 -2px 0 var(--or); }
+.entete nav a.jouer { color: var(--encre); background: var(--or); padding: .45em .9em; border-radius: 2px; }
+.entete nav a.jouer:hover { background: var(--clair); }
+
+/* ---------- le contenu ---------- */
+main { max-width: var(--large); margin: 0 auto; padding: 0 var(--gouttiere) 2.5rem; }
+.bloc { padding-block: 2.1rem .4rem; }
+.bloc + .bloc { border-top: 1px solid rgba(233, 200, 119, .14); }
+.deux { display: grid; gap: 1.6rem 2.6rem; }
+.petit { font-size: .92rem; color: var(--terne); }
+
+/* la une */
+.une { display: grid; gap: 1.4rem; padding-block: 1.8rem .6rem; align-items: center; }
+.une-ar { font-family: var(--f-ar); font-weight: 700; font-size: 2.1rem; line-height: 1; color: var(--or); margin: 0 0 .3em; }
+.une-sous { font-family: var(--f-titre); font-size: .9rem; letter-spacing: .28em; text-transform: uppercase; color: var(--sable); margin-top: -.3em; }
+.une-devise { font-style: italic; font-size: 1.18rem; color: var(--clair); margin-block: 1em; }
+.une-chapo { font-size: 1.12rem; color: var(--clair); }
+.une-image { margin: 0; }
+.une-image img { border: 1px solid var(--trait); box-shadow: 0 18px 50px rgba(0, 0, 0, .55); }
+.introuvable { text-align: center; padding-block: 4rem 3rem; }
+.introuvable .actions { justify-content: center; }
+
+/* les boutons */
+.actions { display: flex; flex-wrap: wrap; gap: .7em; margin-top: 1.2em; }
+.bouton { display: inline-flex; align-items: center; justify-content: center; min-height: 48px; padding: .6em 1.3em; font-family: var(--f-titre); font-weight: 700; font-size: .98rem;
+  letter-spacing: .06em; text-decoration: none; color: var(--encre); background: linear-gradient(180deg, #f6dc98, var(--or)); border: 1px solid var(--or); border-radius: 2px; }
+.bouton:hover { color: var(--encre); background: var(--clair); }
+.bouton.second { color: var(--or); background: transparent; border-color: var(--trait-fort); }
+.bouton.second:hover { color: var(--clair); border-color: var(--clair); }
+
+/* la réserve : bien visible */
+.reserve { margin-block: 1.4rem .6rem; padding: 1rem 1.1rem; border: 1px solid var(--trait-fort); border-inline-start: 4px solid var(--or); background: rgba(233, 200, 119, .07); }
+.reserve p { margin: 0 0 .5em; } .reserve p:last-child { margin: 0; }
+.reserve-texte { font-family: var(--f-titre); font-weight: 700; letter-spacing: .03em; color: var(--clair); font-size: 1.05rem; }
+.reserve-ligne { display: inline-block; padding: .5em .8em; border: 1px solid var(--trait-fort); background: rgba(233, 200, 119, .07); color: var(--clair); font-size: .98rem; }
+
+/* les listes */
+.liste { list-style: none; padding: 0; margin: 0 0 1em; display: grid; gap: .65em; }
+.liste li { position: relative; padding-inline-start: 1.25em; }
+.liste li::before { content: "◆"; position: absolute; inset-inline-start: 0; top: .42em; font-size: .62em; color: var(--or); }
+.liste b { color: var(--or); }
+.gestes { margin: 0 0 1em; padding-inline-start: 1.4em; display: grid; gap: .5em; }
+.gestes li::marker { font-family: var(--f-titre); font-weight: 700; color: var(--or); }
+
+/* les cinq récits */
+.sagas { display: grid; gap: .9rem; margin-block: 1rem 1.3rem; }
+.saga { margin: 0; padding: .7rem 1rem .8rem; border-inline-start: 2px solid var(--or); background: var(--page); }
+.saga-nom { display: block; font-family: var(--f-titre); font-weight: 700; color: var(--or); letter-spacing: .03em; }
+.saga-meta { display: block; font-size: .88rem; letter-spacing: .05em; color: var(--terne); font-variant-numeric: tabular-nums; }
+.saga-phrase { display: block; margin-top: .25em; color: var(--clair); }
+
+/* les images */
+figure { margin: 0; }
+figcaption { margin-top: .45em; font-size: .9rem; color: var(--terne); text-align: center; }
+.galerie { display: grid; gap: 1rem; margin-block: .6rem 1.2rem; }
+.galerie.tel { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+.galerie img, .tel-seul img { border: 1px solid var(--trait); }
+.tel-seul { max-width: 15rem; margin-inline: auto; }
+
+/* la page « Tester » */
+.tete { padding-block: 1.8rem .6rem; }
+.carte { margin-block: 1rem; padding: 1.3rem 1.1rem .6rem; background: var(--page); border: 1px solid var(--trait); }
+.bloc.carte + .bloc.carte { border-top: 1px solid var(--trait); }
+.num { display: inline-grid; place-items: center; width: 1.7em; height: 1.7em; margin-inline-end: .35em; border-radius: 50%; border: 1px solid var(--or); font-size: .8em; vertical-align: .1em; }
+.bientot { display: inline-block; padding: .35em .9em; font-family: var(--f-titre); font-weight: 700; letter-spacing: .08em; color: var(--encre); background: var(--terne); }
+.empreinte span { display: block; font-size: .92rem; color: var(--terne); }
+.empreinte code { display: block; margin-top: .3em; padding: .5em .7em; background: var(--encre); border: 1px solid var(--trait); color: var(--clair); word-break: break-all; line-height: 1.45; }
+.appel { text-align: start; }
+
+/* le soutien : la phrase, puis le logo, tel que l'Institut l'a fourni */
+.soutien { margin-top: 2.2rem; padding: 2rem 1rem; text-align: center; border-top: 1px solid var(--trait); }
+.mention { font-size: 1.15rem; color: var(--sable); text-wrap: balance; }
+.mention b { display: block; font-family: var(--f-titre); font-weight: 700; color: var(--or); font-size: 1.08em; letter-spacing: .03em; }
+.logo { width: min(320px, 80%); margin: 1.2rem auto 0; }
+
+/* ---------- le pied ---------- */
+.pied { max-width: var(--large); margin: 0 auto; padding: 1.6rem var(--gouttiere) max(1.6rem, env(safe-area-inset-bottom, 0px)); border-top: 1px solid var(--trait); text-align: center; color: var(--terne); font-size: .95rem; }
+.pied p { margin: 0 0 .6em; }
+.pied-devise { font-style: italic; color: var(--sable); }
+.pied-reserve { color: var(--clair); }
+.pied-liens a { display: inline-block; padding: .35em .15em; }
+.pied-version { font-size: .86rem; letter-spacing: .06em; }
+
+/* ---------- le grand écran ---------- */
+@media (min-width: 760px) {
+  body { font-size: 1.125rem; }
+  .une { grid-template-columns: minmax(0, 5fr) minmax(0, 6fr); gap: 2.6rem; padding-block: 3rem 1rem; }
+  .deux { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .galerie.tel { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+  .galerie.large { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .sagas { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .carte { padding: 1.6rem 1.8rem .8rem; }
+}
+@media (min-width: 1100px) { .sagas { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
+@media (prefers-reduced-motion: reduce) { * { scroll-behavior: auto !important; } }

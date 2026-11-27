@@ -17,3 +17,5 @@ promo/livret-2x/livret.pdf
 
 # les paquets des plateformes se refont par : node v2/tools/plateformes.js <cible> (polices versionnées dans plateformes/polices/)
 plateformes/sortie/
+# le jeu posé dans l’application se refait par : node v2/tools/plateformes.js android | ios
+plateformes/application/www/

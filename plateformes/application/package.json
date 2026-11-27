@@ -1,0 +1,19 @@
+{
+  "name": "isnad-application",
+  "version": "2.47.0",
+  "private": true,
+  "description": "ISNAD 2.x — l'application Android et iOS (Capacitor), faite à côté du jeu : node v2/tools/plateformes.js android | ios",
+  "license": "UNLICENSED",
+  "engines": { "node": ">=22" },
+  "dependencies": {
+    "@capacitor/android": "8.6.3",
+    "@capacitor/app": "8.1.2",
+    "@capacitor/core": "8.6.3",
+    "@capacitor/filesystem": "8.1.5",
+    "@capacitor/ios": "8.6.3",
+    "@capacitor/share": "8.0.3"
+  },
+  "devDependencies": {
+    "@capacitor/cli": "8.6.3"
+  }
+}

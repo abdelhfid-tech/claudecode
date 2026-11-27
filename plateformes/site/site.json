@@ -1,0 +1,15 @@
+{
+  "_lisez": "Ce qui se règle sans toucher au code. Le site se refait par : node v2/tools/plateformes.js site (voir plateformes/site/LISEZ-MOI.md).",
+  "testflight": "",
+  "_testflight": "le lien public d'invitation TestFlight (https://testflight.apple.com/join/…) ; vide : la page dit « bientôt »",
+  "itch": "",
+  "_itch": "le lien de la page du jeu sur itch.io (https://….itch.io/…) ; vide : rien n'est affiché",
+  "indexable": false,
+  "_indexable": "false tant que le décideur ne l'a pas décidé : noindex partout (balise, en-tête X-Robots-Tag, robots.txt)",
+  "hsts": "max-age=31536000",
+  "_hsts": "l'en-tête Strict-Transport-Security ; includeSubDomains et preload ne s'ajoutent que si le décideur le décide pour tout son domaine",
+  "langues": [
+    { "code": "fr", "dossier": "", "dir": "ltr", "nom": "Français" }
+  ],
+  "_langues": "une langue de plus : ajouter sa ligne (par ex. { \"code\": \"ar\", \"dossier\": \"ar\", \"dir\": \"rtl\", \"nom\": \"العربية\" }) et le dossier plateformes/site/<code>/ (textes.json et les pages), écrits à la source, jamais traduits du français (exigence 25)"
+}

@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Ce que l'application peut tendre à une autre (la feuille de partage) : son seul dossier de cache, où le pont
+     (plateformes/application/pont.js) écrit la partie exportée et l'image du partage. Rien du stockage partagé. -->
+<paths xmlns:android="http://schemas.android.com/apk/res/android">
+    <cache-path name="partage" path="." />
+</paths>

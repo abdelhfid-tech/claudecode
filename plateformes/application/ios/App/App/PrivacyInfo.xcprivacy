@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<!-- ISNAD : le manifeste de confidentialité de l'application. Rien n'est collecté, rien n'est suivi, aucun domaine
+     n'est appelé : la partie reste sur l'appareil (stockage de la page et un fichier de l'application, dans son dossier).
+     Raison d'API déclarée : C617.1 — l'application lit et écrit ses propres fichiers (la partie à l'abri, l'image du
+     partage), dans son conteneur ; le greffon Filesystem peut en consulter la date. Capacitor déclare les siennes dans
+     son propre manifeste. -->
+<plist version="1.0">
+<dict>
+	<key>NSPrivacyTracking</key>
+	<false/>
+	<key>NSPrivacyTrackingDomains</key>
+	<array/>
+	<key>NSPrivacyCollectedDataTypes</key>
+	<array/>
+	<key>NSPrivacyAccessedAPITypes</key>
+	<array>
+		<dict>
+			<key>NSPrivacyAccessedAPIType</key>
+			<string>NSPrivacyAccessedAPICategoryFileTimestamp</string>
+			<key>NSPrivacyAccessedAPITypeReasons</key>
+			<array>
+				<string>C617.1</string>
+			</array>
+		</dict>
+	</array>
+</dict>
+</plist>

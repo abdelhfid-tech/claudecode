@@ -1,0 +1,36 @@
+<!doctype html>
+<html lang="{{langue}}" dir="{{dir}}">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; style-src 'self'; font-src 'self'; img-src 'self'; base-uri 'none'; form-action 'none'">
+<meta name="referrer" content="no-referrer">
+{{^indexable}}<meta name="robots" content="noindex, nofollow">
+{{/indexable}}<title>{{titre}}</title>
+<meta name="description" content="{{description}}">
+<meta name="theme-color" content="#07060d">
+<link rel="icon" href="{{racine}}img/icone-192.png" sizes="192x192" type="image/png">
+<link rel="apple-touch-icon" href="{{racine}}img/apple-touch-icon.png">
+<link rel="stylesheet" href="{{racine}}site.css">
+</head>
+<body class="page-{{page}}">
+<a class="evitement" href="#contenu">{{t.evitement}}</a>
+<header class="entete">
+  <a class="marque" href="{{base}}"><span class="marque-ar" lang="ar" dir="rtl">إسناد</span><span class="marque-nom">{{P.NOM}}</span></a>
+  <nav aria-label="{{t.nav}}">
+    <a href="{{base}}"{{#ici_accueil}} aria-current="page"{{/ici_accueil}}>{{t.accueil}}</a>
+    <a href="{{base}}tester/"{{#ici_tester}} aria-current="page"{{/ici_tester}}>{{t.tester}}</a>
+    <a class="jouer" href="{{racine}}jouer/">{{t.jouer}}</a>
+  </nav>
+</header>
+<main id="contenu">
+{{CORPS}}
+</main>
+<footer class="pied">
+  <p class="pied-devise">« {{P.DEVISE}} »</p>
+  <p class="pied-reserve">{{P.RESERVE}}</p>
+  <p class="pied-liens"><a href="{{base}}">{{t.accueil}}</a> · <a href="{{base}}tester/">{{t.tester}}</a> · <a href="{{base}}confidentialite/">{{t.confidentialite}}</a> · <a href="mailto:{{P.CONTACT}}">{{t.ecrire}}</a></p>
+  <p class="pied-version">{{P.NOM}} {{numero}} · {{P.ETAT}}</p>
+</footer>
+</body>
+</html>

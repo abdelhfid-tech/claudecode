@@ -1,0 +1,23 @@
+{
+  "appId": "org.isnadgame.isnad",
+  "appName": "ISNAD",
+  "webDir": "www",
+  "backgroundColor": "#07060d",
+  "loggingBehavior": "none",
+  "android": {
+    "allowMixedContent": false,
+    "captureInput": false
+  },
+  "ios": {
+    "contentInset": "never",
+    "scrollEnabled": false,
+    "backgroundColor": "#07060d"
+  },
+  "plugins": {
+    "SystemBars": {
+      "style": "DARK",
+      "insetsHandling": "css",
+      "initialViewportFitValueHint": "cover"
+    }
+  }
+}

@@ -1,0 +1,71 @@
+<!--meta {"page": "tester", "sortie": "tester/index.html", "titre": "Tester {{P.NOM}} — {{P.ETAT}}", "description": "Essayer {{P.NOM}} : dans le navigateur tout de suite, sur Android, sur iPhone."} -->
+<section class="bloc tete">
+  <h1>Tester le jeu</h1>
+  <p class="une-chapo">Trois façons d’essayer la version {{numero}}. La plus simple est la première : elle marche sur tous les téléphones.</p>
+  <p class="reserve-ligne">{{P.RESERVE}}</p>
+</section>
+
+<section class="bloc carte" id="navigateur">
+  <h2><span class="num">1</span> Dans le navigateur, tout de suite</h2>
+  <p>Le jeu s’ouvre dans la page : rien à installer, aucun compte.</p>
+  <p class="actions"><a class="bouton" href="{{racine}}jouer/">Jouer maintenant</a></p>
+  <h3>Le garder sur l’écran d’accueil</h3>
+  <ul class="liste">
+    <li><b>iPhone (Safari) :</b> le bouton Partager, puis « Sur l’écran d’accueil ».</li>
+    <li><b>Android (Chrome) :</b> le menu ⋮, puis « Installer l’application » ou « Ajouter à l’écran d’accueil ».</li>
+  </ul>
+  <p class="petit">Une fois ouvert, le jeu se rouvre même sans réseau.</p>
+</section>
+
+<section class="bloc carte" id="android">
+  <h2><span class="num">2</span> Android : l’application de test</h2>
+{{#apk}}
+  <p class="actions"><a class="bouton" href="{{racine}}telechargements/{{apk.nom}}" download>Télécharger l’APK de test</a></p>
+  <p class="petit">{{apk.nom}} · {{apk.taille}} · version {{apk.numero}}</p>
+  <p class="empreinte"><span>Empreinte SHA-256, pour vérifier le fichier :</span> <code>{{apk.sha256}}</code></p>
+  <h3>L’installer, en trois gestes</h3>
+  <ol class="gestes">
+    <li>Sur le téléphone, touchez « Télécharger l’APK de test ».</li>
+    <li>Ouvrez le fichier téléchargé. Android demande d’autoriser l’installation depuis le navigateur : autorisez-la.</li>
+    <li>Touchez « Installer », puis ouvrez ISNAD.</li>
+  </ol>
+  <p class="petit">C’est une version de test, hors du Play Store : Android peut prévenir qu’elle vient d’une source inconnue. Une fois le jeu installé, vous pouvez retirer cette autorisation dans les réglages.</p>
+{{/apk}}
+{{^apk}}
+  <p class="bientot">Bientôt.</p>
+  <p>En attendant, le jeu se joue dans le navigateur (1), et se garde sur l’écran d’accueil.</p>
+{{/apk}}
+</section>
+
+<section class="bloc carte" id="iphone">
+  <h2><span class="num">3</span> iPhone : TestFlight</h2>
+{{#testflight}}
+  <ol class="gestes">
+    <li>Installez TestFlight, l’application d’Apple pour les versions de test (sur l’App Store).</li>
+    <li>Sur l’iPhone, ouvrez l’invitation : <a href="{{testflight}}">rejoindre le test d’ISNAD</a>.</li>
+    <li>Dans TestFlight, touchez « Installer ».</li>
+  </ol>
+{{/testflight}}
+{{^testflight}}
+  <p class="bientot">Bientôt.</p>
+{{/testflight}}
+  <p>En attendant — ou sans TestFlight — le jeu se joue dans Safari (1), et se garde sur l’écran d’accueil.</p>
+</section>
+{{#itch}}
+<section class="bloc">
+  <p>Le jeu est aussi sur itch.io : <a href="{{itch}}">sa page</a>.</p>
+</section>
+{{/itch}}
+<section class="bloc deux">
+  <div>
+    <h2>Votre partie</h2>
+    <p>La partie reste sur l’appareil, dans le navigateur ou dans l’application : rien n’est envoyé nulle part.</p>
+    <p>Pour la mettre à l’abri, ou la passer sur un autre appareil : dans la halte (le bouton ☰), « Exporter la partie », puis « Enregistrer le fichier ». Pour la reprendre : à l’écran-titre, « Importer une partie ».</p>
+    <p class="petit">Sur iPhone, le jeu gardé sur l’écran d’accueil a sa propre partie, distincte de celle de Safari : passez-la de l’un à l’autre par le fichier.</p>
+  </div>
+  <div>
+    <h2>Une erreur ?</h2>
+    <p>Une date, une attribution, une formulation, un écran qui se coince : écrivez-nous, avec le numéro de la version ({{numero}}) et, si possible, une capture d’écran.</p>
+    <p><a href="mailto:{{P.CONTACT}}">{{P.CONTACT}}</a></p>
+  </div>
+</section>

@@ -1,0 +1,7 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+    <string name="app_name">ISNAD</string>
+    <string name="title_activity_main">ISNAD</string>
+    <string name="package_name">org.isnadgame.isnad</string>
+    <string name="custom_url_scheme">org.isnadgame.isnad</string>
+</resources>
