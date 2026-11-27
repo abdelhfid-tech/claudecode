@@ -50,14 +50,16 @@ en hauteur et en largeur ; manette tactile partout.
 
 | Moment | Dans le paquet | Pourquoi |
 |---|---|---|
-| `chaine` : le joueur, sur la Chaîne, ouvre ou reprend un maillon | **oui** | l'arrêt naturel entre deux récits : il montre son intention de continuer, le jeu est déjà à l'arrêt (Stop envoyé), rien ne tourne, rien ne rôde ; la publicité passe avant que le récit ne parte |
-| `reprise` : le joueur, sur l'écran-titre, touche « Continuer » | **oui** | même raisonnement ; mais Poki sert déjà une publicité au chargement : à couper si Poki le préfère |
+| `chaine` : le joueur, sur la Chaîne, ouvre ou reprend un maillon (ou, depuis la 2.48, reprend par « Reprendre » une veillée ou une rencontre quittée) | **oui** | l'arrêt naturel entre deux récits : il montre son intention de continuer, le jeu est déjà à l'arrêt (Stop envoyé), rien ne tourne, rien ne rôde ; la publicité passe avant que le récit ne parte |
+| `reprise` : le joueur, sur l'écran-titre, touche « Continuer » — ou, depuis la 2.48, quand plusieurs récits sont en cours, en choisit un dans la liste qu'ouvre « Continuer » (rien avant le choix) | **oui** | même raisonnement ; mais Poki sert déjà une publicité au chargement : à couper si Poki le préfère |
 | fermeture de la halte | **non** | on revient au milieu d'un lieu, où ce qui rôde continue : la publicité y serait au milieu d'une scène |
 | combat, dialogue, pourparler, prière, carton, descente | **jamais** | demandé par le décideur |
 | fin de chapitre, retour à la Chaîne (sans autre geste) | non | le joueur n'a pas encore montré d'intention ; le Stop est déjà envoyé |
 
 Pour changer : `true` / `false` dans `REGLAGES.moments`, rien d'autre. Poki décide s'il montre une publicité
-(« not every call shows an ad ») : le jeu signale, il ne compte rien. Un seul moment par geste du joueur.
+(« not every call shows an ad ») : le jeu signale, il ne compte rien. Un seul moment par geste du joueur (le branchement
+entoure `U.startSaga`, `U.resume` et, depuis la 2.48, `U.reprendre` ; une pause faite, celle qu'il appellerait dedans ne
+se refait pas).
 Le moment `chaine` ne couvre pas le grand bouton « dernier maillon » de la Chaîne (il lance le chapitre sans passer par
 `startSaga`) : à ajouter si Poki veut ce moment aussi.
 

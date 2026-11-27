@@ -120,9 +120,15 @@
   var raccrocher = function () {
     var I = window.ISNAD, U = I && I.ui; if (cable || !U || !U.startSaga || !U.resume || !I.partage) return; cable = true;
     // la Chaîne : ouvrir ou reprendre un maillon — la publicité passe avant que le récit ne parte
-    var ouvrir = U.startSaga; U.startSaga = function () { var a = arguments, me = this; return pause('chaine', 'chain').then(function () { return ouvrir.apply(me, a); }); };
+    var dedans = false;   // une pause déjà faite pour ce toucher : celle qu'appelle U.reprendre n'en refait pas une
+    var ouvrir = U.startSaga; U.startSaga = function () { var a = arguments, me = this; if (dedans) return ouvrir.apply(me, a); return pause('chaine', 'chain').then(function () { return ouvrir.apply(me, a); }); };
     // l'écran-titre : « Continuer »
     var reprendre = U.resume; U.resume = function () { var a = arguments, me = this; return pause('reprise', 'title').then(function () { return reprendre.apply(me, a); }); };
+    // 2.48 : un récit quitté en chemin reprend par U.reprendre — choisi dans la liste de « Continuer » (avec plusieurs récits
+    // en cours, l'écran-titre la montre : le moment « reprise »), ou par « Reprendre » sur la Chaîne (le moment « chaine »).
+    // Une seule pause par toucher : celle-ci faite, U.startSaga, s'il est appelé dedans, n'en refait pas.
+    if (U.reprendre) { var reprendreRecit = U.reprendre; U.reprendre = function () { var a = arguments, me = this, chaine = !!touche && touche.ecran === 'chain';
+      return pause(chaine ? 'chaine' : 'reprise', chaine ? 'chain' : 'title').then(function () { dedans = true; try { return reprendreRecit.apply(me, a); } finally { dedans = false; } }); }; }
     // Poki : ni lien sortant ni adresse du site (requirements-quality) — « Partager ma progression » n'est pas offert
     I.partage.offert = function () { return false; };
   };

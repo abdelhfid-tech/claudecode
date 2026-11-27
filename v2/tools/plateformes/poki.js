@@ -172,7 +172,16 @@ async function essai(C, fait) {
       const t = s => g.evaluate(s => window.ISNAD.t(s), s);
       const cont = g.locator('#title .vmenu button', { hasText: await t('Continuer') }).first();
       if (await cont.count()) {
-        await cont.click(); await X.attendre('commercialBreak:debut');
+        await cont.click(); await g.waitForTimeout(500);
+        /* 2.48 (D240) : avec plusieurs récits en cours, « Continuer » en ouvre la liste — aucune publicité avant le choix ; on
+           choisit alors le dernier de la liste (un récit quitté en chemin, s'il y en a un : il reprend par U.reprendre) */
+        const liste = await g.evaluate(() => [...document.querySelectorAll('#title .vmenu.reprises button[data-reprise]')].map(b => b.dataset.reprise).filter(k => k !== 'chaine'));
+        if (liste.length) {
+          const a0 = await X.appels(); dit(!a0.includes('commercialBreak:debut') && !a0.includes('gameplayStart'), `${nom} · 5 « Continuer » ouvre la liste des récits en cours (${liste.length}) : aucune publicité ni gameplayStart avant le choix`);
+          await g.locator('#title .vmenu.reprises button[data-reprise]').nth(liste.length - 1).click();
+          note(`${nom} · 5 : choisi dans la liste — ${liste.length > 1 ? 'un récit quitté en chemin (U.reprendre)' : 'le récit en cours (U.resume)'}`);
+        }
+        await X.attendre('commercialBreak:debut');
         let a5 = await X.appels(); dit(a5[a5.length - 1] !== 'gameplayStart' && a5.includes('commercialBreak:debut') && !a5.includes('gameplayStart'), `${nom} · 5 « Continuer » : la publicité de reprise vient avant tout gameplayStart (${a5.join(' → ')})`);
         await g.evaluate(() => window.__poki.finirPub()); await X.attendre('commercialBreak:fin');
         for (let i = 0; i < 30 && !(await X.appels()).includes('gameplayStart'); i++) { await X.p.keyboard.press('Enter'); await g.waitForTimeout(300); }
