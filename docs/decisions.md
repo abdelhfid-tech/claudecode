@@ -2655,7 +2655,10 @@ pages privées de son compte.
     A ou Entrée le reprend exactement à sa place, comme le bouton de la Chaîne (`U.reprendre` ; un maillon achevé qu'on
     rejouait, quitté en chemin, aussi — seul « Rejouer » repart du début) ; B ou Échap revient à
     l'écran-titre. Aucun texte nouveau. Une partie de la 2.47 qui a plusieurs récits rangés montre la liste ; rien à migrer
-    (le format reste le 2). Les copies gardées à la mosquée (« Reprendre une copie gardée ») ne changent pas.
+    (le format reste le 2). Les copies gardées à la mosquée (« Reprendre une copie gardée ») ne changent pas. L'écran-titre
+    vide le fil des annonces, comme la Chaîne (`S.filVide`, en gardant un incident jusqu'au bout) : sans cela, une leçon d'un récit quitté par « Écran-titre »
+    (« Une autre figure s'ouvre à Khâlid ») paraissait dans celui qu'on reprenait par la liste (relevé par `doigt.js`, qui
+    vide aussi le fil quand il relance un chapitre sans passer par la Chaîne).
   - **L'Agrégor, dans l'ordre où l'on joue** : la k-ième rencontre de la Cité-Miroir jouée dit l'étape k (I à V), quelle
     que soit la saga qu'elle suit ; la fiche « L'AGRÉGOR » vient avec l'étape III. Le moteur pose, à l'ouverture et à la
     reprise de chaque chapitre, `_2084_etape_k` (le compte des autres rencontres déjà jouées, plus un) et `_2084_agregor` (le

@@ -987,7 +987,7 @@ body.touch #course .tour, body.touch #course .rangs { font-size: max(.78em, 11px
 <div id="fade"></div>
 <div id="secours" hidden><p data-t>Le jeu semble arrêté.</p><button type="button" data-t>Reprendre au dernier objectif</button><small></small></div>
 <script>
-window.ISNAD_VERSION = "2.48 · 2026-11-27 15:07 UTC · 88f262f+";
+window.ISNAD_VERSION = "2.48 · 2026-11-27 17:18 UTC · 7ced7dd+";
 window.ISNAD_PROMO = {"NOM":"ISNAD","SOUS_TITRE":"Chroniques des Compagnons","ADRESSE":"www.isnad-game.org","RESERVE":"Version bêta. La relecture historique et religieuse par un spécialiste reste à faire."};
 /* ==== src/core/defs.js ==== */
 /* ISNAD — définitions partagées (navigateur + validateur node). Source de vérité du schéma de données. */
@@ -8393,7 +8393,13 @@ window.ISNAD_PROMO = {"NOM":"ISNAD","SOUS_TITRE":"Chroniques des Compagnons","AD
   // une leçon a resservi (son outil), ou une séquence s'achève (sans outil : les leçons déjà lues) — lecons.js
   S.filRetire = function (outil) { FIL.file.filter(x => x.outil && (outil ? x.outil === outil : x.vu >= 1500)).forEach(oter); if (FIL.cours && !FIL.cours.items.length) FIL.cours = null; };
   // la Chaîne s'ouvre : le récit est quitté, ce qui attendait n'est plus à dire (S.fil le garde)
-  S.filVide = function () { FIL.file.slice().forEach(oter); FIL.cours = null; $('#toasts').innerHTML = ''; $('#toasts').className = ''; };
+  // (2.48 : l'écran-titre aussi, avec `garderUrgent` — un incident ou une sauvegarde refusée s'y lit jusqu'au bout)
+  S.filVide = function (garderUrgent) {
+    const garde = garderUrgent ? FIL.file.filter(x => x.urgent) : [];
+    if (!garde.length) { FIL.file.slice().forEach(oter); FIL.cours = null; $('#toasts').innerHTML = ''; $('#toasts').className = ''; return; }
+    FIL.file.filter(x => !x.urgent).forEach(oter); if (FIL.cours && !FIL.cours.urgent) FIL.cours = null;
+    [...$('#toasts').children].forEach(e => { if (!garde.some(x => x.el === e)) e.remove(); });
+  };
   // ce qui naît dans la halte s'écrit sous son titre, le temps de le lire
   S.filHalte = function (html) {
     const hd = $('#menu header'); if (!hd) return; let p = hd.querySelector('.dit'); if (!p) { p = I.el('p', 'dit'); hd.appendChild(p); }
@@ -13024,7 +13030,10 @@ window.ISNAD_PROMO = {"NOM":"ISNAD","SOUS_TITRE":"Chroniques des Compagnons","AD
   /* ---------- titre ---------- */
   U.showTitle = function (vue) {
     I.setScene(U.titleScene); G.clearParts(); G.amb = { kind: 'dust', rate: 5, n: 0 }; I.audio.scene('titre'); I.audio.beat('veille');
-    $('#hud').hidden = true; document.body.dataset.theme = 'orient';
+    // 2.48 : le récit est quitté, comme pour la Chaîne — ce qui attendait dans le fil n'est plus à dire (la halte le relit) ;
+    // sans cela, une leçon d'un récit (« Une autre figure s'ouvre à Khâlid ») paraissait dans celui qu'on reprend par « Continuer ».
+    // Un incident (au chargement, l'écran-titre vient juste après) garde sa ligne jusqu'au bout.
+    $('#hud').hidden = true; document.body.dataset.theme = 'orient'; S.filVide(true);
     const box = $('#title .vmenu'); box.innerHTML = ''; const sv = I.save.data, has = I.save.slots().some(Boolean), auto = I.save.autoGet(); let fl = null, btns = [];
     const mk = (label, fn, dis) => { const b = I.el('button', '', label); b.type = 'button'; b.disabled = !!dis; tapable(b, () => { I.audio.unlock(); fn(b); }); box.appendChild(b); btns.push(b); return b; };
     const quand = t => { const m = Math.max(0, Math.round((Date.now() - t) / 60000)); return m < 1 ? I.t('à l’instant') : m < 60 ? I.t('il y a {n} min', { n: m }) : m < 1440 ? I.t('il y a {n} h', { n: Math.round(m / 60) }) : I.t('le {date}', { date: new Date(t).toLocaleDateString(I.langue.locale(), { day: '2-digit', month: '2-digit' }) }); };

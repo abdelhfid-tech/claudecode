@@ -130,7 +130,9 @@ const tailles = dims.length ? dims : loin ? [[390, 844]] : [[390, 844], [360, 56
     // l'écran en 360 × 560, à moitié en 360 × 640). Pas avec « loin » : les combats y sont menés par l'IA de test après le premier.
     if (fini && !loin) {
       const libre = () => p.evaluate(() => { const I = window.ISNAD, W = I.world; return I.scene === W && !!W.map && !I.script.busy && !W.lock; }), lecture = () => p.evaluate(() => ['#card', '#dialog'].some(q => !document.querySelector(q).hidden));
-      const chapitre = async ci => { await p.evaluate(ci => { const I = window.ISNAD, W = I.world; I.save.reset(); I.save.data.started = true; document.querySelectorAll('.screen').forEach(e => { e.hidden = true; }); document.body.classList.remove('in-screen'); I.input.reset(); W.roster = {}; W.saga = null; W.startChapter('khalid', ci); }, ci); // un groupe de trois : le panneau est plein
+      // (2.48 : le fil vidé, comme le fait la Chaîne quand on quitte un récit — sans elle, la même leçon s'y empilait à chaque
+      // départ, partie remise à zéro, et la manette restait effacée trois fois trente secondes sur 360 × 560)
+      const chapitre = async ci => { await p.evaluate(ci => { const I = window.ISNAD, W = I.world; I.script.filVide(); I.save.reset(); I.save.data.started = true; document.querySelectorAll('.screen').forEach(e => { e.hidden = true; }); document.body.classList.remove('in-screen'); I.input.reset(); W.roster = {}; W.saga = null; W.startChapter('khalid', ci); }, ci); // un groupe de trois : le panneau est plein
         for (let i = 0; i < 120 && !(await libre()); i++) { if (await lecture()) await p.keyboard.press('Enter'); await p.waitForTimeout(170); } };
       const commandes = async (quoi, n, nom, lancer) => { await p.evaluate(() => { const v = window.ISNAD.save.data.items; v.musc = Math.max(2, v.musc | 0); }); await p.evaluate(lancer); // (du musc dans la besace : les Objets et leur cible ont leur « Retour »)
         for (let i = 0; i < 160; i++) { const e = await p.evaluate(() => document.querySelector('.screen:not([hidden]) button, #choice:not([hidden]) .opt') ? 'prep' : !!document.querySelector('#battle .cmd .mlist.main .mi') && document.querySelector('#battle .banner').hidden ? 'cmd' : ['#card', '#dialog'].some(q => !document.querySelector(q).hidden) ? 'lit' : '');
@@ -218,7 +220,13 @@ const tailles = dims.length ? dims : loin ? [[390, 844]] : [[390, 844], [360, 56
         for (let i = 0; i < 40 && !(await libre()); i++) { if (await lecture()) await p.keyboard.press('Enter'); await p.waitForTimeout(170); }   // (un toucher tombé sur quelqu'un lui parle : on referme)
         effaces.push({ sous, fait, sur: r.sur });
         if (fait <= 6) { echecs++; await p.screenshot({ path: path.join(out, 'doigt-' + w + 'x' + h + '-efface.png') }); console.log(`  INACCESSIBLE ${w}×${h} : la manette s'efface (sous ${sous}) et le toucher de la scène ne fait pas marcher Idris (touché sur ${r.sur}, ${fait.toFixed(0)} points)`); } };
-      const attendreManette = async () => { for (let i = 0; i < 120; i++) { const s = await effacee(); if (!s) return true; if (!effaces.some(e => e.sous === s)) await toucherQuandEfface(s); await p.waitForTimeout(250); } return false; };
+      /* 2.48 — une leçon reste jusqu'à ce que son outil ait resservi, trente secondes de lecture au plus (script.js, tic) : la
+         manette peut donc rester effacée près de trente secondes (« Une autre figure s'ouvre à Khâlid », sur 360 × 560). On
+         l'attend quarante-cinq secondes, à l'horloge, plus que la plus longue leçon ; au-delà, c'est un défaut, dit comme tel. */
+      let jamaisRevenue = '', plusLong = 0; const annonces = new Set();
+      const annonce = () => p.evaluate(() => [...document.querySelectorAll('#toasts.montre > .toast:not([hidden])')].map(e => e.textContent.trim().slice(0, 70)).join(' · '));
+      const attendreManette = async () => { const t0 = Date.now(); while (Date.now() - t0 < 45000) { const s = await effacee(); if (!s) { plusLong = Math.max(plusLong, Date.now() - t0); return true; } const a = await annonce(); if (a) annonces.add(a); if (!effaces.some(e => e.sous === s)) await toucherQuandEfface(s); await p.waitForTimeout(250); }
+        jamaisRevenue = (await effacee()) || '?'; return false; };
       const vitesse = async (f, avecB) => { for (let essai = 0; essai < 4; essai++) {
         if (!(await attendreManette())) return 0;
         await p.evaluate(q => { const W = window.ISNAD.world; W.player.x = q.x; W.player.y = q.y; W.dest = null; W.resetTrail(); }, degage);
@@ -229,8 +237,9 @@ const tailles = dims.length ? dims : loin ? [[390, 844]] : [[390, 844], [360, 56
         if (!e1 && !e2) return Math.hypot(b[0] - a[0], b[1] - a[1]) / Math.max(0.01, b[2] - a[2]); }   // (effacée pendant la mesure : on la refait)
         return 0; };
       const vm = await vitesse(0.6, false), vb = await vitesse(0.97, false), vc = await vitesse(0.97, true);
-      for (const e of effaces) if (e.fait > 6) console.log(`      la manette s'efface un instant (sous ${e.sous}) : le toucher de la scène fait marcher Idris (${e.fait.toFixed(0)} points)`);
-      if (!(vm > 70 && vm < 94 && Math.abs(vb - vm) < 0.08 * vm && vc > 1.15 * vm && vc < 1.33 * vm)) { echecs++; await p.screenshot({ path: path.join(out, 'doigt-' + w + 'x' + h + '-course.png') }); console.log(`  INACCESSIBLE ${w}×${h} : courir — joystick au milieu ${vm.toFixed(0)} points par seconde, au bord sans B ${vb.toFixed(0)}, au bord avec B tenu ${vc.toFixed(0)} (dégagé sur ${degage.n} points)`); }
+      for (const e of effaces) if (e.fait > 6) console.log(`      la manette s'efface un instant (sous ${e.sous}${plusLong > 2000 ? ', revenue au plus tard en ' + Math.round(plusLong / 1000) + ' s' : ''}) : le toucher de la scène fait marcher Idris (${e.fait.toFixed(0)} points)${annonces.size ? ' — ' + [...annonces].map(a => '« ' + a + ' »').join(', ') : ''}`);
+      if (jamaisRevenue) { echecs++; await p.screenshot({ path: path.join(out, 'doigt-' + w + 'x' + h + '-efface-longtemps.png') }); console.log(`  INACCESSIBLE ${w}×${h} : la manette reste effacée plus de quarante-cinq secondes (sous ${jamaisRevenue}) — annonces vues : ${[...annonces].map(a => '« ' + a + ' »').join(', ')}`); }
+      else if (!(vm > 70 && vm < 94 && Math.abs(vb - vm) < 0.08 * vm && vc > 1.15 * vm && vc < 1.33 * vm)) { echecs++; await p.screenshot({ path: path.join(out, 'doigt-' + w + 'x' + h + '-course.png') }); console.log(`  INACCESSIBLE ${w}×${h} : courir — joystick au milieu ${vm.toFixed(0)} points par seconde, au bord sans B ${vb.toFixed(0)}, au bord avec B tenu ${vc.toFixed(0)} (dégagé sur ${degage.n} points)`); }
       else console.log(`      courir : le joystick avec B tenu, ${vc.toFixed(0)} points par seconde, ${(vc / vm).toFixed(2)} fois la marche ; le joystick seul, même au bord, la marche (${vm.toFixed(0)}, ${vb.toFixed(0)})`); }
     if (errors.length) { echecs++; [...new Set(errors)].slice(0, 8).forEach(e => console.log('  ERREUR ' + e)); }
     await p.close();

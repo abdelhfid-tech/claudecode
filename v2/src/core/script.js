@@ -455,7 +455,13 @@
   // une leçon a resservi (son outil), ou une séquence s'achève (sans outil : les leçons déjà lues) — lecons.js
   S.filRetire = function (outil) { FIL.file.filter(x => x.outil && (outil ? x.outil === outil : x.vu >= 1500)).forEach(oter); if (FIL.cours && !FIL.cours.items.length) FIL.cours = null; };
   // la Chaîne s'ouvre : le récit est quitté, ce qui attendait n'est plus à dire (S.fil le garde)
-  S.filVide = function () { FIL.file.slice().forEach(oter); FIL.cours = null; $('#toasts').innerHTML = ''; $('#toasts').className = ''; };
+  // (2.48 : l'écran-titre aussi, avec `garderUrgent` — un incident ou une sauvegarde refusée s'y lit jusqu'au bout)
+  S.filVide = function (garderUrgent) {
+    const garde = garderUrgent ? FIL.file.filter(x => x.urgent) : [];
+    if (!garde.length) { FIL.file.slice().forEach(oter); FIL.cours = null; $('#toasts').innerHTML = ''; $('#toasts').className = ''; return; }
+    FIL.file.filter(x => !x.urgent).forEach(oter); if (FIL.cours && !FIL.cours.urgent) FIL.cours = null;
+    [...$('#toasts').children].forEach(e => { if (!garde.some(x => x.el === e)) e.remove(); });
+  };
   // ce qui naît dans la halte s'écrit sous son titre, le temps de le lire
   S.filHalte = function (html) {
     const hd = $('#menu header'); if (!hd) return; let p = hd.querySelector('.dit'); if (!p) { p = I.el('p', 'dit'); hd.appendChild(p); }

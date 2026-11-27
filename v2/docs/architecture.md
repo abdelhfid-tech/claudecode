@@ -1663,7 +1663,8 @@ un carton du récit ou une ligne du fil la même chose dans une autre langue —
   - L'incident (`I.onError`) et la sauvegarde refusée passent outre (`{ urgent: true }`) : tout de suite, même pendant
     une lecture. Une annonce née dans la halte s'écrit sous son titre (`S.filHalte`, `#menu header .dit`).
   - Le combat ne vide plus `#toasts` : le fil s'y tait, et ce qui y attend passe après. La Chaîne, elle, vide la file
-    (`S.filVide`) : le récit est quitté.
+    (`S.filVide`) : le récit est quitté. L'écran-titre aussi, depuis la 2.48 (D240), sauf ce qui est urgent (`S.filVide(true)` : un incident du chargement s'y lit jusqu'au bout) : sans quoi une leçon d'un récit quitté
+    par « Écran-titre » paraissait dans celui qu'on reprenait par la liste de « Continuer ».
 - **Sa place** (`style.css`). En hauteur, sous l'en-tête (ou la barre de « Bâtir »), dans la bande noire : `S.filPlace`
   pose la hauteur de ce qui est au-dessus dans `--fil-haut` (appelé par `W.hud` et à chaque battement du fil). Il ne
   réserve aucune place : aucune boîte ne bouge quand il parle. En largeur et au bureau, en haut à droite, sous le plan

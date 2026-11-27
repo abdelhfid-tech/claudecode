@@ -101,7 +101,10 @@
   /* ---------- titre ---------- */
   U.showTitle = function (vue) {
     I.setScene(U.titleScene); G.clearParts(); G.amb = { kind: 'dust', rate: 5, n: 0 }; I.audio.scene('titre'); I.audio.beat('veille');
-    $('#hud').hidden = true; document.body.dataset.theme = 'orient';
+    // 2.48 : le récit est quitté, comme pour la Chaîne — ce qui attendait dans le fil n'est plus à dire (la halte le relit) ;
+    // sans cela, une leçon d'un récit (« Une autre figure s'ouvre à Khâlid ») paraissait dans celui qu'on reprend par « Continuer ».
+    // Un incident (au chargement, l'écran-titre vient juste après) garde sa ligne jusqu'au bout.
+    $('#hud').hidden = true; document.body.dataset.theme = 'orient'; S.filVide(true);
     const box = $('#title .vmenu'); box.innerHTML = ''; const sv = I.save.data, has = I.save.slots().some(Boolean), auto = I.save.autoGet(); let fl = null, btns = [];
     const mk = (label, fn, dis) => { const b = I.el('button', '', label); b.type = 'button'; b.disabled = !!dis; tapable(b, () => { I.audio.unlock(); fn(b); }); box.appendChild(b); btns.push(b); return b; };
     const quand = t => { const m = Math.max(0, Math.round((Date.now() - t) / 60000)); return m < 1 ? I.t('à l’instant') : m < 60 ? I.t('il y a {n} min', { n: m }) : m < 1440 ? I.t('il y a {n} h', { n: Math.round(m / 60) }) : I.t('le {date}', { date: new Date(t).toLocaleDateString(I.langue.locale(), { day: '2-digit', month: '2-digit' }) }); };
