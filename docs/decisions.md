@@ -2625,6 +2625,13 @@ pages privées de son compte.
     l'étude » contre la porte d'une mosquée (et non plus des Archives). Le récit le dit sans hostilité (« il n'est pas un
     ennemi », « il est venu voir »), mais c'est à toi de dire si la scène te convient dans ce lieu.
   - **Les shorts** qui montrent l'ascenseur ou les Archives seront à refaire avec les autres (en pause).
+- [x] **D239. La manette peut s'effacer un instant, si le toucher marche encore (le décideur, 27 novembre ; aucun changement
+  du jeu).** « Les joystick et bouton peuvent disparaître de manière exceptionnelle pour laisser voir la scène à condition
+  que le tactile fonctionne encore. » Sur un petit téléphone (360 × 560), une annonce du fil — une leçon qui paraît pendant
+  qu'on marche — prend la place de la manette, qui s'efface le temps qu'elle passe (`body.pad-efface`, `ui.js`) ; la mesure
+  de la course de `doigt.js` tombait alors à zéro (la 2.46 aussi). Le jeu suit déjà la règle : la manette effacée, toucher la
+  scène fait marcher Idris. `doigt.js` le vérifie désormais chaque fois qu'il la trouve effacée (« INACCESSIBLE » sinon), et
+  mesure la course une fois la manette revenue.
 - [ ] **Proposition de reformulation de l'exigence 2 (formulation de l'agent, à valider ; l'exigence elle-même n'est pas
   réécrite).** Après D205, on propose d'ajouter à l'exigence 2 : « L'émotion d'un Compagnon passe par l'attitude du corps
   et les bulles ; celle des autres peut aussi passer par le visage. » (aujourd'hui, l'exigence dit : « Le caractère et

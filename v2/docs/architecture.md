@@ -612,7 +612,11 @@ d'elle-même (la marge du système, une encoche, est comprise), et elle passe au
 - **partout**, si une page ne peut pas lui laisser la place (une seconde bulle sans trois lignes au-dessus de la bande, un
   texte qui déborde sur un tout petit écran), la manette s'y efface (`body.pad-efface`, regardé six fois par seconde :
   `U.padRecouvre` — pour un écran ou un carton, c'est son contenu, entre ses marges intérieures, qui compte) plutôt que de
-  recouvrir quoi que ce soit, et revient dès que la place est libre. Masquée au choix du joueur (Réglages, « Manette
+  recouvrir quoi que ce soit, et revient dès que la place est libre. Elle ne s'efface ainsi qu'un instant, et le toucher
+  de la scène marche encore (D239 ; le décideur, 27 novembre : « Les joystick et bouton peuvent disparaître de manière
+  exceptionnelle pour laisser voir la scène à condition que le tactile fonctionne encore ») : sur un petit téléphone, une
+  leçon du fil peut prendre sa place pendant qu'on marche ; `doigt.js` touche alors la scène et vérifie qu'Idris y va, puis
+  mesure la course une fois la manette revenue. Masquée au choix du joueur (Réglages, « Manette
   tactile », `opts.joy`), elle n'est plus là du tout et ne garde aucune place.
 - **une annonce ne la fait pas s'effacer** (2.34 ; le décideur, 24 novembre : « On perd le joystick parfois en paysage sur
   iPhone ») : en largeur, une annonce (`#toasts`) qui toucherait la manette — posée sous la petite carte de la route (la

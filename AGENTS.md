@@ -394,7 +394,8 @@ Le jeu en développement est la **2.x**, dans `v2/` : `v2/src/`, `v2/tools/`, `v
   contenu entre elles (`--pad-cote`), une étiquette de nom ne passe pas sous elle ; là où le navigateur le permet, le jeu
   passe en plein écran au premier toucher en largeur et l'écran y reste en largeur (`U.pleinEcran`, le bouton de la
   scène, le réglage « Plein écran ») — dans un cadre qui le refuse ou sur un iPhone, rien ne paraît. Une page qui ne peut
-  pas lui laisser la place la voit s'effacer (`body.pad-efface`). Masquée au choix du joueur, elle ne prend plus aucune
+  pas lui laisser la place la voit s'effacer (`body.pad-efface`) — un instant seulement, et le toucher de la scène marche encore
+  (D239 ; le décideur, 27 novembre : « à condition que le tactile fonctionne encore » ; `doigt.js` le vérifie). Masquée au choix du joueur, elle ne prend plus aucune
   place. Ce n'est pas un outil de la progression ; rien n'est gardé dans la partie. `v2/docs/architecture.md`, « La
   manette tactile ». Contrôle : `node v2/tools/manette.js` (« MANETTE CONFORME »).
 - Dans la 2.x, l'image s'agrandit (demande du décideur, 16 novembre : « les personnages et les textes sont trop petits
