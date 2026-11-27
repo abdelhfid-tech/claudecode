@@ -81,3 +81,32 @@ CrazyGames est faite ; celle de Newgrounds a été refusée, HTTP 403 : tout y e
 `node v2/tools/plateformes.js poki` — `sortie/poki/isnad-<numéro>-poki.zip` : le paquet web + la balise du SDK de Poki
 (`poki/balise-sdk.html`) + son branchement (`poki/poki.js`, versionné). L'essai (`essai poki`, SDK faux) est dans
 `v2/tools/plateformes/poki.js` ; la fiche, avec les règles relevées et ce qu'il reste à décider : `poki.md`.
+
+## L'application Android et iOS (ajouté par l'agent de l'application)
+
+```sh
+node v2/tools/plateformes.js android                 # sortie/android/isnad-<numéro>-test.apk (débogage, à installer à la main), isnad-<numéro>.aab (non signé), controle.txt
+node v2/tools/plateformes.js ios                     # sortie/ios/isnad-<numéro>-ios.zip : le projet Xcode prêt à ouvrir sur un Mac (non compilé ici)
+node v2/tools/plateformes/application/essai.js       # le pont, par un faux Capacitor (Android, puis iOS) : « PAQUET CONFORME »
+node v2/tools/plateformes.js essai android           # l'essai commun, sur la page de l'application
+```
+
+Le projet Capacitor est dans `application/` (versionné : `package.json` et son verrou aux versions figées,
+`capacitor.config.json`, `android/`, `ios/`, `pont.js`, `icone/icone.js`, `textes-a-valider.md` ; non versionnés :
+`node_modules/`, `www/`, les dossiers de construction). La page de l'application est le paquet web plus **une seule
+insertion** avant `</head>` : le moteur JS de Capacitor (`@capacitor/core`, MIT, inerte hors d'une application) et le pont
+(`application/pont.js` : enregistrer un fichier et partager par la feuille de partage du téléphone, le bouton Retour, la
+partie recopiée dans un fichier de l'application et remise avant que le jeu ne lise). Ôter l'insertion redonne le paquet
+web, octet pour octet : c'est contrôlé, jusque dans l'APK. L'atelier commun (`v2/tools/plateformes/application/`) n'est pas
+une cible. Il faut le SDK Android hors du dépôt (`ANDROID_HOME`, par défaut `/root/android-sdk`) et Java 21. Fiches :
+`android.md`, `ios.md`.
+
+## Le site (présentation et versions de test)
+
+```sh
+node v2/tools/plateformes.js site            # sortie/site/ (un dossier statique, à héberger) et sortie/isnad-site-<numéro>.zip
+node v2/tools/plateformes.js essai site      # son essai propre (en-têtes de _headers appliqués, pages, liens, jouer/ hors ligne) : « SITE CONFORME »
+```
+
+Les sources, les réglages (`site.json` : TestFlight, itch.io, indexation) et les textes à valider sont dans `site/`
+(`site/LISEZ-MOI.md`) ; l'outil dans `v2/tools/plateformes/site.js` et `v2/tools/plateformes/site/` (ce dossier n'est pas une cible).

@@ -90,25 +90,28 @@ module.exports = async function essai(C, fait) {
       const ctx = await b.newContext(opt), p = await ctx.newPage(), erreurs = [], dehors = [], violations = [];
       await ctx.route('**/*', r => { const x = r.request().url(); if (x.startsWith(ORI) || /^(data|blob|about):/.test(x)) return r.continue(); dehors.push(x); return r.abort(); });
       await p.addInitScript(() => { document.addEventListener('securitypolicyviolation', e => { (window.__v = window.__v || []).push(e.violatedDirective + ' ' + e.blockedURI); }); });
-      p.on('pageerror', e => erreurs.push(e.message)); p.on('console', m => { if (m.type() === 'error') erreurs.push(m.text()); });
+      p.on('pageerror', e => erreurs.push(e.message)); p.on('console', m => { if (m.type() === 'error' && !(nom === '404' && /status of 404/.test(m.text()))) erreurs.push(m.text()); });   // la page 404 elle-même : le navigateur note son statut
       const rep = await p.goto(ORI + u, { waitUntil: 'networkidle' });
-      await p.evaluate(async () => { for (const i of document.images) { i.loading = 'eager'; } await document.fonts.ready; window.scrollTo(0, document.body.scrollHeight); await new Promise(r => setTimeout(r, 400)); window.scrollTo(0, 0); await Promise.all([...document.images].map(i => i.complete ? 0 : new Promise(r => { i.onload = i.onerror = r; }))); });
+      await p.evaluate(async () => { for (const i of document.images) { i.loading = 'eager'; } await document.fonts.ready; window.scrollTo(0, document.body.scrollHeight); await new Promise(r => setTimeout(r, 400)); window.scrollTo(0, 0); await Promise.all([...document.images].map(i => i.complete ? 0 : new Promise(r => { i.onload = i.onerror = r; }))); await Promise.all([...document.images].map(i => i.decode().catch(() => {}))); });
       const r = await p.evaluate(() => ({
         large: document.documentElement.scrollWidth - innerWidth,
         images: [...document.images].map(i => ({ src: i.getAttribute('src'), ok: i.complete && i.naturalWidth > 0, alt: i.getAttribute('alt') })),
         polices: [...document.fonts].filter(f => f.status === 'loaded').map(f => f.family.replace(/"/g, '') + ' ' + f.weight),
         servies: ['h1', 'p', '.marque-nom'].map(q => { const e = document.querySelector(q); return e ? getComputedStyle(e).fontFamily.split(',')[0].replace(/"/g, '') : ''; }),
         petits: [...document.querySelectorAll('body *')].filter(e => [...e.childNodes].some(n => n.nodeType === 3 && n.textContent.trim().length > 1) && e.offsetParent !== null && parseFloat(getComputedStyle(e).fontSize) < 12).map(e => e.textContent.trim().slice(0, 30)),
-        liens: [...document.querySelectorAll('a[href]')].map(a => a.href), robots: (document.querySelector('meta[name=robots]') || {}).content || '',
-        texte: document.body.innerText, v: window.__v || [], titre: document.title, cibles: [...document.querySelectorAll('a, button')].filter(e => e.offsetParent !== null).map(e => { const q = e.getBoundingClientRect(); return [e.textContent.trim().slice(0, 20), Math.round(q.height)]; }).filter(([, h]) => h < 24) }));
+        liens: [...document.querySelectorAll('a[href]')].map(a => a.href), ancres: [...document.querySelectorAll('a[href^="#"]')].map(a => a.getAttribute('href').slice(1)).filter(id => !document.getElementById(id)), robots: (document.querySelector('meta[name=robots]') || {}).content || '',
+        coupes: [...document.querySelectorAll('h1, h2, h3, .bouton, .reserve-texte')].flatMap(e => { const R = []; const w = document.createTreeWalker(e, NodeFilter.SHOW_TEXT); let n; while ((n = w.nextNode())) { for (const m of n.textContent.matchAll(/\S+/g)) { const r = document.createRange(); r.setStart(n, m.index); r.setEnd(n, m.index + m[0].length); const L = [...r.getClientRects()].filter(q => q.width > 0); if (new Set(L.map(q => Math.round(q.top))).size > 1) R.push(m[0]); } } return R; }),
+        texte: document.body.innerText, v: window.__v || [], titre: document.title, cibles: [...document.querySelectorAll('a, button')].filter(e => e.offsetParent !== null && !(e.closest('p, li') && e.closest('p, li').textContent.trim() !== e.textContent.trim())).map(e => { const q = e.getBoundingClientRect(); return [e.textContent.trim().slice(0, 20), Math.round(q.height)]; }).filter(([, h]) => h < 24) }));
       await p.screenshot({ path: path.join(SMOKE, `${nom}-${app}.png`), fullPage: true });
-      r.liens.forEach(l => (l.startsWith(ORI) ? liens.add(l.slice(ORI.length)) : dehorsListes.add(l)));
+      r.liens.forEach(l => { if (!l.startsWith(ORI)) return dehorsListes.add(l); const x = new URL(l); if (x.hash && x.pathname === new URL(p.url()).pathname) return; liens.add(x.pathname + x.hash); });   // une ancre de la page même : vérifiée dans la page (ancres)
+      dit(!r.ancres.length, `c · ${nom} ${app} : chaque ancre de la page a sa cible${r.ancres.length ? ' — ' + r.ancres.join(', ') : ''}`);
       const imgKo = r.images.filter(i => !i.ok || !i.alt);
       dit(!erreurs.length && !r.v.length && !dehors.length && (nom === '404' ? rep.status() === 404 : rep.status() === 200),
         `b · ${nom} ${app} (${opt.viewport.width} × ${opt.viewport.height}) : statut ${rep.status()}, aucune erreur, aucune violation de la politique de contenu, aucune requête au-dehors` + (erreurs.length ? ' — ' + erreurs.slice(0, 2).join(' | ') : '') + (r.v.length ? ' — ' + r.v.slice(0, 2).join(' | ') : '') + (dehors.length ? ' — ' + dehors.slice(0, 2).join(' | ') : ''));
       dit(r.large <= 0, `b · ${nom} ${app} : rien ne défile en largeur (${r.large > 0 ? r.large + ' points de trop' : 'scrollWidth = largeur'})`);
       dit(!imgKo.length, `b · ${nom} ${app} : ${r.images.length} images chargées, chacune avec son texte de remplacement` + (imgKo.length ? ' — ' + imgKo.map(i => i.src).join(', ') : ''));
       dit(r.servies[0] === 'Cinzel' && ['Alegreya', 'Cinzel'].every(f => r.polices.some(x => x.startsWith(f))), `b · ${nom} ${app} : les polices du site, servies par lui (${[...new Set(r.polices)].join(', ')})`);
+      dit(!r.coupes.length, `b · ${nom} ${app} : aucun mot coupé dans un titre, un bouton ou la réserve` + (r.coupes.length ? ' — ' + r.coupes.join(', ') : ''));
       dit(!r.petits.length, `b · ${nom} ${app} : aucun texte sous 12 points` + (r.petits.length ? ' — ' + r.petits.slice(0, 3).join(' · ') : ''));
       if (app === 'tel') dit(!r.cibles.length, `b · ${nom} tel : chaque lien et bouton fait au moins 24 points de haut` + (r.cibles.length ? ' — ' + r.cibles.slice(0, 4).map(x => x.join(' ')).join(' · ') : ''));
       dit(fait.S.indexable || /noindex/.test(r.robots), `b · ${nom} ${app} : balise robots « ${r.robots} »`);
@@ -175,14 +178,13 @@ module.exports = async function essai(C, fait) {
       const cache = await p.evaluate(async () => { const K = await caches.keys(), R = {}; for (const k of K) R[k] = (await (await caches.open(k)).keys()).map(q => new URL(q.url).pathname); return R; });
       const ks = Object.keys(cache);
       dit(ks.length === 1 && ks[0] === 'isnad-jouer-' + fait.VERSION && cache[ks[0]].length === 1 && cache[ks[0]][0] === '/jouer/index.html', `f · le service worker s’installe ; son cache, « ${ks.join(', ')} », ne garde que le jeu : ${JSON.stringify(cache)}`);
+      await p.evaluate(() => localStorage.clear());   // la partie de la première visite oubliée : une partie neuve, sans la question « remplacer ? »
       await ctx.setOffline(true);
       const avant = SV.journal.length;
       await p.reload(); await p.waitForFunction(() => window.ISNAD && !document.querySelector('#title').hidden && document.querySelectorAll('#title .vmenu button').length > 0, null, { timeout: 30000 });
       const t = s => p.evaluate(s => window.ISNAD.t(s), s);
-      await p.locator('#title .vmenu button', { hasText: await t('Nouvelle partie') }).first().click();
-      const perso = await p.waitForSelector('#perso:not([hidden])', { timeout: 10000 }).then(() => true, () => false);
-      // une partie était déjà en cours (la page d'avant) : le jeu demande s'il faut la remplacer — on répond comme le joueur
-      if (!perso) { await p.locator('#choice .opt').first().click().catch(() => {}); await p.waitForSelector('#perso:not([hidden])', { timeout: 10000 }); }
+      // l'écran-titre s'ouvre en fondu : on touche « Nouvelle partie » quand il a fini, comme le joueur (deux essais au plus)
+      for (let k = 0; k < 2; k++) { await p.waitForTimeout(1000); await p.locator('#title .vmenu button', { hasText: await t('Nouvelle partie') }).first().click().catch(() => {}); if (await p.waitForSelector('#perso:not([hidden])', { timeout: 5000 }).then(() => true, () => false)) break; }
       await p.locator('#perso button', { hasText: await t('Commencer') }).first().click();
       let rep = ''; for (let i = 0; i < 30 && !rep; i++) { rep = await p.evaluate(() => { const d = document.querySelector('#dialog'); return d && !d.hidden ? d.querySelector('.text').textContent.trim() : ''; }); if (!rep) { await p.keyboard.press('Enter'); await p.waitForTimeout(500); } }
       const vus = SV.journal.slice(avant).map(([u]) => u);

@@ -107,7 +107,7 @@ module.exports = {
     const logo = fs.readFileSync(path.join(C.RACINE, P.SOUTIEN_LOGO)), [lw, lh] = dimensions(logo);
     poser('img/' + path.basename(P.SOUTIEN_LOGO), logo);
     for (const n of ['icone-192.png', 'apple-touch-icon.png']) poser('img/' + n, fs.readFileSync(path.join(CAP, n)));
-    const vues = Object.fromEntries(K.vues.map(v => [v.nom, v])), employees = new Set();
+    const vues = Object.fromEntries(require('./site/captures.js').VUES.map(v => [v.nom, v])), employees = new Set();   // les textes de remplacement et les légendes : ceux d'aujourd'hui, même si les captures sont reprises
     const img = (nom, app, racine, o) => { const v = vues[nom]; if (!v) throw new Error('ÉCART site : capture inconnue ' + nom);
       const f = `${nom}-${app}.jpg`, b = fs.readFileSync(path.join(CAP, f)), [iw, ih] = dimensions(b); employees.add(f);
       return `<img src="${racine}img/${f}" alt="${esc(v.alt)}" width="${iw}" height="${ih}"${o && o.tot ? '' : ' loading="lazy"'} decoding="async">`; };

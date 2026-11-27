@@ -18,7 +18,7 @@ const VUES = [
     faire: async (p, o) => { await chapitre(p, 'abubakr', 0, { obj: 1 }); await zoom(p, o.tel ? 1.5 : 1.25); } },
   { nom: 'chaine', legende: 'La Chaîne', alt: 'L’écran de la Chaîne : les maillons, du premier au dernier, chacun avec son Compagnon et sa Lumière.',
     faire: async (p) => { await p.evaluate(() => { window.ISNAD.ui.showChain(); }); await p.waitForTimeout(1400); } },
-  { nom: 'combat', legende: 'Un combat', alt: 'Un combat au tour par tour : trois Compagnons face au Trône vide, une idole.',
+  { nom: 'combat', legende: 'Un combat', alt: 'Un combat au tour par tour : ‘Umar et ses compagnons face au Trône vide, une idole.',
     faire: async (p) => { await chapitre(p, 'umar', 2, { obj: 0 }); await combat(p, ['trone'], { idole: true, fond: 'ville' }); } },
   { nom: 'desert', legende: 'Au désert', alt: 'Un camp au désert, au couchant : Khâlid et ses compagnons près des tentes.',
     faire: async (p, o) => { await chapitre(p, 'khalid', 0, { obj: 4 }); await zoom(p, o.tel ? 1.5 : 1.25); } },

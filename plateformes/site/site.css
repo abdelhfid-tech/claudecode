@@ -18,9 +18,11 @@ body { margin: 0; background: var(--encre); color: var(--sable); font-family: va
 img { max-width: 100%; height: auto; display: block; }
 a { color: var(--or); text-underline-offset: .18em; }
 a:hover { color: var(--clair); }
+p > a:only-child, .pied-liens a { display: inline-block; padding-block: .3em; } /* un lien seul sur sa ligne : une cible de doigt assez haute */
 a:focus-visible, .bouton:focus-visible { outline: 2px solid var(--clair); outline-offset: 3px; }
 h1, h2, h3 { font-family: var(--f-titre); font-weight: 700; color: var(--or); line-height: 1.18; letter-spacing: .04em; text-wrap: balance; margin: 0 0 .55em; }
-h1 { font-size: clamp(2.1rem, 9vw, 3.4rem); letter-spacing: .14em; color: var(--clair); }
+h1 { font-size: clamp(1.7rem, 7.4vw, 3rem); letter-spacing: .05em; color: var(--clair); overflow-wrap: normal; }
+.une h1 { font-size: clamp(2.1rem, 9vw, 3.4rem); letter-spacing: .14em; }
 h2 { font-size: clamp(1.3rem, 5vw, 1.65rem); }
 h3 { font-size: 1.05rem; color: var(--sable); letter-spacing: .06em; margin-top: 1.4em; }
 p { margin: 0 0 .85em; text-wrap: pretty; }
@@ -29,7 +31,7 @@ b, strong { color: var(--clair); }
 code { font-family: ui-monospace, "SFMono-Regular", Menlo, Consolas, monospace; font-size: .86em; }
 
 /* l'évitement (clavier, lecteurs d'écran) */
-.evitement { position: absolute; inset-inline-start: 8px; top: -40px; padding: .4em .8em; background: var(--or); color: var(--encre); z-index: 10; }
+.evitement { position: absolute; inset-inline-start: 8px; top: -100px; padding: .4em .8em; background: var(--or); color: var(--encre); z-index: 10; }
 .evitement:focus { top: 8px; }
 
 /* ---------- l'en-tête ---------- */
@@ -53,6 +55,7 @@ main { max-width: var(--large); margin: 0 auto; padding: 0 var(--gouttiere) 2.5r
 
 /* la une */
 .une { display: grid; gap: 1.4rem; padding-block: 1.8rem .6rem; align-items: center; }
+.une .reserve { margin: 0; }
 .une-ar { font-family: var(--f-ar); font-weight: 700; font-size: 2.1rem; line-height: 1; color: var(--or); margin: 0 0 .3em; }
 .une-sous { font-family: var(--f-titre); font-size: .9rem; letter-spacing: .28em; text-transform: uppercase; color: var(--sable); margin-top: -.3em; }
 .une-devise { font-style: italic; font-size: 1.18rem; color: var(--clair); margin-block: 1em; }
@@ -126,7 +129,8 @@ figcaption { margin-top: .45em; font-size: .9rem; color: var(--terne); text-alig
 /* ---------- le grand écran ---------- */
 @media (min-width: 760px) {
   body { font-size: 1.125rem; }
-  .une { grid-template-columns: minmax(0, 5fr) minmax(0, 6fr); gap: 2.6rem; padding-block: 3rem 1rem; }
+  .une { grid-template-columns: minmax(0, 5fr) minmax(0, 6fr); gap: 2rem 2.6rem; padding-block: 3rem 1rem; }
+  .une-texte { grid-column: 1; grid-row: 1; } .une-image { grid-column: 2; grid-row: 1; } .une .reserve { grid-column: 1 / -1; grid-row: 2; }
   .deux { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .galerie.tel { grid-template-columns: repeat(4, minmax(0, 1fr)); }
   .galerie.large { grid-template-columns: repeat(2, minmax(0, 1fr)); }
