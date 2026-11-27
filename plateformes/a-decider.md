@@ -33,7 +33,9 @@ seul peux trancher, par ordre de priorité.
 
 ## 3. iPhone
 
-- Le projet Xcode n'a jamais été compilé (pas de Mac ici) : `ios.md` dit les gestes, sur ton Mac.
+- Sur ton Mac (ton choix, 27 novembre) : `ios.md` dit les gestes — Xcode 26 ou plus récent, ▶ sur l'iPhone branché (Mode
+  développeur), puis Archive → TestFlight & App Store. Le projet n'a jamais été compilé (pas de Mac ici) : le premier essai
+  est le tien, et je corrige ce qui coince d'après ce que Xcode affiche.
 
 ## 4. Newgrounds, CrazyGames
 

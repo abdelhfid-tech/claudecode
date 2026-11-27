@@ -63,7 +63,7 @@ module.exports = {
     K.R.push((okZip ? 'OK    ' : 'ÉCART ') + `zip · ${L.length} fichiers ; le projet Xcode, la page embarquée (identique), les trois greffons à leur place`); if (!okZip) K.ecarts.push('zip');
     const tete = [`ISNAD ${N.nom} — projet iOS, ${new Date().toISOString()}`, `Capacitor : ${Object.entries(P.versions).map(([k, x]) => `${k} ${x}`).join(', ')}`,
       `zip : ${path.relative(C.RACINE, f)} (${C.mo(z.length)})`, 'npx cap sync ios, sous Linux :', ...sync.split('\n').filter(l => l.trim()).map(l => '    ' + l.trim()), '',
-      'NON COMPILÉ : il faut Xcode 26 sur un Mac (plateformes/ios.md).', ''];
+      'NON COMPILÉ : il faut un Mac avec Xcode 26 ou plus récent (plateformes/ios.md).', ''];
     fs.writeFileSync(path.join(dos, 'controle.txt'), tete.concat(K.R).join('\n') + '\n');
     console.log(tete.concat(K.R).map(l => '  ' + l).join('\n'));
     if (K.ecarts.length) throw new Error(`ÉCART ios — ${K.ecarts.join(' | ')}`);
@@ -75,13 +75,13 @@ module.exports = {
 const LISEZMOI = N => `ISNAD ${N.nom} — le projet iOS (Capacitor 8, Swift Package Manager)
 
 Ce zip est fait par « node v2/tools/plateformes.js ios ». Le jeu y est déjà posé (ios/App/App/public/index.html).
-Sur un Mac avec Xcode 26 :
+Sur un Mac avec Xcode 26 ou plus récent (Xcode 27 convient) :
 
   1. Décompresser ce zip.
   2. Ouvrir isnad-ios/ios/App/App.xcodeproj (double-clic).
      Xcode télécharge seul ce qui manque (le paquet « capacitor-swift-pm » et la bibliothèque du greffon Filesystem).
   3. Cible « App » > Signing & Capabilities : choisir son équipe (Team).
-  4. Product > Archive, puis Distribute App > App Store Connect > Upload : la version arrive dans TestFlight.
+  4. Product > Archive, puis Distribute App > TestFlight & App Store > Distribute : la version arrive dans TestFlight.
 
 Le pas à pas complet est dans le dépôt : plateformes/ios.md.
 Identifiant proposé : org.isnadgame.isnad — à valider avant tout envoi (il ne se change plus ensuite).
