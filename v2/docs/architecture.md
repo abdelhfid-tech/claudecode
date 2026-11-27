@@ -112,14 +112,37 @@ une partie prise dans la 1.32 gelée, acceptée et remise à jour ; les clés de
 
 ### Mener plusieurs récits : un point de reprise par récit
 
-**Les maillons se suivent (2.22, D211).** Le décideur, 21 novembre : « on ne passe pas à la saga suivante tant qu'on n'a
-pas fini la saga précédente » ; « Ordre fixe, du I au V ». Sur la Chaîne (`U.showChain`, `maillon`), un maillon est
-**scellé** tant que celui d'avant, dans son livre, n'est pas achevé : classe `locked`, bouton désactivé, et « Scellé tant
-que le maillon {rang} n'est pas achevé ». Un maillon achevé se rejoue ; un maillon déjà entamé (`ch > 0` ou rangé dans
-`cps` : une partie d'avant, où l'on menait des récits de front) reste ouvert ; `I.debug.all` lève le scellé. « Revenir en
-2084 » range toujours le récit, qui se reprend là ; mais un seul récit des Compagnons est désormais en route à la fois.
-Rien ne change dans la partie (le format reste le 2). `retours.js` le vérifie (le maillon II scellé tant que le I est en
-route, puis un récit déjà entamé resté ouvert).
+**Toutes les sagas ouvertes, chacune à sa place (2.48, D240).** Le décideur, 27 novembre : « je veux que tu débloque toutes
+les sagas avec possibilité de sauvegarder l'avancement de chacune des saga ». Le sceau de la 2.22 (D211 : « on ne passe pas à
+la saga suivante tant qu'on n'a pas fini la saga précédente », « Ordre fixe, du I au V ») est levé : sur la Chaîne
+(`U.showChain`, `maillon`), chaque maillon s'ouvre dès le prologue joué, dans l'ordre qu'on veut (ceux d'un paquet aussi), et
+dit où il en est — « Maillon à ouvrir », « Chapitre n / total · en route », « … retrouvée » ; un maillon achevé se rejoue.
+Seul **le dernier maillon** est scellé, tant que les maillons du livre I ne sont pas achevés (« Après les cinq sagas ») ;
+`I.debug.all` le lève (les films). Comme il suppose l'étape V de la découverte de l'Agrégor (plus bas), un soir de la
+Cité-Miroir laissé en chemin passe avant lui : toucher le dernier maillon, les cinq sagas achevées, ouvre la première
+rencontre pas encore jouée, reprise là où on l'avait quittée s'il y a lieu (`soirEnAttente`) ; puis le dernier maillon.
+L'en-tête de la Chaîne redevient celui d'avant la 2.22 : « Chaque maillon est un témoin. Choisis celui dont tu veux suivre la
+trace ; l'ordre est libre, mais la Chaîne se lit du premier au dernier. » Rien ne change dans la partie (le format reste le
+2). `retours.js` le vérifie : les cinq maillons ouverts par leurs boutons, du V au I, le dernier scellé ; 'Umar ouvert
+pendant qu'Abû Bakr est en route.
+
+**« Continuer » mène à chaque récit en cours (2.48, D240).** Le décideur : « dans la première page le bouton "continuer"
+pourra renvoyer vers les différentes sauvegardes ». L'écran-titre (`U.showTitle`) a trois vues dans la même colonne :
+l'essentiel, **les récits en cours** (`reprises`) et les réglages. Les récits en cours sont ceux de la partie gardée
+(`isnad2.auto` : comptés sans l'adopter, `W.rangees(d)` ; adoptée quand leur liste s'ouvre, pour le nom du râwî) : le récit courant (`cp` ; le refuge s'y dit « La Cité-Miroir »), puis
+ceux qu'on a quittés en chemin (`cps`), du plus récent au plus ancien. Avec un seul, « Continuer » le reprend comme toujours
+(`U.resume`) ; avec plusieurs, il ouvre leur liste, suivie de « La Chaîne » et « ◂ Retour ». Le refuge compte (après les
+contre-lectures de la 2.48) : remonté dans les quartiers avec un récit rangé — l'état ordinaire après « Revenir en 2084 » —,
+Idris a deux places où reprendre, et la liste les montre.
+Chaque bouton dit ce que dit le bouton de la Chaîne (`repriseDit` : « ▶ Reprendre : {récit} · {chapitre} », « ▶ Reprendre :
+la veillée · {chapitre} ») et, dessous, « Chapitre n / total » pour une saga, le nom du lieu (`D.MAPS`) et « il y a … » (`t`,
+l'heure où il a été rangé). Le toucher, A ou Entrée adopte la partie gardée et reprend ce récit comme le bouton de la Chaîne
+(`U.reprendre` : le point rangé redevient courant, l'autre est rangé ; un maillon achevé qu'on rejouait, quitté en chemin,
+reprend lui aussi à son point — seul « Rejouer » repart du début, `U.startSaga`) ; « La Chaîne » range le récit courant et l'ouvre ; B
+ou Échap revient à l'essentiel (`focusList`, `onCancel`). Aucun texte nouveau. Une partie de la 2.47 avec plusieurs récits
+rangés montre la liste ; « Reprendre une copie gardée » ne change pas. `retours.js` (la liste, au clavier et au doigt ; un
+seul récit, pas de liste ; le refuge et un récit ; une relecture reprise ; une partie de la 2.47) et `manette.js` (au joystick, A et B, en hauteur, en largeur, en immersif)
+le vérifient.
 
 La partie garde un point de reprise courant (`cp`) et, **rangés à part, ceux des récits quittés en chemin** (`cps`) : un
 par saga de la Chaîne (clé : l'identifiant de la saga), un par chapitre de l'histoire-cadre ou des veillées (clé :
@@ -139,7 +162,7 @@ Champs nouveaux de la partie, tous facultatifs : `cps`, `retours`, `rebonds` —
 vérifie, `assainir` écarte un récit rangé dont le contenu manque. `node v2/tools/retours.js` joue le tout par les vrais
 boutons : « RETOURS CONFORMES ».
 
-### La découverte de l'Agrégor (2.25, D214)
+### La découverte de l'Agrégor (2.25, D214 ; dans l'ordre où l'on joue depuis la 2.48, D240)
 
 Le décideur, 21 novembre : « On ne parle plus de l'agregore des le début de l'histoire il faut qu'il le découvre au fur et
 à mesure avec maître Yunus ». L'Agrégor n'est plus nommé au prologue : Idris demande « Et derrière les écrans, qu'y
@@ -147,8 +170,19 @@ a-t-il ? », et Maître Yûnus ne le lui nomme pas (« un nom qu'on reçoit sans
 fond de la salle est celle « que rien, là-haut, n'a jamais pu additionner ». La fiche `agregor` du Recueil n'est plus
 donnée au prologue.
 
-**Cinq étapes, une par maillon achevé.** Les maillons se suivent (D211) : les cinq rencontres de la Cité-Miroir (`r_abubakr`
-… `r_ali`, chapitres `after` de `frame.js`) viennent dans cet ordre. Chacune garde ce qu'elle avait, puis, à la fin de
+**Cinq étapes, dans l'ordre où l'on joue les rencontres (2.48, D240 ; le décideur, 27 novembre : « Dans l'ordre où on
+joue »).** Jusqu'à la 2.47, les maillons se suivaient (D211) et les cinq rencontres de la Cité-Miroir (`r_abubakr` … `r_ali`,
+chapitres `after` de `frame.js`) venaient dans cet ordre, chacune avec son étape. Depuis la 2.48, **la k-ième rencontre jouée
+dit l'étape k**, quelle que soit la saga qu'elle suit : le moteur pose, à l'ouverture et à chaque reprise d'un chapitre,
+`_2084_etape_k` — le compte des autres rencontres déjà jouées (`sv.rencontres`), plus un — et `_2084_agregor` quand le nom est
+reçu (la fiche `idris/agregor`, ou l'épilogue) (`U.etapes`, `U.etape`, `U.nomme`, `ui.js` ; appelés par `W.startChapter`). Le
+dernier objectif de chaque rencontre est `etapes(n, propres, accroche)` (`frame.js`) : cinq `['if', '_2084_etape_k', …]` ; à
+sa place d'avant (n : Abû Bakr I, 'Umar II, Khâlid III, 'Uthmân IV, 'Alî V), ses répliques d'avant, mot pour mot ; à une autre
+place, une accroche (ce qu'Idris vient de voir ce soir-là, sans nommer l'Agrégor ni supposer une étape) puis l'étape commune
+(`ETAPES`), faite des répliques d'avant et d'une ouverture neuve — les mêmes objets d'une rencontre à l'autre, que
+`casesSaga` ne relève qu'une fois. La fiche vient toujours avec l'étape III ; les étapes IV et V, qui la suivent, le nomment.
+Une partie d'avant, qui a joué ses rencontres dans l'ordre des maillons, continue à l'étape suivante (rien n'est migré).
+Chacune garde ce qu'elle avait, puis, à la fin de
 l'objectif de l'enfant, Maître Yûnus paraît : un PNJ `yunus_r` (`hero: 'yunus'`, `hidden: true`, posé à `['ecran', -2, 3]`),
 que `['show', 'yunus_r']` fait paraître — `show` le place et, s'il paraissait sur le joueur, l'en écarte (`W.ecarter`, 2.16 :
 personne n'est posé sur le joueur) —, une narration (« Maître Yûnus est venu de la vieille mosquée. Il attend Idris un peu à
@@ -156,25 +190,37 @@ l'écart. » ; jusqu'à la 2.46, « Maître Yûnus est monté des Archives basse
 `talk: 'yunus_r'` (« Rejoindre Maître Yûnus, un peu à l'écart »), où ils se parlent, quatre à six répliques. Aucune opération de script nouvelle : `show` et `talk` existaient (le dernier maillon fait paraître
 l'enfant de la même façon). Ce qu'Idris découvre :
 
-| Après le maillon | Étape |
+| Étape (et, jusqu'à la 2.47, le maillon) | Ce qu'Idris découvre |
 |---|---|
-| I, Abû Bakr | Celui qui défile n'était pas seul à regarder : quelque chose rassemble les regards. |
+| I, Abû Bakr | Celui qui défile n'était pas seul à regarder : quelque chose rassemble les regards (l'étape commune, ailleurs : toute la rue, sous le grand écran, regardait la même chose). |
 | II, 'Umar | Ça ne commande pas, ça additionne — c'est Idris qui le dit ; Yûnus : « Tu l'as dit avant moi. C'est ainsi qu'il faut l'apprendre. » |
 | III, Khâlid | Son nom : « Ceux qui le servent l'appellent l'Agrégor. » `['codex', 'agregor']` : la fiche entre au Recueil. |
 | IV, 'Uthmân | Il ne craint que ce qui passe de main en main sans passer par lui : la Chaîne. |
 | V, 'Alî | Il a un cœur, sous le grand écran ; quelqu'un qui l'a servi viendra le montrer (le dernier maillon le fait paraître : il n'est pas nommé ici). |
 
-**Rien ne le nomme avant l'étape III.** Relevé des mentions qu'un joueur peut voir avant la fin de la rencontre III : le
+**Rien ne le nomme avant l'étape III — dans tous les ordres (2.48, D240).** Les sagas s'ouvrant toutes, un texte qui le
+nomme ne se dit que là où le nom est reçu à coup sûr : sous `['if', '_2084_agregor', …]`, dans une étape III à V, dans le
+dernier maillon (qui suit les cinq rencontres) ou dans la fiche elle-même. Ce qui le nommait dans les sagas IV et V a sa
+variante tant que le nom n'est pas reçu : la fin de `ut2` (« devant ce qui règne là-haut »), et deux fiches du Recueil, « La
+Rumeur » et « Le Slogan » (« les écrans »), par le champ `avant` d'une fiche, que `U.codexEntry` montre tant que le nom n'est
+pas reçu. `regles.js` le vérifie (`verifierNomAgregor`, et dans chaque langue `verifierLangue` : une langue ne le nomme que là
+où le français le nomme ; « المُجمِّع » comme « للمُجمِّع » en arabe ; et un récit n'écrit jamais un drapeau `_2084_…`) ;
+`retours.js` le joue dans un autre ordre ('Uthmân, 'Alî, Abû Bakr, 'Umar, Khâlid). Hors des récits, la page « Les degrés du
+mal » (`mal.js`, `M.tu`) dit, avant le nom reçu, « Ce qui se cache derrière les écrans » à la place du nom de l'idole du
+dernier maillon et du titre de ce chapitre (relevé par les contre-lectures : elle les montrait depuis la 2.25) ; `retours.js`
+la rend en français, en arabe, en arabe vocalisé et en anglais, avant et après le nom. *Jusqu'à la
+2.47 :* relevé des mentions qu'un joueur peut voir avant la fin de la rencontre III : le
 prologue (retirées, ci-dessus) ; le premier retour, `x_descendu` (`retour: 1`, qui peut venir pendant le maillon I : « Pour
 ce qui règne là-haut, c'est déjà une faute ») ; la fin de la saga de Khâlid et son feuillet `idole_nombre` (« les écrans ») ;
 le titre du dernier maillon sur la Chaîne (`ui.js`, `U.showChain`) : « Ce qui se cache derrière les écrans » tant que la
 partie n'a pas `idris/agregor` dans `codex` (ni l'épilogue), « Le Cœur de l'Agrégor » ensuite — une partie d'avant, qui a
 reçu la fiche au prologue, garde ce titre. Les veillées I et II, les rencontres I et II, la Citadelle, les quartiers
-(`c_quartiers`, `cite`), `coeur.js`, `caid.js`, l'aide, la halte, les leçons, le partage et `page.html` ne le nommaient pas.
+(`c_quartiers`, `cite`), `coeur.js`, `caid.js`, l'aide, les leçons, le partage et `page.html` ne le nommaient pas ; la halte
+non plus, sauf sa page « Les degrés du mal » (ci-dessus, corrigée à la 2.48).
 Ce qui le nomme vient après : les sagas IV et V (`saga_uthman.js`, `saga_ali.js`), le dernier maillon `e1` (son titre, ses
 répliques, le combat), la fiche de l'ennemi (au combat de `e1`). Le même jour, deux phrases devenues fausses avec D211 ont
 changé : « Tu peux suivre plusieurs traces à la fois » (`x_descendu`) et « On peut suivre plusieurs récits à la fois » (la
-fiche `x_veiller`).
+fiche `x_veiller`) ; redevenues vraies avec D240, elles sont revenues à la 2.48.
 
 Une chimère, une image du jeu : les étapes ne lui prêtent aucun pouvoir réel, ni lien avec un peuple, une religion, Iblîs ou
 un djinn (exigences 6, 10, 16, 18) ; aucun verset, aucune parole attestée, rien sur le Prophète ﷺ ni sur un Compagnon : des
@@ -589,7 +635,7 @@ et dans chacune de ses pages, sur les écrans (titre, Chaîne, « Ton personnage
 | la halte | entrer dans la page sélectionnée | la refermer : retour au jeu | la case voisine (en hauteur, deux colonnes) |
 | une page de la halte (Carte, Équipement, une pièce, Figures, Recueil, Aide, Valeurs, Les degrés du mal…) | choisir | revenir d'un cran | la case voisine |
 | la préparation d'une bataille | choisir | rien : on ne recule pas, la seule sortie est « Déclarer la bataille » | la case voisine |
-| l'écran-titre | choisir | dans les réglages : revenir à l'essentiel ; sinon, rien | monter, descendre |
+| l'écran-titre | choisir | dans les réglages et les récits en cours (2.48) : revenir à l'essentiel ; sinon, rien | monter, descendre |
 | « Ton personnage » | choisir | revenir (au début d'une partie : rien) | la case voisine |
 | la Chaîne | ouvrir ce qui est sélectionné | rien | monter, descendre |
 | « Ta partie », « Partager ma progression » | choisir | revenir | monter, descendre |

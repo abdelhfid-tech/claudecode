@@ -169,6 +169,11 @@ boss doivent raconter quelque chose (l'Idole du Héros est `immune:['fer']` et f
   text: '3 à 6 phrases, factuelles et sourcées.', src: 'at-Tabarî, Târîkh ; Ibn Sa\'d, Tabaqât' }
 ```
 `cat` : `Biographie | Événement | Noosphère | Lieu | Parole`. Débloquées par `['codex', id]`.
+*2.x (2.48, D240) :* une fiche dont le `text` nomme l'Agrégor porte `avant`, son texte tant que le nom n'est pas reçu
+(la fiche `idris/agregor`, à l'étape III de la découverte, dans l'ordre où l'on joue les rencontres) : le Recueil le montre
+jusque-là (`U.codexEntry`), puis `text`. `avant` ne le nomme pas (« les écrans », « ce qui règne là-haut ») ; il s'écrit dans
+chaque langue comme `text`. Dans un script, ce qui le nomme se dit sous `['if', '_2084_agregor', [ … ], [ la variante ]]`
+(le moteur pose ce drapeau quand le nom est reçu). Le validateur le vérifie (`regles.js`, `verifierNomAgregor`).
 Prévoir : la biographie du Compagnon et de ses 2 alliés, chaque événement majeur, chaque idole (cat.
 Noosphère), 2–3 paroles.
 
@@ -265,7 +270,7 @@ Un PNJ ou un `foe` peut vivre sur une autre carte que celle du chapitre via `map
 | `['join', héros]` / `['leave', héros]` | modifie le groupe |
 | `['codex', id]` | débloque une entrée |
 | `['heal']` | restaure le groupe |
-| `['flag', nom, valeur?]`, `['if', nom, [ops], [sinon]?]` | drapeaux locaux à la saga |
+| `['flag', nom, valeur?]`, `['if', nom, [ops], [sinon]?]` | drapeaux locaux à la saga ; un nom en `_2084_…` est posé par le moteur (l'état de 2084, le nom de l'Agrégor reçu, l'étape) : un récit le lit par `if`, le validateur refuse qu'il l'écrive (2.48) |
 | `['light', élément]` | accorde la Lumière de la saga (dernière op de `outro` de saga) |
 
 ## 6 bis. Équipement

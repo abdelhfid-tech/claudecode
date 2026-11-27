@@ -242,6 +242,7 @@
     if (!cp && I.cite && I.cite.refuge(ch)) I.cite.neuf(S.flags); // 2.23 : chaque arrivée dans les quartiers est neuve (cite.js)
     if (saga.frame && !saga.veillees && (Number.isInteger(ch.retour) || ch.visite) && I.ui.drapeaux2084) I.ui.drapeaux2084(S.flags); // 2.x : l'état de 2084, pour un retour ou une visite
     if (saga.frame && !saga.veillees && I.circuit) I.circuit.drapeaux(S.flags); // 2.27 : Idris a-t-il couru avec Sâlim ? (le dernier maillon le lit : _2084_salim)
+    if (I.ui.etapes) I.ui.etapes(S.flags, ch); // 2.48 (D240) : le nom de l'Agrégor est-il reçu ? quelle étape dit cette rencontre ? (dans l'ordre où l'on joue)
     I.oeuvres.syncFlags();
     W.party = (cp ? cp.party : ch.party).slice(); W.party.forEach(id => W.ensureLevel(W.hero(id))); W.healAll(); W.refreshSheets();
     W.npcs = (ch.npcs || []).map(n => { const def = n.hero && saga.heroes[n.hero]; const look = def ? lookOf(def) : Object.assign({ kind: 'homme', robe: '#8a7355', head: '#e6dcc4' }, n.look); if (!def && (look.kind === 'soldat' || look.kind === 'romain') && !look.item && !look.coiffe) look.sel = I.hash(n.id || n.name || '') % 97; return Object.assign({}, n, { map: n.map || ch.map, hidden: !!n.hidden, placed: false, dir: n.face !== undefined && G.DIRS[n.face] !== undefined ? G.DIRS[n.face] : 0, sheet: G.planche(look), aura: def ? (lueur(def.look) || '#ffe9a8') : (look.kind === 'compagnon' ? (lueur(look) || '#ffe9a8') : null) }); });
@@ -311,7 +312,7 @@
     const c = sv.cps && sv.cps[k]; if (!c) return null;
     W.ranger(); delete sv.cps[k]; sv.cp = c; return c;
   };
-  W.rangees = function () { const sv = I.save.data; return Object.keys(sv.cps || {}).map(k => sv.cps[k]).filter(c => c && I.sagas[c.saga] && (I.sagas[c.saga].chapters || [])[c.ci] && !(I.cite && I.cite.estPoint(c))).sort((x, y) => (y.t || 0) - (x.t || 0)); };
+  W.rangees = function (d) { const sv = d || I.save.data; return Object.keys(sv.cps || {}).map(k => sv.cps[k]).filter(c => c && I.sagas[c.saga] && (I.sagas[c.saga].chapters || [])[c.ci] && !(I.cite && I.cite.estPoint(c))).sort((x, y) => (y.t || 0) - (x.t || 0)); };
   W.checkpoint = function () {
     if (W.excursion) return; // pendant la descente du râwî, le point de reprise reste celui d'avant
     { const sv = I.save.data, k = W.cleReprise({ saga: W.saga.id, ci: W.ci }); if (sv.cp && W.cleReprise(sv.cp) !== k) W.ranger(); if (sv.cps && sv.cps[k]) delete sv.cps[k]; } // le point d'un autre récit est rangé, jamais écrasé

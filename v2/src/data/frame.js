@@ -18,7 +18,9 @@
    « agregor » du Recueil ; IV, il ne craint que ce qui passe de main en main sans passer par lui ; V, il a un cœur, sous le
    grand écran. Avant l'étape III, aucun texte ne le nomme (on dit « ce qui règne là-haut », « les écrans »). Une chimère,
    une image du jeu : aucun pouvoir réel, aucun lien avec un peuple, une religion, Iblîs ni un djinn. Textes de l'agent, à
-   valider. */
+   valider. 2.48 (D240) : les étapes suivent l'ordre où l'on joue les rencontres, non plus celui des maillons (ETAPES, plus
+   bas) ; un texte qui le nomme ailleurs (les sagas, le Recueil) a sa variante tant que le nom n'est pas reçu (_2084_agregor,
+   et le champ « avant » d'une fiche) ; regles.js le vérifie. */
 /* Depuis la version du cœur : chaque rencontre porte, à sa deuxième manche, l'idée noire de celui à qui l'on
    parle (« noir »), et s'achève devant le mal du cœur qui se tenait derrière lui. Le dernier chapitre fait se
    dresser ceux qui n'ont pas été tranchés (['vices', …]). Textes des maux et des lames : src/data/coeur.js. */
@@ -49,6 +51,47 @@ const PASSANTS_Q = [
   { map: 'quartiers', id: 'q_parieuse', name: 'Une parieuse', at: ['tribune', 2, 0], face: 'up', pose: 'triste', look: { kind: 'femme', robe: '#5a6a4a', head: '#3a4630', cloak: '#6a7a5a' }, talk: [['say', 'q_parieuse', 'Je me dis que la prochaine fois, je rattraperai tout. Je me le dis chaque soir.']] },
   { map: 'quartiers', id: 'q_parieur2', name: 'Un parieur', at: ['tribune', 7, 1], face: 'up', pose: 'accable', look: { kind: 'citadin', robe: '#8a3a5a', head: '#5a2238', cloak: '#9a4a6a' }, talk: [['say', 'q_parieur2', 'Ce que j’ai perdu, je n’ose le dire à personne. Alors je reviens, seul.']] }
 ];
+/* 2.48 (D240 ; le décideur, 27 novembre : « Dans l'ordre où on joue ») — la découverte de l'Agrégor suit l'ordre où l'on joue
+   les rencontres, et non plus celui des maillons : la k-ième rencontre jouée dit l'étape k, quelle que soit sa saga. Le moteur
+   pose un drapeau, un seul, _2084_etape_1 … _2084_etape_5 (le compte des autres rencontres déjà jouées, plus un : ui.js,
+   U.etapes) ; un récit le lit par « if ». Chaque rencontre garde, à sa place d'avant (Abû Bakr I, 'Umar II, Khâlid III,
+   'Uthmân IV, 'Alî V), ses répliques d'avant, mot pour mot ; à une autre place, une accroche — ce qu'Idris vient de voir
+   ce soir-là, sans nommer l'Agrégor, ni supposer une étape, ni dire si les mots ont été trouvés — puis l'étape commune (ETAPES), faite des répliques d'avant et
+   d'une ouverture neuve. La fiche « agregor » vient toujours avec l'étape III : les étapes IV et V, qui la suivent, peuvent
+   le nommer. Textes neufs de l'agent, à valider. */
+const ETAPES = [
+  // I : quelque chose rassemble les regards
+  // (l'ouverture ne dit rien de l'homme de ce soir — le Régent n'a personne, l'Admiré personne derrière ses comptes : elle dit la rue)
+  [['say', 'yunus_r', 'Qu’as-tu vu, ce soir, sous le grand écran ?'],
+    ['say', 'idris', 'Toute la rue regardait la même chose, au même instant.'],
+    ['say', 'yunus_r', 'C’est un commencement. Quelque chose rassemble les regards. Ce n’est pas encore un nom : c’est une trace.'],
+    ['say', 'idris', 'Et ce qui les rassemble, qu’est-ce que c’est ?'],
+    ['say', 'yunus_r', 'Garde ce que tu as vu. Le reste viendra, maillon après maillon.']],
+  // II : ça ne commande pas, ça additionne (Idris le dit le premier)
+  [['say', 'yunus_r', 'Toute la rue regarde la même chose. Qui commande, alors ?'],
+    ['say', 'idris', 'Personne. L’écran ne fait que compter ce que tous regardent. Ça ne commande pas, ça additionne.'],
+    ['say', 'yunus_r', 'Tu l’as dit avant moi. C’est ainsi qu’il faut l’apprendre.'],
+    ['say', 'yunus_r', 'Ce qu’on répète sans l’avoir vu reste une rumeur. Ce qu’on a vu soi-même, on peut le transmettre.']],
+  // III : son nom, et la fiche du Recueil
+  [['say', 'idris', 'Ce qui rassemble les regards a-t-il un nom ?'],
+    ['say', 'yunus_r', 'Tu l’as vu rassembler, puis additionner. Maintenant, tu peux entendre son nom.'],
+    ['say', 'yunus_r', 'Ceux qui le servent l’appellent l’Agrégor.'],
+    ['codex', 'agregor'],
+    ['say', 'idris', 'L’Agrégor… Je l’ai vu avant de savoir son nom.'],
+    ['say', 'yunus_r', 'C’est le bon ordre : d’abord voir, ensuite nommer. Un nom reçu ainsi n’est plus une rumeur.']],
+  // IV : il ne craint que ce qui passe de main en main sans passer par lui
+  [['say', 'idris', 'L’Agrégor compte tout ce qu’on regarde. Que craint-il, alors ?'],
+    ['say', 'yunus_r', 'Une seule chose : ce qui passe de main en main sans passer par lui.'],
+    ['say', 'idris', 'La Chaîne. D’un homme à un autre, avec le nom de celui qui l’a porté.'],
+    ['say', 'yunus_r', 'Oui. Il additionne tout ce qu’on lui montre. Ce qu’on se transmet de main en main, il ne le voit pas passer.']],
+  // V : il a un cœur ; quelqu'un qui l'a servi viendra le montrer (le dernier maillon)
+  [['say', 'idris', 'L’Agrégor additionne tout, et ne va jamais voir.'],
+    ['say', 'yunus_r', 'Alors va voir à sa place. Il a un cœur, Idris, sous le grand écran.'],
+    ['say', 'idris', 'Comment le trouverai-je ?'],
+    ['say', 'yunus_r', 'Pas seul. Quelqu’un qui l’a servi viendra te le montrer. Ceux qui en reviennent savent le chemin.']]
+];
+// la fin d'une rencontre : à sa place d'avant (n), ses propres répliques ; ailleurs, son accroche puis l'étape commune
+const etapes = (n, propres, accroche) => ETAPES.map((e, k) => ['if', '_2084_etape_' + (k + 1), k + 1 === n ? propres : accroche.concat(e)]);
 
 ISNAD.registerSaga({
   id: 'idris', order: 0, frame: true,
@@ -232,7 +275,7 @@ ISNAD.registerSaga({
     { id: 'r_admire', cat: 'Noosphère', title: 'L’Admiré', text: 'Sous le grand écran, un homme que des millions de comptes applaudissent. Derrière ces comptes, il n’y a personne. Il ne sait plus qui il serait sans ce bruit. Descendre du socle demande plus de courage que d’y monter : nul n’applaudit celui qui descend. Personnage de fiction.' },
     { id: 'r_compteur', cat: 'Noosphère', title: 'Le Compteur', text: 'Il achète des regards quand personne n’en veut et les garde dans un coffre, sans jamais en poser un sur quelqu’un. Ce qu’on donne, on sait où il est ; ce qu’on amasse, on le perd de vue. Personnage de fiction.' },
     { id: 'r_cartographe', cat: 'Noosphère', title: 'Le Cartographe', text: 'Il dessine la Cité sans y marcher, d’après des millions de relevés. Il demande « combien ça a fait de vues ? » et jamais « qui ? ». Sa carte porte un mur là où un enfant sait qu’il y a une porte. Un savoir se corrige en allant voir, et se garde avec le nom de celui qui a vu. Personnage de fiction.' },
-    { id: 'x_veiller', cat: 'Noosphère', title: 'Veiller la vieille mosquée', text: 'Chaque fois qu’Idris remonte la Chaîne, là-haut, un écran s’aperçoit qu’on ne le regarde plus, et envoie voir. Les maillons se suivent ; on peut quitter un récit en chemin, il attend là où on l’a laissé. Mais des récits qu’on ne veille pas, un autre les raconte à votre place. Fiction.' },
+    { id: 'x_veiller', cat: 'Noosphère', title: 'Veiller la vieille mosquée', text: 'Chaque fois qu’Idris remonte la Chaîne, là-haut, un écran s’aperçoit qu’on ne le regarde plus, et envoie voir. On peut suivre plusieurs récits à la fois : chacun attend là où on l’a laissé. Mais des récits qu’on ne veille pas, un autre les raconte à votre place. Fiction.' },
     { id: 'x_question', cat: 'Noosphère', title: '« Tu pars où ? »', text: 'L’enfant du parvis a suivi la ruelle jusqu’à la vieille mosquée pour poser sa question. Idris lui a montré un nom, puis celui qui vient après : c’est ainsi que Maître Yûnus avait commencé avec lui. Personnage de fiction.' },
     { id: 'x_avis', cat: 'Noosphère', title: 'L’agent du relevé', text: 'Il mesure un lieu au nombre de ceux qui le regardent. Il n’est pas un ennemi : il fait son relevé, et voudrait rentrer chez lui. Mais il est venu voir, ce que ne font pas ceux qui décident d’en haut. On ne garde pas un lieu en le cachant : on y amène quelqu’un. Personnage de fiction.' },
     { id: 'citadelle_2084', cat: 'Lieu', title: 'La Citadelle, où Idris est né', text: 'Idris est né à la Citadelle, au bord du désert, des siècles après le Caïd dont il entend les veillées. C’est de là qu’on l’envoya apprendre auprès de Maître Yûnus, dans la vieille mosquée. Ce que le Caïd décide dans les veillées s’y lit encore : la prière, le savoir, la justice et le lien y tiennent, ou y manquent. Le lieu, le Caïd et Idris sont de fiction.' },
@@ -597,13 +640,14 @@ ISNAD.registerSaga({
           ['nar', 'Maître Yûnus est venu de la vieille mosquée. Il attend Idris un peu à l’écart.']
         ] },
         // 2.25 (D214) — la découverte de l'Agrégor, étape I : quelque chose rassemble les regards. Textes de l'agent, à valider.
-        { text: 'Rejoindre Maître Yûnus, un peu à l’écart', talk: 'yunus_r', then: [
+        // 2.48 (D240) : l'étape que dit ce soir est celle de son rang parmi les rencontres jouées (ETAPES, plus haut)
+        { text: 'Rejoindre Maître Yûnus, un peu à l’écart', talk: 'yunus_r', then: etapes(1, [
           ['say', 'yunus_r', 'Tu as tiré un homme de son écran, ce soir. Qu’as-tu vu, autour de lui ?'],
           ['say', 'idris', 'Il n’était pas seul à regarder. Toute la rue regardait la même chose, au même instant.'],
           ['say', 'yunus_r', 'C’est un commencement. Quelque chose rassemble les regards. Ce n’est pas encore un nom : c’est une trace.'],
           ['say', 'idris', 'Et ce qui les rassemble, qu’est-ce que c’est ?'],
           ['say', 'yunus_r', 'Garde ce que tu as vu. Le reste viendra, maillon après maillon.']
-        ] }
+        ], [['say', 'yunus_r', 'Tu as parlé ce soir à un homme qui défilait pour oublier.']]) }   // (l'accroche vaut que les mots aient été trouvés ou non)
       ]
     },
     {
@@ -671,12 +715,12 @@ ISNAD.registerSaga({
           ['nar', 'Maître Yûnus est venu de la vieille mosquée. Il attend Idris un peu à l’écart.']
         ] },
         // 2.25 (D214) — étape II : ça ne commande pas, ça additionne ; c'est Idris qui le dit. Textes de l'agent, à valider.
-        { text: 'Rejoindre Maître Yûnus, un peu à l’écart', talk: 'yunus_r', then: [
+        { text: 'Rejoindre Maître Yûnus, un peu à l’écart', talk: 'yunus_r', then: etapes(2, [
           ['say', 'yunus_r', 'Cet homme validait ce que l’écran avait déjà décidé. Qui commande, alors ?'],
           ['say', 'idris', 'Personne. L’écran ne fait que compter ce que tous regardent. Ça ne commande pas, ça additionne.'],
           ['say', 'yunus_r', 'Tu l’as dit avant moi. C’est ainsi qu’il faut l’apprendre.'],
           ['say', 'yunus_r', 'Ce qu’on répète sans l’avoir vu reste une rumeur. Ce qu’on a vu soi-même, on peut le transmettre.']
-        ] }
+        ], [['say', 'yunus_r', 'Cet homme validait ce que l’écran avait déjà décidé.']]) }
       ]
     },
     {
@@ -745,14 +789,14 @@ ISNAD.registerSaga({
         ] },
         // 2.25 (D214) — étape III : son nom, que donnent ceux qui le servent ; la fiche « L'AGRÉGOR » entre au Recueil (la
         // Chaîne nomme alors le dernier maillon « Le Cœur de l'Agrégor », ui.js). Textes de l'agent, à valider.
-        { text: 'Rejoindre Maître Yûnus, un peu à l’écart', talk: 'yunus_r', then: [
+        { text: 'Rejoindre Maître Yûnus, un peu à l’écart', talk: 'yunus_r', then: etapes(3, [
           ['say', 'idris', 'Des fenêtres qui applaudissent, et personne derrière. Ce qui les rassemble a-t-il un nom ?'],
           ['say', 'yunus_r', 'Tu l’as vu rassembler, puis additionner. Maintenant, tu peux entendre son nom.'],
           ['say', 'yunus_r', 'Ceux qui le servent l’appellent l’Agrégor.'],
           ['codex', 'agregor'],
           ['say', 'idris', 'L’Agrégor… Je l’ai vu avant de savoir son nom.'],
           ['say', 'yunus_r', 'C’est le bon ordre : d’abord voir, ensuite nommer. Un nom reçu ainsi n’est plus une rumeur.']
-        ] }
+        ], [['say', 'idris', 'Des fenêtres qui applaudissent, et personne derrière.']]) }
       ]
     },
     {
@@ -821,13 +865,13 @@ ISNAD.registerSaga({
         ] },
         // 2.25 (D214) — étape IV : il ne craint que ce qui passe de main en main sans passer par lui, la Chaîne. Textes de
         // l'agent, à valider.
-        { text: 'Rejoindre Maître Yûnus, un peu à l’écart', talk: 'yunus_r', then: [
+        { text: 'Rejoindre Maître Yûnus, un peu à l’écart', talk: 'yunus_r', then: etapes(4, [
           ['say', 'yunus_r', 'Le Compteur a posé un regard sur un passant. Un seul. L’Agrégor ne l’a pas compté.'],
           ['say', 'idris', 'Il compte tout ce qu’on regarde. Que craint-il, alors ?'],
           ['say', 'yunus_r', 'Une seule chose : ce qui passe de main en main sans passer par lui.'],
           ['say', 'idris', 'La Chaîne. D’un homme à un autre, avec le nom de celui qui l’a porté.'],
           ['say', 'yunus_r', 'Oui. Il additionne tout ce qu’on lui montre. Ce qu’on se transmet de main en main, il ne le voit pas passer.']
-        ] }
+        ], [['say', 'yunus_r', 'Le Compteur amassait des regards, sans jamais en poser un sur quelqu’un.']]) }   // (de même)
       ]
     },
     {
@@ -896,12 +940,12 @@ ISNAD.registerSaga({
         ] },
         // 2.25 (D214) — étape V : il a un cœur, sous le grand écran ; quelqu'un qui l'a servi viendra le montrer (le dernier
         // maillon, e1, le fait paraître : il n'est pas nommé ici). Textes de l'agent, à valider.
-        { text: 'Rejoindre Maître Yûnus, un peu à l’écart', talk: 'yunus_r', then: [
+        { text: 'Rejoindre Maître Yûnus, un peu à l’écart', talk: 'yunus_r', then: etapes(5, [
           ['say', 'idris', 'Le Cartographe additionnait des relevés sans aller voir. L’Agrégor fait de même : il additionne, et ne voit rien.'],
           ['say', 'yunus_r', 'Alors va voir à sa place. Il a un cœur, Idris, sous le grand écran.'],
           ['say', 'idris', 'Comment le trouverai-je ?'],
           ['say', 'yunus_r', 'Pas seul. Quelqu’un qui l’a servi viendra te le montrer. Ceux qui en reviennent savent le chemin.']
-        ] }
+        ], [['say', 'idris', 'Le Cartographe additionnait des relevés sans aller voir.']]) }
       ]
     },
     /* ---------- 2.x : ce qui s'est passé en 2084 pendant qu'Idris suivait un récit ---------- */
@@ -924,10 +968,10 @@ ISNAD.registerSaga({
           ['sfx', 'glitch'], ['hide', 'yunus_x'], ['join', 'yunus'],
           ['battle', { group: ['notif', 'notif', 'notif'], bg: 'cite', intro: 'Trois notifications entre les rayonnages. Elles ne supportent pas qu’on leur résiste avec patience.' }],
           ['leave', 'yunus'], ['show', 'yunus_x'],
-          // 2.25 (D214) : ce retour peut venir avant que l'Agrégor soit nommé (étape III) ; et les maillons se suivent (D211).
-          // Textes de l'agent, à valider.
+          // 2.25 (D214) : ce retour peut venir avant que l'Agrégor soit nommé (étape III). 2.48 (D240) : les maillons s'ouvrent
+          // tous, dans l'ordre qu'on veut — la réplique d'avant la 2.22 revient (D211 levé). Textes de l'agent, à valider.
           ['say', 'yunus_x', 'Elles ne t’ont pas trouvé, toi. Elles ont trouvé que tu n’étais devant aucun écran. Pour ce qui règne là-haut, c’est déjà une faute.'],
-          ['say', 'yunus_x', 'Les maillons se suivent, l’un après l’autre. Mais tu peux laisser une trace en chemin : elle t’attendra là où tu l’as quittée.'],
+          ['say', 'yunus_x', 'Tu peux suivre plusieurs traces à la fois. Les transmetteurs n’apprenaient pas d’un seul maître : ils allaient de ville en ville, et gardaient chaque chaîne à part.'],
           ['say', 'yunus_x', 'Mais reviens. Des récits qu’on ne veille pas, un autre les raconte à ta place.'],
           ['codex', 'x_veiller']
         ] },

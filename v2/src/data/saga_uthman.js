@@ -280,7 +280,9 @@ ISNAD.registerSaga({
     { id: 'or_n', cat: 'Noosphère', title: "L'Or",
       text: "Chimère des richesses amassées. L'Or ne ment pas : il pèse, et fait pencher les regards. Là où chacun compte ce que l'autre a reçu, il dresse sa tour. Il sert de socle à la Rumeur, qui trouve dans l'envie des bouches toutes prêtes." },
     { id: 'rumeur_n', cat: 'Noosphère', title: 'La Rumeur',
-      text: "Idole faite de bouches. Elle dit une chose et son contraire, et n'en est que plus forte : elle ne vit pas d'être crue, mais d'être redite. Nul ne l'a écrite, tous la signent. Le fer ne peut rien contre elle — la frapper, c'est lui donner un récit de plus. 'Uthmân lui refusa la seule chose qu'elle demandait : du sang. Dans la Cité-Miroir, l'Agrégor lui a donné un autre nom : le Flux." }
+      text: "Idole faite de bouches. Elle dit une chose et son contraire, et n'en est que plus forte : elle ne vit pas d'être crue, mais d'être redite. Nul ne l'a écrite, tous la signent. Le fer ne peut rien contre elle — la frapper, c'est lui donner un récit de plus. 'Uthmân lui refusa la seule chose qu'elle demandait : du sang. Dans la Cité-Miroir, l'Agrégor lui a donné un autre nom : le Flux.",
+      // 2.48 (D240) : le texte du Recueil tant que le nom de l'Agrégor n'est pas reçu (ui.js, U.codexEntry). Texte de l'agent, à valider.
+      avant: "Idole faite de bouches. Elle dit une chose et son contraire, et n'en est que plus forte : elle ne vit pas d'être crue, mais d'être redite. Nul ne l'a écrite, tous la signent. Le fer ne peut rien contre elle — la frapper, c'est lui donner un récit de plus. 'Uthmân lui refusa la seule chose qu'elle demandait : du sang. Dans la Cité-Miroir, les écrans lui ont donné un autre nom : le Flux." }
   ],
 
   /* ──────────────────────────── CHAPITRES ─────────────────────────── */
@@ -659,7 +661,13 @@ ISNAD.registerSaga({
       outro: [
         ['codex', 'mats'], ['codex', 'abime_n'],
         ['nar', "À Médine, la nouvelle arrive des semaines plus tard : la Méditerranée n'est plus une mer fermée."],
-        ['nar', "Idris : la contrainte fabrique des idoles de peur. Un homme libre a peur aussi — mais sa peur ne commande pas. Souviens-t'en devant l'Agrégor, qui ne force personne et tient tout le monde."]
+        // 2.48 (D240) : ce maillon peut se jouer avant que le nom de l'Agrégor soit reçu (étape III, dans l'ordre où l'on joue
+        // les rencontres) ; jusque-là, « ce qui règne là-haut » (D214). Texte de l'agent, à valider.
+        ['if', '_2084_agregor', [
+          ['nar', "Idris : la contrainte fabrique des idoles de peur. Un homme libre a peur aussi — mais sa peur ne commande pas. Souviens-t'en devant l'Agrégor, qui ne force personne et tient tout le monde."]
+        ], [
+          ['nar', "Idris : la contrainte fabrique des idoles de peur. Un homme libre a peur aussi — mais sa peur ne commande pas. Souviens-t'en devant ce qui règne là-haut, qui ne force personne et tient tout le monde."]
+        ]]
       ]
     },
 

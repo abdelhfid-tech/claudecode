@@ -135,7 +135,7 @@
     name: 1, epithet: 1, years: 1, lightName: 1, ambiance: 1, tagline: 1, narrator: 1,
     heroes: { '*': { name: 1, title: 1, skills: [COMPETENCE], limit: COMPETENCE } },
     enemies: { '*': ENNEMI },
-    codex: [{ title: 1, text: 1, src: 1 }],
+    codex: [{ title: 1, text: 1, src: 1, avant: 1 }],   // (2.48, D240 : « avant », le texte d'une fiche tant que le nom de l'Agrégor n'est pas reçu)
     chapters: [CHAPITRE],
     // le contenu commun (coeur.js)
     oeuvres: { '*': { name: 1, court: 1, menu: 1, desc: 1, fin: 1, lignes: [1] } },

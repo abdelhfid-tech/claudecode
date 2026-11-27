@@ -33,7 +33,8 @@ Le jeu en développement est la **2.x**, dans `v2/` : `v2/src/`, `v2/tools/`, `v
   issues ; ce qui rôde et la frappe ; la course au clavier, qui ne presse pas le chrono ; la pièce interdite — on ne
   passe pas, sa phrase, les idées noires qui en sortent dans la descente et rien dans un chapitre : « DESCENTE CONFORME ») et `node v2/tools/retours.js` (deux récits quittés par la
   halte puis repris à leur place, la partie exportée et réimportée avec eux, les retours en 2084 joués, la Citadelle
-  visitée : « RETOURS CONFORMES »), `node v2/tools/progression.js` (une partie neuve par les vrais boutons : une seule
+  visitée ; depuis la 2.48, les cinq maillons ouverts par leurs boutons, « Continuer » et la liste des récits en cours,
+  l'Agrégor découvert dans un autre ordre, une partie de la 2.47 : « RETOURS CONFORMES »), `node v2/tools/progression.js` (une partie neuve par les vrais boutons : une seule
   leçon par séquence, les commandes du combat reçues une à une, les pages de la halte ; une partie d'avant garde tout ;
   les trois figures et leurs effets : « PROGRESSION CONFORME »), `node v2/tools/loupe.js` (sur un téléphone, en
   hauteur et en largeur : l'image s'agrandit — d'office, en écartant deux doigts, par le bouton —, le toucher tombe
@@ -95,10 +96,17 @@ Le jeu en développement est la **2.x**, dans `v2/` : `v2/src/`, `v2/tools/`, `v
   (« PROGRESSION CONFORME »).
 - Dans la 2.x, les figures — « postures » dans le code et dans l'exigence 24 : `v2/src/core/postures.js`, `D.POSTURES`,
   `D.TEMPERAMENTS`.
-- Dans la 2.x, les maillons se suivent (2.22, D211 ; le décideur, 21 novembre : « on ne passe pas à la saga suivante tant
-  qu'on n'a pas fini la saga précédente », « Ordre fixe, du I au V ») : sur la Chaîne, un maillon est scellé tant que celui
-  d'avant n'est pas achevé ; un maillon achevé se rejoue, un maillon déjà entamé (une partie d'avant) reste ouvert
-  (`v2/docs/architecture.md`, « Mener plusieurs récits »). La halte offre « Revenir en 2084 » à tout moment, le récit
+- Dans la 2.x, toutes les sagas sont ouvertes, chacune gardée à sa place (2.48, D240 ; le décideur, 27 novembre : « je veux
+  que tu débloque toutes les sagas avec possibilité de sauvegarder l'avancement de chacune des saga » ; « Après les cinq
+  sagas » pour le dernier maillon) — le sceau de la 2.22 (D211 : « Ordre fixe, du I au V ») est levé : sur la Chaîne, chaque
+  maillon s'ouvre dès le prologue joué, dans l'ordre qu'on veut, dit où il en est et se reprend à sa place ; un maillon
+  achevé se rejoue ; seul le dernier maillon est scellé tant que les cinq ne sont pas achevés, et un soir de la Cité-Miroir
+  laissé en chemin se joue avant lui (`v2/docs/architecture.md`, « Mener plusieurs récits »). **« Continuer »** (l'écran-titre ;
+  le décideur : « le bouton "continuer" pourra renvoyer vers les différentes sauvegardes ») : avec un seul récit en cours, il
+  le reprend comme toujours ; avec plusieurs — le refuge compte, quand Idris y est remonté en laissant un récit —, il ouvre
+  leur liste (le courant, puis les rangés, du plus récent au plus ancien, puis « La Chaîne » et « ◂ Retour »), chacun repris
+  exactement à sa place (`U.reprendre` ; un maillon achevé qu'on rejouait aussi : « Rejouer » seul repart du début) ; B
+  revient ; aucun texte nouveau. Le soir joué avant le dernier maillon est un choix de l'agent, à valider (D240). La halte offre « Revenir en 2084 » à tout moment, le récit
   quitté est rangé là où on le laisse (`cps`, dans la partie) et se reprend là. Au retour, un chapitre de l'histoire-cadre marqué `retour: n` peut se jouer, une fois ; un chapitre marqué
   `visite` s'ouvre depuis la Chaîne (la Citadelle, où Idris est né — une fiction, proposée par le décideur). Dans ces
   chapitres-là, qui se rejouent, aucune œuvre n'est comptée et l'on ne descend pas dans la noosphère. Un changement de
@@ -467,15 +475,25 @@ Le jeu en développement est la **2.x**, dans `v2/` : `v2/src/`, `v2/tools/`, `v
   demande ce qu'il y a derrière les écrans ; Maître Yûnus ne le lui nommera pas : « un nom qu'on reçoit sans avoir vu, c'est
   une rumeur »). À la fin de chacune des cinq rencontres de la Cité-Miroir (`r_*`, `frame.js`), Maître Yûnus monte des
   Archives (`yunus_r`, un PNJ caché que `show` fait paraître et écarte du joueur) et Idris découvre une chose de plus, dans
-  l'ordre des maillons (D211) : I, quelque chose rassemble les regards ; II, ça ne commande pas, ça additionne (Idris le dit
+  l'ordre des maillons (D211 ; depuis la 2.48, D240, dans l'ordre où l'on joue les rencontres, plus bas) : I, quelque chose rassemble les regards ; II, ça ne commande pas, ça additionne (Idris le dit
   le premier) ; III, son nom — « Ceux qui le servent l'appellent l'Agrégor » — et la fiche `agregor` du Recueil ; IV, il ne
   craint que ce qui passe de main en main sans passer par lui, la Chaîne ; V, il a un cœur, sous le grand écran, et
-  quelqu'un qui l'a servi viendra le montrer. **Avant l'étape III, aucun texte ne le nomme** : on dit « ce qui règne
-  là-haut », « les écrans » (le premier retour, la fin et un feuillet de la saga de Khâlid) ; sur la Chaîne, le dernier
+  quelqu'un qui l'a servi viendra le montrer. **Depuis la 2.48 (D240 ; le décideur, 27 novembre : « Dans l'ordre où on
+  joue »), les étapes suivent l'ordre où l'on joue les rencontres** : la k-ième jouée dit l'étape k, quelle que soit sa saga
+  (le moteur pose `_2084_etape_k` et, le nom reçu, `_2084_agregor` : `U.etapes`, `ui.js` ; chaque rencontre garde ses
+  répliques d'avant à sa place d'avant, et ailleurs une accroche puis l'étape commune : `ETAPES`, `frame.js`) ; la fiche vient
+  avec l'étape III ; une partie d'avant continue à l'étape suivante. **Tant que le nom n'est pas reçu, aucun texte ne le
+  nomme** : on dit « ce qui règne là-haut », « les écrans » (le premier retour, la fin et un feuillet de la saga de Khâlid ;
+  la fin de `ut2` et deux fiches des sagas IV et V, par `if` et par le champ `avant` d'une fiche) ; sur la Chaîne, le dernier
   maillon s'appelle « Ce qui se cache derrière les écrans » tant que la fiche `idris/agregor` n'est pas reçue (`ui.js`),
   « Le Cœur de l'Agrégor » ensuite (une partie d'avant, qui l'a reçue au prologue, garde ce titre). Un texte qui nomme
-  l'Agrégor ne paraît qu'après l'étape III (sagas IV et V, dernier maillon). Une chimère, une image du jeu : aucun pouvoir
-  réel, aucun lien avec un peuple, une religion, Iblîs ni un djinn (exigences 6, 10, 16, 18). Textes de l'agent, validés par le décideur le 22 novembre.
+  l'Agrégor ne se dit que là où le nom est reçu à coup sûr (sous `_2084_agregor`, dans une étape III à V, dans le dernier
+  maillon) : `regles.js` le vérifie, dans chaque langue, et refuse qu'un récit écrive un drapeau `_2084_…` ; la page « Les
+  degrés du mal » ne dit ni son nom d'idole ni le titre du dernier maillon avant le nom reçu (`mal.js`, `M.tu`). Une chimère, une image du jeu : aucun pouvoir
+  réel, aucun lien avec un peuple, une religion, Iblîs ni un djinn (exigences 6, 10, 16, 18). Textes de l'agent, validés par le décideur le 22 novembre ;
+  **ceux de la 2.48 (D240) — les accroches, les ouvertures des étapes communes, les variantes « ce qui règne là-haut » et
+  « les écrans », la réplique rétablie de Maître Yûnus sur les transmetteurs (elle touche à l'histoire) — sont des
+  propositions de l'agent, à valider**.
   `v2/docs/architecture.md`, « La découverte de l'Agrégor ». Un changement de ces étapes repasse le validateur,
   `smoke.js auto`, `retours.js`, `progression.js` et `longueurs.js`.
 - **Les langues** (demande du décideur, 18 novembre ; exigence 25). La 2.x existe en français, en arabe et en anglais.
@@ -599,7 +617,7 @@ node v2/tools/silhouettes.js        # 2.0 : les personnages — petits sprites i
 node v2/tools/course.js             # 2.x : la course — vitesse, pied d'appui qui ne glisse pas (60 et 120 Hz), suiveurs, rien en main (… images <dossier> : planche et films)
 node v2/tools/dedales.js            # 2.x : les labyrinthes de la noosphère et leur pièce interdite, tirés hors du jeu (… 500 : essai rapide ; … planche [fichier.png] [0,3,5] : une planche)
 node v2/tools/descente.js           # 2.x : les mêmes, dans le jeu — un chapitre dans son labyrinthe, le chrono, la descente du râwî, ce qui rôde et la frappe, la pièce interdite
-node v2/tools/retours.js            # 2.x : deux récits menés de front, les retours en 2084, la Citadelle — par les vrais boutons
+node v2/tools/retours.js            # 2.x : deux récits menés de front, les retours en 2084, la Citadelle — par les vrais boutons ; 2.48 : les cinq maillons ouverts, « Continuer » et ses récits, l'Agrégor dans l'ordre où l'on joue
 node v2/tools/cite.js [dossier] [course|activites|passages]   # 2.23, 2.27 et 2.28 : Sâlim et sa moto, les cinq circuits, la prime, aucune mise (« course » : cette partie seule) ; les activités payées avec la bourse d'Idris (2.31) — la borne, l'étal, l'écran, la roue et les manèges (« activites ») ; la rue, la ruelle et la vieille mosquée (« passages ») ; les quartiers de la Cité — l'arrivée à côté de Maître Yûnus, ses sorties, chaque lieu à pied et au doigt, les voitures, ce qui rôde et le rappel ; captures — « CITÉ CONFORME »
 node v2/tools/monde.js [dossier]    # 2.29 et 2.30 : la carte du monde — les villes à leur place et à leur époque, les portes des récits et elles seules, la route et le retour, les visites (sans étendards), La Mecque sans mosquée ; les rencontres de la route (les chimères du désert, les brigands, le voyageur), rien autour de La Mecque — « MONDE CONFORME »
 node v2/tools/progression.js        # 2.x : une partie neuve apprend un outil à la fois ; les trois figures
@@ -663,8 +681,10 @@ Le détail est dans `docs/schema-saga.md`. À retenir :
   matériel (exigence 17).
 - Dans la 2.x, un chapitre de l'histoire-cadre peut porter `retour: n` (il se joue au n-ième retour en 2084, ou à un
   retour suivant, une seule fois) ou `visite: '<lieu>'` (il s'ouvre depuis la Chaîne, et se rejoue) : toujours `last`,
-  jamais `after`. Les drapeaux `_2084_…` (veillées entendues, maillons achevés, ce que tient la Citadelle) sont posés
-  par le moteur à leur ouverture : un récit les lit par `if`, il ne les écrit pas.
+  jamais `after`. Les drapeaux `_2084_…` (veillées entendues, maillons achevés, ce que tient la Citadelle ; depuis la 2.48,
+  dans tout chapitre, `_2084_agregor` — le nom de l'Agrégor est reçu — et, dans une rencontre, `_2084_etape_k`) sont posés
+  par le moteur à leur ouverture : un récit les lit par `if`, il ne les écrit pas. Une fiche du Recueil qui nomme l'Agrégor
+  porte `avant`, son texte tant que le nom n'est pas reçu (D240).
 - L'idole d'un chapitre (le membre de plus haut palier d'un combat lancé avec `boss: true`) porte une
   `racine` prise dans `D.RACINES`. Aucun combattant, aucune compétence, aucun personnage ne porte le nom
   d'Iblîs, d'un démon ou d'un djinn : le validateur le refuse.

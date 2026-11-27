@@ -95,6 +95,9 @@
   U.screen = screen; U.focusList = focusList;   // 2.x : pour les écrans des autres modules (partage.js)
   U.fondTitre = () => titleBg || (titleBg = paintTitle());   // le ciel de l'écran-titre, à la définition du dessin (l'image de partage, partage.js)
 
+  // reprendre un récit quitté en chemin : ce que dit son bouton (la Chaîne, et « Continuer » à l'écran-titre, 2.48)
+  const repriseDit = c => { const sg = I.sagas[c.saga], chp = sg.chapters[c.ci];
+    return sg.veillees ? I.t('▶ Reprendre : la veillée · {chapitre}', { chapitre: I.esc(chp.title) }) : I.t('▶ Reprendre : {recit} · {chapitre}', { recit: I.esc(sg.frame ? I.perso.dit() : sg.name), chapitre: I.esc(chp.title) }); };
   /* ---------- titre ---------- */
   U.showTitle = function (vue) {
     I.setScene(U.titleScene); G.clearParts(); G.amb = { kind: 'dust', rate: 5, n: 0 }; I.audio.scene('titre'); I.audio.beat('veille');
@@ -103,12 +106,20 @@
     const mk = (label, fn, dis) => { const b = I.el('button', '', label); b.type = 'button'; b.disabled = !!dis; tapable(b, () => { I.audio.unlock(); fn(b); }); box.appendChild(b); btns.push(b); return b; };
     const quand = t => { const m = Math.max(0, Math.round((Date.now() - t) / 60000)); return m < 1 ? I.t('à l’instant') : m < 60 ? I.t('il y a {n} min', { n: m }) : m < 1440 ? I.t('il y a {n} h', { n: Math.round(m / 60) }) : I.t('le {date}', { date: new Date(t).toLocaleDateString(I.langue.locale(), { day: '2-digit', month: '2-digit' }) }); };
     const close = () => { if (fl) fl.destroy(); screen('#title', false); I.audio.stopBeat(); };
-    // deux vues dans la même colonne : l'essentiel (jouer, la langue), et les réglages, rangés derrière un bouton
-    // (2.x : dans les réglages, B — ou Échap — revient à l'essentiel, comme « ◂ Retour »)
-    const montrer = f => { if (fl) fl.destroy(); box.innerHTML = ''; btns = []; box.classList.toggle('essentiel', f === principal); f(); fl = focusList(btns, f === reglages ? { onCancel: () => montrer(principal) } : {}); };
+    // 2.48 (D240 ; le décideur, 27 novembre : « dans la première page le bouton "continuer" pourra renvoyer vers les différentes
+    // sauvegardes ») : les récits en cours de la partie gardée — le courant (sv.cp), puis ceux qu'on a quittés en chemin
+    // (sv.cps), du plus récent au plus ancien. Avec un seul, « Continuer » le reprend comme toujours ; avec plusieurs, il les montre.
+    const courant = auto && auto.cp && I.sagas[auto.cp.saga] && (I.sagas[auto.cp.saga].chapters || [])[auto.cp.ci] ? auto.cp : null;
+    const refuge = c => !!(I.cite && I.cite.estPoint(c));
+    const quittes = auto ? W.rangees(auto).filter(c => !courant || W.cleReprise(c) !== W.cleReprise(courant)) : [];
+    // (le refuge compte : Idris y remonte à chaque « Revenir en 2084 », le récit quitté rangé ; « Continuer » montre alors les deux)
+    const plusieurs = !!(auto && auto.prologue) && (courant ? 1 : 0) + quittes.length >= 2;
+    // trois vues dans la même colonne : l'essentiel (jouer, la langue), les récits en cours, et les réglages, rangés derrière un bouton
+    // (2.x : dans les réglages et les récits, B — ou Échap — revient à l'essentiel, comme « ◂ Retour »)
+    const montrer = f => { if (fl) fl.destroy(); box.innerHTML = ''; btns = []; box.classList.toggle('essentiel', f === principal); box.classList.toggle('reprises', f === reprises); f(); fl = focusList(btns, f !== principal ? { onCancel: () => montrer(principal) } : {}); };
     const principal = () => {
       // la partie se garde toute seule : « Continuer » la reprend là où elle en était ; les copies gardées à la mosquée restent disponibles
-      if (auto) mk(I.t('Continuer') + '<small>' + I.esc((auto.meta && auto.meta.label) || I.t('Partie en cours')) + ' · ' + quand((auto.meta && auto.meta.when) || 0) + '</small>', () => { close(); I.save.readAuto(); U.resume(); });
+      if (auto) mk(I.t('Continuer') + '<small>' + I.esc((auto.meta && auto.meta.label) || I.t('Partie en cours')) + ' · ' + quand((auto.meta && auto.meta.when) || 0) + '</small>', () => { if (plusieurs) return montrer(reprises); close(); I.save.readAuto(); U.resume(); });
       if (has) mk(auto ? I.t('Reprendre une copie gardée') : I.t('Continuer'), async () => { close(); const ok = await U.loadMenu(); if (ok) U.resume(); else U.showTitle(); });
       mk(I.t('Nouvelle partie'), async b => {
         close();
@@ -139,6 +150,19 @@
       if (I.langue.secondes().length) { const lab = () => I.t('Langue secondaire : {langue}', { langue: U.langue2Nom() }) + '<small>' + I.t('La même chose, dite avec les mots de l’autre langue : pas mot à mot.') + '</small>';
         mk(lab(), b => { U.langue2Suivante(); b.innerHTML = lab(); }).classList.add('langue2'); }
       mk(I.t('Importer une partie'), () => { close(); U.partie('importer', () => U.showTitle()); });
+      mk(I.t('◂ Retour'), () => montrer(principal));
+    };
+    // 2.48 (D240) — les récits en cours : chacun se reprend exactement là où on l'a laissé (son point de reprise : chapitre,
+    // objectif, lieu, place, groupe, drapeaux), comme le bouton de la Chaîne ; puis la Chaîne elle-même. Des textes du jeu,
+    // aucun de plus : le libellé de la Chaîne (repriseDit), « Chapitre n / total », le nom du lieu, « il y a … ».
+    const ligne = (c, t) => { const sg = I.sagas[c.saga], m = D.MAPS[c.map];
+      return [sg.frame ? '' : I.t('Chapitre {n} / {total}', { n: c.ci + 1, total: sg.chapters.length }), m && m.label ? I.esc(m.label) : '', t ? quand(t) : ''].filter(Boolean).join(' · '); };
+    const reprises = () => {
+      I.save.readAuto();   // la partie gardée, adoptée : le nom du râwî, ses récits (rien d'autre ne change tant qu'on n'en reprend aucun)
+      const dit = () => { const a = avisAbsent(I.save.avis); I.save.avis = null; return a; };
+      if (courant) mk((refuge(courant) ? I.t('La Cité-Miroir') : repriseDit(courant)) + '<small>' + ligne(courant, auto.meta && auto.meta.when) + '</small>', () => { close(); I.save.readAuto(); U.resume(); }).dataset.reprise = W.cleReprise(courant);
+      quittes.forEach(c => { mk(repriseDit(c) + '<small>' + ligne(c, c.t) + '</small>', () => { close(); I.save.readAuto(); const sv = I.save.data, c2 = sv.cps && sv.cps[W.cleReprise(c)], a = dit(); if (!c2) return U.resume(); if (a) S.toast(a, 14000); return U.reprendre(c2); }).dataset.reprise = W.cleReprise(c); });
+      mk(I.t('La Chaîne'), () => { close(); I.save.readAuto(); W.ranger(); U.showChain(dit() || undefined); }).dataset.reprise = 'chaine';
       mk(I.t('◂ Retour'), () => montrer(principal));
     };
     { const v = $('#title .ver'); if (v) v.textContent = window.ISNAD_VERSION ? I.t('version bêta {v}', { v: '\u2066' + window.ISNAD_VERSION + '\u2069' }) : I.t('version bêta'); }
@@ -311,21 +335,27 @@
     // livres viennent ensuite, chacun sous son titre. Avec un seul livre, aucun titre : c'est l'écran de toujours.
     const livres = I.livres(), fait = s => !!(sv.sagas[s.id] && sv.sagas[s.id].done), un = livres.find(L => L.n === 1) || { n: 1, titre: '', sagas: [] }, autres = livres.filter(L => L.n !== 1);
     const allDone = un.sagas.every(fait), nb = I.enLettres(un.sagas.length);
-    $('#chain header p').innerHTML = msg || (allDone ? I.t('Les {nombre} Lumières sont réunies. Reste le dernier maillon : celui du râwî.', { nombre: nb, n: un.sagas.length }) : I.t('Chaque maillon est un témoin. La Chaîne se lit du premier au dernier : chacun s’ouvre quand celui d’avant est achevé.'));
+    // (2.48, D240 : les maillons s'ouvrent tous, dans l'ordre qu'on veut — l'en-tête d'avant la 2.22 revient)
+    $('#chain header p').innerHTML = msg || (allDone ? I.t('Les {nombre} Lumières sont réunies. Reste le dernier maillon : celui du râwî.', { nombre: nb, n: un.sagas.length }) : I.t('Chaque maillon est un témoin. Choisis celui dont tu veux suivre la trace ; l’ordre est libre, mais la Chaîne se lit du premier au dernier.'));
     const btns = []; let fl;
     const close = () => { fl.destroy(); screen('#chain', false); };
     const tactile = document.body.classList.contains('touch');
     // le maillon à ouvrir : ceux du livre I d'abord, puis le dernier maillon, puis ceux des autres livres
     const suivant = un.sagas.find(s => !fait(s)) || ((sv.epilogue || !I.sagas.idris) && autres.reduce((r, L) => r || L.sagas.find(s => !fait(s)), null)) || null;
     const rang = s => { const L = livres.find(x => x.sagas.includes(s)), r = I.romain(L.sagas.indexOf(s) + 1); return L.n === 1 ? I.t('▶ Ouvrir le maillon {rang} : {nom}', { rang: r, nom: I.esc(s.name) }) : I.t('▶ Ouvrir le maillon {rang} du livre {livre} : {nom}', { rang: r, livre: I.romain(L.n), nom: I.esc(s.name) }); };
-    const ouvrir = s => { close(); U.startSaga(s); }, dernier = () => { close(); W.roster = {}; W.saga = null; W.startChapter('idris', 1); };
+    // 2.48 (D240) : le dernier maillon vient après les cinq sagas et après les cinq soirs de la Cité-Miroir (les étapes de
+    // la découverte de l'Agrégor, dans l'ordre où on les joue : il en suppose la cinquième). Un soir laissé en chemin — une
+    // veillée quittée avant sa rencontre, une rencontre quittée — se joue d'abord, là où on l'a laissé ; puis le dernier maillon.
+    const soirEnAttente = () => { const fr0 = I.sagas.idris; if (!fr0 || sv.epilogue || I.debug.all) return -1;
+      const s = un.sagas.find(x => fait(x) && fr0.chapters.some(c => c.after === x.id) && !(sv.rencontres && sv.rencontres[x.id])); return s ? fr0.chapters.findIndex(c => c.after === s.id) : -1; };
+    const ouvrir = s => { close(); U.startSaga(s); }, dernier = () => { close(); W.roster = {}; W.saga = null; const ri = soirEnAttente(); if (ri >= 0) { const cp = W.reprise('idris', ri); return W.startChapter('idris', ri, cp || undefined); } W.startChapter('idris', 1); };
     // un grand bouton dit quoi faire : ouvrir le maillon suivant (ou reprendre celui qui est entamé)
     // 2.x : les récits quittés en chemin (points de reprise rangés). Le plus récent passe devant : on le reprend d'un toucher.
     const rangees = W.rangees(), enRoute = id => rangees.find(c => c.saga === id) || null;
     const reprendre = c => { close(); return U.reprendre(c); };
     { const hd = $('#chain header'); let go = hd.querySelector('.go'); if (!go) { go = I.el('div', 'go'); hd.appendChild(go); } go.innerHTML = '';
-      if (rangees.length) { const c = rangees[0], sg = I.sagas[c.saga], chp = sg.chapters[c.ci];
-        const b = I.el('button', 'cta', sg.veillees ? I.t('▶ Reprendre : la veillée · {chapitre}', { chapitre: I.esc(chp.title) }) : I.t('▶ Reprendre : {recit} · {chapitre}', { recit: I.esc(sg.frame ? I.perso.dit() : sg.name), chapitre: I.esc(chp.title) })); b.type = 'button';
+      if (rangees.length) { const c = rangees[0], sg = I.sagas[c.saga];
+        const b = I.el('button', 'cta', repriseDit(c)); b.type = 'button';
         if (!sg.frame) b.style.setProperty('--c', D.ELEMENTS[sg.light].color); tapable(b, () => reprendre(c)); go.appendChild(b); btns.push(b); }
       const s = suivant && !(rangees.length && rangees[0].saga === suivant.id) ? suivant : null, sp = s ? (sv.sagas[s.id] || { ch: 0 }) : null; // (le récit que le premier bouton reprend déjà n'est pas offert deux fois)
       if (s || (allDone && !suivant)) { const b = I.el('button', 'cta', s ? ((sp.ch > 0 || enRoute(s.id)) ? I.t('▶ Reprendre : {recit} · chapitre {n}', { recit: I.esc(s.name), n: sp.ch + 1 }) : rang(s)) : (sv.epilogue ? I.t('▶ Rejouer le dernier maillon') : I.t('▶ Ouvrir le dernier maillon : {nom}', { nom: I.esc(I.perso.dit()) }))); b.type = 'button';
@@ -336,13 +366,12 @@
       const vl = (sv.veillees && sv.veillees[s.id] ? ' · ' + I.t('veillée du Caïd') + ' ✓' : '') + (sv.rencontres && sv.rencontres[s.id] ? ' · ' + I.t('rencontre') + ' ✓' : '');
       const qv = I.oeuvres.viceApres(s.id), qt = qv ? `<span class="qt">⚔ ${I.oeuvres.quete(qv)}</span>` : '';
       const er = !sp.done && enRoute(s.id), route = er ? ' · ' + I.t('en route') : '';
-      // 2.22 : les maillons se suivent (le décideur, 21 novembre : « on ne passe pas à la saga suivante tant qu'on n'a pas
-      // fini la saga précédente »). Scellé tant que celui d'avant, dans son livre, n'est pas achevé ; un maillon déjà
-      // entamé (une partie d'avant) reste ouvert, et un maillon achevé se rejoue.
-      const avant = i > 0 ? liste[i - 1] : null, scelle = !!avant && !fait(avant) && !sp.done && !(sp.ch > 0) && !er && !I.debug.all;
-      const st = scelle ? '<span class="stt">' + I.t('Scellé tant que le maillon {rang} n’est pas achevé', { rang: I.romain(i) }) + '</span>' : sp.done ? `<span class="stt done">${e.glyph} ${I.t('{lumiere} retrouvée', { lumiere: s.lightName })}${vl}</span>` : (sp.ch > 0 || er) ? `<span class="stt">${I.t('Chapitre {n} / {total}', { n: sp.ch + 1, total: s.chapters.length })}${route}</span>` : '<span class="stt">' + I.t('Maillon à ouvrir') + '</span>';
-      const b = I.el('button', 'link', `<span class="seal" style="background-image:url(${G.sealURL(s.arabic, e.color)})"></span><span class="lt"><span class="ord">${I.t('MAILLON {rang}', { rang: I.romain(i + 1) })} · ${I.esc(s.years)}</span><h3>${I.esc(s.name)}</h3><span class="ep">${I.esc(s.epithet)} <small>· ${I.esc(s.ambiance || '')}</small></span><span class="tl">${I.esc(s.tagline)}</span>${st}${qt}${scelle ? '' : `<span class="ouvrir">${sp.done ? I.t('Rejouer') : (sp.ch > 0 || er) ? I.t('Reprendre') : I.t('Ouvrir')} ▸</span>`}</span>`);
-      if (scelle) { b.classList.add('locked'); b.disabled = true; }
+      // 2.48 (D240 ; le décideur, 27 novembre : « je veux que tu débloque toutes les sagas avec possibilité de sauvegarder
+      // l'avancement de chacune des saga ») : plus aucun sceau entre les maillons (celui de la 2.22, D211, est levé). Chacun
+      // s'ouvre dès le prologue joué, dans l'ordre qu'on veut ; un maillon entamé dit où il en est et se reprend à sa place
+      // (W.ranger, W.reprise) ; un maillon achevé se rejoue. Seul le dernier maillon attend les cinq (plus bas).
+      const st = sp.done ? `<span class="stt done">${e.glyph} ${I.t('{lumiere} retrouvée', { lumiere: s.lightName })}${vl}</span>` : (sp.ch > 0 || er) ? `<span class="stt">${I.t('Chapitre {n} / {total}', { n: sp.ch + 1, total: s.chapters.length })}${route}</span>` : '<span class="stt">' + I.t('Maillon à ouvrir') + '</span>';
+      const b = I.el('button', 'link', `<span class="seal" style="background-image:url(${G.sealURL(s.arabic, e.color)})"></span><span class="lt"><span class="ord">${I.t('MAILLON {rang}', { rang: I.romain(i + 1) })} · ${I.esc(s.years)}</span><h3>${I.esc(s.name)}</h3><span class="ep">${I.esc(s.epithet)} <small>· ${I.esc(s.ambiance || '')}</small></span><span class="tl">${I.esc(s.tagline)}</span>${st}${qt}<span class="ouvrir">${sp.done ? I.t('Rejouer') : (sp.ch > 0 || er) ? I.t('Reprendre') : I.t('Ouvrir')} ▸</span></span>`);
       b.type = 'button'; b.style.setProperty('--c', e.color);
       tapable(b, () => ouvrir(s));
       box.appendChild(b); btns.push(b);
@@ -351,8 +380,8 @@
     titreLivre(un); un.sagas.forEach(maillon);
     const fr = I.sagas.idris;
     if (fr) {
-      // 2.25 (D214) : l'Agrégor ne se nomme qu'une fois sa fiche reçue (au soir du maillon III, frame.js, r_khalid)
-      const nomme = sv.codex.includes('idris/agregor') || sv.epilogue, ep = nomme ? I.t('Le Cœur de l’Agrégor') : I.t('Ce qui se cache derrière les écrans');
+      // 2.25 (D214) : l'Agrégor ne se nomme qu'une fois sa fiche reçue (2.48, D240 : à l'étape III, la troisième rencontre jouée)
+      const nomme = U.nomme(), ep = nomme ? I.t('Le Cœur de l’Agrégor') : I.t('Ce qui se cache derrière les écrans');
       const b = I.el('button', 'link' + (allDone ? '' : ' locked'), `<span class="seal" style="background-image:url(${G.sealURL('إسناد', '#39e6ff')})"></span><span class="lt"><span class="ord">${I.t('DERNIER MAILLON · 1507 H · 2084')}</span><h3>${I.esc(I.perso.dit())}</h3><span class="ep">${ep} <small>· ${I.t('2084')}</small></span><span class="tl">${allDone ? I.t('Rapporter les {nombre} Lumières à la Cité-Miroir.', { nombre: nb, n: un.sagas.length }) : I.t('Scellé tant que les {nombre} Lumières ne sont pas réunies.', { nombre: nb, n: un.sagas.length })}</span><span class="stt${sv.epilogue ? ' done' : ''}">${sv.epilogue ? I.t('Chaîne transmise') : allDone ? I.t('Ouvert') : I.t('{faits} / {n} Lumières', { faits: un.sagas.filter(fait).length, n: un.sagas.length })}</span></span>`);
       b.type = 'button'; b.style.setProperty('--c', '#39e6ff'); b.disabled = !allDone && !I.debug.all;
       tapable(b, dernier);
@@ -385,7 +414,11 @@
     if (!sv.cp) I.save.auto('La Chaîne · ' + sv.lights.filter(l => l !== 'sabr').length + ' Lumière(s)'); // entre deux maillons : la partie est gardée ici
   };
   // reprendre un récit quitté en chemin, là où on l'a laissé (la Chaîne ; Maître Yûnus et la halte, dans les quartiers de la Cité)
-  U.reprendre = function (c) { const sg = I.sagas[c.saga]; if (!sg.frame) return U.startSaga(sg); W.roster = {}; W.saga = null; const cp = W.reprise(c.saga, c.ci); return W.startChapter(c.saga, c.ci, cp || undefined); };
+  // (2.48 : un maillon achevé qu'on rejouait, quitté en chemin, reprend lui aussi à son point — « Rejouer » seul repart du début)
+  U.reprendre = function (c) { const sg = I.sagas[c.saga], sp = I.save.data.sagas[c.saga];
+    if (!sg.frame && !(sp && sp.done)) return U.startSaga(sg);
+    W.roster = {}; W.saga = null; const cp = W.reprise(c.saga, c.ci); if (!cp && !sg.frame) return U.startSaga(sg);
+    return W.startChapter(c.saga, cp && !sg.frame ? cp.ci : c.ci, cp || undefined); };
   U.startSaga = async function (s) {
     const sv = I.save.data, sp = sv.sagas[s.id] || (sv.sagas[s.id] = { ch: 0, done: false, flags: {} });
     W.roster = {}; W.saga = s; S.flags = {};
@@ -426,6 +459,20 @@
     if (W.rangees().some(x => !I.sagas[x.saga].frame)) F._2084_en_route = true;
     if (sv.cite && (sv.cite.arrivees | 0) > 1) F._2084_cite = true; // 2.23 : Idris est déjà venu dans les quartiers de la Cité
     return F; };
+  /* 2.48 (D240 ; le décideur, 27 novembre : « Dans l'ordre où on joue ») — la découverte de l'Agrégor (D214) suit l'ordre où
+     l'on joue les rencontres : la k-ième jouée dit l'étape k, quelle que soit la saga qu'elle suit (frame.js, ETAPES). Le
+     nom est reçu avec la fiche « agregor », à l'étape III (ou au prologue, dans une partie d'avant la 2.25 ; ou après le
+     dernier maillon). Deux drapeaux, posés par le moteur à chaque ouverture et à chaque reprise d'un chapitre, et lus par
+     « if » : _2084_agregor (le nom est reçu : un texte qui le nomme peut se dire ; sinon, sa variante — « ce qui règne
+     là-haut », « les écrans ») et, dans une rencontre, _2084_etape_k. Rien de plus dans la partie : le compte se tire des
+     rencontres jouées (sv.rencontres) ; une partie d'avant, qui les a jouées dans l'ordre des maillons, continue à l'étape
+     suivante. */
+  U.nomme = d => { const sv = d || I.save.data; return (sv.codex || []).includes('idris/agregor') || !!sv.epilogue; };
+  U.etape = ch => { const sv = I.save.data, fr = I.sagas.idris; if (!fr || !ch || !ch.after || !fr.chapters.includes(ch)) return 0;   // (une rencontre : un chapitre « after » de l'histoire-cadre, non une veillée)
+    return Math.min(5, fr.chapters.filter(c => c.after && c.after !== ch.after && sv.rencontres && sv.rencontres[c.after]).length + 1); };
+  U.etapes = function (F, ch) { for (let k = 1; k <= 5; k++) delete F['_2084_etape_' + k]; delete F._2084_agregor;
+    if (U.nomme()) F._2084_agregor = true;
+    const k = U.etape(ch); if (k) F['_2084_etape_' + k] = true; return F; };
   // la rencontre de la Cité-Miroir qui suit une saga : chapitre de l'histoire-cadre marqué « after »
   const rencontre = id => { const sv = I.save.data; sv.rencontres = sv.rencontres || {}; const fr = I.sagas.idris; if (!fr || !sv.prologue || sv.rencontres[id]) return -1; return fr.chapters.findIndex(c => c.after === id); };
   // ce qu'il reste à ouvrir dans le livre d'une saga, et ce que l'on dit quand il n'y reste rien
@@ -436,7 +483,7 @@
     const sv = I.save.data;
     if (saga.veillees) {
       sv.veillees[ch.after] = true; I.save.store(); const c = sv.citadel;
-      const ri = rencontre(ch.after); if (ri >= 0) { W.roster = {}; W.saga = null; return W.startChapter('idris', ri); }
+      const ri = rencontre(ch.after); if (ri >= 0) { W.roster = {}; W.saga = null; const cp = W.reprise('idris', ri); return W.startChapter('idris', ri, cp || undefined); }   // (2.48 : une rencontre déjà entamée — par le dernier maillon — reprend à sa place)
       const tot = c.priere + c.savoir + c.justice + c.lien;
       return U.showChain(I.t('La veillée s’achève. La Citadelle du Caïd tient par {piliers}.', { piliers: Object.keys(D.PILLARS).map(k => `${D.PILLARS[k].name.toLowerCase()} ${c[k]}`).join(', ') }) + ' ' + (tot >= 12 ? I.t('Elle est debout dans les cœurs.') : tot >= 7 ? I.t('Elle tient, et demande qu’on la veille.') : I.t('Elle se lézarde : ce qui n’est plus bâti s’effrite.')));
     }
@@ -444,10 +491,10 @@
       const vi = I.sagas.caid.chapters.findIndex(c => c.after === saga.id);
       if (vi >= 0 && !(sv.veillees && sv.veillees[saga.id])) {
         if (!Object.keys(sv.veillees || {}).length && !sv.caidIntro) { sv.caidIntro = true; I.audio.scene('citadelle'); await S.run([['title', I.t('Les Veillées de la Citadelle'), I.t('un autre maillon de la Chaîne')], ['nar', I.t('Des siècles après les Compagnons, au bord du désert, un seigneur berbère lisait leurs vies à la lueur d’une lampe. Il n’y cherchait pas des récits. Il y cherchait comment tenir.')], ['nar', I.t('On l’appelait le Caïd. Chaque Lumière que retrouve le râwî, le Caïd l’a reçue avant lui, et a dû en faire quelque chose.')]]); }
-        W.roster = {}; W.saga = null; return W.startChapter('caid', vi);
+        W.roster = {}; W.saga = null; const cp = W.reprise('caid', vi); return W.startChapter('caid', vi, cp || undefined);   // (2.48 : une veillée laissée en chemin reprend à sa place)
       }
     }
-    if (!saga.frame) { const ri = rencontre(saga.id); if (ri >= 0) { W.roster = {}; W.saga = null; return W.startChapter('idris', ri); } }
+    if (!saga.frame) { const ri = rencontre(saga.id); if (ri >= 0) { W.roster = {}; W.saga = null; const cp = W.reprise('idris', ri); return W.startChapter('idris', ri, cp || undefined); } }
     if (saga.frame && ch.after) {
       sv.rencontres = sv.rencontres || {}; sv.rencontres[ch.after] = true; I.save.store();
       const s2 = I.sagas[ch.after], e2 = D.ELEMENTS[s2.light], left2 = resteDans(s2);
@@ -478,7 +525,8 @@
   U.codexEntry = function (cid) {
     if (cid.startsWith('foe:_:')) { const e = I.common.enemies[cid.split(':')[2]]; return e ? { id: cid, cat: 'Noosphère', title: e.name, text: e.desc + ' — ' + I.t('Failles : {failles}.', { failles: e.weak.map(w => D.ELEMENTS[w].name).join(', ') }), saga: { name: I.t('Les routes') } } : null; }
     if (cid.startsWith('foe:')) { const [, sid, eid] = cid.split(':'), s = I.sagas[sid], e = s && s.enemies[eid]; return e ? { id: cid, cat: 'Noosphère', title: e.name, text: e.desc + ' — ' + I.t('Failles : {failles}.', { failles: e.weak.map(w => D.ELEMENTS[w].name).join(', ') }), saga: s } : null; }
-    const [sid, eid] = cid.split('/'), s = I.sagas[sid], e = s && s.codex.find(c => c.id === eid); return e ? Object.assign({ saga: s }, e, { id: cid }) : null;
+    // (2.48, D240 : une fiche qui nomme l'Agrégor a son texte d'avant, « avant », que le Recueil montre tant que le nom n'est pas reçu)
+    const [sid, eid] = cid.split('/'), s = I.sagas[sid], e = s && s.codex.find(c => c.id === eid); return e ? Object.assign({ saga: s }, e, { id: cid }, e.avant && !U.nomme() ? { text: e.avant } : {}) : null;
   };
   U.unlockCodex = function (id) {
     const cid = W.saga.id + '/' + id, sv = I.save.data; if (sv.codex.includes(cid)) return; const e = U.codexEntry(cid); if (!e) return;

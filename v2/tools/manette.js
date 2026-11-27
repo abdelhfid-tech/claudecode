@@ -7,7 +7,8 @@
    Sur un téléphone tenu en hauteur (390 × 844), en largeur (844 × 390), sur un petit téléphone (360 × 640), puis sur une
    tablette en largeur (1024 × 768), au doigt, avec les vrais boutons de la manette seulement (A, B, le joystick ; le bouton
    ☰ de la scène pour ouvrir la halte) :
-   1. l'écran-titre : le joystick descend jusqu'à « Réglages », A y entre, B revient à l'essentiel ;
+   1. l'écran-titre : le joystick descend jusqu'à « Réglages », A y entre, B revient à l'essentiel ; et (2.48, D240) avec
+      plusieurs récits en cours, A sur « Continuer » montre leur liste, le joystick y descend, B revient à l'essentiel ;
    2. en exploration : B n'ouvre pas la halte (tout au plus, il arrête la marche) ;
    3. la halte : ouverte par ☰, on y descend au joystick jusqu'à « Carte », A y entre, B revient, B la referme ;
    4. un dialogue : A passe la première réplique, B la seconde ;
@@ -117,6 +118,23 @@ async function contraste([b64, sel]) {
     await rien('écran-titre, réglages'); await vue('#title .vmenu button.sel', 'écran-titre, réglages'); await shot('titre-reglages');
     await B('écran-titre, réglages'); const t3 = await p.evaluate(() => [...document.querySelectorAll('#title .vmenu button')].map(b => b.textContent));
     dit(t3.some(t => /^Nouvelle partie/.test(t)) && !t3.some(t => /^Son/.test(t)), 'ÉCART', `${nom} · écran-titre : B revient à l'essentiel`);
+    /* 1 bis. 2.48 (D240) : « Continuer », avec plusieurs récits en cours — A montre la liste (le courant, puis les récits quittés,
+       du plus récent au plus ancien, la Chaîne, « ◂ Retour ») ; le joystick y descend ; B revient à l'essentiel */
+    await p.evaluate(() => { const I = window.ISNAD, sv = (I.save.reset(), I.save.data), t = Date.now();
+      const point = (sid, ci, obj, quand) => { const ch = I.sagas[sid].chapters[ci]; return { saga: sid, ci, obj, map: ch.map, opts: ch.opts || {}, pos: [120, 120], party: ch.party.slice(), npcs: {}, foes: [], chests: [], flags: {}, t: quand }; };
+      sv.started = true; sv.prologue = true; sv.sagas = { abubakr: { ch: 1, done: false, flags: {} }, umar: { ch: 0, done: false, flags: {} }, khalid: { ch: 0, done: false, flags: {} } };
+      sv.cp = point('abubakr', 1, 1); sv.cps = { umar: point('umar', 0, 1, t - 600000), khalid: point('khalid', 0, 2, t - 7200000) }; I.save.auto('Abû Bakr · essai');
+      document.querySelectorAll('.screen').forEach(e => e.hidden = true); I.input.reset(); I.ui.showTitle(); });
+    await p.waitForTimeout(500);
+    const r0 = await choisi('#title .vmenu button.sel'); dit(/^Continuer/.test(r0), 'ÉCART', `${nom} · écran-titre : « Continuer » a la sélection d'emblée (« ${r0.slice(0, 40)} »)`);
+    await A('écran-titre, Continuer'); await p.waitForTimeout(250);
+    const rl = await p.evaluate(() => [...document.querySelectorAll('#title .vmenu > button')].map(b => b.dataset.reprise || b.textContent.trim()));
+    dit(rl.join() === 'abubakr,umar,khalid,chaine,◂ Retour', 'ÉCART', `${nom} · écran-titre : A sur « Continuer » montre les récits en cours (${rl.join(' · ')})`);
+    await rien('écran-titre, les récits en cours'); await vue('#title .vmenu button.sel', 'écran-titre, les récits en cours'); await shot('titre-recits');
+    await joy('down', 'écran-titre, les récits en cours'); const r1 = await p.evaluate(() => { const b = document.querySelector('#title .vmenu button.sel'); return b ? b.dataset.reprise || b.textContent.trim() : ''; });
+    dit(r1 === 'umar', 'ÉCART', `${nom} · écran-titre, les récits en cours : le joystick descend au récit suivant (« ${r1} »)`);
+    await B('écran-titre, les récits en cours'); const r2 = await p.evaluate(() => [...document.querySelectorAll('#title .vmenu > button')].map(b => b.dataset.reprise || b.textContent.trim()));
+    dit(r2.some(t => /^Nouvelle partie/.test(t)) && !r2.some(t => t === 'chaine' || t === 'umar'), 'ÉCART', `${nom} · écran-titre, les récits en cours : B revient à l'essentiel`);
 
     /* 2. en exploration : B n'ouvre pas la halte */
     await p.evaluate(() => { const I = window.ISNAD; I.audio.setOn(false); I.save.reset(); I.save.data.started = true; document.querySelectorAll('.screen').forEach(e => e.hidden = true); document.body.classList.remove('in-screen'); I.input.reset();

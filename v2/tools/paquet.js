@@ -215,9 +215,10 @@ const url = 'file://' + path.join(out, 'index.html');
     if (ch.livres.length < 2) ko('ÉCART la Chaîne ne montre qu’un livre');
     else if (JSON.stringify(R.debut.ordre) !== JSON.stringify(attendu)) ko(`ÉCART ordre de la Chaîne : ${R.debut.ordre.join(' · ')} — attendu : ${attendu.join(' · ')}`);
     else ok(`la Chaîne range ${ch.livres.length} livres : ${R.debut.titres.join(' | ')}`);
-    // 2.22 (D211) : dans chaque livre, les maillons se suivent ; au début, seul le premier de chaque livre est ouvert
-    const scellesAttendus = []; ch.livres.forEach(L => { L.noms.slice(1).forEach(n => scellesAttendus.push(n)); if (L.n === 1) scellesAttendus.push('Idris'); });
-    if (JSON.stringify(R.debut.scelles) !== JSON.stringify(scellesAttendus)) ko(`ÉCART au début, sont scellés : ${R.debut.scelles.join(', ') || 'aucun'} — attendu : ${scellesAttendus.join(', ')} (chaque maillon après le premier de son livre, et le dernier)`);
+    // 2.48 (D240, qui lève le sceau de D211) : tous les maillons s'ouvrent dès le prologue joué, ceux du paquet comme ceux du
+    // jeu de base ; seul le dernier maillon est scellé, tant que les maillons du livre I ne sont pas achevés
+    const scellesAttendus = ['Idris'];
+    if (JSON.stringify(R.debut.scelles) !== JSON.stringify(scellesAttendus)) ko(`ÉCART au début, sont scellés : ${R.debut.scelles.join(', ') || 'aucun'} — attendu : ${scellesAttendus.join(', ')} (le dernier maillon seul)`);
     else if (R.livre1.scelles.length || !/dernier maillon/.test(R.livre1.bouton)) ko(`ÉCART les ${ch.nBase} maillons du livre I achevés, le dernier maillon reste scellé (« ${R.livre1.bouton} ») : une saga ajoutée bloque la fin du jeu de base`);
     else if (!/du livre [IVX]+ : /.test(R.transmise.bouton)) ko(`ÉCART la Chaîne transmise, le bouton ne propose pas le maillon d'un autre livre : « ${R.transmise.bouton} »`);
     else ok(`le dernier maillon s'ouvre dès que les ${ch.nBase} maillons du livre I sont achevés (« ${R.livre1.bouton} ») ; ensuite : « ${R.transmise.bouton} »`);

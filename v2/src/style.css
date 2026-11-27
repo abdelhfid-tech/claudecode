@@ -677,6 +677,8 @@ body.portrait .gslot { grid-template-columns: 1.6em 1fr; } body.portrait .gslot 
 .link:disabled .ouvrir { display: none; }
 .chainfoot .ver { flex-basis: 100%; text-align: center; font-size: .78em; opacity: .7; }
 .vmenu button small { display: block; font-family: var(--f-body); letter-spacing: 0; font-size: .78em; color: var(--dim); margin-top: .15em; text-transform: none; }
+/* 2.48 (D240) : la ligne d'un récit en cours (« Continuer ») reste lisible sur le bouton choisi, devant le soleil de l'écran-titre */
+.vmenu button.sel small { color: rgba(255, 246, 226, .9); }
 
 /* ---------- écran tactile : pas de texte minuscule (2.x) ----------
    Demande du décideur : sur un téléphone, les textes étaient trop petits. Les plus petits ont ici un plancher ; la taille

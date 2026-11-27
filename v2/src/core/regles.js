@@ -23,6 +23,8 @@
   // s'écrit *ainsi*) ; et un contenu venu d'ailleurs ne doit pas pouvoir glisser du code dans la page.
   function balises(racine, ou, E) { let n = 0; (function va(v, w) { if (typeof v === 'string') { if (/[<>]/.test(v) && n++ < 5) E.push(`${w}: un texte ne contient ni « < » ni « > » (l'emphase s'écrit *ainsi*)`); }
     else if (v && typeof v === 'object') Object.keys(v).forEach(k => va(v[k], w + (Array.isArray(v) ? '[' + k + ']' : '.' + k))); })(racine, ou); }
+  // 2.48 (D240) : ce qui nomme l'Agrégor, en français (« l'agrégateur de chimères » est sa description) — verifierNomAgregor, verifierLangue
+  const AGREGOR = /agr[ée]g(or|ateur)/i;
   function creer(D, contexte) {
     const C = contexte || {}, savoirConnu = C.savoirConnu || (() => false), ennemisCommuns = C.ennemisCommuns || (() => ({}));
     // (la garde des noms : définie ici parce que les lieux et les objets d'un paquet y passent aussi)
@@ -193,6 +195,39 @@
       lignes(B.avant, `${w}.brigands.avant`, ['nar', 'say']); lignes(B.apres, `${w}.brigands.apres`, ['nar', 'say']);
     }
 
+    /* 2.48 (D240 ; le décideur, 27 novembre : « Dans l'ordre où on joue ») — le nom de l'Agrégor. Les sagas s'ouvrent toutes,
+       et les cinq rencontres de la Cité-Miroir se jouent dans l'ordre qu'on veut ; la k-ième jouée dit l'étape k (frame.js,
+       ETAPES ; ui.js, U.etapes), et le nom est reçu avec la fiche « agregor », à l'étape III. La règle de la 2.25 (D214) —
+       « avant l'étape III, aucun texte ne le nomme » — devient : un texte qui le nomme ne se dit que là où le nom est reçu à
+       coup sûr :
+       - sous ['if', '_2084_agregor', …] (le moteur le pose quand le nom est reçu ; la branche « sinon » dit l'autre chose :
+         « ce qui règne là-haut », « les écrans ») ;
+       - dans une étape III, IV ou V (['if', '_2084_etape_3…5', …]) : une étape k ≥ 3 vient après la troisième rencontre jouée ;
+       - dans le dernier maillon (« fin »), qui ne s'ouvre qu'après les cinq sagas et les cinq rencontres (ui.js, la Chaîne) ;
+       - et la fiche « agregor » elle-même, que seule l'opération ['codex', 'agregor'] donne — vérifiée comme un texte.
+       Une autre fiche qui le nomme porte « avant », son texte tant que le nom n'est pas reçu (ui.js, U.codexEntry), qui ne le
+       nomme pas. Une chimère de la saga qui le nomme ne se combat que là où il est reçu, et ne rôde pas (palier « minion »).
+       Partout ailleurs — l'ouverture et la fin d'une saga, ses héros, ce qu'on dit dans les quartiers, les rencontres de la
+       route —, aucun texte ne le nomme. Dans chaque langue, verifierLangue : une langue ne le nomme que là où le français le nomme. */
+    function verifierNomAgregor(s, E) {
+      const combats = new Set(), OK = f => f === '_2084_agregor' || /^_2084_etape_[345]$/.test(f);
+      const dit = (v, w) => E.push(`${w}: « ${v.slice(0, 70)} » nomme l'Agrégor là où son nom n'est peut-être pas encore reçu (D240 : il l'est à la troisième rencontre jouée) — le dire sous ['if', '_2084_agregor', …], dans une étape III à V, ou dans le dernier maillon`);
+      const va = (v, w, recu) => {
+        if (typeof v === 'string') { if (!recu && AGREGOR.test(v)) dit(v, w); return; }
+        if (!v || typeof v !== 'object') return;
+        if (Array.isArray(v) && v[0] === 'if' && typeof v[1] === 'string' && Array.isArray(v[2])) { va(v[2], w + '.si', recu || OK(v[1])); if (v[3] !== undefined) va(v[3], w + '.sinon', recu); return; }
+        if (!Array.isArray(v) && Array.isArray(v.group) && !recu) v.group.forEach(g => combats.add(g));   // un combat, une manche « noir », une chimère du chapitre
+        if (Array.isArray(v)) v.forEach((x, i) => va(x, `${w}[${i}]`, recu)); else Object.keys(v).forEach(k => va(v[k], `${w}.${k}`, recu));
+      };
+      const finale = !!(s.frame && !s.veillees);   // la clôture de l'histoire-cadre ne se joue qu'à la fin du dernier maillon
+      Object.keys(s).filter(k => !['enemies', 'codex', 'chapters'].includes(k)).forEach(k => va(s[k], `saga ${s.id}.${k}`, k === 'outro' && finale));
+      (s.chapters || []).forEach((c, i) => va(c, `chapitre ${c.id || i}`, !!(c.fin && finale)));
+      (s.codex || []).forEach(c => { if (c.id === 'agregor' && s.frame) return; const w = `codex ${c.id}`;
+        ['title', 'src', 'avant'].forEach(k => va(c[k], `${w}.${k}`, false));
+        if (typeof c.text === 'string' && AGREGOR.test(c.text) && typeof c.avant !== 'string') E.push(`${w}: le texte nomme l'Agrégor ; la fiche porte « avant », son texte tant que le nom n'est pas reçu, qui ne le nomme pas (D240)`); });
+      Object.keys(s.enemies || {}).forEach(k => { const e = s.enemies[k], nomme = JSON.stringify(e || {}).match(AGREGOR);
+        if (nomme && (combats.has(k) || (e && e.tier === 'minion'))) E.push(`ennemi ${k}: il nomme l'Agrégor et se combat là où son nom n'est peut-être pas encore reçu, ou rôde (D240)`); });
+    }
     function checkSaga(s, E, W) {
       const req = (o, k, t, where) => {
         if (o[k] === undefined || o[k] === null) { E.push(`${where}: champ « ${k} » manquant`); return false; }
@@ -343,7 +378,9 @@
         const w = `codex ${c.id}`;
         ['id', 'title', 'text'].forEach(k => req(c, k, 'string', w));
         if (!D.CODEX_CATS.includes(c.cat)) E.push(`${w}: cat « ${c.cat} » invalide (${D.CODEX_CATS.join('|')})`);
+        if (c.avant !== undefined && (typeof c.avant !== 'string' || !c.avant.trim())) E.push(`${w}: « avant » est le texte de la fiche tant que le nom de l'Agrégor n'est pas reçu (D240) : une chaîne`);
       });
+      verifierNomAgregor(s, E);   // 2.48 (D240)
 
       if (commun) {
         // le cœur : chaque œuvre, chaque lame, chaque compagnon de lumière a son texte ; chaque mal a son égrégore
@@ -507,6 +544,9 @@
               case 'join': case 'leave': if (!heroes[o[1]]) E.push(`${wo}: héros « ${o[1]} » inconnu`); break;
               case 'codex': if (!codexIds.has(o[1])) E.push(`${wo}: entrée de codex « ${o[1]} » inconnue`); break;
               case 'if': checkOps(o[2], wo + '.then'); if (o[3]) checkOps(o[3], wo + '.else'); break;
+              // les drapeaux « _2084_… » disent l'état de 2084 (veillées, maillons, nom de l'Agrégor reçu, étape) : le moteur les pose,
+              // un récit — saga, histoire-cadre, veillée ou paquet — les lit par « if », il ne les écrit jamais (2.48, D240)
+              case 'flag': if (typeof o[1] !== 'string' || !o[1]) E.push(`${wo}: flag(nom)`); else if (/^_2084_/.test(o[1])) E.push(`${wo}: le drapeau « ${o[1]} » est posé par le moteur (l'état de 2084) : un récit le lit par « if », il ne l'écrit pas`); break;
               case 'emote': if (o[2] !== null && !D.POSES.includes(o[2])) E.push(`${wo}: pose « ${o[2]} » inconnue (${D.POSES.join('|')}, ou null pour la quitter)`); break;
               case 'pray': if (o[1] !== undefined && !D.PRAYERS[o[1]]) E.push(`${wo}: pray « ${o[1]} » invalide (${Object.keys(D.PRAYERS).join('|')})`); break;
               case 'pillar': if (!D.PILLARS[o[1]]) E.push(`${wo}: pilier « ${o[1]} » invalide (${Object.keys(D.PILLARS).join('|')})`); if (typeof o[2] !== 'number' || Math.abs(o[2]) > 2 || !o[2]) E.push(`${wo}: pillar delta ±1 ou ±2`); break;
@@ -839,7 +879,7 @@
       sacre: /الله|إله|مقدّ?س|مبار[كك]|برك[ةه]|معجز|كرام[ةه]|تميم|حرز|تعويذ|رقي[ةه]|ذهب|حرير|قرآن|مصحف|سورة|زمزم|ملا[ئك]|نبيّ?|رسول/,
       verset: ['﴿', '﴾'], say: 330, nar: 360,
       pari: /رهان|مراهن|[تأنيو]راهن|راهن\s*على|قمار|يقامر|مقامر|الميسر|يانصيب|كازينو/,   // (« الراهن », le présent, et « ميسّر », facile, passent)
-      agregor: /المجمع|مجمع الخيالات/   // (lu sans ses voyelles : « المُجمِّع », ar.md, § 3.6)
+      agregor: /(?:ال|لل)مجمع|مجمع الخيالات/   // (lu sans ses voyelles : « المُجمِّع », ar.md, § 3.6 ; et « للمُجمِّع », la préposition li- devant l'article, 2.48)
     },
     en: {
       demon: /\b(iblis|satan|shaitans?|shaytans?|shayatin|devils?|demons?|djinns?|jinns?|jinni|genies?|ifrits?|ghouls?|fiends?)\b/i,
@@ -893,6 +933,9 @@
       if (g === 'option' && R.pari.test(t)) erreurs.push(`${w}: « ${t.slice(0, 60)} » — aucun pari ni jeu de hasard ne se joue : rien de ce qu'on offre au joueur ne propose de parier (le pari n'est qu'une chimère)`);
       // 2.30 (D222) : les rencontres de la route (coeur.js, route ; les phrases de monde.js) — ni l'Agrégor, ni le pari
       if (/^route\.|^monde\.js$/.test(c.ou)) { const nu = t.replace(/[\u064B-\u0652\u0670]/g, ''); if (R.agregor && R.agregor.test(nu)) erreurs.push(`${w}: la carte du monde vient avant que l'Agrégor soit nommé (2.25) : aucun texte des rencontres ne le nomme`); if (g !== 'option' && R.pari.test(nu)) erreurs.push(`${w}: « ${t.slice(0, 60)} » — aucun texte des rencontres ne porte les mots du pari`); }
+      // 2.48 (D240) : une langue ne nomme l'Agrégor que là où le français le nomme — et le français ne le nomme que là où son nom est
+      // reçu (verifierNomAgregor) : la variante qui dit « ce qui règne là-haut », « les écrans », le dit aussi dans chaque langue
+      if (R.agregor && R.agregor.test(t.replace(/[ً-ْٰ]/g, '')) && !AGREGOR.test(c.fr)) erreurs.push(`${w}: « ${t.slice(0, 60)} » nomme l'Agrégor, et le français ne le nomme pas (D240 : il ne se nomme que là où son nom est reçu)`);
       if ((g === 'say' || g === 'nar') && t.length > R[g]) avis.push(`${w}: ${g === 'say' ? 'réplique' : 'narration'} longue (${t.length} signes, ${R[g]} au plus)`); });
     return { erreurs, avis };
   }

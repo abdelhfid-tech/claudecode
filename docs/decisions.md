@@ -2632,6 +2632,84 @@ pages privées de son compte.
   de la course de `doigt.js` tombait alors à zéro (la 2.46 aussi). Le jeu suit déjà la règle : la manette effacée, toucher la
   scène fait marcher Idris. `doigt.js` le vérifie désormais chaque fois qu'il la trouve effacée (« INACCESSIBLE » sinon), et
   mesure la course une fois la manette revenue.
+- [ ] **D240. Toutes les sagas ouvertes, chacune gardée à sa place ; « Continuer » mène à chaque récit en cours ; l'Agrégor
+  se découvre dans l'ordre où l'on joue (version 2.48 ; le décideur, 27 novembre ; textes nouveaux de l'agent, à valider).**
+  « je veux que tu débloque toutes les sagas avec possibilité de sauvegarder l'avancement de chacune des saga », puis :
+  « Donc dans la première page le bouton "continuer" pourra renvoyer vers les différentes sauvegardes ». Ses choix, à nos
+  questions : pour l'Agrégor, « Dans l'ordre où on joue » ; pour le dernier maillon, « Après les cinq sagas ». **Elle
+  remplace le sceau de D211** (« on ne passe pas à la saga suivante tant qu'on n'a pas fini la saga précédente », « Ordre
+  fixe, du I au V ») **et l'ordre des étapes de D214** (« une étape par maillon achevé », dans l'ordre des maillons).
+  - **La Chaîne** (`ui.js`, `U.showChain`) : plus aucun sceau entre les maillons. Les cinq s'ouvrent dès le prologue joué,
+    dans l'ordre qu'on veut (ceux d'un paquet aussi) ; chacun dit où il en est (« Maillon à ouvrir », « Chapitre n / total ·
+    en route », « … retrouvée ») et se reprend à sa place (`W.ranger`, `W.reprise` : chapitre, objectif, lieu, place,
+    groupe, drapeaux) ; un maillon achevé se rejoue. Le dernier maillon reste scellé tant que les cinq ne sont pas achevés.
+    Le texte « Scellé tant que le maillon {rang} n'est pas achevé » ne sert plus : il sort du moteur et des listes de l'arabe
+    (et de sa forme vocalisée) et de l'anglais. L'en-tête d'avant la 2.22 revient, avec ses textes arabe, vocalisé et anglais
+    d'alors : « Chaque maillon est un témoin. Choisis celui dont tu veux suivre la trace ; l'ordre est libre, mais la Chaîne
+    se lit du premier au dernier. »
+  - **« Continuer »** (l'écran-titre, `U.showTitle`) : avec un seul récit en cours, il le reprend comme toujours ; avec
+    plusieurs (le refuge compte : remonté dans les quartiers avec un récit rangé, Idris a deux places où reprendre), il ouvre leur liste, dans la même colonne — le récit courant d'abord (la partie gardée, `cp` ; le refuge s'y
+    dit « La Cité-Miroir »), puis ceux qu'on a quittés en chemin (`cps`), du plus récent au plus ancien, puis « La Chaîne » et
+    « ◂ Retour ». Chacun dit ce que dit déjà le bouton de la Chaîne (« ▶ Reprendre : {récit} · {chapitre} », « ▶ Reprendre :
+    la veillée · {chapitre} ») et, dessous, « Chapitre n / total » (pour une saga), le nom du lieu et « il y a … ». Un toucher,
+    A ou Entrée le reprend exactement à sa place, comme le bouton de la Chaîne (`U.reprendre` ; un maillon achevé qu'on
+    rejouait, quitté en chemin, aussi — seul « Rejouer » repart du début) ; B ou Échap revient à
+    l'écran-titre. Aucun texte nouveau. Une partie de la 2.47 qui a plusieurs récits rangés montre la liste ; rien à migrer
+    (le format reste le 2). Les copies gardées à la mosquée (« Reprendre une copie gardée ») ne changent pas.
+  - **L'Agrégor, dans l'ordre où l'on joue** : la k-ième rencontre de la Cité-Miroir jouée dit l'étape k (I à V), quelle
+    que soit la saga qu'elle suit ; la fiche « L'AGRÉGOR » vient avec l'étape III. Le moteur pose, à l'ouverture et à la
+    reprise de chaque chapitre, `_2084_etape_k` (le compte des autres rencontres déjà jouées, plus un) et `_2084_agregor` (le
+    nom est reçu) ; un récit les lit par « if » (`U.etapes`, `ui.js`). Chaque rencontre garde, à sa place d'avant (Abû Bakr I,
+    'Umar II, Khâlid III, 'Uthmân IV, 'Alî V), ses répliques d'avant, mot pour mot ; à une autre place, une accroche puis
+    l'étape commune (`ETAPES`, `frame.js`), faite des répliques d'avant et d'une ouverture neuve. Une partie d'avant, qui a
+    joué ses rencontres dans l'ordre des maillons, continue à l'étape suivante ; celle qui a reçu la fiche au prologue (avant
+    la 2.25) garde le nom. Rien de plus dans la partie.
+  - **Ce qui nommait l'Agrégor avant l'étape III** dit, tant que le nom n'est pas reçu, « ce qui règne là-haut » ou « les
+    écrans » (les tournures de D214) : la fin du deuxième chapitre de 'Uthmân (`ut2`, sous `if`), et deux fiches du Recueil,
+    « La Rumeur » ('Uthmân) et « Le Slogan » ('Alî), par un champ nouveau, `avant`, que le Recueil montre tant que le nom
+    n'est pas reçu (`U.codexEntry` ; `docs/schema-saga.md`). Le titre du dernier maillon suivait déjà la fiche.
+  - **Le dernier maillon** suppose l'étape V (« Quelqu'un qui l'a servi viendra te le montrer ») : les cinq sagas achevées,
+    un soir de la Cité-Miroir laissé en chemin (une veillée quittée avant sa rencontre, une rencontre quittée) se joue
+    d'abord quand on touche le dernier maillon, là où on l'a laissé ; puis le dernier maillon. Aucun texte nouveau, aucun
+    sceau de plus (choix de l'agent, à valider : c'était déjà possible sous D211, en quittant une veillée). Une rencontre
+    ainsi ouverte puis quittée reprend à sa place quand sa veillée s'achève, et une veillée rangée de même (`U.afterSaga`).
+  - **La règle, vérifiée** (`regles.js`) : un texte qui nomme l'Agrégor ne se dit que là où le nom est reçu à coup sûr —
+    sous `_2084_agregor`, dans une étape III à V, dans le dernier maillon, ou dans la fiche elle-même ; une autre fiche qui le
+    nomme porte `avant` ; une chimère qui le porte ne se combat que là ; un récit n'écrit jamais un drapeau `_2084_…` (le
+    moteur seul les pose) ; et, dans chaque langue, une langue ne le nomme que là où le français le nomme (en arabe,
+    « المُجمِّع » et « للمُجمِّع »). Hors des récits, la page « Les degrés du mal » ne dit, avant le nom reçu, ni le nom de
+    l'idole ni le titre du dernier maillon (« Ce qui se cache derrière les écrans », comme la Chaîne : `mal.js`). Elle remplace « avant l'étape III, aucun texte ne le nomme » (D214) et la prouve dans tous
+    les ordres de jeu.
+  - **Les textes** (propositions de l'agent, à valider ; en français, en arabe — avec sa forme vocalisée — et en anglais ;
+    aucun fait d'histoire, aucune parole citée) : les cinq accroches (« Tu as parlé ce soir à un homme qui défilait pour
+    oublier. » ; « Cet homme validait ce que l'écran avait déjà décidé. » ; « Des fenêtres qui applaudissent, et personne
+    derrière. » ; « Le Compteur amassait des regards, sans jamais en poser un sur quelqu'un. » ; « Le Cartographe additionnait
+    des relevés sans aller voir. » — chacune vraie que les mots aient été trouvés ou non) ; les ouvertures des étapes communes
+    (I : Yûnus « Qu'as-tu vu, ce soir, sous le grand écran ? », Idris « Toute la rue regardait la même chose, au même
+    instant. » — elle dit la rue, non l'homme du soir : le Régent n'a personne, l'Admiré personne derrière ses comptes ; II : Yûnus « Toute la rue regarde la même chose. Qui commande, alors ? » ;
+    III : Idris « Ce qui rassemble les regards a-t-il un nom ? » ; IV : Idris « L'Agrégor compte tout ce qu'on regarde. Que
+    craint-il, alors ? » ; V : Idris « L'Agrégor additionne tout, et ne va jamais voir. ») ; la fin de `ut2`, « Souviens-t'en
+    devant ce qui règne là-haut, qui ne force personne et tient tout le monde. » ; « Dans la Cité-Miroir, les écrans lui ont
+    donné un autre nom : le Flux. » (« La Rumeur ») ; « Les écrans de la Cité-Miroir en fabriquent mille par jour. » (« Le
+    Slogan »). Reviennent ceux d'avant D211, avec leurs textes arabe, vocalisé et anglais d'alors : au premier retour en
+    2084 (`x_descendu`), Maître Yûnus « Tu peux suivre plusieurs traces à la fois. Les transmetteurs n'apprenaient pas d'un
+    seul maître : ils allaient de ville en ville, et gardaient chaque chaîne à part. » (il touche à l'histoire des
+    transmetteurs : à valider) ; la fiche « Veiller la vieille mosquée » : « On peut suivre plusieurs récits à la fois :
+    chacun attend là où on l'a laissé. »
+  - **Relevé par les contre-lectures, laissé au décideur** : les répliques d'avant, validées, de la rencontre d'Abû Bakr à la
+    place I (« Tu as tiré un homme de son écran, ce soir. ») et de celle de 'Uthmân à la place IV (« Le Compteur a posé un
+    regard sur un passant. Un seul. »), comme la réponse de l'enfant (« Un seul. »), tiennent le pourparler pour réussi alors
+    qu'il peut être perdu sans que le chapitre s'arrête ; c'était déjà le cas avant la 2.48, l'agent n'y touche pas.
+  - **Laissé tel quel** : « Commence par le premier : Abû Bakr… » (à la fin du prologue, un conseil) ; les veillées du Caïd,
+    qui suivent chacune sa saga (jouées dans un autre ordre, elles se lisent comme des souvenirs) ; les niveaux (chaque saga
+    a ses héros et ses niveaux, le groupe n'est jamais trop faible : `W.ensureLevel`) ; trois répliques de l'enfant qui
+    supposent de l'avoir revu (« à force de revenir ») — il est là « tous les soirs », depuis le prologue.
+  - **Les shorts** 02 et 09 posaient `I.debug.all` pour montrer les maillons ouverts (D219) : le jeu les montre désormais
+    ouverts de lui-même ; leur en-tête de Chaîne, s'il est à l'image, est celui de D211. Les films livrés ne se retouchent pas :
+    au décideur de dire s'il faut les refaire.
+  `v2/docs/architecture.md`, « Mener plusieurs récits », « La découverte de l'Agrégor », « L'écran-titre » ; `AGENTS.md`.
+  Contrôles : `retours.js` (les cinq maillons ouverts par leurs boutons, la liste de « Continuer », l'Agrégor dans un autre
+  ordre, une partie de la 2.47), `paquet.js`, `manette.js` (la liste au joystick, A et B), puis la batterie.
 - [ ] **Proposition de reformulation de l'exigence 2 (formulation de l'agent, à valider ; l'exigence elle-même n'est pas
   réécrite).** Après D205, on propose d'ajouter à l'exigence 2 : « L'émotion d'un Compagnon passe par l'attitude du corps
   et les bulles ; celle des autres peut aussi passer par le visage. » (aujourd'hui, l'exigence dit : « Le caractère et

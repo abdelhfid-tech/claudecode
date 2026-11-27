@@ -117,7 +117,15 @@
     if (urls[k] === undefined) { try { urls[k] = G.enemy(e.art, e.hue, 1, 0).toDataURL(); } catch (x) { urls[k] = ''; } }
     return urls[k];
   };
-  const puce = (id, saga, cls) => { const e = defDe(saga, id); return e ? `<span class="pu ${cls || ''}"><img alt="" src="${M.url(id, saga)}">${I.esc(e.name)}</span>` : ''; };
+  /* 2.48 (D240) : tant que le nom de l'Agrégor n'est pas reçu (sa fiche, à la troisième rencontre jouée : I.ui.nomme), la page
+     ne le dit pas — ni le nom d'une chimère ou d'une idole qui le porte, ni le titre du chapitre où elle se tient (le dernier
+     maillon) : elle dit, comme la Chaîne, « Ce qui se cache derrière les écrans ». (Le texte affiché est relu en français,
+     I.langue.fr, pour être reconnu dans chaque langue.) */
+  const AGR = /agr[ée]g(or|ateur)/i;
+  const recu = () => (I.ui && I.ui.nomme ? I.ui.nomme() : ((I.save.data.codex || []).includes('idris/agregor') || !!I.save.data.epilogue));
+  const tu = t => (typeof t !== 'string' || recu() || !(AGR.test(t) || AGR.test(String(I.langue && I.langue.fr ? I.langue.fr(t) : t))) ? t : I.t('Ce qui se cache derrière les écrans'));
+  M.tu = tu;
+  const puce = (id, saga, cls) => { const e = defDe(saga, id); return e ? `<span class="pu ${cls || ''}"><img alt="" src="${M.url(id, saga)}">${I.esc(tu(e.name))}</span>` : ''; };
 
   /* ----- la page de la halte ----- */
   // vue d'ensemble : deux étages séparés par une couture ; le lien en pointillé s'arrête au cœur
@@ -139,9 +147,9 @@
         L.egregores.forEach(id => { if (!eg.includes(id) && defDe(s, id) && !defDe(s, id).vice && D.NOIRS.indexOf(id) < 0) eg.push(id); });
         L.idoles.forEach(id => { if (!ido.some(x => x.id === id)) ido.push({ id, ch }); }); });
       ido.forEach(x => { const k = eg.indexOf(x.id); if (k >= 0) eg.splice(k, 1); });
-      const E = eg.map(id => { const e = defDe(s, id), v = vuDe(s, id); tE++; if (v) nE++; return `<span class="tu${v ? ' vu' : ''}"><img alt="" src="${M.url(id, s)}"><i>${I.esc(e.name)}</i></span>`; }).join('');
+      const E = eg.map(id => { const e = defDe(s, id), v = vuDe(s, id); tE++; if (v) nE++; return `<span class="tu${v ? ' vu' : ''}"><img alt="" src="${M.url(id, s)}"><i>${I.esc(tu(e.name))}</i></span>`; }).join('');
       const Io = ido.map(x => { const e = defDe(s, x.id), tb = st().tombees[s.id + ':' + x.id], v = tb !== undefined || vuDe(s, x.id); tI++; if (tb !== undefined) nI++;
-        return `<span class="ti${tb !== undefined ? ' tombee' : v ? ' vu' : ''}"><img alt="" src="${M.url(x.id, s)}"><b>${I.esc(e.name)}</b>${tb !== undefined ? `<small>${traits(tb)} ${I.t('tombée')}</small>` : v ? `<small>${traits(M.niveau(s, x.ch))}</small>` : ''}</span>`; }).join('');
+        return `<span class="ti${tb !== undefined ? ' tombee' : v ? ' vu' : ''}"><img alt="" src="${M.url(x.id, s)}"><b>${I.esc(tu(e.name))}</b>${tb !== undefined ? `<small>${traits(tb)} ${I.t('tombée')}</small>` : v ? `<small>${traits(M.niveau(s, x.ch))}</small>` : ''}</span>`; }).join('');
       return `<div class="ep"><p class="epn">${I.esc(M.nomEpoque(s))}</p><div class="epe" data-lab="${I.esc(I.t('chimères'))}">${E}</div><div class="epi" data-lab="${I.esc(I.t('idoles'))}">${Io}</div></div>`; }).join('');
     const RE = R.egregores || {}, RI = R.idoles || {};
     const maillons = `<div class="rg bas r-epoques"><details><summary><span class="nm"><b>${I.esc(RE.name || '')}</b> <em>${I.esc(RE.sous || '')}</em></span></summary><p>${I.fmt(RE.texte || '')}</p></details><p class="rep">▸ ${I.fmt(RE.reponse || '')}</p>` +
@@ -165,15 +173,15 @@
       const L = M.lignee(s, ch), eg = L.egregores.filter(vu).map(id => puce(id, s)).join('');
       L.idoles.forEach(id => {
         const e = defDe(s, id), tombee = st().tombees[s.id + ':' + id], connue = tombee !== undefined || vu(id) || ici(ch);
-        if (!connue) { h += `<div class="rg bas inconnue"><p class="src">${I.esc(ch.title)}</p><p class="nm"><img class="ido" alt="" src="${M.url(id, s)}"><b>${I.esc(e.name)}</b> <small>${I.t('pas encore rencontrée')}</small></p></div>`; return; }
+        if (!connue) { h += `<div class="rg bas inconnue"><p class="src">${I.esc(tu(ch.title))}</p><p class="nm"><img class="ido" alt="" src="${M.url(id, s)}"><b>${I.esc(tu(e.name))}</b> <small>${I.t('pas encore rencontrée')}</small></p></div>`; return; }
         rien = false;
         const n = tombee !== undefined ? tombee : M.niveau(s, ch), etat = tombee !== undefined ? I.t('idole tombée') : ici(ch) ? I.t('devant toi') : I.t('idole rencontrée');
         const rc = [].concat(e.racine || []).map(r => puce(r, null, defDe(null, r) && defDe(null, r).vice ? 'vice' : 'noir')).join('');
-        h += `<div class="rg bas"><p class="src">${I.esc(ch.title)}</p><p class="nm"><img class="ido" alt="" src="${M.url(id, s)}"><b>${I.esc(e.name)}</b> ${traits(n)} <small>${etat}</small></p>` +
+        h += `<div class="rg bas"><p class="src">${I.esc(tu(ch.title))}</p><p class="nm"><img class="ido" alt="" src="${M.url(id, s)}"><b>${I.esc(tu(e.name))}</b> ${traits(n)} <small>${etat}</small></p>` +
           (rc ? `<p class="lg"><span class="et">${I.t('racine')}</span>${rc}</p>` : '') + (eg ? `<p class="lg"><span class="et">${I.t('chimères')}</span>${eg}</p>` : '') + `<p class="rep">▸ ${I.fmt(((T.rangs || {}).idoles || {}).reponse || '')}</p></div>`;
       });
       if (!L.idoles.length && ch.vice && (eg || ici(ch))) { rien = false; const m = defDe(null, ch.vice);
-        h += `<div class="rg bas"><p class="src">${I.esc(ch.title)}</p>${eg ? `<p class="lg"><span class="et">${I.t('chimère')}</span>${eg}</p>` : ''}<p class="lg"><span class="et">${I.t('derrière elle')}</span>${puce(ch.vice, null, 'vice')}</p><p class="rep">▸ ${I.esc(m ? I.t('Le mal du cœur : par l’œuvre, qui forge sa lame.') : '')}</p></div>`; }
+        h += `<div class="rg bas"><p class="src">${I.esc(tu(ch.title))}</p>${eg ? `<p class="lg"><span class="et">${I.t('chimère')}</span>${eg}</p>` : ''}<p class="lg"><span class="et">${I.t('derrière elle')}</span>${puce(ch.vice, null, 'vice')}</p><p class="rep">▸ ${I.esc(m ? I.t('Le mal du cœur : par l’œuvre, qui forge sa lame.') : '')}</p></div>`; }
     });
     return h + '</div>' + (rien ? '<p>' + I.t('Aucune idole rencontrée ici pour l’instant.') + '</p>' : '');
   };
