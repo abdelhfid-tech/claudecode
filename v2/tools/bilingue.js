@@ -203,7 +203,7 @@ async function partie(browser, lang, l2, w, h) {
     await carton(() => { const I = window.ISNAD; I.valeurs.reconnait(Object.keys(I.sagas.coeur.attributs)[0]); }, '8-verset');
     // le nom choisi par le joueur : il se pose aussi dans la seconde langue (perso.js, direDans), à la place de celui que
     // cette langue donne au râwî
-    const n = await p.evaluate(() => { const I = window.ISNAD, op = I.sagas.idris.chapters[0].objectives.map(o => o.then && o.then[0]).find(x => Array.isArray(x) && x[0] === 'say' && /Idris/.test(x[2] || ''));   // (la première réplique qui nomme Idris : celle de Maître Yûnus, à l'objectif 4 depuis la 2.47) document.querySelectorAll('.screen').forEach(e => { e.hidden = true; }); document.body.classList.remove('in-screen');
+    const n = await p.evaluate(() => { const I = window.ISNAD, op = I.sagas.idris.chapters[0].objectives.map(o => o.then && o.then[0]).find(x => Array.isArray(x) && x[0] === 'say' && x[1] === 'yunus_n');   // (« Te voilà, Idris… », la première réplique de Maître Yûnus : à l'objectif 4 depuis la 2.47 ; le texte, lui, est déjà dans la langue du jeu) document.querySelectorAll('.screen').forEach(e => { e.hidden = true; }); document.body.classList.remove('in-screen');
       I.perso.choisir('Khalil', I.D.TENUES[0].id); I.script.run([op]); return window.__l2.length; });
     for (let i = 0; i < 40 && (await p.evaluate(() => window.__l2.length)) === n; i++) { await p.keyboard.press('Enter'); await p.waitForTimeout(200); }
     const nom = await p.evaluate(() => window.__l2.pop() || null);   // retirée du relevé : son texte porte le nom choisi
