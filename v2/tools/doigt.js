@@ -198,12 +198,38 @@ const tailles = dims.length ? dims : loin ? [[390, 844]] : [[390, 844], [360, 56
       const degage = await p.evaluate(() => { const W = window.ISNAD.world, P = W.player, ok = (x, y) => !(W.solidAt(x - 4, y - 5) || W.solidAt(x + 4, y - 5) || W.solidAt(x - 4, y) || W.solidAt(x + 4, y));
         return [[1, 0], [-1, 0], [0, 1], [0, -1]].map(v => { let n = 0; while (n < 140 && ok(P.x + v[0] * n, P.y + v[1] * n)) n += 2; return { v, n, x: P.x, y: P.y }; }).sort((a, b) => b.n - a.n)[0]; });
       const tenirB = on => p.evaluate(on => { const b = document.querySelector('#pad .b'); b.dispatchEvent(new PointerEvent(on ? 'pointerdown' : 'pointerup', { bubbles: true, cancelable: true, pointerId: 99, pointerType: 'touch', isPrimary: false })); }, on);
-      const vitesse = async (f, avecB) => { await p.evaluate(q => { const W = window.ISNAD.world; W.player.x = q.x; W.player.y = q.y; W.dest = null; W.resetTrail(); }, degage);
+      /* 2.47 — le décideur, 27 novembre : « Les joystick et bouton peuvent disparaître de manière exceptionnelle pour laisser
+         voir la scène à condition que le tactile fonctionne encore. » Sur un petit écran (360 × 560), une annonce du fil — une
+         leçon qui paraît pendant qu'on marche — peut prendre la place de la manette, qui s'efface le temps qu'elle passe
+         (body.pad-efface, ui.js) : la mesure de la course tombait alors à zéro, la marche ou la course selon l'instant. Chaque
+         fois qu'on la trouve effacée, le toucher de la scène doit faire marcher Idris (sinon, « INACCESSIBLE ») ; la course se
+         mesure une fois la manette revenue, et une mesure pendant laquelle elle s'est effacée est refaite. */
+      const effacee = () => p.evaluate(() => document.body.classList.contains('pad-efface') ? ((window.ISNAD.ui.padSous || []).join(', ') || '?') : '');
+      const effaces = [];
+      const toucherQuandEfface = async sous => {
+        const r = await p.evaluate(q => { const I = window.ISNAD, W = I.world, G = I.gfx, c = document.querySelector('#cv').getBoundingClientRect(), d = Math.max(24, Math.min(56, q.n - 10));
+          W.player.x = q.x; W.player.y = q.y; W.dest = null; W.resetTrail(); W.updateCam(true);
+          const wx = q.x + q.v[0] * d, wy = q.y + q.v[1] * d, x = (wx - Math.round(W.cam.x)) / G.PW * c.width + c.left, y = (wy - 6 - Math.round(W.cam.y)) / G.PH * c.height + c.top, e = document.elementFromPoint(x, y);
+          return { x, y, sur: e ? (e.id || String(e.className || e.tagName).split(' ')[0]) : 'rien' }; }, degage);
+        const lire = () => p.evaluate(() => [window.ISNAD.world.player.x, window.ISNAD.world.player.y]), a = await lire();
+        await p.touchscreen.tap(r.x, r.y); await p.waitForTimeout(700); const b = await lire();
+        const fait = (b[0] - a[0]) * degage.v[0] + (b[1] - a[1]) * degage.v[1];
+        await p.evaluate(() => { window.ISNAD.world.dest = null; });
+        for (let i = 0; i < 40 && !(await libre()); i++) { if (await lecture()) await p.keyboard.press('Enter'); await p.waitForTimeout(170); }   // (un toucher tombé sur quelqu'un lui parle : on referme)
+        effaces.push({ sous, fait, sur: r.sur });
+        if (fait <= 6) { echecs++; await p.screenshot({ path: path.join(out, 'doigt-' + w + 'x' + h + '-efface.png') }); console.log(`  INACCESSIBLE ${w}×${h} : la manette s'efface (sous ${sous}) et le toucher de la scène ne fait pas marcher Idris (touché sur ${r.sur}, ${fait.toFixed(0)} points)`); } };
+      const attendreManette = async () => { for (let i = 0; i < 120; i++) { const s = await effacee(); if (!s) return true; if (!effaces.some(e => e.sous === s)) await toucherQuandEfface(s); await p.waitForTimeout(250); } return false; };
+      const vitesse = async (f, avecB) => { for (let essai = 0; essai < 4; essai++) {
+        if (!(await attendreManette())) return 0;
+        await p.evaluate(q => { const W = window.ISNAD.world; W.player.x = q.x; W.player.y = q.y; W.dest = null; W.resetTrail(); }, degage);
         if (avecB) { await tenirB(true); await p.waitForTimeout(60); }
         await p.mouse.move(joy.x, joy.y); await p.mouse.down(); await p.mouse.move(joy.x + degage.v[0] * joy.r * f, joy.y + degage.v[1] * joy.r * f, { steps: 4 }); await p.waitForTimeout(120);
-        const lire = () => p.evaluate(() => { const W = window.ISNAD.world; return [W.player.x, W.player.y, W.t]; }), a = await lire(); await p.waitForTimeout(300); const b = await lire();
-        await p.mouse.up(); if (avecB) await tenirB(false); await p.waitForTimeout(250); return Math.hypot(b[0] - a[0], b[1] - a[1]) / Math.max(0.01, b[2] - a[2]); };
+        const lire = () => p.evaluate(() => { const W = window.ISNAD.world; return [W.player.x, W.player.y, W.t]; }), a = await lire(), e1 = await effacee(); await p.waitForTimeout(300); const b = await lire(), e2 = await effacee();
+        await p.mouse.up(); if (avecB) await tenirB(false); await p.waitForTimeout(250);
+        if (!e1 && !e2) return Math.hypot(b[0] - a[0], b[1] - a[1]) / Math.max(0.01, b[2] - a[2]); }   // (effacée pendant la mesure : on la refait)
+        return 0; };
       const vm = await vitesse(0.6, false), vb = await vitesse(0.97, false), vc = await vitesse(0.97, true);
+      for (const e of effaces) if (e.fait > 6) console.log(`      la manette s'efface un instant (sous ${e.sous}) : le toucher de la scène fait marcher Idris (${e.fait.toFixed(0)} points)`);
       if (!(vm > 70 && vm < 94 && Math.abs(vb - vm) < 0.08 * vm && vc > 1.15 * vm && vc < 1.33 * vm)) { echecs++; await p.screenshot({ path: path.join(out, 'doigt-' + w + 'x' + h + '-course.png') }); console.log(`  INACCESSIBLE ${w}×${h} : courir — joystick au milieu ${vm.toFixed(0)} points par seconde, au bord sans B ${vb.toFixed(0)}, au bord avec B tenu ${vc.toFixed(0)} (dégagé sur ${degage.n} points)`); }
       else console.log(`      courir : le joystick avec B tenu, ${vc.toFixed(0)} points par seconde, ${(vc / vm).toFixed(2)} fois la marche ; le joystick seul, même au bord, la marche (${vm.toFixed(0)}, ${vb.toFixed(0)})`); }
     if (errors.length) { echecs++; [...new Set(errors)].slice(0, 8).forEach(e => console.log('  ERREUR ' + e)); }
