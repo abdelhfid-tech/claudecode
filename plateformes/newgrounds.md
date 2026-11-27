@@ -36,7 +36,7 @@ le jeu démarre, la partie se garde et se reprend après rechargement du cadre, 
 - le jeu remplit-il le cadre déclaré, et le bouton de plein écran de la page de Newgrounds (s'il y en a un) lui donne-t-il tout l'écran ?
   (Le jeu, lui, demande le plein écran au premier toucher d'un téléphone tenu en largeur ; dans un cadre qui le refuse, rien ne se casse.)
 - la partie se garde-t-elle d'une visite à l'autre (stockage du navigateur dans le cadre) ? Si le navigateur refuse le stockage aux
-  cadres tiers, la partie est perdue au rechargement : le jeu le dit seulement dans sa page Diagnostic. « Ta partie → Enregistrer le fichier » reste la sauvegarde.
+  cadres tiers, la partie est perdue au rechargement : le jeu le dit seulement dans sa page Diagnostic. « Exporter la partie → Enregistrer le fichier » (dans la halte) reste la sauvegarde.
 - le son démarre-t-il au premier toucher (les navigateurs l'exigent) ?
 - la page affiche-t-elle la réserve (« Version bêta… », décision 39, `v2/tools/promotion.js`) dans sa description ?
 

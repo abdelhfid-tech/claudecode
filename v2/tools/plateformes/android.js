@@ -56,6 +56,7 @@ function controler(C, F, page, insertion, web, N) {
   const man = lancer(outil('apkanalyzer'), ['manifest', 'print', F.apk]).sortie;
   dit(/MainActivity/.test(man) && !/screenOrientation/.test(man), 'APK · les deux orientations : aucune android:screenOrientation dans le manifeste (le téléphone tourne, selon son verrou de rotation)');
   dit(/usesCleartextTraffic="false"/.test(man), 'APK · aucun trafic en clair (usesCleartextTraffic="false")');
+  dit(/allowBackup="false"/.test(man), 'APK · aucune sauvegarde automatique (allowBackup="false")');
   // le manifeste fusionné de la version (celle qu'on publiera)
   const fusion = trouver(path.join(AND, 'app/build/intermediates'), /merged_manifest\/release\/.*AndroidManifest\.xml$/);
   if (fusion) {
@@ -66,6 +67,7 @@ function controler(C, F, page, insertion, web, N) {
     dit(pr.every(x => attendues.includes(x)), `version · aucune autorisation au-delà de INTERNET (Capacitor) et de la permission interne d’AndroidX (DYNAMIC_RECEIVER_NOT_EXPORTED_PERMISSION, propre à l’application, sans demande à l’utilisateur)`);
     dit(!/android:debuggable="true"/.test(m), 'version · pas débogable (android:debuggable absent du manifeste fusionné)');
     dit(/android:usesCleartextTraffic="false"/.test(m), 'version · aucun trafic en clair');
+    dit(/android:allowBackup="false"/.test(m) && /android:fullBackupContent="false"/.test(m) && /android:dataExtractionRules="@xml\/data_extraction_rules"/.test(m), 'version · aucune sauvegarde : allowBackup et fullBackupContent à "false", data_extraction_rules (ni sauvegarde dans le compte, ni copie d’un téléphone à l’autre) — la partie ne quitte pas l’appareil');
     fs.writeFileSync(path.join(path.dirname(F.apk), 'manifeste-fusionne-version.xml'), m);
   } else dit(false, 'version · manifeste fusionné introuvable');
   // le débogage de la WebView : Capacitor l'ouvre seulement si l'application est débogable (CapConfig.java), sauf réglage

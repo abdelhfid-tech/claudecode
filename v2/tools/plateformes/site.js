@@ -122,8 +122,8 @@ module.exports = {
     const lignesW = w.html.split('\n'), it = lignesW.findIndex(l => /^<title>/.test(l));
     if (it < 0) throw new Error('ÉCART site : le paquet web n’a pas de ligne <title>');
     const ajout = AJOUT_JOUER(S.indexable), jouer = [...lignesW.slice(0, it + 1), ...ajout, ...lignesW.slice(it + 1)].join('\n');
-    const scripts = [...jouer.matchAll(/<script>([\s\S]*?)<\/script>/g)];
-    if (scripts.length !== 1) throw new Error(`ÉCART site : le jeu devait avoir un seul script en ligne (${scripts.length})`);
+    const scripts = [...jouer.matchAll(/<script\b([^>]*)>([\s\S]*?)<\/script>/g)].filter(x => !/\bsrc\s*=/.test(x[1])).map(x => [x[0], x[2]]);
+    if (scripts.length !== 1) throw new Error(`ÉCART site : le jeu devait avoir un seul script en ligne, avec ou sans attributs (${scripts.length}) — la politique de contenu n'en admet qu'un, par son empreinte`);
     const hashJeu = crypto.createHash('sha256').update(scripts[0][1], 'utf8').digest('base64');
     poser('jouer/index.html', jouer);
     const VERSION = J.numero + '-' + C.sha256(Buffer.from(jouer)).slice(0, 12);
@@ -150,7 +150,7 @@ module.exports = {
             return `    <p class="saga"><span class="saga-nom">${esc(g.nom)}</span><span class="saga-meta">${LE[g.lumiere] || 'la'} ${esc(g.lumiere)} · ${esc(g.annees)}</span><span class="saga-phrase">${esc(g.phrase)}</span></p>`; }).join('\n'),
           IMG: a => { const [n, app] = a.split(':'); return img(n, app, racine, { tot: n === 'titre' }); },
           GALERIE: a => { const [app, L2] = a.split(':'); return L2.split(',').map(n => `    <figure>${img(n, app, racine)}<figcaption>${esc(vues[n].legende)}</figcaption></figure>`).join('\n'); },
-          LOGO: () => `<img class="logo" src="${racine}img/${path.basename(P.SOUTIEN_LOGO)}" alt="Logo de l’Institut Islam Actuel" width="${lw}" height="${lh}" loading="lazy" decoding="async">`,
+          LOGO: () => `<img class="logo" src="${racine}img/${path.basename(P.SOUTIEN_LOGO)}" alt="Logo de ${esc(P.SOUTIEN_NOM)}" width="${lw}" height="${lh}" loading="lazy" decoding="async">`,
           SOUTIEN_HTML: () => soutienHtml };
         const corps = rendre(src.slice(m[0].length), ctx, aides).trimEnd();
         const champs = Object.fromEntries(['titre', 'description'].map(k => [k, rendre(meta[k], ctx, null, true)]));
@@ -186,9 +186,9 @@ module.exports = {
       (apk ? `APK ${apk.nom} (${apk.taille})` : 'pas d’APK : la page dit « bientôt »') + ` ; TestFlight : ${S.testflight ? 'oui' : '« bientôt »'} ; ${S.indexable ? 'indexable' : 'noindex'}`);
     console.log(`✓ site — ${path.relative(C.RACINE, fz)} : ${C.mo(zip.length)}, ${tous.length} entrées`);
     const fait = { page: path.join(OUT, 'index.html'), dossier: OUT, zipSite: fz, fichiers: tous, pages, J, S, apk, VERSION, hashJeu, entetes: H, ajout };
-    // « essai site » : l'essai propre au site (le répartiteur appelle sinon l'essai d'un paquet de jeu, qui ne s'y applique pas)
-    const a = process.argv.slice(2);
-    if (a[0] === 'essai' && a[1] === 'site') { const n = await require('./site/essai.js')(C, fait); process.exit(n ? 1 : 0); }
     return fait;
-  }
+  },
+  // « essai site » : l'essai propre au site (v2/tools/plateformes/site/essai.js), que le répartiteur appelle à la place de
+  // l'essai d'un paquet de jeu, qui ne s'y applique pas
+  essai(C, fait) { return require('./site/essai.js')(C, fait); }
 };

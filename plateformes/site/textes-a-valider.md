@@ -83,12 +83,13 @@ indiquée) ; **[livret, retouché]** repris, avec ce qui change ; **[nouveau]** 
 
 ## Tester (`tester/`)
 
-- « Tester le jeu » ; « Trois façons d'essayer la version 2.47. La plus simple est la première : elle marche sur tous
-  les téléphones. » [nouveau]
+- « Tester le jeu » ; « Trois façons d'essayer la version 2.47. La plus simple est la première : elle n'installe rien. »
+  [nouveau ; « elle marche sur tous les téléphones » retiré : rien ne le prouve, l'essai n'a tourné que dans Chromium]
 - **1. Dans le navigateur, tout de suite** : « Le jeu s'ouvre dans la page : rien à installer, aucun compte. » ; « Le
   garder sur l'écran d'accueil » ; « iPhone (Safari) : le bouton Partager, puis « Sur l'écran d'accueil ». » ;
   « Android (Chrome) : le menu ⋮, puis « Installer l'application » ou « Ajouter à l'écran d'accueil ». » ; « Une fois
-  ouvert, le jeu se rouvre même sans réseau. » [nouveau]
+  ouvert, le jeu peut se rouvrir sans réseau. » [nouveau ; « peut » : prouvé dans Chromium seulement, ni Safari ni
+  l'écran d'accueil d'un iPhone]
 - **2. Android : l'application de test** : « Télécharger l'APK de test » ; « Empreinte SHA-256, pour vérifier le
   fichier : » ; « L'installer, en trois gestes » : « Sur le téléphone, touchez « Télécharger l'APK de test ». » ;
   « Ouvrez le fichier téléchargé. Android demande d'autoriser l'installation depuis le navigateur : autorisez-la. » ;
@@ -141,3 +142,23 @@ indiquée) ; **[livret, retouché]** repris, avec ce qui change ; **[nouveau]** 
 
 - Nom : « ISNAD — Chroniques des Compagnons » ; nom court : « ISNAD » ; description : « Chroniques des Compagnons.
   Version bêta. » (faits de promotion.js) [nouveau]
+
+## Ce que la première liste oubliait (relevé par la contre-lecture)
+
+- Les descriptions des pages (la balise `description`, que montrent les moteurs et les aperçus de lien) :
+  « Essayer ISNAD : dans le navigateur tout de suite, sur Android, sur iPhone. » (Tester) ;
+  « ISNAD ne collecte rien : ni publicité, ni mesure d'audience, ni compte. » (Confidentialité) ;
+  « Cette page n'existe pas. » (404) [nouveau]
+- Les titres d'onglet : « Tester ISNAD — Version bêta », « Confidentialité — ISNAD », « Page introuvable — ISNAD »
+  [nouveau]
+- L'étiquette du menu, pour les lecteurs d'écran : « Navigation » [nouveau]
+- La ligne sous le bouton de l'APK : « isnad-2.47-test.apk · 7,1 Mo · version 2.47 » (faite par l'outil) [nouveau]
+
+## À unifier entre les supports (à trancher une fois)
+
+- « cinq récits » (le site, la fiche itch.io) ou « cinq sagas » (l'écran-titre du jeu : « Un JRPG rétro-HD en cinq sagas ») ;
+- « JRPG » (itch.io, les fiches en anglais) ou « jeu de rôle au tour par tour » (le site) ;
+- le vouvoiement (le site) ou le tutoiement (la fiche itch.io, le jeu lui-même) ;
+- l'âge : « à partir de dix ans » (le site) et PEGI 12 (évoqué pour CrazyGames) : un seul âge public ;
+- « la fin du califat bien guidé » (repris du livret) : à relire au regard de l'exigence 5.
+

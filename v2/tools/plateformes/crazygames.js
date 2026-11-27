@@ -23,5 +23,23 @@ module.exports = {
     if (brut > 50e6) throw new Error('ÉCART crazygames : le chargement initial dépasse 50 Mo (' + C.mo(brut) + ')');
     console.log(`✓ crazygames — ${path.relative(C.RACINE, f)} : zip ${C.mo(taille)}, index.html ${C.mo(brut)} (≤ 50 Mo initial, ≤ 250 Mo en tout, 1 fichier ≤ 1500) ; préambule ${(Buffer.byteLength(bloc) / 1024).toFixed(1)} Ko, ôté on retrouve le paquet web à l’octet`);
     return Object.assign({}, w, { html, page: C.ecrire('crazygames', 'index.html', html), zip: f, entrees: L.map(e => e.nom) });
+  },
+  /* « essai crazygames » : 1. l'essai propre au paquet (crazygames/essai.js : l'anglais d'office, aucun plein écran, le
+     cadre d'une autre origine) ; 2. l'essai commun d'un paquet de jeu, manette.js et loupe.js compris, sur le paquet livré
+     dont on n'a changé que la langue d'office, mise en français (ces contrôles lisent les libellés français) : le
+     changement est contrôlé, c'est la seule différence avec le zip. */
+  async essai(C, fait) {
+    const { spawnSync } = require('child_process'), os = require('os');
+    const r = spawnSync(process.execPath, [path.join(DOS, 'essai.js')], { stdio: 'inherit' });
+    let anomalies = r.status === 0 ? 0 : 1;
+    const AVANT = "o.lang = 'en'", APRES = "o.lang = 'fr'";
+    if (fait.html.split(AVANT).length !== 2) throw new Error('ÉCART crazygames : la langue d’office n’est pas posée une seule fois dans le préambule');
+    const html = fait.html.replace(AVANT, APRES);
+    if (html.replace(APRES, AVANT) !== fait.html) throw new Error('ÉCART crazygames : la copie en français diffère du paquet par autre chose que la langue d’office');
+    const tmp = fs.mkdtempSync(path.join(os.tmpdir(), 'isnad-crazygames-fr-')), page = path.join(tmp, 'index.html');
+    fs.writeFileSync(page, html);
+    console.log(`— essai commun sur le paquet livré, la langue d'office mise en français (seule différence, contrôlée) : ${page}`);
+    anomalies += await require('./essai.js')(C, 'crazygames', this, Object.assign({}, fait, { zip: null, entrees: null, page }));
+    return anomalies;
   }
 };

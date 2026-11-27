@@ -20,7 +20,7 @@ l'application. **Rien n'est collecté, rien ne part sur Internet.**
 ## 1. Installer l'APK de test sur un téléphone
 
 1. **Avant tout, si une version d'ISNAD est déjà installée** et qu'elle vient d'ailleurs (Google Play, ou un APK fait sur une
-   autre machine) : ouvre le jeu, **Ta partie → Enregistrer le fichier**, et garde le fichier `isnad-partie.json`. Deux
+   autre machine) : ouvre le jeu, **la halte → Exporter la partie → Enregistrer le fichier**, et garde le fichier `isnad-partie.json`. Deux
    versions signées de clés différentes ne se remplacent pas : il faudra désinstaller l'ancienne, ce qui efface sa partie.
 2. Mets le fichier `isnad-2.47-test.apk` sur le téléphone : câble USB (dossier *Download*), ou envoie-le-toi (Drive,
    courriel) et ouvre-le depuis le téléphone.
@@ -36,7 +36,7 @@ Pour qui a un ordinateur avec les outils Android : `adb install -r isnad-2.47-te
 
 **À vérifier au premier lancement** (rien de cela n'a pu l'être ici) : le jeu s'ouvre ; en hauteur et en largeur, ni la
 barre d'état ni la barre de navigation ne cachent un texte ou un bouton (elles sont masquées ; un glissement depuis le bord
-les fait paraître un instant) ; le son ; **Ta partie → Enregistrer le fichier** ouvre la feuille de partage ; **Partager ma
+les fait paraître un instant) ; le son ; **la halte → Exporter la partie → Enregistrer le fichier** ouvre la feuille de partage ; **Partager ma
 progression → Partager** aussi, avec l'image ; le bouton **Retour** revient d'un cran et ne ferme jamais le jeu ; quitter
 puis rouvrir l'application : « Continuer » est offert.
 
@@ -105,7 +105,10 @@ jarsigner -verify isnad-2.47-signe.aab        # doit dire « jar verified »
 
 **Réglé (et contrôlé dans `controle.txt`)** : identifiant `org.isnadgame.isnad` (proposé) ; version 2.47 (247) ; minSdk 24,
 targetSdk 36, compileSdk 36 (ce que Google Play exige) ; les deux orientations ; plein écran ; aucun trafic en clair ; la
-version publiée n'est pas débogable et le débogage de sa WebView est coupé ; aucune bibliothèque native (rien à aligner sur
+version publiée n'est pas débogable et le débogage de sa WebView est coupé ; **aucune sauvegarde automatique** (ni dans
+le compte Google du joueur, ni d'un téléphone à l'autre : `allowBackup="false"`, `data_extraction_rules.xml`), pour que la
+partie ne quitte jamais l'appareil, comme le disent la fiche « Sécurité des données » et la page « Confidentialité » — pour
+changer de téléphone, on enregistre le fichier de la partie ; aucune bibliothèque native (rien à aligner sur
 les pages de 16 Ko) ; le jeu embarqué est le paquet web, octet pour octet, plus Capacitor et le pont.
 
 **Autorisations** (manifeste fusionné) : `INTERNET` — posée d'office par Capacitor. Le jeu n'en a pas besoin (il ne
@@ -115,7 +118,9 @@ l'ôter après un premier essai sur un téléphone. La seconde ligne, `org.isnad
 est une permission interne posée par la bibliothèque AndroidX : elle ne protège que l'application elle-même et n'est
 jamais demandée au joueur.
 
-**À décider** : l'identifiant ; l'icône (les trois maillons d'or sur fond d'encre — une proposition) ; garder `INTERNET` ;
+**À décider** : la sauvegarde automatique (coupée aujourd'hui : la rouvrir garderait la partie au changement de téléphone,
+mais l'enverrait dans le compte Google du joueur, et la fiche « Sécurité des données » comme la page « Confidentialité »
+seraient à réécrire) ; l'identifiant ; l'icône (les trois maillons d'or sur fond d'encre — une proposition) ; garder `INTERNET` ;
 le public cible ; le texte de la fiche et la page de confidentialité (`textes-a-valider.md`) ; la clé des APK de test
 (aujourd'hui celle de débogage de la machine de l'agent : une mise à jour faite ailleurs oblige à désinstaller, donc à
 exporter la partie d'abord).

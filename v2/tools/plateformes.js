@@ -20,7 +20,8 @@ const charger = nom => { if (!/^[a-z0-9-]+$/.test(nom) || !cibles().includes(nom
   if (a[0] === 'essai') {
     if (a.length !== 2) throw new Error('essai : une cible à la fois (node v2/tools/plateformes.js essai web)');
     const m = charger(a[1]), fait = await m.faire(C);
-    const anomalies = await require(path.join(DOS, 'essai.js'))(C, a[1], m, fait);
+    // une cible qui a son propre essai (le site, CrazyGames) l'exporte ; sinon, l'essai commun d'un paquet de jeu
+    const anomalies = typeof m.essai === 'function' ? await m.essai(C, fait) : await require(path.join(DOS, 'essai.js'))(C, a[1], m, fait);
     process.exit(anomalies ? 1 : 0);
   }
   for (const nom of a[0] === 'tout' ? cibles() : a) await charger(nom).faire(C);

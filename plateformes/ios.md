@@ -41,7 +41,7 @@ node v2/tools/plateformes.js ios             # refait le projet et le zip (deman
 4. Onglet **General** : *Version* 2.47, *Build* 247 (posés par l'outil). *Display Name* : ISNAD.
 5. **Essayer d'abord** : en haut, choisis un simulateur (« iPhone 17 ») ou ton iPhone branché, puis **▶ (Product → Run)**.
    À vérifier : le jeu s'ouvre ; en hauteur et en largeur, l'encoche et la barre du bas ne cachent ni texte ni bouton ;
-   le son ; **Ta partie → Enregistrer le fichier** ouvre la feuille de partage (on peut choisir *Enregistrer dans Fichiers*) ;
+   le son ; **la halte → Exporter la partie → Enregistrer le fichier** ouvre la feuille de partage (on peut choisir *Enregistrer dans Fichiers*) ;
    **Partager ma progression → Partager**, avec l'image ; fermer l'application puis la rouvrir : « Continuer ».
 
 ## 4. Archiver et envoyer à TestFlight

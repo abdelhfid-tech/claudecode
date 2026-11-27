@@ -18,8 +18,13 @@ const VUES = [
     faire: async (p, o) => { await chapitre(p, 'abubakr', 0, { obj: 1 }); await zoom(p, o.tel ? 1.5 : 1.25); } },
   { nom: 'chaine', legende: 'La Chaîne', alt: 'L’écran de la Chaîne : les maillons, du premier au dernier, chacun avec son Compagnon et sa Lumière.',
     faire: async (p) => { await p.evaluate(() => { window.ISNAD.ui.showChain(); }); await p.waitForTimeout(1400); } },
-  { nom: 'combat', legende: 'Un combat', alt: 'Un combat au tour par tour : ‘Umar et ses compagnons face au Trône vide, une idole.',
-    faire: async (p) => { await chapitre(p, 'umar', 2, { obj: 0 }); await combat(p, ['trone'], { idole: true, fond: 'ville' }); } },
+  // le groupe de ‘Umar tel qu'il est au chapitre précédent (‘Umar et Aslam) : sur un téléphone, le nom de ‘Abd ar-Rahmân
+  // passe sous la jauge dans la rangée du combat (un défaut du jeu, à corriger dans le jeu), et son médaillon écrit son
+  // nom en arabe (question posée au décideur, exigence 8) — la vitrine ne les montre pas tant que ce n'est pas tranché
+  { nom: 'combat', legende: 'Un combat', alt: 'Un combat au tour par tour : ‘Umar et Aslam face au Trône vide, une idole.',
+    faire: async (p) => { await chapitre(p, 'umar', 2, { obj: 0, party: ['umar', 'aslam'] }); await combat(p, ['trone'], { idole: true, fond: 'ville' }); } },
+  // gardée, mais plus montrée sur le site (accueil.html) : dans ce camp, Râfi' ibn 'Umayra se tient derrière une tente, qui
+  // le cache jusqu'à la tête (un défaut du jeu, saga_khalid.js, à corriger dans le jeu) ; la vitrine prend la Cité à la place
   { nom: 'desert', legende: 'Au désert', alt: 'Un camp au désert, au couchant : Khâlid et ses compagnons près des tentes.',
     faire: async (p, o) => { await chapitre(p, 'khalid', 0, { obj: 4 }); await zoom(p, o.tel ? 1.5 : 1.25); } },
   { nom: 'labyrinthe', legende: 'La noosphère', alt: 'La noosphère : un labyrinthe tiré au hasard, sous un chrono.',
@@ -45,7 +50,7 @@ const VUES = [
 // ouvre un chapitre à un point de passage (comme Plateau.chapitre, v2/tools/shorts.js)
 async function chapitre(p, saga, ci, cp) {
   await p.evaluate(([saga, ci, cp]) => { const I = window.ISNAD, W = I.world, ch = I.sagas[saga].chapters[ci]; I.debug.auto = false; W.roster = {}; W.saga = null; window.__site.fait = false;
-    const pt = { party: ch.party, obj: cp.obj || 0, flags: {}, map: cp.carte || ch.map, opts: ch.opts || {}, pos: cp.lieu || ch.start, foes: [], chests: [], npcs: {} };
+    const pt = { party: cp.party || ch.party, obj: cp.obj || 0, flags: {}, map: cp.carte || ch.map, opts: ch.opts || {}, pos: cp.lieu || ch.start, foes: [], chests: [], npcs: {} };
     W.startChapter(saga, ci, pt).then(() => { window.__site.fait = true; }); }, [saga, ci, cp]);
   await p.waitForFunction(() => window.__site.fait, null, { timeout: 30000 });
   await p.waitForFunction(() => { const I = window.ISNAD; return !I.script.busy && !I.world.lock; }, null, { timeout: 20000 }).catch(() => {});

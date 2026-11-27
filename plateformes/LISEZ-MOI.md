@@ -3,6 +3,8 @@
 Le jeu (`v2/index.html`, assemblé par `v2/tools/build.js`) n'est pas modifié : chaque paquet se fait **à côté du jeu**, comme
 la démo jouable (`v2/tools/jouable.js`). L'outil est `v2/tools/plateformes.js` ; ses modules sont dans `v2/tools/plateformes/`.
 
+**Ce qui attend le décideur**, toutes plateformes ensemble : `a-decider.md`.
+
 ## Ce que contient ce dossier
 
 | Chemin | Rôle | Versionné |

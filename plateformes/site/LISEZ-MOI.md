@@ -46,6 +46,15 @@ isnad-site-<numéro>.zip        (le même dossier)
 .site-captures/                (les captures et les icônes, refaites quand le numéro du jeu change)
 ```
 
+## Avant de le mettre en ligne
+
+1. **Installer l'APK de test sur ton propre téléphone** (`plateformes/sortie/android/isnad-<numéro>-test.apk`), et y jouer
+   quelques minutes : l'agent n'a pu le lancer ni sur un téléphone ni sur un émulateur. La page « Tester » le propose au
+   public : elle ne doit le faire qu'une fois cet essai fait. Sinon, retire-le de `plateformes/sortie/android/` avant de
+   refaire le site : la page dit alors « Bientôt ».
+2. Relire `textes-a-valider.md`, et la page « Confidentialité », qui engage le projet (l'adresse de contact y est publiée).
+3. Renseigner `site.json` (le lien TestFlight, la page itch.io) quand ils existent.
+
 ## La sécurité
 
 `_headers` (Cloudflare Pages, Netlify) : HSTS (`max-age=31536000`, sans `includeSubDomains` ni `preload` : au décideur

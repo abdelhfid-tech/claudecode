@@ -33,22 +33,11 @@ Si l'on préfère le jeu **dans la page** : **960 × 540** (le format 16:9 de l'
 
 ## 4. Le texte de la page (proposition de l'agent, à valider)
 
-> **ISNAD — Chroniques des Compagnons**
-> *Savoir de qui l'on tient ce que l'on sait.*
->
-> Un JRPG en cinq récits : les Compagnons après la mort du Prophète ﷺ. En 2084, dans la Cité-Miroir, Idris, un
-> transmetteur, remonte la Chaîne des récits, maillon après maillon. Les ennemis sont des chimères — des idées, jamais
-> des personnes ni des peuples.
->
-> En français, en arabe (vocalisé ou non) et en anglais. Au clavier ou au doigt, en hauteur comme en largeur.
-> Sans achat, sans publicité, sans compte : rien n'est collecté.
->
-> **Version bêta. La relecture historique et religieuse par un spécialiste reste à faire.**
->
-> Ta partie se garde dans ton navigateur. Pour la mettre à l'abri ou changer d'appareil : *Halte → Ta partie →
-> Enregistrer le fichier*.
+Le texte prêt à coller est `plateformes/sortie/itch/page-itch.txt`, refait avec le zip. Son modèle est
+`plateformes/itch-page.txt` : on y change les phrases, jamais le nom, le sous-titre, la devise ni la réserve, qui
+viennent de `v2/tools/promotion.js` (`{{NOM}}`, `{{SOUS_TITRE}}`, `{{DEVISE}}`, `{{RESERVE}}`).
 
-La réserve (« Version bêta… ») doit rester sur la page : c'est la décision 39. Elle vient de `v2/tools/promotion.js`.
+La réserve doit rester sur la page : c'est la décision 39.
 Classement à proposer : genre *Role Playing* ; étiquettes *jrpg, pixel-art, history, story-rich* ; langues : français,
 arabe, anglais. Captures : celles du jeu (`node v2/tools/smoke.js shots`).
 

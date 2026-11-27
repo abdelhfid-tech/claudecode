@@ -2,7 +2,9 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android">
 
     <application
-        android:allowBackup="true"
+        android:allowBackup="false"
+        android:fullBackupContent="false"
+        android:dataExtractionRules="@xml/data_extraction_rules"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
@@ -35,6 +37,10 @@
                 android:resource="@xml/file_paths"></meta-data>
         </provider>
     </application>
+
+    <!-- Sauvegarde : aucune. allowBackup="false" (Android 11 et avant) et data_extraction_rules.xml (Android 12 et après :
+         ni sauvegarde dans le compte du joueur, ni copie d'un téléphone à l'autre) : la partie ne quitte jamais l'appareil,
+         comme le dit la page « Confidentialité ». Pour la mettre à l'abri ou changer de téléphone : « Enregistrer le fichier ». -->
 
     <!-- Autorisations. ISNAD n'appelle rien au-dehors : le jeu est dans l'application, polices comprises.
          INTERNET est celle que Capacitor pose d'office ; elle est gardée tant qu'on n'a pas prouvé, sur un téléphone,
