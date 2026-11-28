@@ -43,10 +43,16 @@ python -m radar gaps [--established]         écarts de disponibilité des apps
 python -m radar initiatives --buyer FR --seller MA [--strength F --window J]
 python -m radar ledger [--anchor]            journal de prédictions : chaîne, ancres, scores
 python -m radar rules                        validité et fraîcheur des règles par pays
+python -m radar reactive [--json]            candidats du jour pour le contenu réactif
+python -m radar reactive --post              … et envoi au flux n8n (RADAR_N8N_WEBHOOK, RADAR_N8N_TOKEN)
 python -m pytest -q                          tests (aucun appel réseau)
 ```
 
 `RADAR_WORKSPACE` choisit l'espace de travail (par défaut `./workspace`). `RADAR_CONTACT` ajoute un contact à l'identifiant envoyé aux sites, comme le demande la politique de Wikimedia ; il est vide par défaut.
+
+## Sur votre serveur
+
+Le dépôt est public : la collecte ne tourne pas sur GitHub, mais sur votre serveur, par cron. Installation, flux n8n du contenu réactif (Claude, validation sur Telegram, Blotato facultatif) et usage quotidien : [deploy/README.md](../../deploy/README.md).
 
 ## Règles de collecte
 

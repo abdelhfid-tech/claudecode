@@ -1,0 +1,9 @@
+# Radar d'arbitrage de tendances (installé par deploy/hostinger/install.sh). Heures en UTC.
+SHELL=/bin/sh
+PATH=/usr/local/bin:/usr/bin:/bin
+# Collecte complète, chaque jour
+17 5 * * * radar radar-run collect >> /var/log/radar-decalage/collect.log 2>&1
+# Tendances du jour de Google, toutes les 2 heures (le verrou évite tout chevauchement)
+41 */2 * * * radar radar-run collect --cadence hourly >> /var/log/radar-decalage/hourly.log 2>&1
+# Candidats du contenu réactif, envoyés au flux n8n si RADAR_N8N_WEBHOOK est réglé
+47 6 * * * radar radar-run reactive --post-if-set >> /var/log/radar-decalage/reactive.log 2>&1

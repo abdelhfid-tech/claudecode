@@ -5,7 +5,7 @@ Version 2, validée sur le principe le 28 novembre 2026.
 ## État d'avancement (28 novembre 2026)
 
 **Fait**
-- Collecteur des 6 sources gratuites (`plugins/radar-decalage/radar/`). Premier passage réel : 100 % des unités réussies, soit 32 classements App Store, 13 Google Play, 162 vérifications de disponibilité sur 27 vitrines, 3 flux Google Trends, 314 autocomplétions et 3 fichiers Wikimedia par pays. Durée : 17 minutes, ramenée à environ 14 en passant au flux historique d'Apple (le flux v2 a dépassé ses délais 11 fois). Volume : environ 730 Ko par jour compressés.
+- Collecteur des 6 sources gratuites (`plugins/radar-decalage/radar/`). Premier passage réel : 100 % des unités réussies, soit 32 classements App Store, 13 Google Play, 162 vérifications de disponibilité sur 27 vitrines, 3 flux Google Trends, 314 autocomplétions et 3 fichiers Wikimedia par pays. Durée : 17 minutes (le flux historique d'Apple, plus rapide, a été abandonné : son robots.txt l'interdit). Volume : environ 730 Ko par jour compressés.
 - Règles datées et sourcées par pays : rails de paiement, plateformes, réglementation, fiscalité et change.
 - Modules A (force du signal), B (délais d'arrivée et sentinelles), C (portes acheteur et vendeur), D (rendement des initiatives, avec la correction du défaut de coût horaire), journal de prédictions chaîné, analyse des écarts de disponibilité.
 - Plugin `radar-decalage` : 6 skills, 3 agents ; `claude plugin validate` passe.
@@ -14,6 +14,8 @@ Version 2, validée sur le principe le 28 novembre 2026.
   - une réponse Apple vide aurait marqué toutes les apps « indisponibles » sans alerte : c'est désormais un échec, et une absence n'est confirmée qu'après deux relevés négatifs.
   - Autres corrections : disjoncteur après un refus, Retry-After respecté, écriture atomique par exécution et verrou, jours Wikimedia repris après un échec, journal de prédictions protégé contre l'antidatage et la troncature (ancres), portes qui multiplient le score entier, calage des délais quand le P10 vaut 0.
 - Études complémentaires sur l'affiliation et sur Amazon KDP, l'impression à la demande et les places de marché : rédigées, contre-vérification en cours.
+- Module de contenu réactif, niveau A (section 3) : commande `radar reactive` (candidats du jour, envoi au webhook n8n avec un jeton), flux n8n prêt à importer (Claude choisit et rédige, validation par formulaire depuis Telegram, programmation Blotato facultative). 128 tests Python et 10 tests des nœuds n8n, sans réseau.
+- Kit de mise en service sur votre serveur Hostinger (`deploy/README.md`) : installation en une commande, collecte par cron, données hors de GitHub. Le contrôle GitHub ne fait plus que les tests.
 
 **Premiers signaux réels**
 - Écarts de disponibilité : Muse (agent IA de Meta) est n°1 au Canada, sortie il y a 2 mois, présente dans 6 vitrines sur 27, absente de France, du Maroc, de Belgique et du Sénégal. PineDrama (micro-dramas de TikTok) est n°16 aux USA, absente de France et du Maroc.
@@ -24,9 +26,9 @@ Version 2, validée sur le principe le 28 novembre 2026.
 
 **Constat de la grille sous vos contraintes** : avec 10 h par semaine et 1 000 € au plus, 15 des 19 archétypes de l'étude sont écartés (exploitation au-delà de 25 h par mois, ou construction au-delà de 12 mois). Il faut des versions réduites des services rentables, avec une offre à prix fixe, et les archétypes légers des études complémentaires.
 
-**En attente de vos réponses** : visibilité du dépôt, module de contenu réactif, synthèse hebdomadaire, structure juridique, Basma Home, contact pour l'identifiant envoyé à Wikimedia.
+**Vos réponses du 28 novembre** (détail en section 14) : dépôt public, contenu réactif au niveau A, structure juridique à définir, Basma Home sans lien avec le projet, serveur Hostinger avec n8n déjà disponible.
 
-**Prochaines étapes** : planification du pilote de 14 jours (après la décision sur le dépôt), intégration des archétypes complémentaires et des versions réduites, backtest pré-enregistré, tableau de bord, premier brief réel.
+**Prochaines étapes** : installation sur votre serveur et début du pilote de 14 jours, import du flux n8n, intégration des archétypes complémentaires et des versions réduites, backtest pré-enregistré, tableau de bord, premier brief réel.
 
 Ce plan s'appuie sur une étude préalable en 13 axes : sources de données, plugins Claude Code, méthode de scoring, marchés France, Maroc, Afrique et Québec, taxonomie, tendances US, concurrence, économie des initiatives. Chaque axe a été contre-vérifié par un agent indépendant. Le plan lui-même a été soumis à une critique adverse. La version 2 en tient compte. Les corrections principales sont en annexe A.
 
@@ -109,11 +111,19 @@ Ces données décident de ce qui est faisable : le pays du vendeur compte autant
 
 **Un critère d'arrêt pour le radar lui-même.** Si, à 12 semaines, le radar n'a déclenché aucun test de demande qui ne figurait pas déjà dans la liste a priori de l'étude, il est réduit à la collecte et à la veille des verrous. Rien ne justifie alors d'y passer plus de temps.
 
-**Module de contenu réactif (proposé, votre décision en section 14).** Les tendances de classe A (mèmes, formats, sorties mondiales) passent de l'anglais au français en quelques jours : entre −8 et +8 jours pour Squid Game ou Wordle. Construire un produit n'a alors aucun sens ; seule une publication rapide en tire parti. Le module fonctionne ainsi :
+**Module de contenu réactif (retenu au niveau A : rien n'est publié sans votre validation).** Les tendances de classe A (mèmes, formats, sorties mondiales) passent de l'anglais au français en quelques jours : entre −8 et +8 jours pour Squid Game ou Wordle. Construire un produit n'a alors aucun sens ; seule une publication rapide en tire parti. Le module fonctionne ainsi :
 - Quand une tendance de classe A monte aux USA sans équivalent en français ou en darija, le radar prépare dans la journée un court paquet : post, carrousel ou script de vidéo courte.
 - Vous validez sur téléphone, en 15 minutes environ, puis la publication est planifiée.
 - Le volume est plafonné à 2 ou 3 contenus par semaine.
 - La règle est « l'IA en coulisses, l'humain en façade », avec l'étiquetage exigé par l'AI Act.
+
+Mise en œuvre (`deploy/`, `radar/reactive.py`) :
+- **Deux entrées.** Chaque matin, le radar envoie au plus 8 candidats à votre n8n : tendances du jour aux USA absentes en France, pages Wikipedia nouvelles dans le top US, apps récentes absentes en France ou au Maroc. Les sources gratuites captent des événements plus que des formats : un formulaire n8n vous permet donc d'ajouter une tendance vue sur TikTok ou Instagram.
+- **Tri.** Le code écarte le sport, la politique, les drames et les candidats déjà envoyés depuis moins de 14 jours. Claude écarte ensuite l'actualité sans angle utile et choisit au plus un candidat.
+- **Brouillon.** Post en français, en darija latine et en darija arabe, ou script de vidéo courte, avec la liste des faits à vérifier et le signalement des visuels IA. La sortie suit un schéma JSON strict.
+- **Validation.** Le brouillon arrive sur Telegram avec un lien vers un formulaire « Programmer » ou « Rejeter », valable 48 heures. Un formulaire plutôt qu'un lien direct, pour qu'un aperçu de lien ne puisse rien déclencher.
+- **Publication.** Avec Blotato, les textes validés sont programmés au prochain créneau libre sur vos comptes texte. Les vidéos ne sont jamais publiées automatiquement. Sans Blotato, vous recevez le texte à publier vous-même.
+- **Coût** : 5 à 10 centimes d'API Claude par brouillon, plus Blotato (29 $ par mois) si vous le prenez.
 
 Ce module n'est pas un archétype « contenu produit en masse ». Celui-ci est le dernier de la grille économique dans tous les pays (chaîne sans visage : 35 sur 100 en France ; SEO programmatique : 40), parce que les plateformes le pénalisent :
 - YouTube démonétise les contenus génériques ou répétitifs, et vise les personnages IA sur les sujets sensibles.
@@ -286,15 +296,16 @@ Le nom `radar-decalage` remplace `trend-radar`, qui existe déjà ailleurs. Le c
 
 - **Un seul écrivain par fichier**, données en texte, en ajout seul.
 - **La base SQLite est reconstruite** à chaque exécution à partir des fichiers et ignorée par git : un fichier binaire ne se fusionne pas.
-- **Les instantanés vont sur une branche de données dédiée**, écrite par le seul collecteur.
+- **Les données restent sur votre serveur** (`/var/lib/radar-decalage`), écrites par le seul collecteur. Le dépôt étant public, rien n'est publié sur GitHub.
 - **Les propositions de Claude arrivent par une demande de fusion** que vous validez pendant votre heure de revue : c'est le moment de la validation humaine, dont celle des mots-clés en darija.
 
 ### 8.3 Exécution
 
 | Tâche | Exécuteur | Écrit dans |
 |---|---|---|
-| Collecte quotidienne et horaire | Candidats : GitHub Actions (gratuit, sans IA) ou tâche planifiée Claude. Le pilote de 14 jours tranche sur le taux de succès réel par source | branche de données |
-| Calculs hebdomadaires (détection, statut, prédictions, rapport) | même exécuteur, code seul | branche de données, journal |
+| Collecte quotidienne et horaire | cron sur votre serveur Hostinger (code seul, sans IA). Le pilote de 14 jours mesure le taux de succès réel par source | `/var/lib/radar-decalage` |
+| Candidats du contenu réactif | même cron, puis votre n8n (Claude, Telegram, Blotato facultatif) | votre téléphone, vos comptes |
+| Calculs hebdomadaires (détection, statut, prédictions, rapport) | même exécuteur, code seul | serveur, journal |
 | Propositions de Claude et décision de la semaine | tâche planifiée Claude Code, budget fixé par exécution | demande de fusion, rapport |
 | Brief et kit | vous, en session | `workspace/initiatives/` |
 
@@ -302,6 +313,7 @@ Points à éprouver avant la planification définitive :
 - **Un « Run now » de la tâche hebdomadaire**, pour mesurer son coût en tokens et vérifier quelle branche elle peut écrire. Un clone neuf repart de la branche par défaut, et une tâche cloud pousse sur une branche `claude/…`.
 - **Un test de republication d'un Artifact** depuis la tâche. La version de référence du tableau de bord reste le fichier du dépôt, déployable sur Vercel.
 - **Le chargement du plugin dans une tâche planifiée.** Les tâches cloud ne chargent ni les plugins installés côté utilisateur ni les marketplaces déclarées dans le dépôt. La tâche s'appuie donc sur le CLI et sur un runbook versionné, pas sur les skills.
+- **L'accès de la tâche hebdomadaire aux données**, qui sont sur votre serveur et non dans le dépôt : Claude Code installé sur le serveur, ou export agrégé et publiable. À trancher après le pilote.
 
 **Budget par exécution.** Les étapes déterministes passent d'abord et sont commitées ; les étapes de Claude sont reprenables. Hors session interactive, atteindre la limite d'usage fait échouer les agents au lieu de les mettre en pause. Le contre-vérificateur ne travaille que sur le brief retenu et lit des adresses connues plutôt que de lancer des recherches. Une requête triviale avec une trentaine de plugins synchronisés consomme déjà environ 53 000 tokens d'entrée : la tâche planifiée tourne avec le strict nécessaire.
 
@@ -353,8 +365,8 @@ Les commandes qui publient ou dépensent ne se déclenchent jamais seules.
 | Publicités et audiences TikTok | TikTok for Business | connexion incomplète | V2, à finaliser |
 | Skills déjà installés et réutilisés | frontend-design, anti-ai-writing, marketing:content-creation, small-business:social-content-engine, small-business:seo-ai-visibility, dataviz | disponibles | V1 |
 | Données payantes | DataForSEO, Apify ou ScrapeCreators, X, Exa ou Firecrawl, Similarweb, Ahrefs | non branchés | Quand le budget s'ouvre |
-| Publication et automatisation des réseaux, avec IA intégrée | Blotato (API et MCP inclus dans toutes les offres ; 29, 97 ou 197 $ par mois, sans offre gratuite, grille du 24/11/2026) | non branché | Seulement si une initiative validée paie l'abonnement ; Postiz, déjà connecté, couvre la V1 |
-| Automatisation de workflows | n8n (édition communautaire auto-hébergée gratuite ; licence d'usage interne, pas de revente comme service hébergé) ; connecteur n8n de l'annuaire Claude | connecteur non installé | Pour les initiatives (automatisations de clients, modèles), pas pour le radar : le code Python et GitHub Actions suffisent, et un serveur de plus coûterait sur l'heure de maintenance |
+| Publication et automatisation des réseaux, avec IA intégrée | Blotato (API et MCP inclus dans toutes les offres ; 29, 97 ou 197 $ par mois, sans offre gratuite, grille du 24/11/2026) | prévu dans le flux n8n, facultatif | Programme les textes validés. Sans abonnement, vous publiez vous-même ; Postiz, déjà connecté, reste une alternative |
+| Automatisation de workflows | n8n (édition communautaire auto-hébergée gratuite ; licence d'usage interne, pas de revente comme service hébergé) ; connecteur n8n de l'annuaire Claude | déjà sur votre serveur Hostinger | Flux du contenu réactif (`deploy/n8n/`), puis les initiatives (automatisations de clients, modèles). La collecte reste en Python : elle n'a pas besoin de n8n |
 | Modèles prêts à adapter | Bibliothèque gratuite de Sabrina Ramonov (plus de 1 000 modèles n8n et Make, reliés à Blotato) | gratuite | Points de départ pour les kits, à vérifier un par un : c'est aussi du marketing pour Blotato |
 
 ---
@@ -395,7 +407,7 @@ Les commandes qui publient ou dépensent ne se déclenchent jamais seules.
 **Licences**
 - Usage interne en V1. Chaque source porte un champ « publiable » ; Product Hunt, Pinterest et les points d'accès Google ne le sont pas.
 - Tout ce qui sera publié un jour, prédictions publiques comprises, ne repose que sur des sources publiables : Wikimedia, recherche App Store, pages officielles.
-- **Le dépôt est public aujourd'hui : il ne doit pas recevoir de données brutes non publiables** (décision en section 14).
+- **Le dépôt reste public (votre décision) : il ne reçoit aucune donnée brute.** La collecte et les données sont sur votre serveur ; GitHub ne fait que les tests.
 
 **Budget**
 - 0 € appliqué par le code : les adaptateurs payants existent mais sont désactivés.
@@ -425,8 +437,8 @@ Ce sont des hypothèses issues de la recherche documentaire, à placer en liste 
 
 La collecte passe en premier, parce qu'une arrivée non capturée ne se date plus.
 
-1. **Collecteur minimal planifié dès la première semaine** : disponibilité et classements App Store sur environ 25 vitrines, Google Play, autocomplétion historisée, Wikimedia par pays filtré, tendances du jour. Écriture en JSONL sur la branche de données.
-2. **Pilote de 14 jours sur l'exécuteur réel** : taux de succès par source et par jour, maintien d'une source si elle répond au moins 90 % des jours, quota par hôte, repli payant activable source par source.
+1. **Collecteur minimal planifié dès la première semaine** : disponibilité et classements App Store sur environ 25 vitrines, autocomplétion historisée, Wikimedia par pays filtré, tendances du jour. Écriture en JSONL sur votre serveur.
+2. **Pilote de 14 jours sur votre serveur** : taux de succès par source et par jour, maintien d'une source si elle répond au moins 90 % des jours, quota par hôte, repli payant activable source par source.
 3. Pendant le pilote : schéma de données typé, profil, règles datées, statuts, portes, initiatives, journal.
 4. Backtest pré-enregistré, cas connus et cohorte non choisie.
 5. Plugin `radar-decalage` : skills, agents, hooks, runbooks, validation (`claude plugin validate --strict`) et contrôle de CI.
@@ -437,13 +449,21 @@ La collecte passe en premier, parce qu'une arrivée non capturée ne se date plu
 
 ---
 
-## 14. Décisions à prendre avec vous
+## 14. Décisions
 
-1. **Validation du plan**, ou corrections.
-2. **Profil du fondateur** : résidence fiscale et structure, lecture et écriture de la darija, canaux et audiences que vous possédez déjà.
-3. **Visibilité du dépôt** : le passer en privé (recommandé : les données de certaines sources ne sont pas redistribuables), ou le garder public et stocker les données brutes ailleurs.
+**Prises le 28 novembre 2026**
+1. **Plan** : validé dans son principe.
+2. **Profil** : résident en France et au Maroc, darija maîtrisée, aucun canal ni audience existants. Basma Home (SARL de vente au détail à Fès) n'a aucun lien avec ce projet : elle n'entre pas dans le profil.
+3. **Dépôt** : reste public. Conséquence : aucune donnée collectée n'y entre ; la collecte tourne sur votre serveur Hostinger.
+4. **Contenu réactif** : niveau A, brouillons validés par vous avant toute publication (section 3).
+5. **Structure juridique** : à définir. À vérifier avec un expert-comptable avant le premier encaissement : micro-entreprise en France, auto-entrepreneur au Maroc, ou facturation par une société existante si son objet le permet. Les portes acheteur et vendeur du radar (module C) en dépendent.
+6. **Identifiant envoyé aux sites** : générique. Wikimedia demande un moyen de joindre l'opérateur d'un robot ; un identifiant générique est accepté. Un contact peut être ajouté plus tard par le réglage `RADAR_CONTACT`, sur votre seul accord.
+
+**Restent ouvertes**
+1. **Comptes de publication** : lesquels créer en premier (un ou deux au plus, par exemple LinkedIn en français et Threads ou Instagram en darija).
+2. **Écriture de la darija** par défaut : latine, arabe, ou les deux.
+3. **Abonnement Blotato** (29 $ par mois) : maintenant, ou après les premiers contenus validés à la main.
 4. **Synthèse hebdomadaire publiée par vous** à partir de la semaine 4 : oui ou non.
-5. **Module de contenu réactif** en V1 : oui ou non, et à quel niveau d'automatisation. Trois choix : brouillons validés par vous (recommandé), planification automatique après validation en un clic, ou publication entièrement automatique (déconseillée). Préciser sur quels comptes vous publieriez.
 
 ---
 

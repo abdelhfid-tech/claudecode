@@ -242,6 +242,32 @@ def cmd_rules(args: argparse.Namespace) -> int:
     return 1
 
 
+def cmd_reactive(args: argparse.Namespace) -> int:
+    import os
+
+    from . import reactive
+
+    if args.post_if_set:
+        args.post = bool(os.environ.get("RADAR_N8N_WEBHOOK", "").strip())
+    url = args.url or (os.environ.get("RADAR_N8N_WEBHOOK", "").strip() if args.post else "")
+    if args.post and not url:
+        print("aucune adresse de webhook : définissez RADAR_N8N_WEBHOOK ou passez --url", file=sys.stderr)
+        return 2
+    out = reactive.run(datetime.now(timezone.utc), post_url=url or None,
+                       token=os.environ.get("RADAR_N8N_TOKEN", "").strip() or None, dry_run=args.dry_run)
+    if args.json:
+        print(json.dumps(out, ensure_ascii=False, indent=1))
+        return 0
+    print(f"{len(out['candidates'])} candidats pour le contenu réactif")
+    for c in out["candidates"]:
+        print(f"  [{c['kind']}] {c['title'][:60]}  FR : {c['presence'].get('FR')}  MA : {c['presence'].get('MA')}")
+    if out["post_status"] is not None:
+        ok = 200 <= out["post_status"] < 300
+        print(f"envoi au flux n8n : HTTP {out['post_status']}{'' if ok else ' (échec)'}")
+        return 0 if ok else 1
+    return 0
+
+
 def build_parser() -> argparse.ArgumentParser:
     p = argparse.ArgumentParser(prog="radar", description="Radar d'arbitrage de tendances (radar-decalage)")
     p.add_argument("--version", action="version", version=__version__)
@@ -277,6 +303,14 @@ def build_parser() -> argparse.ArgumentParser:
     lg.add_argument("--anchor", action="store_true", help="noter l'empreinte de tête, à publier hors du dépôt")
     lg.set_defaults(func=cmd_ledger)
     sub.add_parser("rules", help="contrôler les règles par pays (validité, péremption)").set_defaults(func=cmd_rules)
+    rc = sub.add_parser("reactive", help="candidats du jour pour le contenu réactif (et envoi au flux n8n)")
+    rc.add_argument("--post", action="store_true", help="envoyer au webhook n8n (RADAR_N8N_WEBHOOK, RADAR_N8N_TOKEN)")
+    rc.add_argument("--post-if-set", action="store_true",
+                    help="envoyer seulement si RADAR_N8N_WEBHOOK est réglé (pour la tâche planifiée)")
+    rc.add_argument("--url", help="adresse du webhook, à la place de RADAR_N8N_WEBHOOK")
+    rc.add_argument("--json", action="store_true")
+    rc.add_argument("--dry-run", action="store_true", help="calculer sans rien écrire ni envoyer")
+    rc.set_defaults(func=cmd_reactive)
     return p
 
 

@@ -1,0 +1,30 @@
+# Module de contenu réactif (niveau A : brouillons validés par vous avant toute publication).
+#
+# Le radar prépare chaque jour une courte liste de candidats ; le flux n8n en choisit au plus
+# un, rédige un brouillon avec Claude et vous l'envoie pour validation. Rien n'est publié
+# sans votre accord.
+
+max_candidates = 8
+resend_after_days = 14      # un candidat déjà envoyé n'est pas renvoyé avant ce délai
+
+# Exclusions grossières faites par le code ; le tri fin (actualité, sport, célébrités) est fait
+# par Claude dans le flux n8n. Expressions régulières, insensibles à la casse.
+exclude_patterns = [
+  "\\bvs\\.?\\b", " – ", " - ", "\\bcontre\\b", "\\bضد\\b",
+  "football", "basketball", "baseball", "hockey", "soccer", "\\bnfl\\b", "\\bnba\\b", "\\bufc\\b", "\\bwwe\\b",
+  "_\\(american_football\\)", "_\\(basketball\\)", "_\\(footballer\\)", "_\\(rapper\\)",
+  "^main_page$", "^special:", "^wikipedia:", "^list_of", "^deaths_in", "^\\d{4}(_in|$)",
+  "election", "élection", "guerre", "\\bwar\\b", "shooting", "fusillade", "obituary", "\\bdies\\b", "décès",
+]
+
+[gtrends]
+days = 2                    # derniers jours de tendances du jour pris en compte
+min_traffic = 1000          # trafic minimal annoncé par Google (« 1K+ »)
+
+[wikimedia]
+min_views = 20000           # vues minimales de la page aux USA le dernier jour
+lookback_from_days = 3      # « nouvelle » : absente du top US entre J-8 et J-3
+lookback_to_days = 8
+
+[apps]
+max = 3                     # apps récentes fortes aux USA, absentes en France ou au Maroc
