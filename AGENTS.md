@@ -699,7 +699,8 @@ Le détail est dans `docs/schema-saga.md`. À retenir :
   fil des annonces, avec sa langue secondaire, et rend la main aussitôt ; Idris marche pendant qu'elle se lit. Elle sert à
   l'arrivée dans un lieu, quand rien n'est à suivre ni à répondre ; un dialogue, une scène, un carton, une parole citée ou
   ce qui précède un choix restent bloquants (`say`, `nar`, `title`, `quote`). Au plus 240 signes (`regles.js`) ; les langues
-  la relèvent comme `nar` (`langue.js`), et `longueurs.js` la mesure dans le fil.
+  la relèvent comme `nar` (`langue.js`), et `longueurs.js` la mesure dans le fil ; là où elle ne tient pas au-dessus de la
+  manette, le moteur la partage en pages, coupées comme celles d'une réplique (`S.legende`).
 - L'idole d'un chapitre (le membre de plus haut palier d'un combat lancé avec `boss: true`) porte une
   `racine` prise dans `D.RACINES`. Aucun combattant, aucune compétence, aucun personnage ne porte le nom
   d'Iblîs, d'un démon ou d'un djinn : le validateur le refuse.

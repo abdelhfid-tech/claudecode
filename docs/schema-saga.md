@@ -255,7 +255,7 @@ Un PNJ ou un `foe` peut vivre sur une autre carte que celle du chapitre via `map
 |---|---|
 | `['say', qui, texte]` | réplique. `qui` = id de héros / id de PNJ / nom libre (« Un bédouin »). ≤ 300 caractères |
 | `['nar', texte]` | narration (voix de la Chaîne). ≤ 340 caractères |
-| `['legende', texte]` | 2.x (2.49, D242) : narration qui ne retient pas le joueur — posée dans le fil des annonces (avec sa langue secondaire), le temps de la lire ; le script continue et Idris marche. Pour l'arrivée dans un lieu, quand rien n'est à suivre ni à répondre ; jamais devant un choix, une parole citée ou une scène. ≤ 240 caractères |
+| `['legende', texte]` | 2.x (2.49, D242) : narration qui ne retient pas le joueur — posée dans le fil des annonces (avec sa langue secondaire), le temps de la lire ; le script continue et Idris marche. Pour l'arrivée dans un lieu, quand rien n'est à suivre ni à répondre ; jamais devant un choix, une parole citée ou une scène. Si elle ne tient pas au-dessus de la manette, le moteur la partage en pages. ≤ 240 caractères |
 | `['quote', texte, source]` | parole attestée, carton solennel avec la source |
 | `['title', grand, petit]` | carton-titre |
 | `['choice', question, [{t, ok:true, r:[ops]}, {t, r:[ops]}…]]` | choix de fidélité (cf. §1) : une seule `ok:true` ; chaque option fausse a un `r` explicatif |

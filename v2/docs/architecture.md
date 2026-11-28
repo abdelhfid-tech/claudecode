@@ -1683,7 +1683,13 @@ un carton du récit ou une ligne du fil la même chose dans une autre langue —
     lecture au moins 3 s. Elle a sa mise en page (`#toasts.recit` : plus large, de deux à trois lignes ; en hauteur, en
     15 points). Elle sert aux arrivées de 2084 — la rue, les quartiers et la ruelle du prologue, l'arrivée du refuge, la
     Citadelle —, texte inchangé ; un dialogue, une scène, un carton ou ce qui précède un choix restent bloquants.
-    `longueurs.js` la mesure dans le fil (partie 4).
+    Elle tient entre le haut du fil et, en hauteur, la bande de la manette (le bas de l'écran si elle est masquée), ailleurs
+    le bas de l'écran ; sinon (un petit téléphone, une langue secondaire), elle se partage en pages (`S.pagesLegende`,
+    `S.legende`), coupées comme celles d'une réplique — entre deux phrases, puis deux membres, puis deux mots, jamais au
+    milieu d'un mot, l'italique refermé et rouvert —, qui passent l'une après l'autre, chacune le temps de la lire ; le
+    texte ne change pas d'un signe, et la halte la garde entière, une fois. Sa langue secondaire, mise en forme comme le
+    texte, vient avec la dernière page si elles tiennent ensemble, sinon en pages à part, après elle. `longueurs.js` la
+    mesure dans le fil, page par page, et vérifie que les pages redonnent le texte (partie 4).
   - Le combat ne vide plus `#toasts` : le fil s'y tait, et ce qui y attend passe après. La Chaîne, elle, vide la file
     (`S.filVide`) : le récit est quitté. L'écran-titre aussi, depuis la 2.48 (D240), sauf ce qui est urgent (`S.filVide(true)` : un incident du chargement s'y lit jusqu'au bout) : sans quoi une leçon d'un récit quitté
     par « Écran-titre » paraissait dans celui qu'on reprenait par la liste de « Continuer ».

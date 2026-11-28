@@ -2749,7 +2749,9 @@ pages privées de son compte.
   - **Marcher pendant les narrations d'arrivée** : une opération de récit nouvelle, `['legende', texte]` (`D.OPS`,
     `docs/schema-saga.md`), pose la phrase dans le fil des annonces, avec sa langue secondaire, et rend la main aussitôt ;
     Idris marche pendant qu'elle se lit. Une ligne de récit a un temps fait pour la prose (de 4 à 22 secondes selon sa
-    longueur), n'est jamais retirée pour faire place, et a sa mise en page (plus large, en deux ou trois lignes). Douze
+    longueur), n'est jamais retirée pour faire place, et a sa mise en page (plus large, en deux ou trois lignes) ; là où elle
+    ne tient pas au-dessus de la manette (un petit téléphone, une langue secondaire), elle passe en pages, coupées comme
+    celles d'une réplique, l'une après l'autre, sans qu'un signe change (relevé par `longueurs.js`). Douze
     narrations d'arrivée de 2084 passent de `nar` à `legende`, texte inchangé au signe près : la rue, les quartiers, la
     ruelle (le prologue, objectifs 1 à 3) ; l'arrivée du refuge par la rue, par la porte, et les deux de la première
     arrivée ; les trois de la Citadelle. Les dialogues, les cartons et les scènes ne changent pas. Leurs textes arabe,
