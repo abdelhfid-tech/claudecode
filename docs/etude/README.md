@@ -1,6 +1,6 @@
 # Étude préalable du radar de tendances
 
-Quinze dossiers rédigés le 28 novembre 2026, chacun suivi d'une section « Contre-vérification » écrite par un agent indépendant (en cours pour les deux études complémentaires, affiliation et KDP). Le plan qui en découle est dans [../PLAN.md](../PLAN.md).
+Quinze dossiers rédigés le 28 novembre 2026, chacun suivi d'une section « Contre-vérification » écrite par un agent indépendant. Le plan qui en découle est dans [../PLAN.md](../PLAN.md).
 
 Les fichiers `.json` contiennent la sortie structurée de chaque dossier : constats clés, sources de données testées, tendances. Les dossiers marchés France et Maroc n'en ont pas.
 
