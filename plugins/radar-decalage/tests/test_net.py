@@ -178,3 +178,38 @@ def test_missing_robots_allows_unreachable_robots_denies():
                                    {"b.test": {"min_interval": 0, "max_retries": 2, "backoff": 0}}, robots=True)
     r = client.request("https://b.test/x")
     assert r.status is None and "robots" in r.error
+
+
+def test_unreachable_robots_uses_the_last_known_copy(tmp_path):
+    cache = tmp_path / "robots_cache.json"
+    cache.write_text('{"h.test": {"text": "User-agent: *\\nDisallow: /private\\n", "fetched": "2026-11-27T00:00:00+00:00"}}')
+    clock = Clock()
+    script = [urllib.error.URLError("down"), FakeResp(200, b"ok")]
+
+    def opener(req, timeout):
+        item = script.pop(0)
+        if isinstance(item, Exception):
+            raise item
+        return item
+
+    client = HttpClient({"h.test": {"min_interval": 0, "max_retries": 0}}, opener=opener, sleep=clock.sleep,
+                        clock=clock.now, robots_cache_path=cache)
+    assert client.request("https://h.test/public").ok           # dernière copie : /public autorisé
+    assert "robots" in (client.request("https://h.test/private/x").error or "")
+
+
+def test_unreachable_robots_without_copy_is_retried_after_a_minute():
+    clock = Clock()
+    script = [urllib.error.URLError("down"), FakeResp(200, b"User-agent: *\n"), FakeResp(200, b"ok")]
+
+    def opener(req, timeout):
+        item = script.pop(0)
+        if isinstance(item, Exception):
+            raise item
+        return item
+
+    client = HttpClient({"h.test": {"min_interval": 0, "max_retries": 0}}, opener=opener, sleep=clock.sleep,
+                        clock=clock.now)
+    assert "robots" in client.request("https://h.test/a").error  # on s'abstient
+    clock.t += 61
+    assert client.request("https://h.test/a").ok                 # nouvelle lecture réussie

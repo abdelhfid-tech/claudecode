@@ -19,6 +19,9 @@ class FakeClient:
         self.stats = {}
         self.blocked = {}
 
+    def save_robots_cache(self):
+        pass
+
     def download(self, url, dest, headers=None):
         r = self.request(url)
         if r.ok:

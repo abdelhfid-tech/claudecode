@@ -78,7 +78,7 @@ def cmd_collect(args: argparse.Namespace) -> int:
 
 
 def _collect(args, sources_cfg, sources_raw, zones, zone_filter, only, data_dir) -> int:
-    client = HttpClient(host_policies=sources_raw.get("host", {}))
+    client = HttpClient(host_policies=sources_raw.get("host", {}), robots_cache_path=data_dir / "robots_cache.json")
     store = RawStore(data_dir)
     runlog = RunLog(data_dir)
     watch = Watchlist(paths.workspace() / "watchlist.json")
@@ -127,6 +127,8 @@ def _collect(args, sources_cfg, sources_raw, zones, zone_filter, only, data_dir)
               f"{' (essai, rien écrit)' if args.dry_run else ''}")
         for err in result.errors[:3]:
             print(f"    - {err}")
+    if not args.dry_run:
+        client.save_robots_cache()
     for host, reason in sorted(client.blocked.items()):
         print(f"hôte coupé pendant l'exécution : {host} ({reason})", file=sys.stderr)
     for w in store.warnings:

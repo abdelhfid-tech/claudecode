@@ -3,7 +3,9 @@
 Règles de collecte du plan :
 - robots.txt est lu pour chaque hôte et respecté (RFC 9309 : groupe de l'agent ou « * »,
   jokers « * » et « $ », règle la plus longue gagnante, « Allow » à égalité ; fichier absent
-  en 4xx = tout autorisé ; hôte injoignable ou 5xx = tout interdit pour l'exécution) ;
+  en 4xx = tout autorisé). Hôte injoignable ou 5xx : la dernière copie obtenue fait foi
+  (RFC 9309, section 2.4) ; sans copie connue, tout est interdit et une nouvelle lecture
+  est tentée une minute plus tard ;
 - un 403, ou un 429 qui persiste après les reprises, coupe l'hôte pour le reste de
   l'exécution (disjoncteur) : on ne contourne jamais un refus ;
 - seuls 429, 5xx et les erreurs réseau déclenchent une reprise ; Retry-After est
@@ -32,6 +34,7 @@ from . import __version__
 RETRYABLE = {429, 500, 502, 503, 504}
 NETWORK_ERRORS = (urllib.error.URLError, TimeoutError, ConnectionError, OSError, http.client.HTTPException)
 AGENT_TOKEN = "radar-decalage"
+ROBOTS_RETRY_S = 60.0
 
 DEFAULT_POLICY = {"min_interval": 1.0, "max_retries": 2, "backoff": 2.0, "max_retry_after": 60.0, "timeout": 30.0}
 
@@ -141,6 +144,7 @@ class HttpClient:
         sleep: Callable[[float], None] = time.sleep,
         clock: Callable[[], float] = time.monotonic,
         respect_robots: bool = True,
+        robots_cache_path: Path | None = None,
     ):
         self.host_policies = host_policies or {}
         self.user_agent = user_agent or default_user_agent()
@@ -150,6 +154,14 @@ class HttpClient:
         self._last: dict[str, float] = {}
         self.respect_robots = respect_robots
         self.robots: dict[str, Robots] = {}
+        self._robots_retry_at: dict[str, float] = {}
+        self.robots_cache_path = Path(robots_cache_path) if robots_cache_path else None
+        self.robots_cache: dict[str, dict[str, str]] = {}
+        if self.robots_cache_path and self.robots_cache_path.exists():
+            try:
+                self.robots_cache = json.loads(self.robots_cache_path.read_text(encoding="utf-8"))
+            except (json.JSONDecodeError, OSError):
+                self.robots_cache = {}
         self.blocked: dict[str, str] = {}
         self.stats: dict[str, dict[str, int]] = {}
 
@@ -174,15 +186,31 @@ class HttpClient:
     def robots_for(self, url: str) -> Robots:
         u = urlparse(url)
         host = u.hostname or ""
-        if host not in self.robots:
-            r = self._fetch(f"{u.scheme}://{host}/robots.txt", check=False)
-            if r.ok:
-                self.robots[host] = Robots.parse(r.text())
-            elif r.status is not None and 400 <= r.status < 500 and r.status != 429:
-                self.robots[host] = Robots(allow_all=True)       # pas de robots.txt : tout est permis
-            else:
-                self.robots[host] = Robots(deny_all=True)        # injoignable : on s'abstient
+        known = self.robots.get(host)
+        if known is not None and not (known.deny_all and self._clock() >= self._robots_retry_at.get(host, 0)):
+            return known
+        r = self._fetch(f"{u.scheme}://{host}/robots.txt", check=False)
+        if r.ok:
+            text = r.text()
+            self.robots[host] = Robots.parse(text)
+            self.robots_cache[host] = {"text": text, "fetched": datetime.now(timezone.utc).isoformat()}
+        elif r.status is not None and 400 <= r.status < 500 and r.status != 429:
+            self.robots[host] = Robots(allow_all=True)        # pas de robots.txt : tout est permis
+            self.robots_cache[host] = {"text": "", "fetched": datetime.now(timezone.utc).isoformat()}
+        elif host in self.robots_cache:
+            self.robots[host] = Robots.parse(self.robots_cache[host]["text"])  # injoignable : dernière copie
+        else:
+            self.robots[host] = Robots(deny_all=True)         # injoignable, sans copie : on s'abstient
+            self._robots_retry_at[host] = self._clock() + ROBOTS_RETRY_S
         return self.robots[host]
+
+    def save_robots_cache(self) -> None:
+        if self.robots_cache_path is None:
+            return
+        self.robots_cache_path.parent.mkdir(parents=True, exist_ok=True)
+        tmp = self.robots_cache_path.with_name(self.robots_cache_path.name + ".tmp")
+        tmp.write_text(json.dumps(self.robots_cache, ensure_ascii=False, indent=1, sort_keys=True), encoding="utf-8")
+        tmp.replace(self.robots_cache_path)
 
     def request(self, url: str, data: bytes | None = None, headers: dict[str, str] | None = None,
                 method: str | None = None) -> Response:
