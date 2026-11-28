@@ -357,3 +357,367 @@ as_of = 2026-11-28
 date_regle = "Règlement (CE) n° 1935/2004 ; page ministérielle publiée le 15/04/2024 ; arrêté de 1985 modifié le 23/05/2006 (copie FAOLEX)"
 source = "https://www.entreprises.gouv.fr/fr/echanges-commerciaux-et-reglementation/libre-circulation-des-produits/materiaux-au-contact-de-denrees-alimentaires ; https://faolex.fao.org/docs/pdf/fra64422.pdf"
 preuve = "F2"
+
+# ---------- Maroc (recherche du 28/11/2026, 25 dispositifs) ----------
+# Incertitudes relevées : tax.gov.ma, douane.gov.ma et Maroc PME inaccessibles (CGI 2026 lu dans l'édition DGI
+# reproduite) ; taux ligne par ligne non consultés ; PLF 2027 (avance de 3 %) non adopté ; renouvellement de la
+# liste négative turque après mai 2026 inconnu ; inclusion du Maroc dans le droit zéro chinois vue dans la presse
+# seulement ; un auto-entrepreneur qui achète à l'étranger pour revendre est-il « marchand importateur » ? non
+# tranché ; autorité des compléments alimentaires (ONSSA ou AMMPS) contradictoire. Désaccord entre les deux
+# recherches sur les frais européens de 2 € : appliqués depuis le 01/11/2026 (France/UE, preuve F) ou montant non
+# encore fixé (Maroc, non vérifié) : la fiche eu_frais_traitement_petits_colis fait foi jusqu'à relecture.
+
+# 1. Douane à l'importation
+[[dispositif]]
+id = "ma_di_droit_commun"
+pays = "MA"
+sens = "freine"
+categorie = "douane"
+s_applique_a = ["produit_importe", "colis_ecommerce"]
+titre = "Droit d'importation de droit commun (pays sans accord) : 30 % le plus souvent pour les produits finis"
+resume = "Sans accord préférentiel (cas de la Chine), un produit fini de consommation paie le droit commun : la LF 2024 a ramené de 40 % à 30 % tous les produits relevés à 40 % par la LFR 2020 (sauf chapitre 24 et produits déjà à 40 % avant 2020), et l'échelle courante reste 2,5 %, 10 %, 17,5 %, 30 % et 40 %. Des taux plus élevés existent pour des produits ciblés : safran 60 % depuis le 1er janvier 2026 (LF 2026), produits du cannabis 200 % (LF 2025) ; à l'inverse, les smartphones sont passés de 17,5 % à 2,5 % au 1er janvier 2026."
+pour_fes = "Un produit fini acheté en Chine supporte en général 30 % de droit puis 20 % de TVA calculée droit inclus, soit environ 56 % de surcoût fiscal avant transitaire et transport."
+as_of = 2026-11-28
+date_regle = "2024-01-01 (LF 2024, 40 % ramené à 30 %) ; 2026-01-01 (LF 2026)"
+source = "https://ecoactu.ma/wp-content/uploads/2024/01/Recueil_CIRCULAIRES_ADII_4eme_Trimestre_2023.pdf ; https://www.finances.gov.ma/Publication/adii/2025/circulaire_97273.pdf"
+preuve = "F"
+
+[[dispositif]]
+id = "ma_tva_import"
+pays = "MA"
+sens = "freine"
+categorie = "douane"
+s_applique_a = ["produit_importe", "colis_ecommerce"]
+titre = "TVA à l'importation : 20 % sur la valeur en douane majorée des droits"
+resume = "La TVA à l'importation est de 20 % ad valorem (10 % pour une liste limitée : produits de l'article 99-B, huiles alimentaires fluides, maïs, orge, etc.), calculée sur la valeur en douane augmentée des droits d'entrée et taxes (art. 121 CGI). Elle est perçue par la douane au dédouanement, y compris sur les colis achetés en ligne."
+pour_fes = "Un importateur assujetti récupère cette TVA par déduction ; pour un particulier ou un auto-entrepreneur non assujetti, c'est un coût définitif à intégrer au prix de revient."
+as_of = 2026-11-28
+date_regle = "Article 121 CGI, dernière modification LF 2024 (loi 55-23), texte vérifié dans l'édition 2026"
+source = "https://ecoactu.ma/wp-content/uploads/2025/12/Code-general-des-impots-CGI-2026.pdf"
+preuve = "F"
+
+[[dispositif]]
+id = "ma_colis_ecommerce"
+pays = "MA"
+sens = "freine"
+categorie = "douane"
+s_applique_a = ["colis_ecommerce", "produit_importe"]
+titre = "Achats sur plateformes étrangères : aucune franchise, quel que soit le montant"
+resume = "Depuis le 1er juillet 2022, les achats effectués via les plateformes internationales de e-commerce sont exclus de l'exonération de droits et taxes, quelle qu'en soit la valeur ; la franchise de 1 250 DH ne subsiste que pour les envois sans caractère commercial entre particuliers (décret 2-77-862, art. 190-e-2°). Les circulaires douanières des LF 2025 et LF 2026 ne contiennent aucune mesure nouvelle sur les petits colis, et aucune mesure e-commerce n'a été trouvée dans le PLF 2027 en discussion."
+pour_fes = "Faire venir des échantillons par colis coûte droits et TVA dès le premier dirham, et fractionner des envois sous 1 250 DH est précisément la pratique ciblée par la douane."
+as_of = 2026-11-28
+date_regle = "2022-07-01"
+source = "https://www.finances.gov.ma/CommuniquesEtAnnonces/adii/2022/Communiqu%C3%A9_AchatsEnligne_fr.pdf"
+preuve = "F"
+
+[[dispositif]]
+id = "ma_ale_ue_usa"
+pays = "MA"
+sens = "facilite"
+categorie = "douane"
+s_applique_a = ["produit_importe"]
+titre = "Accords avec l'UE et les États-Unis : droit zéro sur les produits industriels originaires"
+resume = "Les produits industriels originaires de l'UE entrent à 0 % de droit d'importation depuis le 1er mars 2012 (accord d'association), la TVA restant due ; les produits agricoles ne sont que partiellement libéralisés. Avec les États-Unis (ALE en vigueur le 1er janvier 2006), plus de 95 % des échanges de produits de consommation et industriels sont devenus francs de droits immédiatement et le reste devait l'être en 9 ans, soit vers 2015 ; l'agriculture suit un calendrier plus long."
+pour_fes = "Un produit fabriqué dans l'UE ou aux USA, et pas seulement expédié de là, évite les 30 % de droit commun, à condition d'obtenir du fournisseur la preuve d'origine prévue par l'accord."
+as_of = 2026-11-28
+date_regle = "UE : 2012-03-01 ; USA : 2006-01-01 (+9 ans)"
+source = "https://lematin.ma/journal/2012/Demantelement-douanier_Les-produits-provenant-de-l-UE-rentreront--au-Maroc-a-droit-zero/163308.html ; https://ustr.gov/about-us/policy-offices/press-office/fact-sheets/archives/2004/march/free-trade-morocco-vital-step-towards-middle-e"
+preuve = "F2"
+
+[[dispositif]]
+id = "ma_ale_eau_gzale"
+pays = "MA"
+sens = "facilite"
+categorie = "douane"
+s_applique_a = ["produit_importe"]
+titre = "Accord Maroc–Émirats (2001) et zone arabe de libre-échange : exonération des produits d'origine émiratie"
+resume = "L'accord de libre-échange Maroc–Émirats, signé le 25 juin 2001 et en vigueur depuis le 9 juillet 2003, s'adosse à la Grande zone arabe de libre-échange et prévoit une exonération totale et immédiate des produits originaires (sauf exclusions santé, sécurité, environnement), sous couvert du certificat d'origine arabe ; les produits d'origine nationale fabriqués en zone franche et exportés directement bénéficient aussi des préférences arabes (art. 6). Des droits antidumping visent toutefois certains produits émiratis (fils galvanisés : 18,44 % à 52,71 %, mesure définitive annoncée en septembre 2026)."
+pour_fes = "Un produit chinois simplement réexpédié depuis Dubaï n'est pas émirati et paie le droit commun ; seul un produit fabriqué ou suffisamment transformé aux Émirats, avec certificat d'origine arabe, entre sans droit."
+as_of = 2026-11-28
+date_regle = "2003-07-09"
+source = "https://rtais.wto.org/rtadocs/665/TOA/French/ACR_EAU_Maroc.pdf ; https://www.ires.ma/wp-content/uploads/2013/05/presentation_dg_ces_23_mai_2013_version_site_web-771.pdf"
+preuve = "F2"
+
+[[dispositif]]
+id = "ma_ale_turquie"
+pays = "MA"
+sens = "facilite"
+categorie = "douane"
+s_applique_a = ["produit_importe"]
+titre = "Accord Maroc–Turquie : franchise générale, mais plus de 1 200 produits retaxés à 90 % du droit commun"
+resume = "L'ALE Maroc–Turquie (en vigueur depuis 2006) a été amendé par la loi 54-20 : depuis le 13 mai 2021, une liste négative de plus de 1 200 produits (630 positions tarifaires, notamment textile, habillement et cuir) paie 90 % du droit commun, pour 5 ans renouvelables une fois. La période initiale arrivait à échéance en mai 2026 ; aucune source trouvée ne confirme son renouvellement ou un nouvel avenant."
+pour_fes = "Pour du textile ou de la maroquinerie turcs de la liste, compter environ 27 % de droit si le droit commun est de 30 % ; les autres produits industriels d'origine turque restent en principe à droit nul."
+as_of = 2026-11-28
+date_regle = "2021-05-13 (avenant, loi 54-20)"
+source = "https://fr.le360.ma/economie/officiel-entree-en-vigueur-de-la-loi-amendant-lale-maroc-turquie-238527/ ; https://www.bladi.net/maroc-freine-produits-turcs-ankara-vend,123376.html"
+preuve = "F2"
+
+[[dispositif]]
+id = "ma_chine"
+pays = "MA"
+sens = "freine"
+categorie = "douane"
+s_applique_a = ["produit_importe", "colis_ecommerce", "export_depuis_maroc"]
+titre = "Maroc–Chine : pas d'accord tarifaire, des droits antidumping ciblés, mais un accès à droit zéro au marché chinois depuis mai 2026"
+resume = "Aucun accord de libre-échange Maroc–Chine n'a été trouvé : les biens de consommation chinois paient le droit commun et la TVA, et certains subissent des droits antidumping (contreplaqué 76 % à compter du 25 septembre 2026). En sens inverse, la Chine accorde du 1er mai 2026 au 30 avril 2028 un traitement à droit zéro aux 20 pays africains non-PMA ayant des relations diplomatiques avec elle (hors droits hors contingent), et la presse marocaine indique que le Maroc en fait partie."
+pour_fes = "Importer de Chine reste la voie la plus taxée ; à l'inverse, un produit d'origine marocaine fabriqué à Fès peut entrer en Chine sans droit jusqu'en avril 2028, sous réserve des règles d'origine chinoises."
+as_of = 2026-11-28
+date_regle = "Chine : 2026-05-01 au 2028-04-30 ; antidumping contreplaqué : 2026-09-25"
+source = "https://english.www.gov.cn/news/202604/28/content_WS69f0a1d7c6d00ca5f9a0aad0.html ; https://fr.le360.ma/economie/maroc-chine-comment-tirer-profit-de-la-suppression-des-droits-de-douane_7K2L4MW4NRC4FBCHIM5TUVPGPY/ ; https://lematin.ma/economie/importations-droits-antidumping-de-76-sur-le-contreplaque-chinois/366885"
+preuve = "F2"
+
+# 2. Exportation depuis le Maroc
+[[dispositif]]
+id = "ma_tva_export"
+pays = "MA"
+sens = "facilite"
+categorie = "fiscalite"
+s_applique_a = ["export_depuis_maroc", "service_numerique", "artisanat"]
+titre = "Exportations de biens et de services : TVA exonérée avec droit à déduction"
+resume = "Les produits livrés et services rendus à l'exportation par les assujettis sont exonérés de TVA avec droit à déduction (art. 92-I-1° CGI) ; un service est exporté s'il est exploité ou utilisé hors du Maroc, ce qui se justifie par une facture au nom du client étranger et la preuve d'un règlement en devises. Les exportateurs peuvent aussi acheter en suspension de TVA dans la limite du chiffre d'affaires export de l'année précédente (art. 94)."
+pour_fes = "Facturer un client en France pour un site web, un design ou un lot d'artisanat se fait sans TVA marocaine, à condition d'être payé en devises et de garder les justificatifs bancaires."
+as_of = 2026-11-28
+date_regle = "Articles 92-I-1° et 94 CGI, texte vérifié dans l'édition 2026"
+source = "https://ecoactu.ma/wp-content/uploads/2025/12/Code-general-des-impots-CGI-2026.pdf"
+preuve = "F"
+
+[[dispositif]]
+id = "ma_change_igoc2026"
+pays = "MA"
+sens = "facilite"
+categorie = "reglementation"
+s_applique_a = ["export_depuis_maroc", "service_numerique", "colis_ecommerce", "concept_franchise"]
+titre = "Change (IGOC 2026) : rapatriement obligatoire, compte en devises possible, dotation e-commerce relevée"
+resume = "Depuis le 1er janvier 2026, l'exportateur de services rapatrie ses recettes sous 90 jours (150 jours pour les biens) et peut en garder jusqu'à 70 % en compte devises ou dirhams convertibles ; ce compte exportateur est réservé aux inscrits au registre du commerce, mais un Marocain résident non inscrit au RC qui a des revenus de source étrangère peut ouvrir un compte en devises crédité jusqu'à 70 % (art. 234). La dotation e-commerce passe à 20 000 DH par an pour les particuliers et à 50 000 DH minimum pour les sociétés nouvellement créées (services achetés en ligne), et la définition des importations de services est élargie. Les redevances versées à un franchiseur étranger supportent une retenue à la source de 10 % (art. 15 et 19-IV-B CGI)."
+pour_fes = "Un auto-entrepreneur de Fès payé en euros peut garder une partie de ses recettes en devises pour régler ses abonnements en ligne, et une SARL AU débutante dispose d'au moins 50 000 DH par an de paiements par carte à l'étranger pour ses services."
+as_of = 2026-11-28
+date_regle = "2026-01-01 (IGOC 2026)"
+source = "https://www.oc.gov.ma/sites/default/files/2026-01/IGOC%202026_1.pdf ; https://ecoactu.ma/wp-content/uploads/2025/12/Code-general-des-impots-CGI-2026.pdf"
+preuve = "F"
+
+[[dispositif]]
+id = "ma_export_ue_origine"
+pays = "MA"
+sens = "facilite"
+categorie = "douane"
+s_applique_a = ["export_depuis_maroc", "artisanat"]
+titre = "Vente vers la France : l'origine marocaine prouvée évite les droits, y compris le nouveau droit européen de 3 € par article"
+resume = "Dans la convention pan-euro-méditerranéenne, l'origine se prouve par un EUR.1 visé par la douane ou par une déclaration d'origine sur facture, ouverte à tout exportateur jusqu'à 6 000 € par envoi ; les petits colis jusqu'à 500 € et les bagages jusqu'à 1 200 € sont dispensés de preuve. Depuis le 1er juillet 2026 et jusqu'au 1er juillet 2028, l'UE applique 3 € par article (ligne tarifaire) aux envois B2C de 150 € ou moins, mais en exclut les marchandises sous accord préférentiel si la TVA n'est pas perçue via l'IOSS et si elles sont déclarées en H1. Côté marocain, toute exportation exige un numéro de RC ou, à défaut, un code particulier attribué par la douane."
+pour_fes = "Un tapis ou un sac en cuir de Fès vendu à un particulier français peut échapper au droit de 3 € s'il voyage avec sa preuve d'origine hors IOSS, mais la TVA française reste due et il faut un RC ou un code douanier pour exporter."
+as_of = 2026-11-28
+date_regle = "Droit UE de 3 € : 2026-07-01 au 2028-07-01 ; règles PEM en vigueur"
+source = "https://trade.ec.europa.eu/access-to-markets/fr/content/regles-dorigine-de-la-convention-paneuro-mediterraneenne ; https://taxation-customs.ec.europa.eu/news/guidance-and-legal-text-temporary-flat-fee-low-value-imports-which-will-apply-until-1-july-2028-2026-06-08_en ; https://mtaess.gov.ma/wp-content/uploads/2022/06/Guide-de-lexportateur-de-lArtisanat.pdf"
+preuve = "F"
+
+# 3. Statuts et fiscalité des petits entrepreneurs
+[[dispositif]]
+id = "ma_ae_regime"
+pays = "MA"
+sens = "facilite"
+categorie = "statut"
+s_applique_a = ["service_numerique", "artisanat", "colis_ecommerce"]
+titre = "Auto-entrepreneur : impôt de 0,5 % ou 1 % du chiffre d'affaires, retenue de 30 % au-delà de 80 000 DH par client"
+resume = "L'auto-entrepreneur paie l'IR à 0,5 % du chiffre d'affaires encaissé pour les activités commerciales, industrielles et artisanales (plafond 500 000 DH) et à 1 % pour les services (plafond 200 000 DH), plus un droit complémentaire selon un barème, avec adhésion obligatoire à la sécurité sociale (art. 42 bis, 42 ter, 73-III CGI). La retenue à la source de 30 % est toujours en vigueur dans le CGI 2026 : au-delà de 80 000 DH de services facturés à un même client sur l'année, le surplus est retenu à 30 % par ce client."
+pour_fes = "Pour des services numériques vendus à un ou deux gros clients marocains, la retenue de 30 % au-delà de 80 000 DH par client annule l'intérêt du statut ; avec des clients nombreux, le coût reste proche de 1 % (le texte ne dit pas comment s'applique la retenue à un client étranger)."
+as_of = 2026-11-28
+date_regle = "Taux : LF 2019 ; retenue de 30 % : LF 2023 ; droit complémentaire : LF 2021 ; vérifié dans le CGI 2026"
+source = "https://ecoactu.ma/wp-content/uploads/2025/12/Code-general-des-impots-CGI-2026.pdf"
+preuve = "F"
+
+[[dispositif]]
+id = "ma_exclusion_importateur"
+pays = "MA"
+sens = "freine"
+categorie = "statut"
+s_applique_a = ["produit_importe", "export_depuis_maroc", "service_numerique"]
+titre = "Marchands importateurs et exportateurs exclus de l'auto-entrepreneur et de la CPU"
+resume = "Le décret 2-15-263 (2015) exclut du régime fiscal de l'auto-entrepreneur notamment les « marchands importateurs », « marchands exportateurs », commissionnaires en marchandises et mandataires négociants, et le décret 2-08-124 (2009) exclut les mêmes professions de la contribution professionnelle unique (CPU), régime qui taxe à 10 % un revenu égal au chiffre d'affaires multiplié par un coefficient (12 % pour les autres produits non alimentaires, 20 % pour les autres prestations ; plafonds 2 MDH et 500 000 DH). En revanche, la liste des activités ouvertes à l'auto-entrepreneur comprend la vente par Internet, la vente par correspondance, le conseil, hébergement et développement informatique et le design graphique."
+pour_fes = "Importer soi-même pour revendre suppose en pratique une SARL (AU) ou un régime au réel ; un auto-entrepreneur peut vendre en ligne et facturer des services numériques, mais pas exercer comme marchand importateur ou exportateur."
+as_of = 2026-11-28
+date_regle = "Décret 2-08-124 du 28 mai 2009 ; décret 2-15-263 du 10 avril 2015 (textes annexés au CGI 2026)"
+source = "https://ecoactu.ma/wp-content/uploads/2025/12/Code-general-des-impots-CGI-2026.pdf"
+preuve = "F"
+
+[[dispositif]]
+id = "ma_societe_is"
+pays = "MA"
+sens = "freine"
+categorie = "fiscalite"
+s_applique_a = ["produit_importe", "service_numerique", "concept_franchise", "export_depuis_maroc"]
+titre = "SARL et SARL AU : IS à 20 % dès le premier dirham en 2026, et plus d'exonération export"
+resume = "Pour les exercices ouverts à partir du 1er janvier 2026, l'IS est de 20 % pour les bénéfices inférieurs à 100 MDH (contre 10 % jusqu'à 300 000 DH de bénéfice avant 2023) et 35 % au-delà ; la cotisation minimale est de 0,25 % du chiffre d'affaires, avec un minimum de 3 000 DH, mais les sociétés en sont exonérées pendant leurs 36 premiers mois d'exploitation. L'exonération quinquennale d'IS des exportateurs ne vaut plus que pour ceux dont la première exportation est antérieure au 1er janvier 2020 (LF 2020), et le capital d'une SARL est librement fixé depuis la loi 24-10."
+pour_fes = "Une SARL AU se crée sans capital minimum, donc avec moins de 2 000 €, mais un petit bénéfice y est taxé à 20 % sans avantage pour l'export, contre 0,5 % à 1 % du chiffre d'affaires en auto-entrepreneur."
+as_of = 2026-11-28
+date_regle = "2026-01-01 (fin de la convergence des taux d'IS, LF 2023) ; LF 2020 pour l'export"
+source = "https://ecoactu.ma/wp-content/uploads/2025/12/Code-general-des-impots-CGI-2026.pdf ; https://maroclaw.com/el-alami-souha-le-mirage-de-la-responsabilite-limitee-des-associes-de-la-sarl/"
+preuve = "F"
+
+[[dispositif]]
+id = "ma_tva_revente_avance_import"
+pays = "MA"
+sens = "freine"
+categorie = "fiscalite"
+s_applique_a = ["produit_importe", "artisanat", "service_numerique"]
+titre = "Importateur-revendeur : TVA obligatoire à la revente, et avance d'impôt de 3 % à l'import en projet (PLF 2027)"
+resume = "La revente en l'état de produits importés par un commerçant importateur est obligatoirement soumise à la TVA, quel que soit le chiffre d'affaires (art. 89-I-3° CGI), alors que les fabricants et prestataires personnes physiques jusqu'à 500 000 DH de chiffre d'affaires en sont exonérés (art. 91-II-3°), de même que les tapis artisanaux de production locale (art. 91-I-C-4°). Le PLF 2027 prévoit une avance d'impôt perçue au dédouanement sur les marchandises importées pour revente en l'état, imputable sur l'IS ou l'IR : 5 % de la valeur en douane pendant 60 mois dans le projet, ramenés à 3 % et 36 mois par un amendement adopté en commission le 11 novembre 2026, avec une application prévue au 1er juillet 2027, texte non encore définitivement adopté."
+pour_fes = "Un petit importateur doit gérer la TVA dès la première vente et, si la mesure est votée, avancer 3 % de la valeur de chaque lot pendant trois ans, alors qu'un artisan ou un prestataire de Fès sous 500 000 DH reste hors TVA."
+as_of = 2026-11-28
+date_regle = "CGI 2026 (art. 89 et 91) ; PLF 2027 : application prévue le 2027-07-01"
+source = "https://ecoactu.ma/wp-content/uploads/2025/12/Code-general-des-impots-CGI-2026.pdf ; https://fr.le360.ma/economie/importations-lavance-fiscale-ramenee-de-5-a-3-et-limitee-a-trois-ans_FBATYTAUWRCURNEPCXJYBG7Y4I/ ; https://lematin.ma/economie/plf-2027-voici-les-principales-dispositions-fiscales-et-douanieres/371991"
+preuve = "F2"
+
+# 4. Aides et financements
+[[dispositif]]
+id = "ma_intelaka_damane"
+pays = "MA"
+sens = "facilite"
+categorie = "aide"
+s_applique_a = ["produit_importe", "service_numerique", "concept_franchise", "artisanat"]
+titre = "Intelaka / Damane Intelak : garantie Tamwilcom jusqu'à 80 % du crédit, programme en refonte"
+resume = "Tamwilcom affiche en 2026 « Damane Intelak », garantie couvrant jusqu'à 80 % du crédit bancaire, sans commission, ouverte aux entrepreneurs, auto-entrepreneurs et petites entreprises, avec une variante rurale. Fin mai 2026, Intelaka comptait environ 33 600 entreprises bénéficiaires et 8,2 Mds DH de crédits, mais il est jugé essoufflé et doit être intégré à la Charte TPE signée en décembre 2025 et en vigueur depuis le 1er janvier 2026 (engagement bancaire de 18 Mds DH par an). Les taux bonifiés et le plafond de prêt applicables fin 2026 n'ont pas pu être vérifiés (inconnus)."
+pour_fes = "Un crédit garanti reste possible pour un auto-entrepreneur de Fès, mais la garantie réduit seulement le risque de la banque : c'est elle qui accepte ou refuse le dossier."
+as_of = 2026-11-28
+date_regle = "Charte TPE : 2026-01-01 ; offre Tamwilcom consultée en novembre 2026"
+source = "https://www.tamwilcom.ma/nos-solutions/tres-petites-entreprises ; https://ecoactu.ma/intelaka-un-programme-en-quete-dun-nouveau-depart/"
+preuve = "F"
+
+[[dispositif]]
+id = "ma_forsa"
+pays = "MA"
+sens = "facilite"
+categorie = "aide"
+s_applique_a = ["produit_importe", "service_numerique", "concept_franchise"]
+titre = "Forsa : aucune nouvelle édition trouvée depuis 2023, programme en gestion des prêts existants"
+resume = "Forsa, piloté par le ministère du Tourisme via la SMIT, a connu des éditions en 2022 et 2023 ; en 2026, la seule communication officielle trouvée porte sur le report d'un an des remboursements des prêts d'honneur, à demander avant le 28 février 2026, pour environ 21 000 porteurs éligibles. Aucun appel à candidatures 2024, 2025 ou 2026 n'a été trouvé, ni aucun texte officiel de clôture : je ne peux pas confirmer que le programme est clos, seulement qu'il ne semble plus ouvert aux nouveaux candidats."
+pour_fes = "Ne pas compter sur Forsa pour un nouveau projet à Fès fin 2026, sauf annonce d'une nouvelle édition sur forsa.ma."
+as_of = 2026-11-28
+date_regle = "2026-02-28 (date limite de demande de report)"
+source = "https://www.maroc.ma/fr/actualites/programme-forsa-le-28-fevrier-dernier-delai-pour-beneficier-du-report-des-prets-dhonneur"
+preuve = "F"
+
+[[dispositif]]
+id = "ma_innov_invest"
+pays = "MA"
+sens = "facilite"
+categorie = "aide"
+s_applique_a = ["service_numerique"]
+titre = "Fonds Innov Invest : subvention et prêt d'honneur pour startups technologiques incubées"
+resume = "Le Fonds Innov Invest (Tamwilcom) propose en 2026 « Tech Start » (subvention après preuve de concept), « Tech Boost » (prêt d'honneur sans intérêts ni sûretés après le MVP), « Innov Risk » (avance remboursable) et « Innov Dev » (prêt participatif pour PME ayant levé des fonds). L'accès passe par une structure d'accompagnement partenaire de Tamwilcom ; les montants ne figurent pas sur la page officielle consultée (inconnus)."
+pour_fes = "Seul un service numérique réellement technologique, suivi par une structure partenaire, peut y prétendre ; l'import de produits et l'artisanat ne sont pas visés."
+as_of = 2026-11-28
+date_regle = "Offre consultée en novembre 2026"
+source = "https://www.tamwilcom.ma/nos-solutions/fonds-innov-invest"
+preuve = "F"
+
+[[dispositif]]
+id = "ma_charte_tpme"
+pays = "MA"
+sens = "facilite"
+categorie = "aide"
+s_applique_a = ["produit_importe", "service_numerique", "concept_franchise", "artisanat"]
+titre = "Charte de l'investissement, dispositif TPME : primes jusqu'à 30 %, mais dès 1 million de dirhams investis"
+resume = "Le dispositif TPME (décret 2-25-342, activé par des décisions publiées au BO n° 7454 du 6 novembre 2025) subventionne des investissements de 1 à 50 MDH, avec au moins 10 % de fonds propres et un emploi stable par million investi ; les primes (emploi 5 à 10 %, territoriale 10 à 15 %, secteurs prioritaires 10 %) sont plafonnées à 30 % et versées après réalisation. Le CRI est le guichet (plateforme CRI-invest.ma), avec l'appui technique de Maroc PME."
+pour_fes = "Hors de portée d'un projet à moins de 2 000 € : il faut investir au moins 1 MDH (environ 90 000 €) et créer un emploi CNSS d'au moins 18 mois."
+as_of = 2026-11-28
+date_regle = "BO n° 7454 du 2025-11-06"
+source = "https://fr.hespress.com/449569-subventions-et-secteurs-prioritaires-tout-savoir-sur-le-nouveau-dispositif-pour-les-tpme.html"
+preuve = "F2"
+
+[[dispositif]]
+id = "ma_cri_fes_meknes"
+pays = "MA"
+sens = "facilite"
+categorie = "aide"
+s_applique_a = ["service_numerique", "artisanat", "produit_importe", "concept_franchise"]
+titre = "CRI et Région Fès-Meknès : accompagnement AFWAJ ; subvention Fès-Shore réservée aux grands employeurs"
+resume = "AFWAJ 2026 (CRI Fès-Meknès, ANAPEC, Fondation Création d'Entreprises, Banque Populaire) sélectionne 50 porteurs de la région, auto-entrepreneurs compris, pour un accompagnement (cadrage, e-learning, business plan, création, réseautage) sans financement annoncé ; les candidatures sur afwaj.ma ont fermé le 31 octobre 2026. La subvention d'installation du Conseil régional au parc Fès-Shore (jusqu'à 2 MDH) exige au moins 100 emplois nets en offshoring : ce parc comme les zones d'accélération industrielle ne concernent pas un projet de cette taille."
+pour_fes = "Préparer la candidature à la prochaine édition d'AFWAJ : c'est l'appui local le plus adapté à un porteur seul, pour structurer le projet plutôt que pour le financer."
+as_of = 2026-11-28
+date_regle = "AFWAJ : clôture 2026-10-31 ; Fès-Shore : appel du 2026-04-09"
+source = "https://www.lavieeco.com/?p=460406 ; https://www.maroc.ma/fr/actualites/une-subvention-dinstallation-aux-entreprises-pour-simplanter-au-parc-fes-shore"
+preuve = "F2"
+
+[[dispositif]]
+id = "ma_artisanat_rna_mda"
+pays = "MA"
+sens = "facilite"
+categorie = "aide"
+s_applique_a = ["artisanat", "export_depuis_maroc"]
+titre = "Artisanat : Registre national (loi 50-17), carte professionnelle et salons export pris en charge par la Maison de l'Artisan"
+resume = "L'inscription au Registre national de l'artisanat donne une carte professionnelle numérique valable 5 ans, qui ouvre l'accès aux formations, aux salons nationaux et internationaux, aux programmes d'appui de l'État et à l'AMO. Pour les exposants sélectionnés, la Maison de l'Artisan paie l'inscription, un stand de 12 m² au plus et le transport de 250 kg de produits (exemple : INDEX Dubaï, 28 au 30 septembre 2026), sur attestation RNA et ICE pour coopératives et entreprises ; seuls des produits artisanaux marocains, ni importés ni contrefaits, peuvent être exposés."
+pour_fes = "Un revendeur qui n'est pas artisan doit travailler avec des artisans ou coopératives de Fès inscrits au RNA, ou créer une entreprise artisanale, pour profiter des salons pris en charge."
+as_of = 2026-11-28
+date_regle = "Loi 50-17 (dahir 1-20-68) ; guide de la carte publié en janvier 2026 ; INDEX Dubaï : 2026-09-28"
+source = "https://mtaess.gov.ma/wp-content/uploads/2026/01/Avantages-CPA-version-Fr.pdf ; https://mda.gov.ma/wp-content/uploads/2026/04/REGLEMENT-DE-PARTICIPATION-INDEX-DUBAI-2026-2.pdf"
+preuve = "F"
+
+# 5. Règles produit, consommateur et données
+[[dispositif]]
+id = "ma_onssa_complements"
+pays = "MA"
+sens = "freine"
+categorie = "reglementation"
+s_applique_a = ["produit_importe", "colis_ecommerce"]
+titre = "Aliments et compléments alimentaires importés : contrôle ONSSA, enregistrement préalable et réforme en cours"
+resume = "La loi 28-07 soumet les produits alimentaires, importation comprise, au contrôle de l'ONSSA, dont la plateforme ATLAS (2024) enregistre les établissements étrangers fournisseurs de viandes, produits de la pêche, lait, jus et conserves. Les compléments alimentaires exigent un enregistrement préalable avant mise sur le marché, l'autorité compétente (ONSSA ou AMMPS) étant présentée différemment selon les sources en 2026 ; la presse cite des plafonds de dosage bas (vitamine D 10 µg, vitamine C 180 mg) et une étude privée estime 12 à 15 mois et 15 000 à 20 000 DH par produit. Une réforme de l'article 30 de la loi 17-04 réservant aux pharmacies certains compléments à effet thérapeutique a été adoptée en première lecture par la Chambre des représentants en juin 2026, sans adoption définitive confirmée."
+pour_fes = "Importer des compléments américains ou des produits alimentaires de Dubaï pour les revendre à Fès est parmi les projets les plus freinés : environ un an de délai, un coût par référence et des formules souvent non conformes aux plafonds marocains."
+as_of = 2026-11-28
+date_regle = "Loi 28-07 ; ATLAS : juillet 2024 ; réforme de la loi 17-04 en cours (juin 2026)"
+source = "https://fr.hespress.com/379444-379444.html ; https://fr.hespress.com/477181-complements-alimentaires-pourquoi-la-reforme-inquiete.html ; https://fr.le360.ma/economie/complements-alimentaires-un-secteur-a-3-milliards-freine-par-sa-reglementation_OUAZW2LHIFDYZOEBBQXVCPGHAU/"
+preuve = "F2"
+
+[[dispositif]]
+id = "ma_cosmetiques_ammps"
+pays = "MA"
+sens = "freine"
+categorie = "reglementation"
+s_applique_a = ["produit_importe", "colis_ecommerce"]
+titre = "Cosmétiques : déclaration d'établissement et enregistrement auprès de l'AMMPS"
+resume = "Le guide de l'AMMPS (Agence marocaine du médicament et des produits de santé) rend obligatoire une déclaration préalable d'établissement avant toute fabrication ou commercialisation de cosmétiques, avec registre de commerce, plans des locaux (sous-sols interdits) et liste du personnel qualifié, l'enregistrement des produits relevant de la circulaire ministérielle n° 771 ; les coopératives peuvent fabriquer et exporter mais pas importer. Depuis le 31 mars 2026, la plateforme TARKHISS dématérialise déclarations d'activité, enregistrements, certificats de libre vente et autorisations d'importation de matières premières."
+pour_fes = "Revendre des cosmétiques importés suppose une société inscrite au RC, un local conforme et un enregistrement par produit, ce qui cadre mal avec un statut d'auto-entrepreneur et un budget de 2 000 €."
+as_of = 2026-11-28
+date_regle = "Guide AMMPS (presse du 2026-04-30) ; TARKHISS : 2026-03-31"
+source = "https://lematin.ma/societe/lagence-marocaine-du-medicament-serre-la-vis-sur-le-marche-de-cosmetiques/359451 ; https://www.maroc.ma/fr/actualites/lancement-de-la-plateforme-tarkhiss-pour-accelerer-la-transformation-digitale-du-secteur-de-la-sante"
+preuve = "F2"
+
+[[dispositif]]
+id = "ma_conformite_contrefacon"
+pays = "MA"
+sens = "freine"
+categorie = "reglementation"
+s_applique_a = ["produit_importe", "colis_ecommerce", "concept_franchise"]
+titre = "Produits industriels : certificat de conformité obligatoire et saisie douanière des contrefaçons"
+resume = "Depuis le 1er février 2020 (loi 24-09), de nombreux produits industriels importés (électroménager et produits électriques, jouets, textiles, chaussures, cuir, plastiques, articles au contact des aliments, équipements de protection, pièces auto) doivent avoir un certificat de conformité, délivré en principe dans le pays d'export par un organisme mandaté, sans seuil de valeur, avec marquage et notices en arabe et marquage CMIM pour l'électrique et les jouets. La loi 17-97 modifiée par la loi 23-13 (en vigueur le 18 décembre 2014) permet à la douane de suspendre des marchandises suspectées de contrefaçon, à la demande du titulaire de la marque ou d'office, le titulaire ayant 10 jours ouvrables pour saisir la justice ; seuls les petits envois personnels non commerciaux sont exclus."
+pour_fes = "Un lot de jouets ou d'objets électriques sans certificat ni marquage arabe risque le blocage, et toute copie de marque peut être saisie ; à l'inverse, déposer sa marque à l'OMPIC permet de demander cette protection en douane pour un concept importé."
+as_of = 2026-11-28
+date_regle = "Contrôle de conformité : 2020-02-01 ; loi 23-13 : 2014-12-18"
+source = "https://verigates.bureauveritas.com/sites/verigates/files/2020-01/MAROC%20(Voc)%20FR%20Datasheet%20Rev.1.pdf ; https://www.wipo.int/wipolex/fr/legislation/details/19767"
+preuve = "F2"
+
+[[dispositif]]
+id = "ma_loi_31_08"
+pays = "MA"
+sens = "freine"
+categorie = "reglementation"
+s_applique_a = ["colis_ecommerce", "service_numerique", "produit_importe"]
+titre = "Vente à distance (loi 31-08) : 7 jours de rétractation et informations obligatoires"
+resume = "Le consommateur dispose de 7 jours pour se rétracter sans motif ni pénalité, hors frais de retour, délai porté à 30 jours si le fournisseur n'a pas confirmé par écrit les informations obligatoires ; le délai court à la réception du bien ou à l'acceptation de l'offre de service (art. 36). L'offre en ligne doit préciser notamment les caractéristiques, l'identité du vendeur, les frais et délais de livraison, le droit de rétractation et les modalités de paiement (art. 29), et un contrat en langue étrangère doit être accompagné d'une traduction en arabe (art. 206)."
+pour_fes = "Une boutique en ligne basée à Fès doit accepter les retours sous 7 jours et publier des conditions de vente complètes, avec version arabe."
+as_of = 2026-11-28
+date_regle = "2011-04-07 (BO n° 5932)"
+source = "https://www.wipo.int/wipolex/fr/legislation/details/19773 ; https://www.axl.cefan.ulaval.ca/afrique/maroc-loi-consommateur-2011.htm"
+preuve = "F"
+
+[[dispositif]]
+id = "ma_cndp_09_08"
+pays = "MA"
+sens = "freine"
+categorie = "reglementation"
+s_applique_a = ["service_numerique", "colis_ecommerce"]
+titre = "Service numérique : notification à la CNDP (loi 09-08) et transferts de données à l'étranger encadrés"
+resume = "Tout traitement de données personnelles (fichier clients, newsletter, CRM) doit être notifié à la CNDP avant sa mise en œuvre, avec autorisation préalable pour les données sensibles et certains usages (art. 12). Les transferts à l'étranger ne sont libres que vers les pays jugés adéquats par la CNDP ; sinon il faut une autorisation ou une exception (consentement explicite, exécution du contrat), et un transfert illicite est passible de 3 mois à 1 an de prison et/ou 20 000 à 200 000 DH d'amende. Aucune loi de réforme n'était adoptée fin juin 2026, des projets d'alignement sur le RGPD étant en discussion."
+pour_fes = "Un service numérique qui stocke les données de clients marocains sur des outils hébergés à l'étranger doit le déclarer à la CNDP et justifier le transfert ; ses clients français relèvent en plus du RGPD."
+as_of = 2026-11-28
+date_regle = "Loi 09-08 (BO du 2009-03-05) ; situation décrite au 2026-06-29"
+source = "https://cms.law/en/int/expert-guides/cms-expert-guide-to-data-protection-and-cyber-security-laws/morocco ; https://www.cndp.ma/wp-content/uploads/2025/07/CNDP_Procedure-de-Notification-des-traitements_20250724.pdf"
+preuve = "F2"
