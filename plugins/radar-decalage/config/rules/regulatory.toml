@@ -47,7 +47,8 @@ as_of = 2026-11-28
 source = "loi n° 2023-451 du 9 juin 2023 ; décret n° 2025-1137 (seuil de 1 000 € HT, à relire sur Légifrance)"
 evidence = "F2"
 status = { FR = "restreint" }
-notes = { FR = "mention « Publicité » ou « Collaboration commerciale » ; contrat écrit au-delà de 1 000 € HT depuis le 01/01/2026 ; secteurs interdits à la promotion ; mention des images retouchées ou virtuelles" }
+notes = { FR = "mention « Publicité » ou « Collaboration commerciale » (article 5-2 en vigueur) ; contrat écrit au-delà de 1 000 € HT depuis le 01/01/2026 ; secteurs interdits à la promotion ; mention des images retouchées ou virtuelles ; application incertaine à un site anonyme sans notoriété" }
+gate = { FR = 0.95 }  # obligation de mention et de contrat : coût de conformité, pas un verrou [H]
 
 [[rule]]
 id = "contenu_genere_ia"
@@ -57,6 +58,7 @@ source = "règlement (UE) 2024/1689 (AI Act), article 50"
 evidence = "F2"
 status = { FR = "restreint", BE = "restreint", LU = "restreint" }
 notes = { FR = "obligations de transparence de l'article 50 depuis août 2026 ; annexe III au 02/12/2027" }
+gate = { FR = 0.95, BE = 0.95, LU = 0.95 }  # étiquetage : coût de conformité [H]
 
 [[rule]]
 id = "mineurs_reseaux_sociaux"
@@ -85,13 +87,16 @@ source = "RGPD ; loi marocaine 09-08 (CNDP)"
 evidence = "F2"
 status = { FR = "restreint", BE = "restreint", CH = "restreint", MA = "restreint" }
 notes = { MA = "déclaration ou autorisation CNDP selon le traitement" }
+gate = { FR = 0.95, BE = 0.95, CH = 0.95, MA = 0.95 }  # conformité, pas un verrou [H]
 
 [[rule]]
 id = "influence_vendeur_hors_ue"
 category = "influence commerciale vers un public français, vendeur établi hors UE, EEE et Suisse"
 applies_to = "vendeur"
+buyer_zones = ["FR"]  # la règle ne vise qu'un public français
 as_of = 2026-11-28
 source = "loi n° 2023-451, article 9, réécrit par l'ordonnance n° 2024-978 (JORF du 07/11/2024) ; décret d'application non vérifié"
 evidence = "F"
 status = { MA = "restreint", DZ = "restreint", TN = "restreint", SN = "restreint", CI = "restreint", CM = "restreint", CD = "restreint", "CA-QC" = "restreint", FR = "autorise", BE = "autorise", CH = "autorise" }
 notes = { MA = "désigner un représentant dans l'UE et souscrire une assurance de responsabilité civile professionnelle auprès d'un assureur européen ; coût à ajouter au capital et aux heures de l'initiative" }
+gate = { MA = 0.8, DZ = 0.8, TN = 0.8, SN = 0.8, CI = 0.8, CM = 0.8, CD = 0.8, "CA-QC" = 0.8 }  # coût fixe du représentant et de l'assurance [H]

@@ -61,6 +61,12 @@ def status(rules: dict[str, list[dict[str, Any]]], kind: str, rule_id: str, zone
 
 
 def gate(rules: dict[str, list[dict[str, Any]]], kind: str, rule_id: str, zone: str) -> float:
+    """Valeur de porte. Une règle peut fixer sa propre valeur par zone (champ « gate ») :
+    une obligation de mention est « restreinte » sans retirer 40 % du revenu."""
+    item = find(rules, kind, rule_id)
+    override = (item or {}).get("gate", {})
+    if zone in override or "ALL" in override:
+        return float(override.get(zone, override.get("ALL")))
     return GATE[status(rules, kind, rule_id, zone)]
 
 

@@ -142,7 +142,8 @@ def evaluate(name: str, buyer_zone: str, seller_zone: str, profile: Profile, tre
     # 2. Portes du module C.
     spec = InitiativeSpec(rails=list(a.get("rails", [])), platforms_seller=list(a.get("platforms_seller", [])),
                           platforms_buyer=list(trend.platforms_buyer if trend else []),
-                          regulatory=list(trend.regulatory if trend else []))
+                          regulatory=list(a.get("regulatory", [])) + list(trend.regulatory if trend else []),
+                          regulatory_seller=list(a.get("regulatory_seller", [])))
     gres = evaluate_gates(spec, buyer_zone, seller_zone, rules)
     ev.gate = gres.value
     ev.reasons.extend(gres.reasons)

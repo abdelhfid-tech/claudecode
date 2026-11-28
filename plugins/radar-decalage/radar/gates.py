@@ -20,7 +20,8 @@ class InitiativeSpec:
     rails: list[str]                                    # rails acceptables : il en faut un d'ouvert
     platforms_seller: list[str] = field(default_factory=list)  # programmes requis côté vendeur (ex. TikTok Shop)
     platforms_buyer: list[str] = field(default_factory=list)   # plateformes requises côté acheteur
-    regulatory: list[str] = field(default_factory=list)        # catégories réglementées touchées
+    regulatory: list[str] = field(default_factory=list)        # catégories réglementées touchées, côté acheteur
+    regulatory_seller: list[str] = field(default_factory=list)  # règles qui dépendent du pays du vendeur
     targets_minors: bool = False
 
 
@@ -71,12 +72,21 @@ def evaluate(spec: InitiativeSpec, buyer_zone: str, seller_zone: str,
         if g < 1.0:
             reasons.append(f"{pid} côté acheteur ({buyer_zone}) : {rules_mod.status(rules, 'platforms', pid, buyer_zone)}")
 
-    # Réglementation, côté acheteur.
+    # Réglementation, côté acheteur puis côté vendeur.
     for rid in spec.regulatory:
         g = rules_mod.gate(rules, "regulatory", rid, buyer_zone)
         parts[f"réglementation {rid}"] = g
         if g < 1.0:
             reasons.append(f"{rid} en {buyer_zone} : {rules_mod.status(rules, 'regulatory', rid, buyer_zone)}")
+    for rid in spec.regulatory_seller:
+        rule = rules_mod.find(rules, "regulatory", rid)
+        if rule and rule.get("buyer_zones") and buyer_zone not in rule["buyer_zones"]:
+            continue  # la règle ne vise pas ce public
+        g = rules_mod.gate(rules, "regulatory", rid, seller_zone)
+        parts[f"réglementation vendeur {rid}"] = g
+        if g < 1.0:
+            reasons.append(f"{rid}, vendeur en {seller_zone} : "
+                           f"{rules_mod.status(rules, 'regulatory', rid, seller_zone)}")
 
     value = 1.0
     for g in parts.values():

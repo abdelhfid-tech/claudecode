@@ -321,43 +321,43 @@ rails = ["stripe", "paddle", "polar", "paypal_reception"]
 label = "France"
 ppp = 1.0
 default_hourly_cost_eur = 25
-tax = { bnc = 0.256, bic_vente = 0.123 }
+tax = { bnc = 0.256, bic_vente = 0.123, bic_presta = 0.212, auteur = 0.17 }
 
 [country."BE"]
 label = "Belgique"
 ppp = 1.05
 default_hourly_cost_eur = 25
-tax = { bnc = 0.25, bic_vente = 0.25 }
+tax = { bnc = 0.25, bic_vente = 0.25, bic_presta = 0.25, auteur = 0.15 }
 
 [country."CH"]
 label = "Suisse"
 ppp = 1.6
 default_hourly_cost_eur = 45
-tax = { bnc = 0.15, bic_vente = 0.15 }
+tax = { bnc = 0.15, bic_vente = 0.15, bic_presta = 0.15, auteur = 0.15 }
 
 [country."CA-QC"]
 label = "Quebec"
 ppp = 0.95
 default_hourly_cost_eur = 25
-tax = { bnc = 0.2, bic_vente = 0.2 }
+tax = { bnc = 0.2, bic_vente = 0.2, bic_presta = 0.2, auteur = 0.2 }
 
 [country."MA"]
 label = "Maroc"
 ppp = 0.25
 default_hourly_cost_eur = 6
-tax = { bnc = 0.01, bic_vente = 0.005 }
+tax = { bnc = 0.01, bic_vente = 0.005, bic_presta = 0.01, auteur = 0.1 }
 
 [country."SN"]
 label = "UEMOA (SN, CI)"
 ppp = 0.15
 default_hourly_cost_eur = 4
-tax = { bnc = 0.1, bic_vente = 0.1 }
+tax = { bnc = 0.1, bic_vente = 0.1, bic_presta = 0.1, auteur = 0.15 }
 
 [country."CM"]
 label = "Afrique centrale (CM, RDC)"
 ppp = 0.12
 default_hourly_cost_eur = 3
-tax = { bnc = 0.1, bic_vente = 0.1 }
+tax = { bnc = 0.1, bic_vente = 0.1, bic_presta = 0.1, auteur = 0.15 }
 
 # Ajustements (archétype, pays) de p12, avec justification dans le dossier.
 [fit]
@@ -371,3 +371,327 @@ tax = { bnc = 0.1, bic_vente = 0.1 }
 "geo_visibilite@SN" = 0.6
 "geo_visibilite@CM" = 0.5
 "shopify_marque@MA" = 0.9
+
+# ---- Archétypes des études complémentaires (docs/etude/amazon-kdp-pod.md, docs/etude/affiliation.md),
+# corrigés par leurs contre-vérifications. regulatory_seller : règles évaluées dans le pays du vendeur.
+
+[archetype.kdp_fiction_fr]
+p12 = 0.04
+Rs = 1500
+m = 0.7
+T1 = 10
+C = 600
+h = 250
+hrun = 25
+L = 0.5
+D = 1.5
+Rp = 0.3
+orient = "export"
+regime = "auteur"
+rails = ["kdp_payout"]
+
+[archetype.kdp_low_content]
+p12 = 0.03
+Rs = 800
+m = 0.75
+T1 = 9
+C = 300
+h = 150
+hrun = 15
+L = 0.75
+D = 0.5
+Rp = 0.4
+orient = "export"
+regime = "auteur"
+rails = ["kdp_payout"]
+
+[archetype.kdp_guides_pratiques]
+p12 = 0.05
+Rs = 1000
+m = 0.75
+T1 = 10
+C = 400
+h = 200
+hrun = 15
+L = 0.6
+D = 2.0
+Rp = 0.25
+orient = "export"
+regime = "auteur"
+rails = ["kdp_payout"]
+
+[archetype.pod_marketplaces]
+p12 = 0.01
+Rs = 800
+m = 0.95
+T1 = 8
+C = 150
+h = 120
+hrun = 10
+L = 0.6
+D = 0.5
+Rp = 0.4
+orient = "export"
+regime = "auteur"
+rails = ["pod_payout"]
+
+[archetype.pod_etsy_printify]
+# Contre-vérification : maquettes autorisées sur Etsy, la pénalité « photo réelle » est retirée (Rp 0,25 -> 0,20) [H]
+p12 = 0.05
+Rs = 1500
+m = 0.3
+T1 = 6
+C = 600
+h = 250
+hrun = 25
+L = 0.5
+D = 1.5
+Rp = 0.20
+orient = "export"
+regime = "bic_vente"
+rails = ["etsy_payments"]
+
+[archetype.etsy_imprimables]
+p12 = 0.05
+Rs = 1200
+m = 0.75
+T1 = 4
+C = 150
+h = 150
+hrun = 15
+L = 0.6
+D = 1.0
+Rp = 0.35
+orient = "export"
+regime = "bic_presta"
+rails = ["etsy_payments"]
+
+[archetype.modeles_notion_canva]
+# Contre-vérification : l'offre française existe (253 produits « modèle notion » contre 19 745 « notion template »
+# sur Gumroad, écart d'environ 1 pour 80) : p12 abaissé de 0,06 à 0,05 [H]
+p12 = 0.05
+Rs = 1000
+m = 0.88
+T1 = 4
+C = 200
+h = 150
+hrun = 12
+L = 0.75
+D = 1.5
+Rp = 0.15
+orient = "export"
+regime = "bic_presta"
+rails = ["notion_marketplace", "gumroad", "paddle", "polar"]
+
+[archetype.cours_udemy]
+p12 = 0.04
+Rs = 1000
+m = 0.9
+T1 = 8
+C = 200
+h = 200
+hrun = 15
+L = 0.5
+D = 1.5
+Rp = 0.3
+orient = "export"
+regime = "bnc"
+rails = ["udemy_payout"]
+
+[archetype.banque_images_ia]
+p12 = 0.02
+Rs = 800
+m = 0.95
+T1 = 6
+C = 300
+h = 150
+hrun = 15
+L = 0.6
+D = 0.5
+Rp = 0.45
+orient = "export"
+regime = "bnc"
+rails = ["adobe_stock_payout"]
+
+[archetype.affil_comparatif_donnees]
+p12 = 0.06
+Rs = 2200
+m = 0.85
+T1 = 18
+C = 700
+h = 200
+hrun = 20
+L = 0.65
+D = 2.5
+Rp = 0.35
+orient = "export"
+regime = "bnc"
+rails = ["amazon_associates_fr", "awin_payout"]
+regulatory = ["influence_commerciale"]
+regulatory_seller = ["influence_vendeur_hors_ue"]
+
+[archetype.affil_newsletter]
+p12 = 0.05
+Rs = 2000
+m = 0.85
+T1 = 10
+C = 500
+h = 180
+hrun = 16
+L = 0.45
+D = 3.5
+Rp = 0.15
+orient = "export"
+regime = "bnc"
+rails = ["awin_payout", "saas_affiliate_payout"]
+regulatory = ["influence_commerciale"]
+regulatory_seller = ["influence_vendeur_hors_ue"]
+
+[archetype.affil_voyage_maroc]
+# Contre-vérification : Viator paie 8 % en direct (4 % via Awin) : Rs relevé de 1 800 à 2 700 € [E]
+p12 = 0.08
+Rs = 2700
+m = 0.9
+T1 = 18
+C = 500
+h = 200
+hrun = 18
+L = 0.6
+D = 3.0
+Rp = 0.35
+orient = "export"
+regime = "bnc"
+rails = ["viator_direct", "awin_payout"]
+regulatory = ["influence_commerciale"]
+regulatory_seller = ["influence_vendeur_hors_ue"]
+
+[archetype.affil_saas_recurrent]
+p12 = 0.07
+Rs = 1800
+m = 0.9
+T1 = 10
+C = 400
+h = 180
+hrun = 15
+L = 0.7
+D = 2.5
+Rp = 0.25
+orient = "export"
+regime = "bnc"
+rails = ["saas_affiliate_payout"]
+regulatory = ["influence_commerciale"]
+regulatory_seller = ["influence_vendeur_hors_ue"]
+
+[archetype.affil_video_humaine]
+p12 = 0.06
+Rs = 2000
+m = 0.85
+T1 = 16
+C = 800
+h = 220
+hrun = 30
+L = 0.35
+D = 3.0
+Rp = 0.3
+orient = "export"
+regime = "bnc"
+rails = ["amazon_associates_fr", "awin_payout"]
+regulatory = ["influence_commerciale"]
+regulatory_seller = ["influence_vendeur_hors_ue"]
+
+[archetype.affil_outil_interactif]
+p12 = 0.06
+Rs = 1800
+m = 0.85
+T1 = 14
+C = 500
+h = 160
+hrun = 12
+L = 0.85
+D = 3.0
+Rp = 0.25
+orient = "export"
+regime = "bnc"
+rails = ["awin_payout", "saas_affiliate_payout", "amazon_associates_fr"]
+regulatory = ["influence_commerciale"]
+regulatory_seller = ["influence_vendeur_hors_ue"]
+
+[archetype.affil_bons_plans_local]
+p12 = 0.05
+Rs = 1500
+m = 0.9
+T1 = 6
+C = 200
+h = 180
+hrun = 25
+L = 0.5
+D = 1.5
+Rp = 0.45
+orient = "local"
+regime = "bnc"
+rails = ["local_affiliate"]
+
+[archetype.affil_avis_generique_ia]
+p12 = 0.02
+Rs = 1500
+m = 0.9
+T1 = 16
+C = 400
+h = 120
+hrun = 10
+L = 0.9
+D = 0.5
+Rp = 0.7
+orient = "export"
+regime = "bnc"
+rails = ["amazon_associates_fr"]
+regulatory = ["influence_commerciale"]
+
+# ---- Versions légères de l'automatisation IA (n8n), proposées le 28/11/2026. Paramètres = HYPOTHÈSES [H],
+# déduites de l'agence d'automatisation et des produits numériques, à remplacer par le journal des initiatives.
+
+[archetype.service_automatisation_prix_fixe]
+# Une automatisation livrée à prix fixe (pas une agence) : version réduite de agence_automatisation
+p12 = 0.15
+Rs = 2000
+m = 0.8
+T1 = 4
+C = 300
+h = 150
+hrun = 20
+L = 0.7
+D = 2.0
+Rp = 0.15
+orient = "local"
+regime = "bnc"
+rails = ["stripe", "paypal_reception", "youcan_pay", "paddle"]
+
+[archetype.modeles_n8n]
+p12 = 0.05
+Rs = 900
+m = 0.88
+T1 = 4
+C = 150
+h = 120
+hrun = 10
+L = 0.8
+D = 1.5
+Rp = 0.2
+orient = "export"
+regime = "bic_presta"
+rails = ["gumroad", "paddle", "polar", "chariow"]
+
+[archetype.atelier_n8n]
+p12 = 0.10
+Rs = 1500
+m = 0.85
+T1 = 3
+C = 100
+h = 80
+hrun = 15
+L = 0.6
+D = 2.0
+Rp = 0.1
+orient = "local"
+regime = "bnc"
+rails = ["stripe", "paypal_reception", "youcan_pay"]

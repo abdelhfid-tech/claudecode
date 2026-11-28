@@ -1,3 +1,5 @@
+import pytest
+
 from radar.gates import InitiativeSpec, evaluate
 
 
@@ -30,11 +32,36 @@ def test_excluded_categories_and_minors():
 
 
 def test_regulated_but_allowed_category_is_a_partial_gate():
-    influence = InitiativeSpec(rails=["stripe"], regulatory=["influence_commerciale"])
-    res = evaluate(influence, "FR", "FR")
+    colis = InitiativeSpec(rails=["stripe"], regulatory=["petits_colis_ue"])
+    res = evaluate(colis, "FR", "FR")
     assert res.value == 0.6 and not res.excluded
 
 
 def test_cash_on_delivery_in_morocco():
     cod = InitiativeSpec(rails=["paiement_livraison", "youcan_pay"])
     assert evaluate(cod, "MA", "MA").value == 1.0
+
+
+def test_rule_specific_gate_values_and_seller_side_rules():
+    affil = InitiativeSpec(rails=["awin_payout", "saas_affiliate_payout"], regulatory=["influence_commerciale"],
+                           regulatory_seller=["influence_vendeur_hors_ue"])
+    fr = evaluate(affil, buyer_zone="FR", seller_zone="FR")
+    assert fr.value == pytest.approx(0.95)  # obligation de mention : pas un verrou
+    ma = evaluate(affil, buyer_zone="FR", seller_zone="MA")
+    # meilleur rail ouvert au Maroc : logiciels via PayPal (partiel, 0,6) ; article 9 hors UE : 0,8
+    assert ma.value == pytest.approx(0.6 * 0.95 * 0.8)
+    assert any("vendeur en MA" in r for r in ma.reasons)
+
+
+def test_kdp_and_etsy_rails_by_country():
+    kdp = InitiativeSpec(rails=["kdp_payout"])
+    assert evaluate(kdp, "FR", "MA").value == 1.0      # virement en dirhams
+    assert evaluate(kdp, "FR", "SN").value == 0.6      # chèque en dollars seulement
+    etsy = InitiativeSpec(rails=["etsy_payments"])
+    assert evaluate(etsy, "FR", "MA").value == 1.0 and evaluate(etsy, "FR", "SN").value == 0.0
+
+
+def test_seller_rule_only_applies_to_its_target_audience():
+    affil = InitiativeSpec(rails=["saas_affiliate_payout"], regulatory_seller=["influence_vendeur_hors_ue"])
+    assert evaluate(affil, buyer_zone="MA", seller_zone="MA").value == 0.6  # pas de public français : pas d'article 9
+    assert evaluate(affil, buyer_zone="FR", seller_zone="MA").value == pytest.approx(0.48)
