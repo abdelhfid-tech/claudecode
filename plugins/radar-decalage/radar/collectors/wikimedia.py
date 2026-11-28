@@ -37,26 +37,46 @@ def parse_rows(text: str) -> Iterable[dict[str, Any]]:
 
 
 def select(rows: Iterable[dict[str, Any]], countries: set[str], projects: set[str] | None,
-           top_n: int, qids: set[str]) -> tuple[list[dict[str, Any]], dict[str, int]]:
-    """Renvoie (lignes retenues, nombre total de lignes par pays suivi)."""
+           top_n: int, qids: set[str], origins: set[str] | None = None,
+           top_n_origin: int | None = None) -> tuple[list[dict[str, Any]], dict[str, int]]:
+    """Renvoie (lignes retenues, nombre total de lignes par pays suivi).
+
+    Lignes retenues, pour les pays suivis :
+      - le top `top_n` de chaque couple (pays, projet) : tendances locales et flux inverses ;
+      - toutes les lignes, dans tous les pays suivis, des QID qui figurent dans le top
+        `top_n_origin` d'un pays d'origine (USA, sentinelles) ou dans la liste suivie.
+    La seconde règle permet de savoir si une page en vogue aux USA est lue en France ou
+    au Maroc : son absence d'un top local ne prouverait rien, son absence du fichier dit
+    qu'elle est sous le seuil de publication.
+    """
     coverage: dict[str, int] = defaultdict(int)
     groups: dict[tuple[str, str], list[dict[str, Any]]] = defaultdict(list)
-    forced: list[dict[str, Any]] = []
+    tracked: list[dict[str, Any]] = []
     for row in rows:
         if row["code"] not in countries:
             continue
         coverage[row["code"]] += 1
-        if row["qid"] and row["qid"] in qids:
-            forced.append(row)
-        elif projects is None or row["project"] in projects:
+        if row["qid"]:
+            tracked.append(row)
+        if projects is None or row["project"] in projects:
             groups[(row["code"], row["project"])].append(row)
-    kept = list(forced)
-    seen = {(r["code"], r["project"], r["page_id"]) for r in forced}
-    for rows_ in groups.values():
+    follow = set(qids)
+    keep_keys: set[tuple[str, str, str]] = set()
+    for (code, _project), rows_ in groups.items():
         rows_.sort(key=lambda r: -r["views"])
         for r in rows_[:top_n]:
-            if (r["code"], r["project"], r["page_id"]) not in seen:
-                kept.append(r)
+            keep_keys.add((r["code"], r["project"], r["page_id"]))
+        if origins and code in origins:
+            for r in rows_[: (top_n_origin or top_n)]:
+                if r["qid"]:
+                    follow.add(r["qid"])
+    for r in tracked:
+        if r["qid"] in follow:
+            keep_keys.add((r["code"], r["project"], r["page_id"]))
+    kept = [r for rows_ in groups.values() for r in rows_ if (r["code"], r["project"], r["page_id"]) in keep_keys]
+    seen = {(r["code"], r["project"], r["page_id"]) for r in kept}
+    kept += [r for r in tracked if (r["code"], r["project"], r["page_id"]) in keep_keys
+             and (r["code"], r["project"], r["page_id"]) not in seen]
     return kept, dict(coverage)
 
 
@@ -81,7 +101,9 @@ class WikimediaCountry(Collector):
             if not r.ok:
                 res.unit(False, f"{day}: {r.status or r.error}")
                 continue
-            kept, coverage = select(parse_rows(r.text()), countries, projects, int(cfg.get("top_n", 100)), qids)
+            kept, coverage = select(parse_rows(r.text()), countries, projects, int(cfg.get("top_n", 50)), qids,
+                                    set(cfg.get("origins", ["US", "GB", "CA", "DE"])),
+                                    int(cfg.get("top_n_origin", 50)))
             res.unit(True)
             for code, n in sorted(coverage.items()):
                 res.records.append(make_record(self.name, code, "coverage", "rows", n,

@@ -210,6 +210,23 @@ def test_wikimedia_select_topn_forced_qids_and_coverage():
     assert cov == {"FR": 4, "MA": 2}
 
 
+def test_wikimedia_follows_origin_top_qids_in_every_country():
+    tsv = "\n".join([
+        "United States\tUS\ten.wikipedia\t1\tTrend_US\tQ100\t5000",
+        "United States\tUS\ten.wikipedia\t2\tOther_US\tQ101\t400",
+        "France\tFR\tfr.wikipedia\t50\tLocal_FR\tQ200\t900",
+        "France\tFR\tfr.wikipedia\t51\tTendance_US_fr\tQ100\t95",   # sous le top local, mais QID suivi
+        "Morocco\tMA\tfr.wikipedia\t60\tLocal_MA\tQ300\t120",
+    ])
+    kept, _ = wikimedia.select(list(wikimedia.parse_rows(tsv)), {"US", "FR", "MA"}, {"en.wikipedia", "fr.wikipedia"},
+                               top_n=1, qids=set(), origins={"US"}, top_n_origin=1)
+    keys = sorted((r["code"], r["qid"]) for r in kept)
+    assert ("FR", "Q100") in keys  # la tendance US est suivie en France même hors du top français
+    assert ("US", "Q101") not in keys  # hors du top 1 d'origine
+    assert keys == [("FR", "Q100"), ("FR", "Q200"), ("MA", "Q300"), ("US", "Q100")]
+    # Q100 n'a aucune ligne au Maroc : sous le seuil de publication, pas forcément absent.
+
+
 def test_wikimedia_collect_skips_unpublished_days_and_tracks_state(now, tmp_path):
     published = (now.date() - timedelta(days=2)).isoformat()
     client = FakeClient({published: (200, TSV)})

@@ -161,6 +161,18 @@ def cmd_watchlist(args: argparse.Namespace) -> int:
     return 0
 
 
+def cmd_gaps(args: argparse.Namespace) -> int:
+    from . import analysis
+
+    targets = tuple(t.strip() for t in args.targets.split(","))
+    rows = analysis.gaps(RawStore(paths.data_dir()), max_origin_rank=args.max_rank, targets=targets)
+    if args.json:
+        print(json.dumps(rows, ensure_ascii=False, indent=1))
+    else:
+        print(analysis.render_gaps(rows, args.limit))
+    return 0
+
+
 def build_parser() -> argparse.ArgumentParser:
     p = argparse.ArgumentParser(prog="radar", description="Radar d'arbitrage de tendances (radar-decalage)")
     p.add_argument("--version", action="version", version=__version__)
@@ -177,6 +189,12 @@ def build_parser() -> argparse.ArgumentParser:
     h.set_defaults(func=cmd_health)
     sub.add_parser("sources", help="registre des sources").set_defaults(func=cmd_sources)
     sub.add_parser("watchlist", help="liste de suivi").set_defaults(func=cmd_watchlist)
+    g = sub.add_parser("gaps", help="apps fortes à l'origine, indisponibles dans les pays cibles")
+    g.add_argument("--targets", default="FR,MA")
+    g.add_argument("--max-rank", type=int, default=50)
+    g.add_argument("--limit", type=int, default=30)
+    g.add_argument("--json", action="store_true")
+    g.set_defaults(func=cmd_gaps)
     return p
 
 

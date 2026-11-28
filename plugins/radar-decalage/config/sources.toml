@@ -75,8 +75,11 @@ publishable = true
 tos = "jeu public de Wikimedia (pages vues par pays, confidentialité différentielle)"
 countries = ["US", "CA", "GB", "DE", "ES", "IT", "NL", "FR", "BE", "CH", "LU", "MA", "DZ", "TN", "SN", "CI", "CM", "CD"]
 projects = ["en.wikipedia", "fr.wikipedia", "ar.wikipedia", "ary.wikipedia", "de.wikipedia", "es.wikipedia", "it.wikipedia", "nl.wikipedia"]
-top_n = 100
-# QID suivis en plus du top : ajoutés quand une entité est validée.
+top_n = 50
+# Pays d'origine : les QID de leur top sont suivis dans tous les pays (présence ou absence sous le seuil).
+origins = ["US", "GB", "CA", "DE"]
+top_n_origin = 50
+# QID suivis en plus : ajoutés quand une entité est validée.
 qids = []
 
 # Règles de débit par site. min_interval en secondes entre deux appels au même site.

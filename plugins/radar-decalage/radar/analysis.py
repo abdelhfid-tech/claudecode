@@ -1,0 +1,154 @@
+"""Premières analyses sur les instantanés : écarts de disponibilité des apps.
+
+Utilisable dès le premier jour : la disponibilité par vitrine ne demande pas
+d'historique. Les arrivées datées (première disponibilité par pays) s'ajoutent
+au fil des relevés quotidiens.
+"""
+
+from __future__ import annotations
+
+from collections import defaultdict
+from datetime import date
+from typing import Any, Iterable
+
+from .storage import RawStore
+
+ORIGIN_ZONES = ("US", "GB", "CA", "AU", "DE", "JP", "MX")
+TARGET_ZONES = ("FR", "BE", "CH", "MA", "DZ", "TN", "SN", "CI")
+
+
+def latest_day(store: RawStore, source: str, on_or_before: date | None = None) -> date | None:
+    days = [d for d in store.days(source) if on_or_before is None or d <= on_or_before]
+    return days[-1] if days else None
+
+
+def availability(records: Iterable[dict[str, Any]]) -> tuple[dict[str, dict[str, int]], dict[str, dict[str, Any]]]:
+    """({app: {zone: 0/1}}, {app: méta de la vitrine US si disponible, sinon de la première vitrine})."""
+    avail: dict[str, dict[str, int]] = defaultdict(dict)
+    meta: dict[str, dict[str, Any]] = {}
+    for r in records:
+        if r.get("kind") != "availability" or not r["key"].startswith("ios:"):
+            continue
+        app = r["key"][4:]
+        avail[app][r["zone"]] = int(r["value"])
+        if r["value"] and r.get("meta") and (app not in meta or r["zone"] == "US"):
+            meta[app] = {**r["meta"], "meta_zone": r["zone"]}
+    return dict(avail), meta
+
+
+def chart_ranks(records: Iterable[dict[str, Any]], chart: str = "top-free",
+                platform: str = "ios") -> tuple[dict[str, dict[str, int]], dict[str, dict[str, Any]]]:
+    ranks: dict[str, dict[str, int]] = defaultdict(dict)
+    info: dict[str, dict[str, Any]] = {}
+    for r in records:
+        if r.get("kind") != "rank" or not r["key"].startswith(platform + ":"):
+            continue
+        if r.get("meta", {}).get("chart", chart) != chart:
+            continue
+        app = r["key"].split(":", 1)[1]
+        prev = ranks[app].get(r["zone"])
+        if prev is None or r["value"] < prev:
+            ranks[app][r["zone"]] = r["value"]
+        info.setdefault(app, {"name": r["meta"].get("name", ""), "genres": r["meta"].get("genres", [])})
+    return dict(ranks), info
+
+
+def age_days(meta: dict[str, Any], today: date) -> int | None:
+    """Ancienneté d'après la date de sortie, seulement si elle vient d'une vitrine fiable.
+
+    La date est tronquée à l'ouverture de la vitrine au Maroc et en Côte d'Ivoire
+    (avril 2020) : on ne l'utilise que si elle vient de la vitrine US.
+    """
+    if meta.get("meta_zone") != "US" or not meta.get("release_date"):
+        return None
+    try:
+        return (today - date.fromisoformat(meta["release_date"])).days
+    except ValueError:
+        return None
+
+
+def classify(zones_available: dict[str, int], n_storefronts: int, age: int | None) -> str:
+    n_yes = sum(zones_available.values())
+    if n_storefronts and n_yes >= 0.8 * n_storefronts:
+        return "mondiale"
+    if n_yes <= 2 and age is not None and age > 3 * 365:
+        return "nationale établie"  # service local par nature : Walmart, banques, opérateurs
+    if age is not None and age <= 540:
+        return "récente, diffusion limitée"
+    return "diffusion limitée"
+
+
+def gaps(store: RawStore, day: date | None = None, max_origin_rank: int = 50,
+         targets: tuple[str, ...] = ("FR", "MA")) -> list[dict[str, Any]]:
+    """Apps fortes dans un marché d'origine, indisponibles dans au moins une cible."""
+    d_lookup = latest_day(store, "apple_lookup", day)
+    d_charts = latest_day(store, "apple_charts", day)
+    if not d_lookup or not d_charts:
+        return []
+    avail, meta = availability(store.read("apple_lookup", d_lookup))
+    ranks, info = chart_ranks(store.read("apple_charts", d_charts))
+    n_store = max((len(z) for z in avail.values()), default=0)
+    today = day or d_lookup
+    rows = []
+    for app, zone_avail in avail.items():
+        app_ranks = ranks.get(app, {})
+        origin = {z: r for z, r in app_ranks.items() if z in ORIGIN_ZONES and r <= max_origin_rank}
+        if not origin:
+            continue
+        missing = [t for t in targets if zone_avail.get(t) == 0]
+        if not missing:
+            continue
+        age = age_days(meta.get(app, {}), today)
+        cls = classify(zone_avail, n_store, age)
+        if cls == "nationale établie":
+            continue
+        best_zone, best_rank = min(origin.items(), key=lambda kv: kv[1])
+        rows.append({
+            "app": app, "name": info.get(app, {}).get("name") or meta.get(app, {}).get("name", ""),
+            "genres": info.get(app, {}).get("genres", []),
+            "best_origin": f"{best_zone} n°{best_rank}", "best_rank": best_rank,
+            "available_in": sorted(z for z, v in zone_avail.items() if v),
+            "available_count": f"{sum(zone_avail.values())}/{len(zone_avail)}",
+            "missing_targets": missing,
+            "target_status": {t: ("disponible" if zone_avail.get(t) else "indisponible") for t in TARGET_ZONES
+                              if t in zone_avail},
+            "age_days": age, "class": cls,
+        })
+    rows.sort(key=lambda r: (r["best_rank"], r["app"]))
+    return rows
+
+
+def arrivals(store: RawStore, source: str = "apple_lookup") -> dict[tuple[str, str], str]:
+    """Première date où chaque (app, vitrine) est observée disponible après une absence observée.
+
+    Une app disponible dès le premier relevé n'a pas de date d'arrivée : on sait
+    seulement qu'elle est arrivée avant le début de la collecte.
+    """
+    seen_absent: set[tuple[str, str]] = set()
+    first_present: dict[tuple[str, str], str] = {}
+    for d in store.days(source):
+        for r in store.read(source, d):
+            if r.get("kind") != "availability":
+                continue
+            k = (r["key"], r["zone"])
+            if r["value"] == 0:
+                seen_absent.add(k)
+            elif k in seen_absent and k not in first_present:
+                first_present[k] = d.isoformat()
+    return first_present
+
+
+def render_gaps(rows: list[dict[str, Any]], limit: int = 30) -> str:
+    if not rows:
+        return "Aucun écart : il faut au moins un relevé des classements et de la disponibilité."
+    lines = ["| App | Genre | Meilleur rang d'origine | Disponible | FR | MA | BE | SN | Âge | Classe |",
+             "|---|---|---|---|---|---|---|---|---|---|"]
+    for r in rows[:limit]:
+        st = r["target_status"]
+        age = f"{r['age_days'] // 30} mois" if r["age_days"] is not None else "?"
+        lines.append(f"| {r['name'][:38]} | {', '.join(g for g in r['genres'] if g)[:18]} | {r['best_origin']} | "
+                     f"{r['available_count']} | {st.get('FR', '?')} | {st.get('MA', '?')} | {st.get('BE', '?')} | "
+                     f"{st.get('SN', '?')} | {age} | {r['class']} |")
+    if len(rows) > limit:
+        lines.append(f"\n{len(rows) - limit} autres écarts non affichés.")
+    return "\n".join(lines)
