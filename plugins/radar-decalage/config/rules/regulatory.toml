@@ -85,3 +85,13 @@ source = "RGPD ; loi marocaine 09-08 (CNDP)"
 evidence = "F2"
 status = { FR = "restreint", BE = "restreint", CH = "restreint", MA = "restreint" }
 notes = { MA = "déclaration ou autorisation CNDP selon le traitement" }
+
+[[rule]]
+id = "influence_vendeur_hors_ue"
+category = "influence commerciale vers un public français, vendeur établi hors UE, EEE et Suisse"
+applies_to = "vendeur"
+as_of = 2026-11-28
+source = "loi n° 2023-451, article 9, réécrit par l'ordonnance n° 2024-978 (JORF du 07/11/2024) ; décret d'application non vérifié"
+evidence = "F"
+status = { MA = "restreint", DZ = "restreint", TN = "restreint", SN = "restreint", CI = "restreint", CM = "restreint", CD = "restreint", "CA-QC" = "restreint", FR = "autorise", BE = "autorise", CH = "autorise" }
+notes = { MA = "désigner un représentant dans l'UE et souscrire une assurance de responsabilité civile professionnelle auprès d'un assureur européen ; coût à ajouter au capital et aux heures de l'initiative" }
