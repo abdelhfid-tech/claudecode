@@ -127,8 +127,14 @@ let anomalies = 0; const ok = m => console.log('OK  ' + m), ko = m => { anomalie
   const ouvrir = async (nom, n) => { await ev(nom => { window.ISNAD.debug.auto = true; window.__t.toucher(window.__t.maillon(nom)); }, nom); return ev(n => window.__t.jusqua(n), n); };
   // faire avancer ce qui se dit (dialogues, cartons), une ligne écrite tout entière à la fois, jusqu'à la main ou un choix
   const avancer = async () => { for (let i = 0; i < 120; i++) {
-      const e = await ev(() => { const T = window.__t, q = s => document.querySelector(s); return T.calme() ? 'calme' : T.visible('#choice') ? 'choix' : T.visible('#dialog') ? (getComputedStyle(q('#dialog .next')).visibility === 'visible' ? 'lire' : 'ecrit') : (T.visible('#card') && q('#card').classList.contains('on')) ? 'lire' : ''; });
-      if (e === 'calme' || e === 'choix') return e; if (e === 'lire') { await page.waitForTimeout(200); await page.keyboard.press('Enter'); } await page.waitForTimeout(170); }
+      // (2.49 : un choix ouvert se voit avant le calme — et s'il est ouvert alors que le joueur a la main, c'est un défaut du jeu)
+      const e = await ev(() => { const T = window.__t, q = s => document.querySelector(s); return T.visible('#choice') ? (T.calme() ? 'choix-libre' : 'choix') : T.calme() ? 'calme' : T.visible('#dialog') ? (getComputedStyle(q('#dialog .next')).visibility === 'visible' ? 'lire' : 'ecrit') : (T.visible('#card') && q('#card').classList.contains('on')) ? 'lire' : ''; });
+      if (e === 'choix-libre') { ko('ÉCART un choix est ouvert alors que le joueur a la main : ' + JSON.stringify(await ev(() => [...document.querySelectorAll('#choice .opt')].map(b => b.textContent.trim())))); return 'choix'; }
+      // (2.49 : on ne presse que sur un texte encore à lire — à la vitesse d'essai, une carte se ferme seule ; et depuis que les
+      // narrations d'arrivée ne retiennent plus, un « Entrée » de trop tombe dans le monde : à côté de Maître Yûnus, il lui parle)
+      if (e === 'calme' || e === 'choix') return e;
+      if (e === 'lire') { await page.waitForTimeout(200); const encore = await ev(() => { const T = window.__t, q = s => document.querySelector(s); return !T.calme() && !T.visible('#choice') && ((T.visible('#dialog') && getComputedStyle(q('#dialog .next')).visibility === 'visible') || (T.visible('#card') && q('#card').classList.contains('on'))); }); if (encore) await page.keyboard.press('Enter'); }
+      await page.waitForTimeout(170); }
     return 'bloque'; };
   const revenir = async () => {
     const n0 = await ev(() => window.__t.journal.length);
@@ -143,7 +149,10 @@ let anomalies = 0; const ok = m => console.log('OK  ' + m), ko = m => { anomalie
     if (!(pres > 0 && pres < 40)) ko(`ÉCART au retour, Idris n’est pas à côté de Maître Yûnus (${pres} points)`);
     // la Chaîne, par Maître Yûnus : lui parler, puis « La Chaîne, au fond de la mosquée »
     await ev(() => { const W = window.ISNAD.world, y = W.npcs.find(n => n.id === 'yunus_c'); W.player.x = y.x + 18; W.player.y = y.y; W.player.dir = 1; W.stop(); W.resetTrail(); });
-    await page.waitForTimeout(250); await page.keyboard.press('Enter'); await page.waitForTimeout(300);
+    await page.waitForTimeout(250); await page.keyboard.press('Enter');
+    // (2.49 : on attend que Maître Yûnus réponde — sa réplique, ou le choix — avant de lire ; un A sans réponse est un défaut)
+    const repond = await ev(() => window.__t.attendre(() => window.__t.visible('#dialog') || window.__t.visible('#choice'), 4000));
+    if (!repond) { const e = await ev(() => Object.assign(window.__t.etat(), { yunus: (() => { const W = window.ISNAD.world, y = W.npcs.find(n => n.id === 'yunus_c'); return y ? [Math.round(y.x), Math.round(y.y), !!y.hidden] : null; })(), menu: window.ISNAD.cite && window.ISNAD.cite.journal.slice(-3) })); ko('INACCESSIBLE Maître Yûnus ne répond pas au premier A : ' + JSON.stringify(e)); await page.keyboard.press('Enter'); }
     const c = await avancer(), opts = await ev(() => [...document.querySelectorAll('#choice .opt')].map(b => b.textContent.trim()));
     const i = opts.findIndex(o => /^La Chaîne/.test(o));
     if (c !== 'choix' || i < 0) { ko('INACCESSIBLE Maître Yûnus n’offre pas « La Chaîne » : ' + JSON.stringify({ c, opts })); return ici; }
