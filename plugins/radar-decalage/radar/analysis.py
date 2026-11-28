@@ -14,7 +14,8 @@ from typing import Any, Iterable
 
 from .storage import RawStore
 
-ORIGIN_ZONES = ("US", "GB", "CA", "AU", "DE", "JP", "MX")
+# Marchés d'origine des tendances : USA et pays sentinelles, Golfe (Dubaï, Riyad) et Chine (App Store seulement).
+ORIGIN_ZONES = ("US", "GB", "CA", "AU", "DE", "JP", "MX", "AE", "SA", "CN")
 TARGET_ZONES = ("FR", "BE", "CH", "MA", "DZ", "TN", "SN", "CI")
 # Vitrines ouvertes en 2020 : la date de sortie y est tronquée à l'ouverture (avril 2020).
 TRUNCATED_STOREFRONTS = {"MA", "CI", "SN", "DZ", "TN"}

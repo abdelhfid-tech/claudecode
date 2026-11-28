@@ -137,10 +137,20 @@ group = "test"
 apple = "th"
 
 [[zone]]
+code = "CN"
+name = "Chine"
+group = "origine"
+apple = "cn"
+# Google, YouTube et Wikipedia sont bloqués en Chine : seul l'App Store chinois est observable
+# gratuitement. Douyin, Xiaohongshu et Taobao restent hors de portée (angle mort assumé).
+
+[[zone]]
 code = "AE"
 name = "Émirats arabes unis"
 group = "relais"
 apple = "ae"
+# Dubaï : origine de tendances qui gagnent le Maroc (chocolat de Dubaï) ; App Store, Google Trends,
+# autocomplétion et radar produits.
 
 [[zone]]
 code = "SA"

@@ -1,0 +1,4 @@
+# Aides et freins à l'arrivée d'un produit, d'un service ou d'un concept au Maroc ou en France.
+# Chaque dispositif est daté et sourcé ; preuve F = source officielle lue, F2 = presse ou cabinet citant
+# la source officielle, H = non confirmé. Relire après chaque loi de finances (Maroc, France) et chaque
+# règlement européen. Contrôle : python -m radar rules

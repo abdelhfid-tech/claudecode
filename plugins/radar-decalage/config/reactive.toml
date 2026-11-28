@@ -18,6 +18,7 @@ exclude_patterns = [
 ]
 
 [gtrends]
+origins = ["US", "AE", "SA"]    # USA et Golfe (Dubaï, Riyad)
 days = 2                    # derniers jours de tendances du jour pris en compte
 min_traffic = 1000          # trafic minimal annoncé par Google (« 1K+ »)
 

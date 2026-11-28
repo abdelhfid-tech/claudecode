@@ -5,10 +5,11 @@ from .apple import AppleCharts, AppleLookup
 from .autocomplete import Autocomplete
 from .google_play import GooglePlayCharts
 from .gtrends import GoogleTrendsDaily
+from .produits import AutocompleteProduits
 from .villes import AutocompleteVilles
 from .wikimedia import WikimediaCountry
 
 REGISTRY = [AppleCharts, GooglePlayCharts, AppleLookup, GoogleTrendsDaily, Autocomplete, WikimediaCountry,
-            AutocompleteVilles]
+            AutocompleteVilles, AutocompleteProduits]
 
 BY_NAME = {c.name: c for c in REGISTRY}

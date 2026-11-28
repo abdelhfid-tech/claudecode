@@ -5,6 +5,8 @@
   sources   registre des sources et leur statut
   watchlist état de la liste de suivi
   villes    tendances et métiers locaux, ville par ville
+  produits  produits recherchés au Maroc : installés à Casablanca, pas encore à Fès
+  incitations aides et freins : douane, fiscalité, aides, règles (Maroc, France)
   initiatives classement des modèles d'activité (--scenario solo, petit_ia, agence)
 """
 
@@ -248,6 +250,30 @@ def cmd_villes(args: argparse.Namespace) -> int:
     return 0
 
 
+def cmd_produits(args: argparse.Namespace) -> int:
+    from . import produits
+
+    rows = produits.table(RawStore(paths.data_dir()))
+    if args.fes:
+        rows = [r for r in rows if r["verdict"] == "Installé à Casablanca, pas encore à Fès"]
+    print(json.dumps(rows, ensure_ascii=False, indent=1) if args.json else produits.render(rows))
+    return 0
+
+
+def cmd_incitations(args: argparse.Namespace) -> int:
+    from . import incitations
+
+    items = incitations.load()
+    if args.archetype:
+        chosen = incitations.for_initiative(items, args.archetype, args.buyer, args.seller)
+    else:
+        pays = [p.strip() for p in args.pays.split(",")] if args.pays else None
+        usages = [u.strip() for u in args.pour.split(",")] if args.pour else None
+        chosen = incitations.select(items, pays=pays, usages=usages, sens=args.sens)
+    print(json.dumps(chosen, ensure_ascii=False, indent=1, default=str) if args.json else incitations.render(chosen))
+    return 0
+
+
 def cmd_ledger(args: argparse.Namespace) -> int:
     from .ledger import Ledger, scoreboard
 
@@ -267,7 +293,10 @@ def cmd_ledger(args: argparse.Namespace) -> int:
 def cmd_rules(args: argparse.Namespace) -> int:
     from . import rules
 
-    problems = rules.check(rules.load_rules(), datetime.now(timezone.utc).date())
+    from . import incitations
+
+    today = datetime.now(timezone.utc).date()
+    problems = rules.check(rules.load_rules(), today) + incitations.check(incitations.load(), today)
     if not problems:
         print("Règles valides et à jour.")
         return 0
@@ -344,6 +373,19 @@ def build_parser() -> argparse.ArgumentParser:
     v.add_argument("--decalage", help="ville_en_avance:ville_en_retard, par exemple casablanca:fes")
     v.add_argument("--json", action="store_true")
     v.set_defaults(func=cmd_villes)
+    pr = sub.add_parser("produits", help="produits recherchés au Maroc, installés à Casablanca, pas encore à Fès")
+    pr.add_argument("--fes", action="store_true", help="seulement les produits installés à Casablanca et pas encore à Fès")
+    pr.add_argument("--json", action="store_true")
+    pr.set_defaults(func=cmd_produits)
+    inc = sub.add_parser("incitations", help="aides et freins (douane, fiscalité, aides, règles) au Maroc et en France")
+    inc.add_argument("--pays", help="MA, FR (FR inclut les règles européennes)")
+    inc.add_argument("--pour", help="produit_importe, colis_ecommerce, service_numerique, concept_franchise, export_depuis_maroc, artisanat")
+    inc.add_argument("--sens", choices=["facilite", "freine"])
+    inc.add_argument("--archetype", help="dispositifs utiles pour un modèle d'activité (avec --buyer et --seller)")
+    inc.add_argument("--buyer", default="MA")
+    inc.add_argument("--seller", default="MA")
+    inc.add_argument("--json", action="store_true")
+    inc.set_defaults(func=cmd_incitations)
     rc = sub.add_parser("reactive", help="candidats du jour pour le contenu réactif (et envoi au flux n8n)")
     rc.add_argument("--post", action="store_true", help="envoyer au webhook n8n (RADAR_N8N_WEBHOOK, RADAR_N8N_TOKEN)")
     rc.add_argument("--post-if-set", action="store_true",

@@ -43,9 +43,13 @@ def _days_back(store: RawStore, source: str, n: int) -> list[date]:
     return days[-n:] if days else []
 
 
+ORIGIN_LABELS = {"US": "USA", "AE": "Émirats", "SA": "Arabie saoudite", "GB": "Royaume-Uni", "CA": "Canada"}
+
+
 def trend_candidates(store: RawStore, cfg: dict[str, Any], patterns: list[re.Pattern]) -> list[dict[str, Any]]:
     days = _days_back(store, "gtrends_daily", int(cfg.get("days", 2)))
-    by_zone: dict[str, dict[str, dict[str, Any]]] = {"US": {}, "FR": {}, "MA": {}}
+    origins = list(cfg.get("origins", ["US"]))
+    by_zone: dict[str, dict[str, dict[str, Any]]] = {z: {} for z in [*origins, "FR", "MA"]}
     for d in days:
         for r in store.read("gtrends_daily", d):
             if r.get("kind") != "trending" or r["zone"] not in by_zone:
@@ -57,7 +61,11 @@ def trend_candidates(store: RawStore, cfg: dict[str, Any], patterns: list[re.Pat
                 by_zone[r["zone"]][key] = {**r, "title": title}
     elsewhere = set(by_zone["FR"]) | set(by_zone["MA"])
     out = []
-    for key, r in by_zone["US"].items():
+    seen: set[str] = set()
+    for key, r in [(k, v) for z in origins for k, v in by_zone[z].items()]:
+        if key in seen:
+            continue
+        seen.add(key)
         traffic = r.get("value") or 0
         if traffic < int(cfg.get("min_traffic", 1000)) or _excluded(r["title"], patterns):
             continue
@@ -65,7 +73,7 @@ def trend_candidates(store: RawStore, cfg: dict[str, Any], patterns: list[re.Pat
             continue
         out.append({
             "id": f"trend:{key}", "kind": "tendance_recherche", "title": r["title"],
-            "signal": {"source": "Google Trends, tendances du jour USA", "traffic": traffic,
+            "signal": {"source": f"Google Trends, tendances du jour {ORIGIN_LABELS.get(r['zone'], r['zone'])}", "traffic": traffic,
                        "traffic_label": r["meta"].get("traffic_label")},
             "presence": {"FR": "absent des tendances du jour", "MA": "absent des tendances du jour"},
             "context": [n.get("title", "") for n in r["meta"].get("news", []) if n.get("title")][:3],

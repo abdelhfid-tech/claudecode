@@ -41,7 +41,7 @@ cadence = "hourly"
 enabled = true
 publishable = false
 tos = "flux RSS officiel de Google Trends ; usage interne"
-geos = ["US", "FR", "MA"]
+geos = ["US", "FR", "MA", "AE", "SA"]   # Golfe : tendances qui gagnent le Maroc ; pas de Google Trends en Chine
 
 [source.autocomplete]
 family = "search"
@@ -53,6 +53,7 @@ max_queries = 400
 # Couples (moteur, zone, langue). La langue renvoie aux variantes des termes (en, fr, ar, ary).
 pairs = [
   { engine = "google", zone = "US", lang = "en", hl = "en", gl = "us" },
+  { engine = "google", zone = "AE", lang = "en", hl = "en", gl = "ae" },
   { engine = "google", zone = "FR", lang = "fr", hl = "fr", gl = "fr" },
   { engine = "google", zone = "BE", lang = "fr", hl = "fr", gl = "be" },
   { engine = "google", zone = "CA-QC", lang = "fr", hl = "fr", gl = "ca" },
@@ -87,6 +88,14 @@ cities = [
 ]
 # Métiers locaux suivis ville par ville (cibles possibles d'une offre spécialisée).
 trades = ["riad", "école privée", "clinique", "salle de sport", "agence immobilière", "coworking", "formation ia", "agence ia"]
+
+[source.autocomplete_produits]
+family = "search"
+cadence = "weekly"
+enabled = true
+publishable = false
+tos = "autocomplétion Google au Maroc (« prix … », « ثمن … », puis « produit + ville ») : même point d'accès que l'autocomplétion (sans robots.txt, zone grise)"
+# Paramètres (préfixes, filtres, risques, villes comparées) : config/produits.toml
 
 [source.wikimedia_country]
 family = "attention"

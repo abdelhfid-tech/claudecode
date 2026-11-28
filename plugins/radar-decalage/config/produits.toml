@@ -1,0 +1,103 @@
+# Radar produits : ce que les gens veulent acheter au Maroc (suggestions Google « prix … » et « ثمن … »),
+# puis où le produit est déjà installé (Casablanca) et où il ne l'est pas encore (Fès).
+# Sert à repérer des produits à vendre en ligne à Fès (paiement à la livraison, réseaux sociaux, WhatsApp).
+
+top_products = 45          # produits vérifiés ville par ville (2 recherches chacun)
+cities = ["casablanca", "fes"]            # identifiants de [source.autocomplete_villes].cities
+city_ar = { casablanca = "الدار البيضاء", fes = "فاس" }
+city_ar_match = { casablanca = "الدار البيضاء|كازا", fes = "فاس" }
+
+# Découverte : un préfixe d'intention d'achat, suivi de chaque lettre.
+[[discovery]]
+prefix = "prix "
+letters = "abcdefghijklmnopqrstuvwxyz"
+hl = "fr"
+lang = "fr"
+# « prix » veut aussi dire récompense (prix Goncourt) : on garde seulement les recherches d'achat au Maroc.
+require = "\\b(maroc|morocco|dh|dirhams?|marjane|jumia|electroplanet|decathlon|carrefour|bim|kitea|ikea|pas cher|neuf|occasion)\\b"
+
+[[discovery]]
+prefix = "ثمن "
+letters = "ابتثجحخدذرزسشصضطظعغفقكلمنهوي"
+hl = "ar"
+lang = "ar"
+
+# Dubaï : ce qui s'y cherche (en anglais), puis comparé à Casablanca et Fès.
+[[discovery]]
+prefix = "price "
+letters = "abcdefghijklmnopqrstuvwxyz"
+hl = "en"
+gl = "ae"
+lang = "en"
+origin = "Dubaï"
+
+[filters]
+# Mots retirés autour du nom du produit (expressions régulières sur le texte sans accents latins).
+strip = [
+  "^prix ", "^ثمن ", "^price ", "\\b(in|at)? ?(dubai|uae|abu dhabi|sharjah)\\b", "\\bprice\\b", "\\btoday\\b", "\\b(au|en|du|a)? ?maroc\\b", "\\bmorocco\\b", "\\bmarjane\\b", "\\bjumia\\b", "\\bpas cher\\b",
+  "\\ben ligne\\b", "\\bneuf\\b", "\\bneuve\\b", "\\boccasion\\b", "\\baujourd hui\\b", "\\b20[0-9]{2}\\b",
+  "في المغرب", "بالمغرب", "المغرب", "اليوم", "جديدة", "جديد", "\\bفي\\b",
+]
+# Ce qui ne se vend pas en ligne par un petit vendeur, ou n'est pas un produit.
+exclude = [
+  # voitures, motos et transport
+  "\\b(voiture|auto|moto|scooter|camion|pneu|mercedes|bmw|audi|toyota|tesla|dacia|renault|peugeot|citroen|kia|hyundai|fiat|volkswagen|vw|tiguan|touareg|t roc|golf|polo|clio|sandero|logan|duster|range rover|jeep|ford|nissan|mg|mini cooper|chery|byd|seat|skoda|suzuki|opel|honda|mazda|land rover|porsche)\\b",
+  "سيارة|سيارات|كليو|داسيا|رونو|بيجو|طويوطا|موطور|دراجة نارية",
+  "\\b(train|oncf|tgv|al boraq|billet|vol|ram|ryanair|taxi|bus|ctm|autoroute)\\b",
+  # matières premières, énergie, monnaie
+  "\\b(or|gold|argent|dollar|euro|bitcoin|essence|gasoil|diesel|gaz|butane|electricite|eau)\\b",
+  "ذهب|الذهب|فضة|الفضة|بنزين|البنزين|بترول|البترول|غازوال|الغاز|الدولار|الأورو|الكهرباء|الماء",
+  # santé, tabac, alcool, armes
+  "\\b(medicament|pharmacie|vaccin|analyse|scanner|irm|operation|dentiste|lunettes de vue|cigarette|marlboro|tabac|vape|biere|vin|whisky|alcool|arme|fusil)\\b",
+  "دواء|الدواء|سجائر|دخان|شراب",
+  # immobilier, services, administratif, loisirs
+  "\\b(appartement|maison|villa|terrain|loyer|location|hotel|riad|restaurant|menu|mcdo|kfc|burger king|ecole|formation|cours|visa|passeport|permis|assurance|credit|banque|abonnement|forfait|recharge|internet|fibre|carte sim|concert|match|stade|place|ticket|conjugaison|traduction)\\b",
+  "شقة|منزل|أرض|كراء|فندق|مدرسة|تأشيرة|جواز|رخصة|تأمين|قرض|بنك|اشتراك|تعبئة|انترنت|مباراة|تذكرة",
+  # mêmes exclusions en anglais (découverte à Dubaï)
+  "\\b(car|cars|bike|gold|silver|petrol|fuel|diesel|flight|flights|ticket|tickets|rent|apartment|villa|hotel|visa|salary|license|insurance|loan|bank|medicine|cigarette|cigarettes|vape|metro|taxi|salik|parking|school|course|plot|land|property|shares|stock|bitcoin|dirham|usd|aed|iftar|menu)\\b",
+  "\\b(nissan|patrol|land cruiser|prado|lexus|range rover|mercedes|bmw|toyota|tesla|ferrari|lamborghini|rolls royce|porsche|kia|hyundai|mg|jetour|haval|geely)\\b",
+  # modèles de voitures courants au Maroc (la liste générale ne les attrape pas tous)
+  "\\b(urus|cupra|exeed|kardian|yaris|corolla|rav4|hilux|tucson|sportage|creta|accent|i10|i20|picanto|c3|c4|208|2008|3008|308|partner|berlingo|kangoo|megane|captur|arkana|jogger|spring|omoda|jaecoo|tiggo|lynk|mg4|zs|t-roc|haval|jetour|exeed|alfa|maserati|bentley|ferrari|lamborghini)\\b",
+  "هيونداي|كيا|تويوتا|طويوطا|رونو|داسيا|بيجو|مرسيديس",
+  # services et contenus numériques, jeux vidéo, restauration, alcool et tabac
+  "\\b(netflix|spotify|shahid|disney|canal|bein|iptv|steam|gta|fifa|psn|game pass|big mac|kfc|pizza|tacos|heineken|flag|stork|winston|camel|gauloises|marquise)\\b",
+  # carburant, péage, courrier, administration
+  "\\b(carburant|baril|petrole|peage|timbre|recommande)\\b", "طريق السيار|تذاكر|ظرف|مضمون الوصول|البريد",
+  # médicaments et soins
+  "\\b(augmentin|amoxicilline|doliprane|biafine|azix|ventoline|insuline|pilule|consultation|radio|echographie)\\b",
+  "طبيب|حبوب|حبة|منع الحمل|تحليل|عملية|أسنان",
+  # denrées de base
+  "^(سكر|قالب السكر|الطماطم|البطاطس|البطاطا|البصل|اللحم|الدجاج|الحليب|البيض|الدقيق|الزيت)$", "^قالب السكر",
+  # encore des véhicules, de l'alcool, des jeux d'argent, de l'énergie, des services religieux et du vocabulaire
+  "\\b(jaguar|kodiaq|leapmotor|qashqai|quad|jet ski|jetski|bateau|camping car)\\b",
+  "\\b(jack daniel|red label|black label|johnnie walker|smirnoff|absolut|vodka|gin|rhum|champagne|ricard)\\b",
+  "\\b(quinte|pmu|loto|paris sportif|1xbet)\\b", "\\b(kwh|kw|watt)\\b", "\\b(omra|hajj|umrah)\\b", "عمرة|الحج",
+  "\\b(elasticity|demand|index|inflation|shares|stock market|ppv)\\b",
+  # animaux vivants et bétail (Aïd)
+  "\\b(mouton|chevre|vache|cheval|chien|chat)\\b", "خروف|الخروف|حولي|بقرة|عجل|حصان",
+]
+
+# Risques à vérifier avant de vendre (affichés, pas éliminatoires).
+[[risks]]
+label = "contrefaçon possible : vendre seulement l'original ou un produit sans marque"
+pattern = "\\b(labubu|stanley|dupe|replica|imitation|original|nike|adidas|zara|dior|chanel|ysl|gucci|louis vuitton|lv|rolex|apple|iphone|airpods|samsung|dyson|ps5|playstation|jordan)\\b|ايفون|ابل"
+
+[[risks]]
+label = "complément alimentaire ou cosmétique : autorisation sanitaire à vérifier"
+pattern = "\\b(creatine|whey|proteine|complement|vitamine|collagene|skincare|serum|creme|parfum|minoxidil|glp)\\b|كرياتين|بروتين|فيتامين|كريم|عطر"
+
+[[risks]]
+label = "lourd, fragile ou électrique : livraison et retours coûteux"
+pattern = "\\b(frigo|refrigerateur|congelateur|climatiseur|machine a laver|lave|televiseur|tv|tele|four|canape|lit|matelas|armoire|meuble|velo|trottinette|toilette|carrelage)\\b|ثلاجة|مكيف|غسالة|تلفاز|فرن|سرير|كنبة|دراجة|كرسي"
+
+[[risks]]
+label = "appareil médical : règles de vente à vérifier"
+pattern = "\\b(tensiometre|glucometre|oxymetre|thermometre)\\b|قياس الضغط|قياس السكر"
+
+[[risks]]
+label = "aliment pour bébé ou produit alimentaire importé : règles sanitaires strictes"
+pattern = "\\b(nan|nido|guigoz|lait infantile|lait bebe|formula)\\b|حليب الأطفال"
+
+[[risks]]
+label = "électronique : garantie, pannes et retours"
+pattern = "\\b(telephone|smartphone|iphone|samsung|xiaomi|redmi|oppo|tecno|infinix|pc|ordinateur|laptop|macbook|ipad|tablette|ecouteurs|airpods|montre connectee|camera|ps5)\\b|هاتف|ايفون|حاسوب|كاميرا"

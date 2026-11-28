@@ -15,6 +15,9 @@ Le paquet Python `radar` (bibliothèque standard uniquement, Python 3.11 ou plus
 | `autocomplete` | Autocomplétion Google et YouTube, par pays et par langue (Amazon exclu : robots.txt) | US, FR, BE, Québec, MA, SN, CI |
 | `wikimedia_country` | Pages vues par pays (top par projet, QID suivis, couverture du jour) | 18 pays |
 | `autocomplete_villes` | Suggestions Google « tendance + ville » et « métier + ville », chaque lundi | Paris, Lyon, Casablanca, Rabat, Marrakech, Fès, Tanger |
+| `autocomplete_produits` | Produits cherchés à l'achat (« prix … », « ثمن … » au Maroc, « price … » à Dubaï), puis comparés entre Casablanca et Fès, chaque lundi | Maroc, Émirats |
+
+Origines suivies : USA et pays sentinelles, Golfe (App Store, tendances du jour et suggestions aux Émirats, App Store et tendances en Arabie saoudite) et Chine (App Store seulement : Google et Wikipedia y sont bloqués).
 
 Les données vont dans un espace de travail, jamais dans la branche de code :
 
@@ -43,6 +46,8 @@ python -m radar watchlist                    état de la liste de suivi
 python -m radar collect --cadence weekly     relevé ville par ville (lundi)
 python -m radar gaps [--established] [--independants]   écarts de disponibilité des apps (petits éditeurs)
 python -m radar villes [--decalage casablanca:fes]      tendances et métiers locaux, ville par ville
+python -m radar produits [--fes]             produits cherchés au Maroc et à Dubaï, installés à Casablanca, pas encore à Fès
+python -m radar incitations --pays MA --pour colis_ecommerce   aides et freins : douane, fiscalité, aides, règles
 python -m radar initiatives --buyer FR --seller MA [--scenario petit_ia] [--strength F --window J]
 python -m radar initiatives --scenarios      scénarios : solo, petit_ia, petit_ia_fort, agence
 python -m radar ledger [--anchor]            journal de prédictions : chaîne, ancres, scores

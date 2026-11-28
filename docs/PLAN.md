@@ -470,6 +470,13 @@ La collecte passe en premier, parce qu'une arrivée non capturée ne se date plu
 - Chemin conseillé : automatisations à prix fixe pour trouver le métier qui achète (mois 1 et 2), offre spécialisée avec abonnement (mois 3 à 6, piste privilégiée : riads de Fès puis Marrakech et gîtes en France), puis visibilité dans les IA et publicités ChatGPT pour les mêmes clients.
 - Apps mobiles (vidéo « 1,5M de téléchargements ») : écartées pour l'instant (environ 940 h sur 2 ans même avec plus de temps) ; le radar repère désormais les apps de petits éditeurs absentes en France et au Maroc.
 
+**Centrage sur Fès (28 novembre, suite à vos questions)**
+- L'entonnoir part des tendances étrangères (USA, Golfe, Chine), passe par ce que l'on cherche au Maroc et ce qui est installé à Casablanca, et aboutit à Fès : ce qui n'y est pas encore.
+- Trois façons d'en vivre à Fès, testées en parallèle : vendre en ligne à Fès les produits déjà installés à Casablanca (paiement à la livraison, sourcing chez des grossistes de Casablanca), équiper les commerces de Fès avec l'IA (riads, salles de sport, écoles privées), et un compte « Fès » en darija comme vitrine.
+- Le e-commerce et le dropshipping n'ont pas d'archétype calibré dans le modèle : le test de 4 semaines donnera les vrais chiffres (marge après refus de colis). Le dropshipping vers la France est écarté (saturé, dépendant de la publicité).
+- Nouveaux outils : radar produits (`radar produits --fes`), aides et freins datés et sourcés (`radar incitations`), origines Golfe et Chine.
+- Biais et angles morts reconnus : orientation numérique de l'outil, cadrage américain, calibration hors Maroc, biais du français à Fès, pas de volumes, pas de TikTok ni d'Instagram, pas d'Avito ni de groupes WhatsApp, concurrence locale invisible.
+
 **Restent ouvertes**
 1. **Comptes de publication** : lesquels créer en premier (un ou deux au plus, par exemple LinkedIn en français et Threads ou Instagram en darija).
 2. **Écriture de la darija** par défaut : latine, arabe, ou les deux.

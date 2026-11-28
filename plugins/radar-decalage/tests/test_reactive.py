@@ -104,3 +104,14 @@ def test_failed_post_does_not_mark_candidates_as_sent(workspace, monkeypatch):
     out = reactive.run(NOW, post_url="https://n8n.example/webhook/x", token="bad", opener=opener)
     assert out["post_status"] == 401
     assert not (workspace / "reactive" / "sent.json").exists()
+
+
+def test_gulf_trends_are_candidates_too(tmp_path):
+    store = RawStore(tmp_path)
+    store.append("gtrends_daily", [trend("AE", "Dubai chocolate bar", 20000), trend("US", "Dubai chocolate bar", 5000),
+                                   trend("SA", "Pistachio cream", 3000), trend("FR", "Pistachio cream", 2000)],
+                 date(2026, 11, 28))
+    cfg = {**CFG, "gtrends": {**CFG["gtrends"], "origins": ["US", "AE", "SA"]}}
+    out = reactive.build(store, date(2026, 11, 28), cfg)
+    assert [c["title"] for c in out] == ["Dubai chocolate bar"]  # une seule fois ; la crème déjà en France
+    assert "USA" in out[0]["signal"]["source"] or "Émirats" in out[0]["signal"]["source"]

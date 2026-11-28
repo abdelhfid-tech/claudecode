@@ -79,7 +79,7 @@ def test_weekly_sources_run_only_on_the_weekly_cadence():
     cfg = {}
     daily = {c.name for c in select_sources(cfg, None, "daily")}
     weekly = {c.name for c in select_sources(cfg, None, "weekly")}
-    assert "autocomplete_villes" not in daily and weekly == {"autocomplete_villes"}
+    assert "autocomplete_villes" not in daily and weekly == {"autocomplete_villes", "autocomplete_produits"}
     assert "autocomplete_villes" in {c.name for c in REGISTRY}
 
 
