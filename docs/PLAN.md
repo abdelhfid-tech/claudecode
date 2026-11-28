@@ -83,6 +83,17 @@ Ces données décident de ce qui est faisable : le pays du vendeur compte autant
 
 **Un critère d'arrêt pour le radar lui-même.** Si, à 12 semaines, le radar n'a déclenché aucun test de demande qui ne figurait pas déjà dans la liste a priori de l'étude, il est réduit à la collecte et à la veille des verrous. Rien ne justifie alors d'y passer plus de temps.
 
+**Module de contenu réactif (proposé, votre décision en section 14).** Les tendances de classe A (mèmes, formats, sorties mondiales) passent de l'anglais au français en quelques jours : entre −8 et +8 jours pour Squid Game ou Wordle. Construire un produit n'a alors aucun sens ; seule une publication rapide en tire parti. Le module fonctionne ainsi :
+- Quand une tendance de classe A monte aux USA sans équivalent en français ou en darija, le radar prépare dans la journée un court paquet : post, carrousel ou script de vidéo courte.
+- Vous validez sur téléphone, en 15 minutes environ, puis la publication est planifiée.
+- Le volume est plafonné à 2 ou 3 contenus par semaine.
+- La règle est « l'IA en coulisses, l'humain en façade », avec l'étiquetage exigé par l'AI Act.
+
+Ce module n'est pas un archétype « contenu produit en masse ». Celui-ci est le dernier de la grille économique dans tous les pays (chaîne sans visage : 35 sur 100 en France ; SEO programmatique : 40), parce que les plateformes le pénalisent :
+- YouTube démonétise les contenus génériques ou répétitifs, et vise les personnages IA sur les sujets sensibles.
+- Google sanctionne depuis mars 2024 les contenus produits en masse.
+- Un résumé IA fait tomber le taux de clic de 15 % à 8 % (Pew).
+
 **Option de distribution (votre décision, section 14).** À partir de la semaine 4, publier vous-même la synthèse hebdomadaire en français, en 30 minutes, en newsletter ou sur LinkedIn. C'est le seul actif de distribution que le radar crée gratuitement, et c'est le test réel d'une productisation future.
 
 ---
@@ -374,6 +385,7 @@ Ce sont des hypothèses issues de la recherche documentaire, à placer en liste 
 | Maroc vers France : services vendus en euros depuis le Maroc | En tête de la grille au Maroc | Classement fragile : à 25 €/h, l'agence export recule au 4e rang ; à recalculer avec votre profil |
 | Diaspora en France et en Belgique : services et commerce, y compris TikTok Shop | Seul accès à TikTok Shop pour ce public ; pouvoir d'achat européen | Cellule acheteur France, vendeur selon votre profil |
 | Micro-dramas en français et en darija | Matures aux USA, DramaWave n°13 au Maroc | Pas d'archétype chiffré, et la « chaîne sans visage » est dernière de la grille : à chiffrer ou à retirer |
+| Affiliation, Amazon KDP, impression à la demande, places de marché de contenus numériques | Archétypes adaptés à un solo à temps partiel, où l'automatisation par Claude pèse lourd | Étude complémentaire en cours, avec contre-vérification ; chaque archétype entrera dans la grille avec ses rails de paiement par pays |
 
 **Productisation, plus tard.** Si le journal de prédictions est crédible après 6 à 12 mois, pour les classes A et B : newsletter francophone gratuite, puis premium (9 à 12 € par mois), offre agence (149 à 399 € par mois), puis études pour les marques. Encaissement par une entité européenne ou Paddle, et en dirhams pour les clients marocains.
 
@@ -401,6 +413,7 @@ La collecte passe en premier, parce qu'une arrivée non capturée ne se date plu
 2. **Profil du fondateur** : résidence fiscale et structure, lecture et écriture de la darija, canaux et audiences que vous possédez déjà.
 3. **Visibilité du dépôt** : le passer en privé (recommandé : les données de certaines sources ne sont pas redistribuables), ou le garder public et stocker les données brutes ailleurs.
 4. **Synthèse hebdomadaire publiée par vous** à partir de la semaine 4 : oui ou non.
+5. **Module de contenu réactif** en V1 : oui ou non, et à quel niveau d'automatisation. Trois choix : brouillons validés par vous (recommandé), planification automatique après validation en un clic, ou publication entièrement automatique (déconseillée). Préciser sur quels comptes vous publieriez.
 
 ---
 
