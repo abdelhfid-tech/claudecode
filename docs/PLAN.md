@@ -234,7 +234,9 @@ Les commandes qui publient ou dépensent ne se déclenchent jamais seules.
 - Collecte : pas de collecte derrière une connexion, respect des refus (403, robots.txt, captcha), pas de contournement, cache et débit limité par site.
 - Données personnelles : seulement des agrégats (terme, compteur, date, pays), aucun profil de personne.
 - Exclusions par défaut des initiatives : cibler des mineurs, allégations de santé non étayées, jeux d'argent et marchés de prédiction, nicotine, conseil financier sans cadre, ultra fast-fashion, dropshipping à petit panier depuis la Chine.
-- Conformité intégrée à chaque brief : mention des contenus générés par IA (AI Act, article 50), loi influenceurs en France, RGPD, CNDP au Maroc, règles WhatsApp Business (assistants IA généralistes interdits depuis le 15 janvier 2026, sauf là où Meta est légalement tenu de les accepter : UE et EEE, Brésil, Turquie ; donc interdits au Maroc).
+- Conformité intégrée à chaque brief : mention des contenus générés par IA (AI Act, article 50), loi influenceurs en France, RGPD, CNDP au Maroc, règles WhatsApp Business (assistants IA généralistes interdits depuis le 15 janvier 2026, sauf dans l'UE et l'EEE, au Brésil et en Turquie ; donc interdits en Suisse, au Québec, au Maroc et en Afrique ; les agents propres à une entreprise restent permis).
+- Règles d'éligibilité relues sur les pages officielles, jamais codées en dur : Programme Partenaire YouTube (Maroc, Algérie, Tunisie et Sénégal éligibles ; Côte d'Ivoire, Cameroun et RDC non), TikTok Shop, publicités ChatGPT, rails de paiement pays par pays (Paddle exclut la RDC et le Mali ; Polar n'est pas disponible au Maroc).
+- Change marocain : cours du jour de Bank Al-Maghrib. Une pile d'outils avec Claude Pro tient dans la dotation de 20 000 DH par an ; avec Claude Max, elle la dépasse d'environ 5 %.
 - Budget à 0 € appliqué par le code : les adaptateurs payants existent mais sont désactivés.
 
 ---
@@ -248,8 +250,8 @@ Les commandes qui publient ou dépensent ne se déclenchent jamais seules.
 | Piste | Pourquoi |
 |---|---|
 | France : outils et services d'automatisation IA pour TPE et indépendants, visibilité dans les réponses des IA (GEO) | Archétypes adossés à un service, en tête de la grille économique en France |
-| France : reprise de PME (outils, contenus) | Environ 500 000 cédants d'ici 2032, la moitié sans repreneur |
-| Maroc vers France : services vendus en euros depuis le Maroc | Meilleur rendement ajusté du risque au Maroc dans la grille (environ 0,4 contre 0,1 en France) |
+| France : mise en relation pour la reprise de PME (outils, contenus) | Les repreneurs sont 5 à 10 fois plus nombreux que les cédants sur le marché ouvert (CCI Paris IdF, novembre 2026) : le goulot est l'appariement, pas le manque de repreneurs |
+| Maroc vers France : services vendus en euros depuis le Maroc | En tête de la grille au Maroc, mais ce classement est fragile : il dépend du coût d'opportunité supposé (à 25 €/h, l'agence export recule au 4e rang) |
 | Maroc : outils pour marchands en paiement à la livraison (confirmation, risque de refus, créations en darija), facturés en dirhams | 84 % des acheteurs en ligne paient à la livraison, avec 20 à 40 % de refus |
 | Diaspora en France et en Belgique : services et commerce, y compris TikTok Shop | Seul accès à TikTok Shop pour un public maghrébin ; pouvoir d'achat européen |
 | Micro-dramas en français et en darija | Maturité aux USA, DramaWave n°13 au Maroc, offre française naissante |
@@ -283,6 +285,10 @@ Les commandes qui publient ou dépensent ne se déclenchent jamais seules.
 - Stripe indique le pays du vendeur, pas celui de l'acheteur : la vraie limite côté acheteur est la détention d'une carte.
 - Les « soumissions » App Store à +84 % sont des nouvelles apps publiées.
 - La TikTok Commercial Content API couvre 32 pays européens, aucun hors Europe.
+- Reprise de PME en France : pas de déficit de repreneurs ; le goulot est l'appariement.
+- Le classement « export depuis le Maroc en tête » ne résiste pas à une variation du coût d'opportunité : il est présenté comme une hypothèse.
+- Les chiffres annoncés par les plateformes (vendeurs TikTok Shop France, croissance de Whatnot France) sont déclaratifs et notés comme tels.
+- Le MRR affiché sur TrustMRR n'est pas un encaissement : seules les fenêtres recalculées et récemment synchronisées comptent.
 - La date de parution de Pinterest Predicts 2027 n'est pas confirmée ; seul un webinaire le 10 décembre l'est.
 
 Les dossiers complets (environ 900 000 caractères) sont conservés pour la phase de code.
