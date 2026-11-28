@@ -8,6 +8,9 @@ grands = [
   "aliexpress", "walmart", "target", "paypal", "block, inc", "cash app", "\\bebay\\b", "booking",
   "department of", "government", "\\bu\\.s\\.", "ministère", "gouvernement", "état ",
   "electronic arts", "activision", "supercell", "king\\.com", "playrix", "scopely", "zynga", "niantic",
+  # grands groupes chinois et du Golfe
+  "tencent", "douyin", "baidu", "meituan", "xiaomi", "huawei", "kuaishou", "netease", "trip\\.com", "ctrip", "didi",
+  "pinduoduo", "careem", "noon", "talabat", "emirates", "etisalat", "\\be&\\b", "\\bstc\\b",
   # grandes enseignes (apps de magasin ou de marque)
   "\\blidl\\b", "aldi", "carrefour", "ikea", "inditex", "\\bzara\\b", "h&m", "decathlon", "sephora", "\\bnike\\b",
   "adidas", "costco", "best buy", "home depot", "debenhams", "dbz marketplace", "aritzia", "flying tiger",
