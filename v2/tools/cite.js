@@ -131,11 +131,14 @@ async function preparer(p) {
 async function refugeAuxQuartiers(P) { const la = await P.evaluate(() => window.__t.attendre(() => window.ISNAD.world.ch && window.ISNAD.world.ch.id === 'c_quartiers', 30000)); if (!la) return false;
   await avancer(P); return P.evaluate(() => window.__t.auxQuartiers()); }
 // faire avancer ce qui se dit (dialogues, cartons) jusqu'à ce que le joueur ait la main, ou qu'un choix s'ouvre
+const encoreAffiche = () => { const T = window.__t, q = s => document.querySelector(s); return !T.calme() && !T.visible('#choice') && (T.visible('#dialog') || (T.visible('#card') && q('#card').classList.contains('on'))); };
 async function avancer(p, n = 120) {
   for (let i = 0; i < n; i++) {
     const e = await p.evaluate(() => { const T = window.__t; return T.calme() ? 'calme' : T.visible('#choice') ? 'choix' : (T.visible('#dialog') || (T.visible('#card') && document.querySelector('#card').classList.contains('on'))) ? 'lire' : T.visible('#chain') ? 'chaine' : ''; });
     if (e === 'calme' || e === 'choix' || e === 'chaine') return e;
-    if (e === 'lire') { await p.evaluate(() => window.__t.lu()); await p.keyboard.press('Enter'); }
+    // 2.49 : « Entrée » seulement sur un texte encore affiché — un carton qui se referme seul (I.speed) laisserait sinon la
+    // touche au monde, où, depuis que les narrations d'arrivée ne retiennent plus (D242), elle parlerait à qui est à côté
+    if (e === 'lire') { await p.evaluate(() => window.__t.lu()); if (await p.evaluate(encoreAffiche)) await p.keyboard.press('Enter'); }
     await p.waitForTimeout(170);
   }
   return 'bloque';
@@ -880,7 +883,10 @@ async function avancer(p, n = 120) {
     const A = () => E(() => window.__t.bouton('.a')), B = () => E(() => window.__t.bouton('.b'));
     const essai = async id => { await E(id => window.__t.zone(id), id); await P.waitForTimeout(250); await A(); await P.waitForTimeout(700); };
     const lecons = () => E(() => ({ j: window.ISNAD.lecons.journal.map(x => x.id), a: window.ISNAD.activites.journal.filter(x => x.quoi === 'lecon' || x.quoi === 'attend').map(x => x.quoi + ':' + x.outil), d: window.ISNAD.save.data.lecons.dernier }));
-    const menu = async () => { await E(() => window.__t.attendre(() => window.__t.visible('#choice'), 4000)); return E(() => window.__t.choix()); };
+    // (le menu vient après ce qui se dit au premier essai : la leçon, et à l'étal sa ligne, « Personne derrière l'étal… »)
+    const menu = async () => { for (let i = 0; i < 30; i++) { if (await E(() => window.__t.attendre(() => window.__t.visible('#choice'), 800))) return E(() => window.__t.choix());
+      if (await E(() => window.__t.visible('#dialog'))) { await E(() => window.__t.lu()); if (await E(encoreAffiche)) await P.keyboard.press('Enter'); } } return null; };
+    const l0 = await lecons();
     await essai('borne'); const c1 = await menu(); await P.waitForTimeout(430); await B(); await avancer(P, 10);
     const l1 = await lecons();
     await essai('etal'); const c2 = await menu(); await P.waitForTimeout(430); await B(); await avancer(P, 10);
@@ -892,9 +898,9 @@ async function avancer(p, n = 120) {
     await essai('etal'); await menu(); await P.waitForTimeout(430); await B(); await avancer(P, 10);
     const l4 = await lecons();
     const attendu = l1.a.join() === 'lecon:borne' && l2.a.join() === 'lecon:borne,lecon:etal' && l3.a.join() === 'lecon:borne,lecon:etal,lecon:manege' && l4.a.join() === l3.a.join();
-    si(c1 && /borne/.test(c1.prompt) && c2 && c3 && /roue/.test(c3.prompt) && attendu && l2.d === 'halte' && l4.d === 'source',
+    si(c1 && /borne/.test(c1.prompt) && c2 && c3 && /roue/.test(c3.prompt) && attendu && l1.d === l0.d && l2.d === l0.d && l4.d === 'source',
       `${nom} · partie neuve : la borne, l’étal puis la grande roue, l’une après l’autre, chacune avec sa leçon au premier essai et son menu (« ${c3 && c3.prompt} ») ; un outil d’un récit en suspens n’y change rien ; à l’essai suivant, rien ne se redit ; le dernier outil des récits reste « ${l4.d} »`,
-      `${nom} · les activités dans une partie neuve : ${JSON.stringify({ c1, c2, c3, l1, l2, l3, l4 })}`);
+      `${nom} · les activités dans une partie neuve : ${JSON.stringify({ c1, c2, c3, l0, l1, l2, l3, l4 })}`);
     // Sâlim, avec ce même outil en suspens : il arrive au premier passage au circuit
     await E(() => { const W = window.ISNAD.world, s = W.spotPx('circuit'); window.__t.poser(s[0] + 70, s[1] - 26); });
     await E(() => { const W = window.ISNAD.world, s = W.spotPx('circuit'); return window.__t.marcher(s[0], s[1] - 18, 15000); });

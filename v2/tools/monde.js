@@ -106,11 +106,13 @@ async function preparer(p) {
   });
 }
 // faire avancer ce qui se dit (dialogues, cartons) jusqu'à ce que le joueur ait la main, ou qu'un choix s'ouvre
+// (2.49 : « Entrée » seulement sur un texte encore affiché — un carton qui se referme seul laisserait la touche au monde)
+const encoreAffiche = () => { const T = window.__t, q = s => document.querySelector(s); return !T.calme() && !T.visible('#choice') && (T.visible('#dialog') || (T.visible('#card') && q('#card').classList.contains('on'))); };
 async function avancer(p, n = 160) {
   for (let i = 0; i < n; i++) {
     const e = await p.evaluate(() => { const T = window.__t; return T.calme() ? 'calme' : T.visible('#choice') ? 'choix' : (T.visible('#dialog') || (T.visible('#card') && document.querySelector('#card').classList.contains('on'))) ? 'lire' : T.visible('#chain') ? 'chaine' : ''; });
     if (e === 'calme' || e === 'choix' || e === 'chaine') return e;
-    if (e === 'lire') { await p.evaluate(() => window.__t.lu()); await p.keyboard.press('Enter'); }
+    if (e === 'lire') { await p.evaluate(() => window.__t.lu()); if (await p.evaluate(encoreAffiche)) await p.keyboard.press('Enter'); }
     await p.waitForTimeout(160);
   }
   return 'bloque';
