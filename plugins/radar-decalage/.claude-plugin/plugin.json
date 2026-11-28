@@ -1,0 +1,6 @@
+{
+  "name": "radar-decalage",
+  "version": "0.1.0",
+  "description": "Radar d'arbitrage de tendances : détecte les tendances numériques aux USA, mesure leur diffusion vers l'Europe, la France, le Maroc et la francophonie, et propose des initiatives réalisables avec Claude Code.",
+  "keywords": ["tendances", "francophonie", "maroc", "france", "veille", "arbitrage"]
+}
