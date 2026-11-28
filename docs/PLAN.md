@@ -2,7 +2,7 @@
 
 Version 2, soumise à validation le 28 novembre 2026. Rien n'est codé avant votre accord.
 
-Ce plan s'appuie sur une étude préalable en 13 axes : sources de données, plugins Claude Code, méthode de scoring, marchés France, Maroc, Afrique et Québec, taxonomie, tendances US, concurrence, économie des initiatives. Chaque axe a été contre-vérifié par un agent indépendant ; la vérification du modèle de scoring est encore en cours et ses corrections seront intégrées avant le code. Le plan lui-même a été soumis à une critique adverse. La version 2 en tient compte. Les corrections principales sont en annexe A.
+Ce plan s'appuie sur une étude préalable en 13 axes : sources de données, plugins Claude Code, méthode de scoring, marchés France, Maroc, Afrique et Québec, taxonomie, tendances US, concurrence, économie des initiatives. Chaque axe a été contre-vérifié par un agent indépendant. Le plan lui-même a été soumis à une critique adverse. La version 2 en tient compte. Les corrections principales sont en annexe A.
 
 ---
 
@@ -165,14 +165,16 @@ Force du signal (A) ──► Statut et fenêtre par pays (B) ──► Portes (
 - La corroboration (part des familles de sources en hausse) pèse le plus : un signal à source unique trompe, comme Google Flu Trends l'a montré.
 - Pénalités : ×0,6 si une seule famille monte, plafond à 40 pour un pic d'un jour.
 - Les termes sont notés sur des ancres absolues, pas sur des percentiles relatifs aux autres candidats de la semaine. Sinon, quelqu'un serait toujours en tête, même sans signal.
+- Persistance : test de Mann-Kendall à partir de 8 points (6 au strict minimum), avec correction de Hamed et Rao en cas d'autocorrélation. Détection précoce par les rafales de Kleinberg calculées en ligne, au fil des relevés. Le CUSUM n'est pas utilisé au démarrage à froid : sur des articles nouveaux, il alerte après le pic.
 - Le bruit est filtré : saisonnalité (Black Friday, Ramadan), apps à récompenses, services nationaux non distribués hors des USA.
 
 **B. Statut et fenêtre par pays.**
 
 - **Statuts** : absent, non mesurable, intérêt, disponible, adopté, bloqué, muté (équivalent local) ou en avance (flux inverse). « Absent » exige deux capteurs de présence négatifs ; sinon le statut est « non mesurable ».
-- **Deux dates** : l'intérêt et la disponibilité. L'attention précède souvent l'offre (Pokémon Go : mi-hauteur de l'intérêt en français 7 jours avant le lancement en France).
-- **Arrivée** : la règle est écrite d'avance par source (par exemple 3 jours sur 7 au-dessus du seuil Wikimedia, ou 50 % du pic propre pour Google Trends). Le décalage est affiché comme une fourchette, jamais comme un chiffre unique.
-- **Délai attendu** : loi log-normale par classe de friction et groupe de pays, avec une part « jamais » pour les produits réglementés. Il est mis à jour quand un pays sentinelle décolle. Les sentinelles sont choisies par niche : Royaume-Uni pour le commerce social, Allemagne pour la santé et le fitness, Espagne pour le sport et les services vers le Maroc, France pour le Maghreb, Golfe pour les apps arabophones.
+- **Deux dates** : l'intérêt et la disponibilité. L'attention précède souvent l'offre : l'intérêt français pour Threads existait dès juillet 2023, cinq mois avant l'ouverture du service dans l'UE, à condition de regrouper l'article renommé sous ses deux titres.
+- **Arrivée** : la règle est écrite d'avance par source, par exemple 3 jours sur 7 au-dessus du seuil Wikimedia, jamais un seul franchissement près du seuil, ou 50 % du pic propre pour Google Trends. Les séries Wikipedia sont agrégées par identifiant de page ou par QID, en suivant les renommages. L'intensité est rapportée à la consommation totale de Wikipedia du pays. Le décalage est affiché comme une fourchette, jamais comme un chiffre unique.
+- **Délai attendu** : un mélange de trois cas par classe de friction et groupe de pays : « simultané », « avant les USA », et une loi log-normale calée sur P10 et P90, avec une part « jamais » pour les produits réglementés. Une loi log-normale seule ne sait représenter ni un délai nul ni une arrivée en Europe avant les USA.
+- **Mise à jour par pays sentinelle** : le délai attendu est révisé quand un pays relais décolle. Les sentinelles sont choisies par niche : Royaume-Uni pour le commerce social, Allemagne pour la santé et le fitness, Espagne pour le sport et les services vers le Maroc, France pour le Maghreb. Pour les apps arabophones, le Golfe ne sert de sentinelle que par les stores : le jeu Wikimedia ne publie ni l'Arabie saoudite ni la Chine, et applique aux Émirats, à l'Égypte et à la Turquie un seuil de 1 000 vues.
 - **Indice d'opportunité** : il est élevé quand l'attention locale est arrivée et que l'offre locale manque encore (apps, articles, vendeurs en langue locale). C'est la fenêtre d'arbitrage.
 
 **C. Portes.** Paiement, plateforme et loi valent 0, 0,3, 0,6 ou 1, et multiplient le reste. Elles sont évaluées deux fois, côté acheteur et côté vendeur. Les portes sont appliquées une seule fois, ici. La transposabilité culturelle part de la langue et du pays relais, notée avec son niveau de preuve. Les scores Hofstede, qui exigent une licence commerciale, ne sont pas utilisés.
@@ -197,7 +199,7 @@ Force du signal (A) ──► Statut et fenêtre par pays (B) ──► Portes (
 - **Forme d'une prédiction** : un événement binaire proche (« l'app X est disponible dans la vitrine France avant le 30 juin 2027 », « au moins trois offres locales en français existent avant la date D »). Elle porte une probabilité, un horizon et une règle de résolution écrite d'avance, du type « N relevés sur 7 jours ». Le statut « annulée » s'applique quand les données manquent.
 - **Prédictions marocaines** : limitées à ce qui se résout réellement, c'est-à-dire la disponibilité et le rang en store, et la première mention dans une liste de médias curée.
 - **Forme du fichier** : ajout seul, un seul écrivain, lignes chaînées par empreinte SHA-256, et empreinte ancrée chaque semaine hors du dépôt (horodatage OpenTimestamps ou commit dans un dépôt public séparé). Une chaîne gardée dans un dépôt qu'on contrôle ne prouve aucune antériorité.
-- **Scores** : Brier, Brier relatif au taux de base, couverture des intervalles à 80 %, erreur sur le délai. Ils restent agrégés tant qu'une classe a moins de 50 prédictions résolues. Aucune crédibilité n'est annoncée à 6 ou 12 mois, sauf pour les classes A et B. Les classes D à F se résolvent en plusieurs années.
+- **Scores** : Brier, Brier relatif au taux de base, score d'intervalle ou CRPS pour les délais (la couverture seule récompense les intervalles trop larges). Les avis de plusieurs agents Claude nourris des mêmes données ne sont jamais « extrémisés » : ils ne sont pas indépendants. Ils restent agrégés tant qu'une classe a moins de 50 prédictions résolues. Aucune crédibilité n'est annoncée à 6 ou 12 mois, sauf pour les classes A et B. Les classes D à F se résolvent en plusieurs années.
 
 **Backtest, pré-enregistré avant de le lancer.**
 1. **Définitions figées** : arrivée par source, paramètres et critères d'acceptation écrits et commités avant toute exécution.
@@ -205,8 +207,9 @@ Force du signal (A) ──► Statut et fenêtre par pays (B) ──► Portes (
    - 20 cas connus (Pokémon Go, Squid Game, Threads, chocolat de Dubaï, Labubu, Apple Pay, TikTok Shop, hard seltzer, pickleball, Hyrox…), séparés en cas d'ajustement et cas de test. Le jeu compte six cas nés hors des USA et quatre échecs.
    - Une **cohorte non choisie**, pour mesurer les faux positifs : des entités tirées des classements quotidiens de en.wikipedia sur des semaines aléatoires de 2023 à 2025, suivies vers fr.wikipedia et vers le jeu par pays.
 3. **Références naïves à battre** : taux de base, délai constant, table de classes sans sentinelle.
-4. **Critères d'acceptation** : faire mieux que le taux de base à 90 et 365 jours, et une couverture à 80 % comprise entre 0,65 et 0,95. Si la mise à jour par sentinelle ne fait pas mieux que la table seule, elle est retirée.
-5. **En cas d'échec** : le radar est livré en mode « veille et statut », sans probabilités affichées, et le journal accumule des données pour un nouvel essai à 6 mois.
+4. **Critères d'acceptation** : faire mieux que le taux de base à 90 et 365 jours en score de Brier, et faire mieux que la table de classes seule en score d'intervalle sur les délais. Si la mise à jour par sentinelle ne fait pas mieux que la table seule, elle est retirée.
+5. **Couverture variable du jeu Wikimedia** : chaque cas est normalisé par la couverture du jour, car celle du Maroc a été divisée par 17 entre 2023 et 2026, et les données US de 2023 ont été republiées avec un autre algorithme. Une absence sous le seuil n'est jamais lue comme « absent ».
+6. **En cas d'échec** : le radar est livré en mode « veille et statut », sans probabilités affichées, et le journal accumule des données pour un nouvel essai à 6 mois.
 
 Limite connue : le backtest valide Wikipedia et Google Trends, alors que la production repose aussi sur les stores et l'autocomplétion, qui n'ont pas d'historique. Ces capteurs seront validés par le journal, au fil de l'eau.
 
@@ -415,6 +418,10 @@ La collecte passe en premier, parce qu'une arrivée non capturée ne se date plu
 - La TikTok Commercial Content API couvre 32 pays européens, aucun hors d'Europe.
 - La date de parution de Pinterest Predicts 2027 n'est pas confirmée ; seul un webinaire le 10 décembre l'est.
 - Whee n'est pas un flux inverse marocain : c'est une vague mondiale où les USA sont arrivés en dernier.
+- L'exemple Pokémon Go (« intérêt en français 7 jours avant le lancement en France ») ne prouve rien : l'édition française de Wikipedia est partagée avec la Belgique, la Suisse et le Québec, qui avaient lancé le jeu le même jour. Threads le remplace.
+- La couverture du Maroc dans le jeu Wikimedia par pays n'est pas stable : 1 300 lignes par jour en 2023, 74 en 2026.
+- Les délais ne suivent pas une loi log-normale simple : il faut un mélange qui admet les délais nuls et négatifs.
+- Mann-Kendall exige au moins 6 points (8 recommandés), et le CUSUM ne détecte pas à froid.
 - Reprise de PME en France : pas de déficit de repreneurs ; le goulot est l'appariement.
 - Le classement « export depuis le Maroc en tête » ne résiste pas à une variation du coût horaire.
 - Les chiffres annoncés par les plateformes (vendeurs TikTok Shop France, croissance de Whatnot France) sont déclaratifs.

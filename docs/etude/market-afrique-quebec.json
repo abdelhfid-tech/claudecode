@@ -1,0 +1,514 @@
+{
+ "dossier_path": "/tmp/claude-0/-home-user-claudecode/00e88930-c277-528f-99f2-9b7f935da647/scratchpad/research/market-afrique-quebec.md",
+ "executive_summary": "Les 12 pays d'Afrique subsaharienne francophone étudiés comptent environ 336 M d'habitants et 106 M d'internautes fin 2026 (31 %), avec un âge médian de 15,9 à 21,6 ans ; la pénétration va de 18,7 % (Madagascar) et 19,7 % (RDC) à 62,3 % (Sénégal) et 68,7 % (Gabon) [DataReportal 2027].\nLe smartphone n'est le téléphone principal que pour 20,6 % (RDC) à 60,8 % (Sénégal) des adultes ; le compte mobile money (35 à 67 %) est plus répandu que le smartphone et que l'achat en ligne (1,7 % à 21,7 %) [Findex 2025].\nPoint aveugle de mesure : DataReportal ne publie TikTok qu'en RDC (13,8 M d'adultes, +32,5 %, 59,8 % des internautes) et en Guinée (+42,7 %), YouTube qu'au Sénégal (+18,3 %) ; ailleurs les audiences sociales sont des planchers Facebook, et Facebook recule au Sénégal, au Bénin, au Mali et au Gabon.\nLa monétisation native est presque fermée : parmi les 12 pays, seul le Sénégal est éligible au Programme Partenaire YouTube, seule la RDC figure dans la liste in-stream de Meta, aucun n'a TikTok Creator Rewards ni TikTok Shop.\nLes rails occidentaux manquent : Stripe ne liste que la Côte d'Ivoire (réseau étendu), Paddle bloque vendeurs et acheteurs en RDC et au Mali ; le rail réel est le mobile money (Afrique de l'Ouest 498 Md$ en 2025, +34 % ; Afrique centrale 105 Md$) via des agrégateurs (HUB2 sur 9 pays, FedaPay, Flutterwave, PayDunya).\nWave fixe un plancher de prix à 1 % par envoi et détient environ 80 % de l'encours de monnaie électronique au Sénégal ; les États taxent (Sénégal 0,5 % plafonné à 2 000 FCFA et 1,5 % marchands, Cameroun 0,2 %, Mali 1 % sur retraits) ; PI-SPI (BCEAO, lancé le 30/09/2025) dépasse 30 M d'utilisateurs en UEMOA, pas en CEMAC ni en RDC.\nLa langue de masse n'est pas seulement le français : 45 % de francophones au Sénégal (wolof parlé par environ 80 %), 47 % au Cameroun (camfranglais), 52 % en Côte d'Ivoire (nouchi), 60 % en RDC (lingala) ; le Web écrit y est plus francophone que la parole.\nL'OIF compte 396 M de francophones en 2025 (65 % en Afrique) et projette 467 à 586 M en 2050 selon le scénario, dont 53 à 63 % en Afrique subsaharienne : le futur public francophone est africain.\nLes tendances arrivent par cinq canaux (France, Nigeria/Ghana/Afrique du Sud, USA, Chine via Transsion, hubs africains et Asie) avec trois régimes de décalage : semaines à deux ans pour les formats TikTok et musicaux, années pour les modèles de services, blocage pour les fonctionnalités de plateforme et la monétisation.\nRisque élevé de coupure : Access Now recense en 2025 4 coupures au Cameroun, 2 en Guinée, 2 en RDC, et au Togo des blocages de Facebook, YouTube, Telegram et Signal jusqu'à trois mois ; Madagascar a connu un mouvement Gen Z puis un coup d'État (octobre 2025).\nQuébec : Facebook 76 %, Instagram 38 %, TikTok 25 % des internautes (49 % des 18-34 ans), 3 h 41 par jour ; 82 % achètent en ligne, Amazon chez 83 % des cyberacheteurs, mais 48 % ont réduit ou cessé leurs achats auprès de marchands américains [NETendances 2025].\nLe Québec est un indicateur avancé des usages et produits nord-américains, pas du contenu en français ; il impose des filtres propres : loi 25 (sanctions jusqu'à 2 % du CA mondial ou 10 M$), Charte de la langue française (loi 96), blocage des nouvelles par Meta depuis 2023, toujours en place en janvier 2026.\nDiasporas : 3,92 M d'immigrés nés en Afrique en France (dont environ 1,2 M nés dans les 12 pays) ; Cameroun, Côte d'Ivoire et RDC parmi les premiers pays d'origine des immigrants récents francophones au Canada ; transferts = 10,6 % du PIB au Sénégal. La diaspora est le segment solvable (rails Stripe en EUR/CAD) et le pont de diffusion.\nPour l'outil : matrice de faisabilité paiement et monétisation par pays en règle bloquante, score d'observabilité, dictionnaires multilingues et transcription audio, panels de créateurs construits en propre, couche de risque (coupures, zone monétaire), variante diaspora systématique.",
+ "key_findings": [
+  {
+   "claim": "DataReportal Digital 2027 ne publie aucune audience publicitaire TikTok pour 10 des 12 pays (seulement RDC et Guinée) et aucune audience YouTube hors Sénégal ; les « identités réseaux sociaux » de ces pays égalent l'audience de la plus grosse plateforme mesurée et sont donc des planchers.",
+   "evidence": "Pages pays Digital 2027 et Digital 2026 lues : sections TikTok absentes pour Sénégal, Côte d'Ivoire, Cameroun, Bénin, Togo, Mali, Burkina, Madagascar, Gabon, Congo ; identités = Facebook (ex. CI 8,70 M) ou YouTube (Sénégal 6,41 M).",
+   "sources": [
+    "https://datareportal.com/reports/digital-2027-senegal",
+    "https://datareportal.com/reports/digital-2027-cote-divoire",
+    "https://datareportal.com/reports/digital-2027-cameroon",
+    "https://datareportal.com/reports/digital-2027-democratic-republic-of-the-congo"
+   ],
+   "confidence": "high",
+   "as_of": "2026-10",
+   "load_bearing": true
+  },
+  {
+   "claim": "Là où il est mesuré, TikTok est la plateforme dominante et la plus dynamique : RDC 13,8 M d'adultes (+32,5 % en un an, 24,7 % des adultes, 59,8 % des internautes, 51,6 % de femmes) ; Guinée 4,35 M (+42,7 %, 84,1 % des internautes). Facebook recule au Sénégal (-4,2 %), au Bénin (-4,0 %), au Mali (-2,1 %) et au Gabon (-18,0 %).",
+   "evidence": "Sections TikTok et Facebook des pages DataReportal 2027 (outils publicitaires, fin 2026).",
+   "sources": [
+    "https://datareportal.com/reports/digital-2027-democratic-republic-of-the-congo",
+    "https://datareportal.com/reports/digital-2027-guinea",
+    "https://datareportal.com/reports/digital-2027-senegal",
+    "https://datareportal.com/reports/digital-2027-gabon"
+   ],
+   "confidence": "high",
+   "as_of": "2026-10",
+   "load_bearing": true
+  },
+  {
+   "claim": "Connectivité étroite et jeune : pénétration Internet de 18,7 % (Madagascar) et 19,7 % (RDC) à 62,3 % (Sénégal) et 68,7 % (Gabon) ; âge médian 15,9 à 21,6 ans ; smartphone comme téléphone principal de 8,9 % (Madagascar) et 20,6 % (RDC) à 60,8 % (Sénégal) des 15 ans et plus.",
+   "evidence": "DataReportal 2027 (internautes, âge médian) ; Global Findex 2025, indicateur con9a, données 2024, via l'API Banque mondiale.",
+   "sources": [
+    "https://datareportal.com/reports/digital-2027-senegal",
+    "https://datareportal.com/reports/digital-2027-madagascar",
+    "https://api.worldbank.org/v2/country/SEN;CIV;CMR;COD/indicator/con9a?source=28&format=json"
+   ],
+   "confidence": "high",
+   "as_of": "2026-10",
+   "load_bearing": true
+  },
+  {
+   "claim": "Monétisation native : parmi les 12 pays, seul le Sénégal figure dans la liste du Programme Partenaire YouTube ; seule la RDC figure dans la liste Meta des publicités in-stream ; aucun n'a les abonnements Facebook (37 pays) ; TikTok Creator Rewards est limité à 8 marchés (USA, Royaume-Uni, Allemagne, Japon, Corée, France, Mexique, Brésil).",
+   "evidence": "Pages officielles YouTube et Meta lues le 2026-11-28 ; liste TikTok via sources secondaires (Creator Academy citée, sept. 2026).",
+   "sources": [
+    "https://support.google.com/youtube/answer/7101720",
+    "https://www.facebook.com/business/help/267128784014981",
+    "https://creators.facebook.com/tools/subscriptions/",
+    "https://www.lilachbullock.com/tiktok-creator-rewards-by-the-numbers/"
+   ],
+   "confidence": "high",
+   "as_of": "2026-11-28",
+   "load_bearing": true
+  },
+  {
+   "claim": "TikTok Shop n'est ouvert dans aucun pays africain fin 2026 ; le commerce social sur TikTok s'y développe sans boutique intégrée.",
+   "evidence": "Capmad (nov. 2026) et TechCabal cités par résumé de recherche ; aucune annonce officielle TikTok d'ouverture en Afrique trouvée.",
+   "sources": [
+    "https://www.capmad.com/post/tiktok-shops-standalone-app-sharpens-bytedances-ecommerce-play-against-amazon",
+    "https://techcabal.com/fr/?p=150573"
+   ],
+   "confidence": "medium",
+   "as_of": "2026-11",
+   "load_bearing": true
+  },
+  {
+   "claim": "Rails de paiement occidentaux quasi absents : Stripe ne liste que la Côte d'Ivoire (réseau étendu) parmi les 12 pays ; Paddle refuse vendeurs et acheteurs situés en RDC, au Mali et en Centrafrique ; Flutterwave couvre Cameroun, Côte d'Ivoire et Sénégal ; HUB2 couvre 9 pays (CI, Bénin, Mali, Sénégal, Togo, Burkina, Guinée, Cameroun, Niger) ; FedaPay 5 pays UEMOA.",
+   "evidence": "Pages officielles lues le 2026-11-28.",
+   "sources": [
+    "https://stripe.com/global",
+    "https://www.paddle.com/help/start/intro-to-paddle/which-countries-are-supported-by-paddle",
+    "https://flutterwave.com/us/",
+    "https://www.hub2.io/en/",
+    "https://www.fedapay.com"
+   ],
+   "confidence": "high",
+   "as_of": "2026-11-28",
+   "load_bearing": true
+  },
+  {
+   "claim": "Le mobile money est le rail principal : en 2025, Afrique de l'Ouest 517 M de comptes enregistrés (+15 %), 104 M actifs à 30 jours, 498 Md$ de transactions (+34 %) ; Afrique centrale 128 M, 39 M, 105 Md$ (+21 %). Comptes mobile money (Findex 2024) : 66,9 % des adultes au Sénégal, 55,1 % au Cameroun, 53,4 % en Côte d'Ivoire, 35,1 % en RDC, 25,8 % en Guinée.",
+   "evidence": "GSMA State of the Industry Report 2026 (PDF) ; Findex 2025 mobileaccount.t.d.",
+   "sources": [
+    "https://www.gsma.com/sotir/wp-content/plugins/plugin_gsma_sotir/reports/The-State-of-the-Industry-Report-2026_English.pdf",
+    "https://api.worldbank.org/v2/country/SEN;CIV;CMR;COD/indicator/mobileaccount.t.d?source=28&format=json"
+   ],
+   "confidence": "high",
+   "as_of": "2025-12",
+   "load_bearing": true
+  },
+  {
+   "claim": "Prix et fiscalité du paiement mobile : Wave affiche l'envoi à 1 % et détient environ 80 % de l'encours de monnaie électronique au Sénégal (459 Md FCFA sur 571, août 2026) ; Sénégal taxe 0,5 % les transferts (plafond 2 000 FCFA, depuis décembre 2025) et 1,5 % les paiements marchands ; Cameroun 0,2 % plus 0,007 $ (janv. 2025) ; Mali 1 % sur les retraits (févr. 2025) ; Wave lancé au Cameroun en juin 2025.",
+   "evidence": "Site Wave ; GSMA 2026 (taxes, lancement) ; Senego citant la Commission bancaire UMOA ; lepetitjournal.com Dakar pour le plafond.",
+   "sources": [
+    "https://www.wave.com/en/",
+    "https://www.gsma.com/sotir/wp-content/plugins/plugin_gsma_sotir/reports/The-State-of-the-Industry-Report-2026_English.pdf",
+    "https://senego.com/mobile-money-au-senegal-wave-ecrase-la-concurrence-avec-80-du-marche_1997891.html",
+    "https://lepetitjournal.com/dakar/mobile-money-ce-qui-change-pour-les-utilisateurs-de-wave-et-orange-money-au-senegal-457757"
+   ],
+   "confidence": "medium",
+   "as_of": "2026-08",
+   "load_bearing": true
+  },
+  {
+   "claim": "PI-SPI, plateforme de paiement instantané interopérable de la BCEAO lancée le 30 septembre 2025, compte plus de 30 M d'utilisateurs (près de 40 % des adultes UEMOA) et 80 établissements connectés au 20 juillet 2026 ; 175 participants autorisés au public au 30 septembre 2026. Elle ne couvre pas la CEMAC (Cameroun, Gabon, Congo) ni la RDC.",
+   "evidence": "Financial Afrik citant la BCEAO lors de la présentation du rapport annuel 2025 ; liste du 30/09/2026 via résumé de recherche.",
+   "sources": [
+    "https://www.financialafrik.com/2026/07/23/bceao-pi-spi-franchit-le-cap-des-30-millions-dutilisateurs-et-accelere-linclusion-financiere-dans-luemoa/",
+    "https://www.financialafrik.com/2026/10/01/bceao-liste-des-175-participants-autorises-a-ouvrir-les-services-de-pi-spi-au-public-au-30-septembre-2026/"
+   ],
+   "confidence": "medium",
+   "as_of": "2026-09-30",
+   "load_bearing": true
+  },
+  {
+   "claim": "Le commerce en ligne déclaré reste marginal : achat par mobile ou Internet chez 21,7 % des adultes au Sénégal, 14,0 % au Gabon, 9,8 % au Cameroun, 8,3 % en Côte d'Ivoire, 5,2 % en RDC, 1,7 % à Madagascar ; Jumia n'opère que dans 8 pays dont seulement la Côte d'Ivoire et le Sénégal parmi les 12.",
+   "evidence": "Findex 2025 indicateur fin26b (données 2024) ; site groupe Jumia (« 8 countries », domaines .ci et .sn).",
+   "sources": [
+    "https://api.worldbank.org/v2/country/SEN;CIV;CMR;COD;MDG;GAB/indicator/fin26b?source=28&format=json",
+    "https://group.jumia.com/"
+   ],
+   "confidence": "high",
+   "as_of": "2024",
+   "load_bearing": true
+  },
+  {
+   "claim": "La langue réelle du contenu dépasse le français : part de francophones estimée par l'OIF à 45 % au Sénégal, 47 % au Cameroun, 52 % en Côte d'Ivoire, 60 % en RDC, 68 % au Gabon, 74 % au Congo ; le wolof est parlé par environ 80 % des Sénégalais ; lingala (Kinshasa, Brazzaville), nouchi (Abidjan) et camfranglais (jeunes urbains camerounais) structurent le contenu populaire ; en Afrique francophone la part de sites en français est 3,5 fois la part de locuteurs.",
+   "evidence": "Synthèse OIF 2026 (méthode 2 et indicateur OBDILCI) ; Wikipédia Wolof, Lingala, Camfranglais.",
+   "sources": [
+    "https://www.francophonie.org/sites/default/files/2026-04/Synthese_rapport_Langue_francaise_dans_le_monde_2026.pdf",
+    "https://en.wikipedia.org/wiki/Wolof_language",
+    "https://en.wikipedia.org/wiki/Camfranglais",
+    "https://en.wikipedia.org/wiki/Lingala"
+   ],
+   "confidence": "high",
+   "as_of": "2026-03",
+   "load_bearing": true
+  },
+  {
+   "claim": "Projection OIF : 396 M de francophones en 2025 (méthode 2), 65 % en Afrique ; selon la méthode 1 (347,7 M en 2025), 466,7 M en 2050 au scénario de référence (53,3 % en Afrique subsaharienne) et 586 M au scénario de redressement scolaire (62,8 %) ; le français pèse environ 3,5 % des contenus du Web.",
+   "evidence": "Tableaux de projection de la synthèse OIF 2026.",
+   "sources": [
+    "https://www.francophonie.org/sites/default/files/2026-04/Synthese_rapport_Langue_francaise_dans_le_monde_2026.pdf"
+   ],
+   "confidence": "high",
+   "as_of": "2026-03",
+   "load_bearing": false
+  },
+  {
+   "claim": "Financement : l'Afrique tech a levé 4,1 Md$ en 2025 (+25 %) ; hors top 4, les pays francophones captent 68 % des fonds propres (252 M$ contre 99 M$) et 64 % des opérations ; le Sénégal lève 223 M$ (+449 %) dont 139 M$ de dette liés à Wave et 84 M$ de fonds propres ; la Côte d'Ivoire n'apparaît qu'avec 11 M$ de dette.",
+   "evidence": "Rapport et communiqué Partech Africa 2025 (22/01/2026).",
+   "sources": [
+    "https://cdn-website.partechpartners.com/africa-reports/2025-africa-tech-venture-capital-report",
+    "https://partechpartners.com/news/2025-partech-africa-tech-vc-report-african-tech-funding-rebounds-to-us41b-driven-by-record-debt-activity-and-disciplined-equity-growth"
+   ],
+   "confidence": "high",
+   "as_of": "2025-12",
+   "load_bearing": false
+  },
+  {
+   "claim": "Risque de coupure élevé : en 2025, Access Now recense 4 coupures au Cameroun (dont après la présidentielle d'octobre), 2 en Guinée, 2 en RDC (Goma, 23 janvier) et au Togo des blocages de Facebook, YouTube, Telegram, Signal et DuckDuckGo pendant jusqu'à trois mois après le 26 juin ; à Madagascar, un mouvement Gen Z organisé sur Facebook et TikTok aboutit à un coup d'État le 11 octobre 2025.",
+   "evidence": "Rapport Access Now 2025 (PDF) ; Wikipédia 2025 Malagasy protests (rév. 2026-11-26).",
+   "sources": [
+    "https://www.accessnow.org/keepiton-2025-report",
+    "https://en.wikipedia.org/wiki/2025_Malagasy_protests"
+   ],
+   "confidence": "high",
+   "as_of": "2025-12",
+   "load_bearing": true
+  },
+  {
+   "claim": "Les tendances culturelles africaines et asiatiques circulent sans passer par les USA, avec des décalages de semaines à deux ans : « Jerusalema » (sortie 29/11/2019) diffusée massivement en Italie et en France en août-sept. 2020 après un défi de danse angolais ; « Love Nwantiti » (2019) n° 1 en France en 2021 via TikTok ; « Calm Down » (févr. 2022) amplifiée par un remix US (août 2022) ; symboles Gen Z repris d'Asie à Madagascar en septembre 2025. Nollywood arrive en français par une chaîne doublée (Nollywood TV, 2012-2013, Canal+ Afrique).",
+   "evidence": "Pages Wikipédia des titres et de Nollywood TV ; cas compilés dans le dossier.",
+   "sources": [
+    "https://en.wikipedia.org/wiki/Jerusalema",
+    "https://en.wikipedia.org/wiki/Love_Nwantiti",
+    "https://en.wikipedia.org/wiki/Calm_Down_(Rema_song)",
+    "https://fr.wikipedia.org/wiki/Nollywood_TV"
+   ],
+   "confidence": "medium",
+   "as_of": "2026-11",
+   "load_bearing": true
+  },
+  {
+   "claim": "Québec (NETendances 2025) : Facebook 76 %, Messenger 59 %, Instagram 38 %, TikTok 25 % des internautes adultes (49 % des 18-34 ans) ; 3 h 41 par jour sur les réseaux (+51 min) ; YouTube quotidien chez 47 % des anglophones contre 26 % des francophones ; 82 % achètent en ligne, Amazon chez 83 % des cyberacheteurs, mais 48 % ont réduit ou cessé leurs achats auprès de marchands américains.",
+   "evidence": "Rapports PDF NETendances 2025 (collectes juillet 2025 et janvier 2026, n≈990).",
+   "sources": [
+    "https://transformation-numerique.ulaval.ca/wp-content/uploads/2026/02/netendances25-reseaux-sociaux-divertissement.pdf",
+    "https://transformation-numerique.ulaval.ca/wp-content/uploads/2026/04/netendances-2025-commerce-en-ligne.pdf"
+   ],
+   "confidence": "high",
+   "as_of": "2026-01",
+   "load_bearing": true
+  },
+  {
+   "claim": "Cadre québécois : loi 25 en vigueur par étapes (22/09/2022, 22/09/2023, 22/09/2024) avec transparence des décisions automatisées, évaluation avant tout transfert hors Québec et sanctions administratives jusqu'à 2 % du CA mondial ou 10 M$ ; Charte de la langue française renforcée par la loi 96 (sanctionnée le 01/06/2022) ; Meta bloque les nouvelles au Canada depuis l'été 2023, blocage toujours en place le 28/01/2026.",
+   "evidence": "Page CAI, Wikipédia Loi 25, Charter of the French Language, Online News Act ; BNN Bloomberg / Presse canadienne.",
+   "sources": [
+    "https://www.cai.gouv.qc.ca/protection-renseignements-personnels/sujets-et-domaines-dinteret/principaux-changements-loi-25",
+    "https://en.wikipedia.org/wiki/Charter_of_the_French_Language",
+    "https://en.wikipedia.org/wiki/Online_News_Act",
+    "https://www.bnnbloomberg.ca/business/2026/01/28/ottawa-remains-open-to-deal-with-meta-to-restore-news-to-facebook-instagram/"
+   ],
+   "confidence": "high",
+   "as_of": "2026-01-28",
+   "load_bearing": true
+  },
+  {
+   "claim": "Diasporas : en France, 7,97 M d'immigrés en 2025 dont 3,92 M nés en Afrique ; parts : Côte d'Ivoire 2,2 %, Comores 2,1 %, Sénégal 2,0 %, Cameroun 1,6 %, Mali 1,4 %, Madagascar 1,3 %, Congo et RDC 1,2 % chacun, Guinée 1,1 % (environ 1,2 M pour les 12 pays, estimation) ; au Canada, les immigrants récents de langue maternelle française viennent de France (30,3 %), du Cameroun (11,5 %), de Côte d'Ivoire (8,4 %), d'Algérie (5,8 %), de RDC (5,7 %) ; transferts : 10,6 % du PIB au Sénégal (2023), 3,32 Md$ en RDC (2025), 1,77 Md$ en Côte d'Ivoire (2024).",
+   "evidence": "INSEE (données provisoires 2025) ; Statistique Canada Le Quotidien 26/10/2022 ; API Banque mondiale (mise à jour 2026-11-11).",
+   "sources": [
+    "https://www.insee.fr/fr/statistiques/3633212",
+    "https://www150.statcan.gc.ca/n1/daily-quotidien/221026/dq221026a-fra.htm",
+    "https://api.worldbank.org/v2/country/SEN;COD;CIV/indicator/BX.TRF.PWKR.DT.GD.ZS?format=json"
+   ],
+   "confidence": "high",
+   "as_of": "2025",
+   "load_bearing": true
+  },
+  {
+   "claim": "Les sources commerciales et ouvertes de signal par pays sont vides pour l'axe : HypeAuditor ne publie aucun classement TikTok, YouTube ou Instagram pour le Sénégal, la Côte d'Ivoire, le Cameroun, la RDC (ni le Nigeria) ; l'API Wikimedia des articles les plus vus par pays renvoie 1 article pour la Côte d'Ivoire et aucune donnée pour le Cameroun le 25/11/2026, contre 202 pour le Canada.",
+   "evidence": "Pages index HypeAuditor et appels API Wikimedia top-per-country effectués pendant la session.",
+   "sources": [
+    "https://hypeauditor.com/top-tiktok/",
+    "https://wikimedia.org/api/rest_v1/metrics/pageviews/top-per-country/CI/all-access/2026/11/25"
+   ],
+   "confidence": "high",
+   "as_of": "2026-11-28",
+   "load_bearing": true
+  },
+  {
+   "claim": "Coût de la data (dernier jeu Cable.co.uk, 2023) : 0,52 $ le Go en RDC, 0,68 $ au Congo, 1,18 $ en Côte d'Ivoire, 1,63 $ au Sénégal et au Cameroun, 2,37 $ au Bénin, 3,27 $ au Burkina, 4,09 $ au Gabon, 4,56 $ au Mali, contre 0,20 $ en France et 0,39 $ au Nigeria.",
+   "evidence": "Classement Cable.co.uk, fichier de données 2023.",
+   "sources": [
+    "https://www.cable.co.uk/mobiles/worldwide-data-pricing/"
+   ],
+   "confidence": "medium",
+   "as_of": "2023",
+   "load_bearing": false
+  }
+ ],
+ "implications_for_tool": [
+  "Coder une matrice de faisabilité par pays (YPP, Meta in-stream/Content Monetization, abonnements Facebook, TikTok Creator Rewards, TikTok Shop, Stripe, Paddle, agrégateurs mobile money, PI-SPI) comme règle bloquante du score de transposabilité, versionnée et datée, révisée chaque trimestre.",
+  "Ajouter un score d'observabilité par pays et plateforme : ne jamais calculer de pénétration TikTok ou YouTube là où l'audience n'est pas publiée (10 pays sur 12 pour TikTok) ; afficher source, date et niveau de confiance de chaque chiffre.",
+  "Modéliser les prix en FCFA avec frais et taxes paramétrables par pays (Wave 1 %, Sénégal 0,5 % plafonné et 1,5 % marchands, Cameroun 0,2 % + 0,007 $, Mali 1 % sur retraits, délai de versement des agrégateurs) et proposer des micro-paiements plutôt que des abonnements US.",
+  "Intégrer les agrégateurs mobile money (HUB2, FedaPay, PayDunya, CinetPay, Flutterwave) comme rails cibles des initiatives locales, et Stripe ou Paddle uniquement pour les variantes diaspora (Paddle exclu pour les clients en RDC et au Mali).",
+  "Construire des dictionnaires de mots-clés multilingues (français, wolof, lingala, nouchi, camfranglais, pidgin, malgache) et une transcription audio des vidéos pour capter la parole non francophone ; détecter le mélange de langues.",
+  "Construire ses propres panels de créateurs, pages et chaînes par pays et par niche (YouTube RSS, fournisseur payant TikTok/Instagram, pages Facebook publiques, veille manuelle WhatsApp) ; écarter HypeAuditor et l'API Wikimedia par pays pour l'Afrique subsaharienne.",
+  "Remplacer le modèle linéaire USA → Europe → Afrique par un graphe multi-origines (USA, France, Belgique, Nigeria, Ghana, Afrique du Sud, Chine, Asie, hubs Dakar/Abidjan/Kinshasa/Douala, diasporas Paris/Bruxelles/Montréal) avec des classes de décalage : semaines à 2 ans pour formats TikTok et musique, années pour modèles de services, « bloqué » pour fonctionnalités et monétisation de plateforme.",
+  "Ajouter une couche de risque : jeu STOP d'Access Now (coupures 2016-2025), calendrier électoral, blocages de plateformes, zone monétaire (UEMOA, CEMAC, franc congolais), sanctions des prestataires ; pénaliser les initiatives mono-plateforme au Cameroun, en Guinée, en RDC, au Togo et au Sahel.",
+  "Segmenter les tribus à partir des données disponibles : TikTok féminin (RDC), Facebook masculin, Instagram marginal, segment professionnel de 1 à 2 M d'inscrits LinkedIn par grand pays ; utiliser comme déclencheurs les calendriers foot (CAN, Coupe du monde), religieux et scolaires.",
+  "Traiter le Québec comme un marché distinct avec filtres loi 25 et Charte de la langue française, indicateur de rejet des marchands américains (48 %), absence de nouvelles sur Meta, et proxy linguistique fr-CA faute de découpage Québec dans les API.",
+  "Mesurer empiriquement le rôle d'indicateur avancé du Québec : pour chaque tendance US, enregistrer la date de premier signal au Québec et en France et alimenter un jeu d'étalonnage des décalages.",
+  "Générer systématiquement une variante « diaspora » de chaque initiative (paiement en EUR ou CAD par carte, service ou livraison au pays via mobile money), segment le plus solvable de l'axe.",
+  "Prioriser pour une petite équipe : outils B2B pour commerçants et créateurs-vendeurs (catalogue WhatsApp, facture, lien de paiement mobile money, relance), contenus en langues locales, services diaspora, formation professionnelle courte ; écarter les modèles dépendant des revenus publicitaires de plateforme hors Sénégal (YouTube) et RDC (Facebook)."
+ ],
+ "open_questions": [
+  "Audience réelle de TikTok au Sénégal, en Côte d'Ivoire et au Cameroun, en l'absence de données publicitaires : quelles enquêtes (GWI, Afrobarometer, régulateurs ARTP, ARTCI, ART) la mesurent ?",
+  "Part du commerce passant par WhatsApp, Facebook et les directs TikTok : aucune mesure chiffrée trouvée.",
+  "Disponibilité et conversion en argent des cadeaux LIVE TikTok pour les créateurs de ces pays.",
+  "L'API YouTube accepte-t-elle regionCode CI, CM, CD pour chart=mostPopular (test i18nRegions.list avec une clé) ?",
+  "Parts de marché mobile money par opérateur en Côte d'Ivoire, au Cameroun et en RDC selon BCEAO, BEAC et BCC.",
+  "Interopérabilité effective de Wave via PI-SPI depuis octobre 2026 et prélèvement réel de la taxe sénégalaise de 0,5 %.",
+  "Liste officielle des pays du programme Facebook Content Monetization et calendrier de l'ouverture annoncée pour la Côte d'Ivoire.",
+  "Effectifs des diasporas congolaise et camerounaise en Belgique et premiers résultats du recensement canadien 2026.",
+  "Le blocage des nouvelles par Meta au Canada est-il toujours en vigueur au 28/11/2026 ? Statut 2026 de l'ordre fédéral visant TikTok Canada.",
+  "Participation des pays de l'axe à la Coupe du monde 2026 (page non lue).",
+  "Prix de la data en 2025-2026 (le dernier jeu Cable.co.uk lu date de 2023).",
+  "Décalage mesuré USA → France → Sénégal/Côte d'Ivoire et Québec → France pour un même panel de tendances : aucune série comparable n'existe."
+ ],
+ "data_sources": [
+  {
+   "name": "DataReportal Digital 2027 (pages pays)",
+   "category": "audiences",
+   "signal_type": "audiences publicitaires par plateforme, internautes, démographie",
+   "access_method": "HTML public, curl puis extraction de texte",
+   "auth": "aucune",
+   "cost": "gratuit",
+   "geo_coverage": "tous pays, dont les 12 de l'axe, Canada sans découpage Québec",
+   "limits_and_tos": "annuel ; TikTok absent de 10 pays de l'axe, YouTube absent de 11 ; chiffres non comparables d'une édition à l'autre",
+   "tested_call": "curl https://datareportal.com/reports/digital-2027-senegal",
+   "test_result": "200, 175 ko ; 15 pages lues et parsées",
+   "verdict": "core"
+  },
+  {
+   "name": "Banque mondiale Global Findex 2025 (API, source 28)",
+   "category": "inclusion financière",
+   "signal_type": "comptes, mobile money, smartphone, achat en ligne",
+   "access_method": "API REST JSON",
+   "auth": "aucune",
+   "cost": "gratuit",
+   "geo_coverage": "12 pays de l'axe + France, Canada, Maroc, Nigeria, Ghana",
+   "limits_and_tos": "enquête triennale, données 2024",
+   "tested_call": "https://api.worldbank.org/v2/country/SEN;CIV;CMR;COD/indicator/mobileaccount.t.d?source=28&format=json",
+   "test_result": "200, valeurs 2024 pour tous les pays de l'axe",
+   "verdict": "core"
+  },
+  {
+   "name": "Banque mondiale WDI, transferts de fonds",
+   "category": "diaspora",
+   "signal_type": "transferts en % du PIB et en USD",
+   "access_method": "API REST JSON",
+   "auth": "aucune",
+   "cost": "gratuit",
+   "geo_coverage": "mondiale ; Togo, Gabon, Congo sans valeur 2022-2025",
+   "limits_and_tos": "mise à jour 2026-11-11",
+   "tested_call": "https://api.worldbank.org/v2/country/SEN;COD/indicator/BX.TRF.PWKR.DT.GD.ZS?format=json",
+   "test_result": "200",
+   "verdict": "core"
+  },
+  {
+   "name": "Liste de disponibilité du Programme Partenaire YouTube",
+   "category": "monétisation",
+   "signal_type": "règle d'éligibilité par pays",
+   "access_method": "page d'aide HTML",
+   "auth": "aucune",
+   "cost": "gratuit",
+   "geo_coverage": "mondiale",
+   "limits_and_tos": "à surveiller par diff",
+   "tested_call": "https://support.google.com/youtube/answer/7101720?hl=en",
+   "test_result": "200, liste extraite ; Sénégal oui, CI/CM/CD non",
+   "verdict": "core"
+  },
+  {
+   "name": "Pages Meta de disponibilité (in-stream, abonnements)",
+   "category": "monétisation",
+   "signal_type": "règle d'éligibilité par pays",
+   "access_method": "pages d'aide HTML (liste dans JSON embarqué)",
+   "auth": "aucune",
+   "cost": "gratuit",
+   "geo_coverage": "mondiale",
+   "limits_and_tos": "page in-stream peut-être obsolète depuis l'unification Content Monetization ; page Stars non rendue",
+   "tested_call": "https://www.facebook.com/business/help/267128784014981",
+   "test_result": "200, 70 pays extraits dont RDC",
+   "verdict": "optional"
+  },
+  {
+   "name": "Stripe global et Paddle pays non supportés",
+   "category": "paiement",
+   "signal_type": "faisabilité d'encaissement",
+   "access_method": "pages HTML",
+   "auth": "aucune",
+   "cost": "gratuit",
+   "geo_coverage": "mondiale",
+   "limits_and_tos": "à surveiller par diff",
+   "tested_call": "https://stripe.com/global ; https://www.paddle.com/help/start/intro-to-paddle/which-countries-are-supported-by-paddle",
+   "test_result": "200 ; CI seul pays Stripe de l'axe ; Paddle bloque RDC et Mali",
+   "verdict": "core"
+  },
+  {
+   "name": "GSMA State of the Industry Report on Mobile Money 2026",
+   "category": "paiement",
+   "signal_type": "comptes, valeurs, taxes, lancements par région",
+   "access_method": "PDF",
+   "auth": "aucune",
+   "cost": "gratuit",
+   "geo_coverage": "régions GSMA, pas de détail pays systématique",
+   "limits_and_tos": "annuel",
+   "tested_call": "PDF The-State-of-the-Industry-Report-2026_English.pdf",
+   "test_result": "200, 8,8 Mo, texte extrait",
+   "verdict": "optional"
+  },
+  {
+   "name": "OIF, La langue française dans le monde 2026",
+   "category": "langue et démographie",
+   "signal_type": "francophones par pays, projections 2050-2070",
+   "access_method": "PDF",
+   "auth": "aucune",
+   "cost": "gratuit",
+   "geo_coverage": "espace francophone",
+   "limits_and_tos": "quadriennal",
+   "tested_call": "Synthese_rapport_Langue_francaise_dans_le_monde_2026.pdf",
+   "test_result": "200, texte extrait",
+   "verdict": "optional"
+  },
+  {
+   "name": "NETendances (ATN, Université Laval)",
+   "category": "usages Québec",
+   "signal_type": "usage des plateformes, commerce en ligne, information",
+   "access_method": "PDF",
+   "auth": "aucune",
+   "cost": "gratuit",
+   "geo_coverage": "Québec, adultes internautes",
+   "limits_and_tos": "annuel, panel Web n≈990, pas de marge d'erreur",
+   "tested_call": "netendances25-reseaux-sociaux-divertissement.pdf ; netendances-2025-commerce-en-ligne.pdf",
+   "test_result": "200, texte extrait",
+   "verdict": "core"
+  },
+  {
+   "name": "Access Now STOP (coupures d'Internet)",
+   "category": "risque",
+   "signal_type": "coupures et blocages par pays et date",
+   "access_method": "rapport PDF et jeu de données 2016-2025 téléchargeable",
+   "auth": "aucune",
+   "cost": "gratuit",
+   "geo_coverage": "mondiale",
+   "limits_and_tos": "annuel ; jeu de données à télécharger depuis la page #KeepItOn",
+   "tested_call": "https://www.accessnow.org/keepiton-2025-report",
+   "test_result": "200, PDF lu",
+   "verdict": "core"
+  },
+  {
+   "name": "Wikimedia pageviews top-per-country",
+   "category": "signal de tendance",
+   "signal_type": "articles les plus vus par pays et par jour",
+   "access_method": "API REST",
+   "auth": "aucune (User-Agent descriptif requis)",
+   "cost": "gratuit",
+   "geo_coverage": "riche pour CA ; quasi vide pour CI, MA ; absent pour CM",
+   "limits_and_tos": "429 fréquents ; seuils de confidentialité",
+   "tested_call": "https://wikimedia.org/api/rest_v1/metrics/pageviews/top-per-country/CI/all-access/2026/11/25",
+   "test_result": "CI 1 article, MA 4, CA 202, CM 404",
+   "verdict": "avoid"
+  },
+  {
+   "name": "HypeAuditor classements publics de créateurs",
+   "category": "créateurs",
+   "signal_type": "top créateurs par pays et catégorie",
+   "access_method": "pages HTML",
+   "auth": "aucune",
+   "cost": "gratuit (pages publiques), payant au-delà",
+   "geo_coverage": "aucun pays de l'axe, ni Nigeria ; Canada et Maroc présents",
+   "limits_and_tos": "CGU commerciales",
+   "tested_call": "https://hypeauditor.com/top-tiktok/",
+   "test_result": "200 ; pages pays SN/CI en 404",
+   "verdict": "avoid"
+  },
+  {
+   "name": "Cable.co.uk prix mondial de la data mobile",
+   "category": "coût d'accès",
+   "signal_type": "prix moyen du Go par pays",
+   "access_method": "page HTML et fichier xlsx",
+   "auth": "aucune",
+   "cost": "gratuit",
+   "geo_coverage": "237 pays",
+   "limits_and_tos": "dernière édition lue : 2023",
+   "tested_call": "https://www.cable.co.uk/mobiles/worldwide-data-pricing/",
+   "test_result": "200",
+   "verdict": "optional"
+  },
+  {
+   "name": "INSEE, Statbel, Statistique Canada",
+   "category": "diaspora",
+   "signal_type": "immigrés par pays de naissance, origines",
+   "access_method": "pages HTML",
+   "auth": "aucune",
+   "cost": "gratuit",
+   "geo_coverage": "France, Belgique, Canada",
+   "limits_and_tos": "annuel ou quinquennal",
+   "tested_call": "https://www.insee.fr/fr/statistiques/3633212",
+   "test_result": "200, parts 2025 par pays extraites",
+   "verdict": "optional"
+  }
+ ],
+ "trends": [
+  {
+   "name": "Commerce social en direct (live shopping)",
+   "niche": "commerce",
+   "description": "Vente en direct sur TikTok et Facebook ; aux USA et en France via TikTok Shop, en Afrique francophone sans boutique intégrée, avec paiement mobile money ou à la livraison.",
+   "us_stage": "acceleration",
+   "us_emergence": "TikTok Shop USA le 12/09/2023",
+   "francophone_status": "France : TikTok Shop depuis le 31/03/2025 ; Afrique : TikTok Shop absent fin 2026, pratique informelle non mesurée ; Québec : non mesuré",
+   "lifestyle_segments": [
+    "petits commerçants",
+    "créateurs-vendeurs",
+    "mode et beauté"
+   ],
+   "monetization": "commission sur ventes, outils B2B (catalogue, lien de paiement)",
+   "evidence": "Absence de TikTok Shop en Afrique (FAIT-2), Findex achat en ligne 1,7 à 21,7 %",
+   "sources": [
+    "https://techcabal.com/fr/?p=150573",
+    "https://api.worldbank.org/v2/country/SEN;CIV;CMR;COD/indicator/fin26b?source=28&format=json"
+   ]
+  },
+  {
+   "name": "Information par influenceurs d'actualité",
+   "niche": "médias",
+   "description": "Les jeunes adultes s'informent auprès d'influenceurs spécialisés plutôt que des médias, renforcé au Canada par le blocage des nouvelles sur Meta.",
+   "us_stage": "mainstream",
+   "francophone_status": "Québec : 42 % des 18-34 ans ; Afrique : mobilisations Gen Z (Madagascar 2025) portées par des influenceurs TikTok",
+   "lifestyle_segments": [
+    "18-34 ans urbains",
+    "jeunesse contestataire"
+   ],
+   "monetization": "partenariats, abonnements hors plateforme",
+   "evidence": "NETendances 2025 ; Wikipédia 2025 Malagasy protests",
+   "sources": [
+    "https://nouvelles.ulaval.ca/2026/02/11/plus-de-4-jeunes-internautes-sur-10-ont-recours-aux-influenceuses-et-influenceurs-pour-sinformer-95c9e3d5-881d-487b-9d45-cc37142df87d",
+    "https://en.wikipedia.org/wiki/2025_Malagasy_protests"
+   ]
+  },
+  {
+   "name": "Afrobeats et amapiano mondialisés",
+   "niche": "musique",
+   "description": "Musiques nigériane et sud-africaine diffusées par les défis TikTok vers l'Europe et les USA, puis revenant amplifiées en Afrique francophone.",
+   "us_stage": "mainstream",
+   "us_emergence": "remix Calm Down avec Selena Gomez, 25/08/2022",
+   "francophone_status": "France : Love Nwantiti n° 1 en 2021 ; Belgique : Calm Down n° 1 ; Afrique francophone : non mesuré",
+   "lifestyle_segments": [
+    "jeunes urbains",
+    "danse",
+    "diaspora"
+   ],
+   "monetization": "événements, contenus de danse, marques",
+   "evidence": "Pages Wikipédia des titres",
+   "sources": [
+    "https://en.wikipedia.org/wiki/Calm_Down_(Rema_song)",
+    "https://en.wikipedia.org/wiki/Love_Nwantiti",
+    "https://en.wikipedia.org/wiki/Amapiano"
+   ]
+  }
+ ]
+}

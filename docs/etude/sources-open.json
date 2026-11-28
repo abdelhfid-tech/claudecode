@@ -1,0 +1,816 @@
+{
+ "dossier_path": "/tmp/claude-0/-home-user-claudecode/00e88930-c277-528f-99f2-9b7f935da647/scratchpad/research/sources-open.md",
+ "executive_summary": "Au 28/11/2026, aucune source ouverte hors réseaux sociaux ne donne une API officielle comparant les pays. L'API Google Trends reste une alpha sur candidature, sans quota ni prix publiés. La meilleure mesure gratuite du décalage est l'endpoint non officiel Trends explore + widgetdata/multiline : une seule requête US+FR+MA place les trois séries sur une échelle commune. Testé en 200 aujourd'hui sur Labubu : première semaine ≥ 5 en oct. 2024 aux US, fin avr. 2025 en FR, début mai 2025 au MA, soit environ 28 semaines US→FR et environ 1 semaine FR→MA. Les classements d'apps sont le signal produit le plus net. Le RSS Apple v2 (≤ 100 entrées, storefronts ma/sn/ci/dz/tn en 200) et Google Play batchexecute (200 apps par pays et catégorie) montrent que 18 des 30 premières apps iOS US et 24 des 50 premières apps Android US sont absentes des tops FR et MA. Wikimedia combine l'API Pageviews (200 req/min avec UA conforme, Retry-After à respecter) et un TSV quotidien pays × page × QID Wikidata depuis 02/2023. Le Maroc y est très peu couvert (87 lignes contre 10 770 pour la FR) à cause des seuils de confidentialité différentielle. Au Maroc, il faut donc des signaux de présence plutôt que de volume : autocomplétion localisée (« chocolat dubai marjane / prix maroc »), première mention presse via Google News RSS (after:/before:/site:, l'édition gl=MA n'étant pas la presse marocaine), entrée dans un top d'apps. Plusieurs sources sont mortes ou dégradées en 2026 : OSS Insight (indisponible depuis le 01/03/2026), GH Archive (fichiers horaires divisés par environ 5), GitHub /trending (403 via le proxy), pytrends (archivé), PA-API 5 d'Amazon (403), Amazon.fr (captcha), Etsy, Kickstarter JSON, Indiegogo et Similarweb (403 ou anti-bot). GDELT est trop limité (1 req/5 s par IP) et trop pauvre sur les niches (4 articles « pickleball » FR en 24 mois). Hacker News, le flux Atom de Product Hunt, la recherche GitHub, npm/PyPI, yc-oss et environ 70 % des flux RSS médias testés (US/FR/MA/Afrique) répondent en 200. Les flux bloqués (Axios, BoF, Medias24, L'Economiste, WeAreTech) passent par Google News site:. Points CGU : API Product Hunt non commerciale par défaut, données Cloudflare Radar sous CC BY-NC 4.0, endpoints Google non officiels en zone grise. Il faut des adaptateurs coupables d'un geste et un repli payant bon marché (DataForSEO Trends 0,0027 $ la tâche, SerpApi gratuit jusqu'à 250 requêtes par mois). L'architecture doit stocker des instantanés dès le premier jour, puisque la plupart des sources « now » n'ont pas d'historique, et pivoter sur les QID Wikidata et les identifiants d'apps.",
+ "key_findings": [
+  {
+   "claim": "L'API Google Trends officielle est toujours une alpha sur candidature, sans quota, prix ni « Trending Now » publiés. Contenu annoncé : 5 ans glissants, agrégations jour/semaine/mois/an, pays et sous-régions, données à J-2.",
+   "evidence": "La page officielle indique « Get early access to the Google Trends API alpha » et « we're now accepting applications for alpha testers ». Annonce du 24/07/2025 : « available only to a very limited number of testers ».",
+   "sources": [
+    "https://developers.google.com/search/apis/trends",
+    "https://developers.google.com/search/blog/2025/07/trends-api"
+   ],
+   "confidence": "high",
+   "as_of": "2026-11-28",
+   "load_bearing": true
+  },
+  {
+   "claim": "L'endpoint non officiel Trends explore + widgetdata/multiline fonctionne. Une requête avec 3 comparisonItem (US, FR, MA) donne 261 points hebdomadaires sur 5 ans, sur une échelle commune. Labubu : première semaine ≥ 5 le 13–19/10/2024 (US), le 27/04–03/05/2025 (FR), le 04–10/05/2025 (MA), soit un décalage d'environ 28 semaines US→FR et d'environ 1 semaine FR→MA.",
+   "evidence": "curl : GET explore?geo=FR&q=labubu (cookie, 429 sans conséquence), puis api/explore → 200 (11 307 octets), puis widgetdata/multiline → 200 (48 619 octets). Un appel direct sans cookie a renvoyé 429.",
+   "sources": [
+    "https://trends.google.com/trends/api/explore",
+    "https://trends.google.com/trends/api/widgetdata/multiline"
+   ],
+   "confidence": "high",
+   "as_of": "2026-11-28",
+   "load_bearing": true
+  },
+  {
+   "claim": "Le RSS Trends « Trending Now » répond 200 pour US, FR, MA, BE, CH, CA, CA-QC, SN, CI, DZ, TN et CM, mais avec 10 items seulement et une fenêtre de quelques heures dominée par le sport et la politique. Les anciens endpoints dailytrends, realtimetrends et trendingsearches/daily/rss renvoient 404.",
+   "evidence": "curl https://trends.google.com/trending/rss?geo=MA → 200, 10 items avec ht:approx_traffic et ht:news_item ; les anciens endpoints → 404.",
+   "sources": [
+    "https://trends.google.com/trending/rss?geo=MA"
+   ],
+   "confidence": "high",
+   "as_of": "2026-11-28",
+   "load_bearing": true
+  },
+  {
+   "claim": "Pour les apps, 18 des 30 premières apps gratuites iOS US sont absentes des top 100 FR et MA (ex. PineDrama, GoWish, Giftful, Kalshi, Muse from Meta). Whatnot est arrivée en FR (#3) mais pas au MA. Vinted (#7 US) illustre un flux inverse Europe→US.",
+   "evidence": "Apple RSS v2 rss.marketingtools.apple.com/api/v2/{us,fr,ma}/apps/top-free/100/apps.json → 200, mise à jour le 28/11/2026 13:01 UTC ; n ≤ 100 (101 → 500) ; 502 et timeouts intermittents.",
+   "sources": [
+    "https://rss.marketingtools.apple.com/api/v2/ma/apps/top-free/100/apps.json",
+    "https://rss.marketingtools.apple.com/"
+   ],
+   "confidence": "high",
+   "as_of": "2026-11-28",
+   "load_bearing": true
+  },
+  {
+   "claim": "Les classements Google Play par pays ne sont accessibles qu'en RPC non officiel (batchexecute rpcids=vyAe2, gabarit de google-play-scraper 10.1.4) : 200 apps par pays, collection et catégorie. 24 des 50 premières apps US sont absentes des top 200 FR et MA. La page HTML /store/apps/top n'est pas exploitable.",
+   "evidence": "POST play.google.com/_/PlayStoreUi/data/batchexecute?rpcids=vyAe2&...&hl=fr&gl=ma → 200 pour us, fr, ma, sn ; MA topgrossing renvoie 115 apps. Le gabarit bl=boq_playuiserver_20220612 est fragile.",
+   "sources": [
+    "https://play.google.com/_/PlayStoreUi/data/batchexecute",
+    "https://www.npmjs.com/package/google-play-scraper"
+   ],
+   "confidence": "high",
+   "as_of": "2026-11-28",
+   "load_bearing": true
+  },
+  {
+   "claim": "Wikimedia publie un TSV quotidien pays × projet × page × QID Wikidata (confidentialité différentielle, depuis le 06/02/2023, environ 16 Mo par jour). Le Maroc y est quasiment absent (87 lignes le 27/11/2026, contre FR 10 770 et US 97 501 ; CI 0), à cause de seuils de 90, 550 ou 1 000 vues selon le niveau de risque du pays.",
+   "evidence": "curl analytics.wikimedia.org/published/datasets/country_project_page/2026-11-27.tsv → 200, 16 079 853 octets, 247 639 lignes. Le README détaille les seuils et les IC à 95 % (±36, ±177, ±353).",
+   "sources": [
+    "https://analytics.wikimedia.org/published/datasets/country_project_page/00_README.html"
+   ],
+   "confidence": "high",
+   "as_of": "2026-11-28",
+   "load_bearing": true
+  },
+  {
+   "claim": "La politique 2026 de Wikimedia impose 10 req/min aux clients non identifiés et 200 req/min aux bots avec un UA conforme (contact URL ou e-mail). Il faut respecter Retry-After (sinon attendre au moins 5 s) et garder au plus 3 requêtes concurrentes. Les UA génériques comme curl ou python-requests peuvent recevoir un 403. Avec un UA conforme et Retry-After respecté, 4 appels sur 4 ont réussi. Les 429 restants viennent probablement de l'IP de sortie partagée.",
+   "evidence": "Page Rate limits modifiée le 08/11/2026 ; en-têtes observés : retry-after: 4 à 27, x-envoy-ratelimited: true.",
+   "sources": [
+    "https://www.mediawiki.org/wiki/Wikimedia_APIs/Rate_limits",
+    "https://foundation.wikimedia.org/wiki/Policy:Wikimedia_Foundation_User-Agent_Policy"
+   ],
+   "confidence": "high",
+   "as_of": "2026-11-08",
+   "load_bearing": true
+  },
+  {
+   "claim": "L'API Pageviews per-article mesure un décalage entre éditions linguistiques : Labubu culmine en 2025-07 sur la Wikipédia en (1,41 M vues), 2025-07 sur l'ar (13 902) et 2025-08 sur la fr (91 132) ; Pickleball culmine en 2023-10 sur l'en contre 2026-08 sur la fr, soit environ 34 mois. top-per-country pour MA ne renvoie que 3 articles.",
+   "evidence": "curl wikimedia.org/api/rest_v1/metrics/pageviews/per-article/{en,fr,ar}.wikipedia/all-access/user/{Labubu,Pickleball}/monthly/... → 200.",
+   "sources": [
+    "https://wikimedia.org/api/rest_v1/metrics/pageviews/per-article/fr.wikipedia/all-access/user/Pickleball/monthly/2019010100/2026110100"
+   ],
+   "confidence": "high",
+   "as_of": "2026-11-28",
+   "load_bearing": false
+  },
+  {
+   "claim": "L'autocomplétion Google, YouTube et Amazon par pays (gl=ma|fr|us) révèle le stade local d'une tendance. Pour « chocolat dubai », le MA suggère maroc, casablanca, prix maroc et marjane ; la FR suggère lidl, lindt, carrefour et aldi. C'est un signal gratuit de présence commerciale, sans historique.",
+   "evidence": "curl suggestqueries.google.com/complete/search?client=firefox&hl=fr&gl=ma&q=chocolat%20dubai → 200 ; completion.amazon.fr/api/2017/suggestions → 200.",
+   "sources": [
+    "https://suggestqueries.google.com/complete/search?client=firefox&hl=fr&gl=ma&q=chocolat%20dubai"
+   ],
+   "confidence": "high",
+   "as_of": "2026-11-28",
+   "load_bearing": true
+  },
+  {
+   "claim": "Google News RSS date l'arrivée dans la presse grâce à after:, before:, when: et site:, mais l'édition gl=MA ne restitue pas la presse marocaine (dominée par FFT et Radio-Canada) et MA:ar redirige vers EG:ar. Il faut des listes site: de domaines marocains : Labubu apparaît dans Le Matin le 23/06/2025 et dans Hespress le 01/07/2025. Le flux plafonne à environ 100 items et renvoie des 503 intermittents.",
+   "evidence": "curl news.google.com/rss/search?q=pickleball+when:1y&hl=fr&gl=MA&ceid=MA:fr → 70 items (FFT 13, Radio-Canada 8) ; ceid=MA:ar → EG:ar ; recherche labubu avec site: et before:2025-09-01 → 200.",
+   "sources": [
+    "https://news.google.com/rss/search?q=pickleball+when:1y&hl=fr&gl=MA&ceid=MA:fr"
+   ],
+   "confidence": "high",
+   "as_of": "2026-11-28",
+   "load_bearing": true
+  },
+  {
+   "claim": "Les classements fondés sur les événements GitHub sont cassés en 2026. OSS Insight Trending est « unavailable » depuis le 01/03/2026, avec une capture des événements tombée à environ 0,3 % de la normale. Le fichier horaire GH Archive pèse 4,76 Mo le 27/11/2026, contre 25,6 Mo le 27/11/2025 et 37,8 Mo le 10/02/2026. GitHub /trending renvoie 403 via le proxy, mais la recherche GitHub fonctionne.",
+   "evidence": "curl api.ossinsight.io/v1/trends/repos → data_quality.status=unavailable ; curl -I data.gharchive.org/{h}.json.gz → content-length.",
+   "sources": [
+    "https://api.ossinsight.io/v1/trends/repos/?period=past_week&language=All",
+    "https://data.gharchive.org/2026-11-27-12.json.gz"
+   ],
+   "confidence": "high",
+   "as_of": "2026-11-28",
+   "load_bearing": false
+  },
+  {
+   "claim": "GDELT DOC 2.0 est peu utile pour les niches lifestyle et pour le Maroc. Sa limite est de 1 requête toutes les 5 s par IP (429 en série depuis l'IP partagée) et il ne compte que 4 articles « pickleball » en source FR sur 24 mois, contre 58 dans Google News FR sur 30 jours.",
+   "evidence": "curl api.gdeltproject.org/api/v2/doc/doc?query=pickleball%20sourcecountry:FR&mode=timelinevolraw&timespan=24m → 200 une fois, puis 429 et coupures de tunnel.",
+   "sources": [
+    "https://blog.gdeltproject.org/gdelt-doc-2-0-api-debuts/",
+    "https://api.gdeltproject.org/api/v2/doc/doc"
+   ],
+   "confidence": "medium",
+   "as_of": "2026-11-28",
+   "load_bearing": false
+  },
+  {
+   "claim": "pytrends est archivé (dernière version 4.9.2 du 13/04/2023). L'alternative maintenue la plus récente est trendspyg 1.9.0 (01/10/2026) ; trendspy 0.1.6 date du 25/12/2024.",
+   "evidence": "API de recherche GitHub : GeneralMills/pytrends archived=true ; API JSON PyPI.",
+   "sources": [
+    "https://pypi.org/project/pytrends/",
+    "https://pypi.org/project/trendspyg/",
+    "https://apiserpent.com/blog/pytrends-dead-google-trends-data-2026"
+   ],
+   "confidence": "high",
+   "as_of": "2026-11-28",
+   "load_bearing": false
+  },
+  {
+   "claim": "Les replis payants pour Trends restent bon marché : DataForSEO Trends à 0,0027 $ par tâche (file standard, jusqu'à 45 min) ou 0,011 $ en Live ; SerpApi gratuit jusqu'à 250 recherches par mois, puis 25 $ pour 1 000 et 75 $ pour 5 000. L'API Exploding Topics est hors budget (option du plan à 249 $/mois, dès 1 000 $/mois pour 1 000 requêtes, sans filtre géographique, usage commercial sur devis).",
+   "evidence": "Pages de prix consultées le 28/11/2026.",
+   "sources": [
+    "https://dataforseo.com/apis/google-trends-api",
+    "https://serpapi.com/pricing",
+    "https://explodingtopics.com/feature/et-api",
+    "https://explodingtopics.com/pricing"
+   ],
+   "confidence": "high",
+   "as_of": "2026-11-28",
+   "load_bearing": true
+  },
+  {
+   "claim": "Plusieurs sources présentent un risque de CGU ou de licence pour un produit commercial. L'API Product Hunt est non commerciale par défaut (6 250 points de complexité par 15 min). Les données de l'API Cloudflare Radar sont sous CC BY-NC 4.0, alors que Radar offre justement un classement des domaines montants par pays (TRENDING_RISE, location=MA).",
+   "evidence": "Doc Product Hunt v2 et page rate limits ; page À propos de Radar ; API Radar en 400 sans jeton (non testée avec jeton).",
+   "sources": [
+    "https://api.producthunt.com/v2/docs",
+    "https://api.producthunt.com/v2/docs/rate_limits/headers",
+    "https://radar.cloudflare.com/about",
+    "https://developers.cloudflare.com/api/resources/radar/subresources/ranking/methods/top/"
+   ],
+   "confidence": "medium",
+   "as_of": "2026-11-28",
+   "load_bearing": true
+  },
+  {
+   "claim": "Les sources commerce et marketplaces sont inexploitables à 0 € pour comparer US et FR. Amazon.fr présente un captcha, la page Movers & Shakers US est rendue en JS, et la PA-API 5 est dépréciée (403, remplacée par Creators API). Etsy, Kickstarter JSON, Indiegogo et Similarweb renvoient 403 ou une page anti-bot. Les meilleures ventes Steam sont identiques entre US et MA.",
+   "evidence": "Tests curl du 28/11/2026 ; page Amazon de dépréciation de la PA-API 5.",
+   "sources": [
+    "https://affiliate-program.amazon.com/creatorsapi/docs/en-us/paapiv5-deprecation",
+    "https://www.amazon.fr/gp/movers-and-shakers/"
+   ],
+   "confidence": "high",
+   "as_of": "2026-11-28",
+   "load_bearing": false
+  },
+  {
+   "claim": "Environ 70 % des flux RSS médias testés répondent en 200 avec des items datés du 20 au 28/11/2026 : The Verge, TechCrunch, Morning Brew (/feed.xml), Modern Retail, Digiday, Social Media Today, Later (/rss.xml), Siècle Digital, BDM, Maddyness, FrenchWeb, JDN, L'ADN, Le360 (/arc/outboundfeeds/rss/), TelQuel, Hespress FR, Welovebuzz, TechCabal, Disrupt Africa. Axios, BoF, Medias24, L'Economiste et WeAreTech sont bloqués (403 ou 404) mais restent accessibles via Google News site:.",
+   "evidence": "Script de test de flux (agent précédent) et revérification Google News site:axios.com, medias24.com, leconomiste.com, wearetech.africa → 200.",
+   "sources": [
+    "https://fr.le360.ma/arc/outboundfeeds/rss/?outputType=xml",
+    "https://www.morningbrew.com/feed.xml",
+    "https://later.com/rss.xml",
+    "https://news.google.com/rss/search?q=site:medias24.com+when:2d&hl=fr&gl=MA&ceid=MA:fr"
+   ],
+   "confidence": "high",
+   "as_of": "2026-11-28",
+   "load_bearing": true
+  },
+  {
+   "claim": "Le jeu BigQuery Google Trends international (top 25 et top 25 en hausse, « approximately 50 additional countries », 5 ans) et les jeux CrUX par pays (chrome-ux-report.country_ma, mensuels, publiés le deuxième mardi, rangs en paliers 1k/5k/10k...) sont des signaux gratuits sur inscription GCP. Ils n'ont pas pu être testés, et la présence de FR et MA dans Google Trends international reste inconnue.",
+   "evidence": "bq ls → Invalid Credentials dans l'environnement ; pages de documentation lues.",
+   "sources": [
+    "https://support.google.com/trends/answer/12764470",
+    "https://developer.chrome.com/docs/crux/bigquery",
+    "https://developer.chrome.com/docs/crux/methodology/metrics"
+   ],
+   "confidence": "medium",
+   "as_of": "2026-11-28",
+   "load_bearing": false
+  },
+  {
+   "claim": "Le décalage n'est pas linéaire US→FR→MA : pour Labubu, le pic Trends du Maroc (08–14/06/2025) précède celui des US (13–19/07/2025) et de la FR (20–26/07/2025). Les métriques doivent se rapporter au pic propre de chaque pays et à des seuils de présence, et intégrer d'autres foyers d'origine (Golfe, Asie).",
+   "evidence": "Même requête Trends multiline US+FR+MA (échelle commune).",
+   "sources": [
+    "https://trends.google.com/trends/api/widgetdata/multiline"
+   ],
+   "confidence": "medium",
+   "as_of": "2026-11-28",
+   "load_bearing": true
+  }
+ ],
+ "implications_for_tool": [
+  "Collecte d'instantanés dès le premier jour (cron) vers SQLite ou Parquet : Trends RSS toutes les 30 à 60 min ; tops Apple et Play (US, FR, MA, BE, CH, CA, SN, CI, DZ, TN, en global et par catégorie), autocomplétion de la liste de veille et Product Hunt une fois par jour. Ces sources n'ont pas d'historique, donc une arrivée non capturée ne peut plus être datée.",
+  "Module de rattrapage historique pour les sources qui en ont : Trends explore/multiline (5 ans, requête comparative US+FR+MA), Wikipedia per-article (depuis 2015), TSV DP country_project_page (depuis 02/2023), Google News RSS after:/before: (découpage par fenêtres pour trouver la première mention), HN Algolia.",
+  "Résolution d'entités avec trois pivots : QID Wikidata pour les concepts (titres en, fr, ar, ary et jointure avec le jeu DP pays), identifiant Apple et package Play pour les produits, mots-clés traduits par LLM avec variantes locales (fr, ar, darija) enrichies par les RELATED_QUERIES Trends de chaque pays.",
+  "Métriques de décalage : t_emergence(pays) = première semaine ≥ X % du pic propre ou au-dessus d'un seuil sur l'échelle commune ; lag = t_pays − t_US ; presence_topN(app, pays) ; stade_local(pays) d'après les qualificatifs ville, prix ou enseigne de l'autocomplétion ; t_presse(pays) d'après la liste site: curée. Score d'opportunité = force du signal US × absence en FR ou au MA.",
+  "Couche de gouvernance réseau : seau de jetons par hôte, respect de Retry-After, UA Wikimedia conforme (nom/version + URL de contact du projet), au moins 5 s entre deux appels GDELT, amorce de cookie pour Trends, relances bornées sur Apple et Google News (502/503), cache, et exécution sur une IP dédiée plutôt que partagée.",
+  "Registre des sources par niveau de risque de CGU (ouverte, zone grise, bloquée), avec un interrupteur par adaptateur et un repli payant documenté (DataForSEO Trends à 0,0027 $ par tâche, puis SerpApi) quand un endpoint Google non officiel casse. Tests de bon fonctionnement quotidiens (canaris) sur chaque endpoint.",
+  "Ne pas revendre les données brutes Product Hunt (non commerciales) ni Cloudflare Radar (CC BY-NC). Les garder comme signaux internes et faire valider la stratégie par l'axe juridique.",
+  "Profil Maroc spécifique : privilégier les signaux de présence aux volumes ; liste curée de médias MA (Le360, TelQuel, Hespress FR et AR, Le Site Info, Challenge, LeBrief, Welovebuzz, plus site: pour Medias24 et L'Economiste) ; requêtes trilingues ; ne pas utiliser gl=MA de Google News comme « presse marocaine ».",
+  "Exclure du code les sources mortes ou dégradées : OSS Insight Trending, classements GH Archive, pytrends, Amazon PA-API 5 et Amazon.fr, Etsy, Kickstarter JSON, Indiegogo, Similarweb gratuit, endpoints Trends dailytrends et realtimetrends.",
+  "Prévoir des connecteurs optionnels « avec clé gratuite » : jeton Cloudflare Radar (domaines TRENDING_RISE par pays), projet GCP BigQuery (CrUX country_ma/country_fr, Google Trends international), et candidature à l'API Google Trends alpha, avec bascule dès qu'elle est accordée."
+ ],
+ "open_questions": [
+  "Quand et à quelles conditions (quotas, prix, Trending Now) l'API Google Trends alpha sera-t-elle ouverte ? Combien de temps prend une acceptation ?",
+  "Le jeu BigQuery google_trends.international_* couvre-t-il FR et MA ? (SELECT DISTINCT country_code à lancer.)",
+  "Les 429 Wikimedia et GDELT disparaissent-ils depuis une IP dédiée ? Dans quel niveau de risque DP le Maroc est-il classé ?",
+  "Combien de temps le gabarit Google Play batchexecute (bl=boq_playuiserver_20220612) restera-t-il valide ? Quel plan de repli si Google le casse ?",
+  "Cloudflare Radar : le quota de 10 000 req/jour est-il réel, le classement location=MA est-il rempli, et une exception commerciale à la licence CC BY-NC est-elle possible ?",
+  "Le rang de popularité CrUX est-il disponible par pays (country_ma) ? Sous quelle licence ?",
+  "GDELT sourcecountry:MO indexe-t-il réellement Le360, Hespress et TelQuel ?",
+  "Quelle est la cause de l'effondrement des événements publics GitHub en 2026, et existe-t-il une alternative ouverte pour les dépôts en tendance ?",
+  "Existe-t-il un accès licite aux classements Spotify FR et MA autrement que par kworb (tiers) ou par la session connectée de charts.spotify.com ?",
+  "Quel cadre juridique s'applique au scraping d'endpoints non officiels Google (Trends explore, autocomplétion, Play, News RSS) pour un produit commercial vendu depuis la France ou le Maroc ?",
+  "Quels seuils d'émergence prédisent une adoption durable plutôt qu'un pic passager ? À calibrer sur une vingtaine de cas historiques."
+ ],
+ "data_sources": [
+  {
+   "name": "Google Trends RSS Trending Now",
+   "category": "recherche",
+   "access_method": "GET https://trends.google.com/trending/rss?geo={US|FR|MA|BE|CH|CA|CA-QC|SN|CI|DZ|TN|CM}",
+   "auth": "aucune",
+   "cost": "0 €",
+   "geo_coverage": "pays + sous-régions (CA-QC) ; 12 codes francophones testés",
+   "signal_type": "pics de recherche horaires + articles liés",
+   "limits_and_tos": "10 items, quelques heures de fenêtre, pas d'historique ; non documenté",
+   "tested_call": "curl -sL -A 'Mozilla/5.0' 'https://trends.google.com/trending/rss?geo=MA'",
+   "test_result": "200 text/xml pour les 12 geos (28/11/2026)",
+   "verdict": "core"
+  },
+  {
+   "name": "Google Trends explore + widgetdata/multiline (non officiel)",
+   "category": "recherche",
+   "access_method": "GET /trends/explore (cookie) puis /trends/api/explore?req={comparisonItem US,FR,MA} puis /trends/api/widgetdata/multiline?token=",
+   "auth": "cookie de session",
+   "cost": "0 €",
+   "geo_coverage": "tous pays, sous-régions, DMA",
+   "signal_type": "séries hebdomadaires sur 5 ans comparables entre pays + requêtes associées par pays",
+   "limits_and_tos": "429 fréquents, jeton par widget ; CGU Google (zone grise)",
+   "tested_call": "explore?hl=en-US&tz=0&req=<3 comparisonItem labubu US/FR/MA today 5-y> puis multiline",
+   "test_result": "200, 261 points ; appel direct sans cookie en 429",
+   "verdict": "core"
+  },
+  {
+   "name": "Google Trends API officielle (alpha)",
+   "category": "recherche",
+   "access_method": "candidature sur developers.google.com/search/apis/trends",
+   "auth": "accès alpha",
+   "cost": "non publié",
+   "geo_coverage": "pays + sous-régions ISO 3166-2",
+   "signal_type": "intérêt de recherche à échelle constante, 5 ans, jusqu'à J-2",
+   "limits_and_tos": "testeurs très limités ; quotas non publiés",
+   "tested_call": "non testable (pas d'accès)",
+   "test_result": "page : alpha, accepting applications (28/11/2026)",
+   "verdict": "optional"
+  },
+  {
+   "name": "Google Trends BigQuery public dataset",
+   "category": "recherche",
+   "access_method": "BigQuery bigquery-public-data.google_trends.(international_)top_(rising_)terms",
+   "auth": "projet GCP",
+   "cost": "0 € dans le quota gratuit BigQuery (à vérifier)",
+   "geo_coverage": "US 210 DMA + environ 50 pays (FR et MA non confirmés)",
+   "signal_type": "top 25 et top 25 en hausse par jour, 5 ans",
+   "limits_and_tos": "CGU Google Cloud",
+   "tested_call": "bq query ... international_top_rising_terms",
+   "test_result": "non testé : Invalid Credentials dans l'environnement",
+   "verdict": "optional"
+  },
+  {
+   "name": "DataForSEO Google Trends API",
+   "category": "recherche (payant)",
+   "access_method": "REST v3",
+   "auth": "login + mot de passe API",
+   "cost": "0,0027 $/tâche (standard), 0,011 $ (live)",
+   "geo_coverage": "pays",
+   "signal_type": "séries Trends, related",
+   "limits_and_tos": "prépaiement",
+   "tested_call": "page de prix lue",
+   "test_result": "prix confirmés le 28/11/2026",
+   "verdict": "paid_addon"
+  },
+  {
+   "name": "SerpApi Google Trends",
+   "category": "recherche (payant)",
+   "access_method": "GET serpapi.com/search?engine=google_trends",
+   "auth": "clé API",
+   "cost": "Free 250/mois ; 25 $ pour 1 000 ; 75 $ pour 5 000",
+   "geo_coverage": "pays, sous-région, DMA, ville",
+   "signal_type": "TIMESERIES, GEO_MAP, RELATED_*",
+   "limits_and_tos": "débit garanti par plan",
+   "tested_call": "page de prix lue",
+   "test_result": "prix confirmés le 28/11/2026",
+   "verdict": "paid_addon"
+  },
+  {
+   "name": "Glimpse API",
+   "category": "recherche (payant)",
+   "access_method": "enterprise.meetglimpse.com",
+   "auth": "clé API",
+   "cost": "non publié",
+   "geo_coverage": "pays (code à 2 lettres)",
+   "signal_type": "volumes absolus estimés sur 5 ans",
+   "limits_and_tos": "sur devis",
+   "tested_call": "pages lues",
+   "test_result": "prix absents",
+   "verdict": "paid_addon"
+  },
+  {
+   "name": "Exploding Topics API",
+   "category": "tendances (payant)",
+   "access_method": "api.explodingtopics.com",
+   "auth": "clé API",
+   "cost": "option du Pro Business (dès 249 $/mois) : 1 000 $/mois pour 1 000 req",
+   "geo_coverage": "pas de filtre géographique",
+   "signal_type": "base de tendances, croissance, prévisions",
+   "limits_and_tos": "60 req/min ; usage commercial sur devis",
+   "tested_call": "explodingtopics.com/api → 404 ; pages de prix lues",
+   "test_result": "prix confirmés",
+   "verdict": "avoid"
+  },
+  {
+   "name": "Treendly",
+   "category": "tendances",
+   "access_method": "API/MCP annoncée sur tous les plans",
+   "auth": "compte",
+   "cost": "Free 0 $ ; Pro 99 $/an",
+   "geo_coverage": "non précisée",
+   "signal_type": "bibliothèque de 52 668 tendances",
+   "limits_and_tos": "3 tendances suivies en Free",
+   "tested_call": "treendly.com/pricing lu",
+   "test_result": "API non testée",
+   "verdict": "optional"
+  },
+  {
+   "name": "Autocomplétion Google / YouTube / Amazon / DuckDuckGo",
+   "category": "recherche",
+   "access_method": "suggestqueries.google.com/complete/search?client=firefox&hl=&gl=&q= (ds=yt) ; completion.amazon.{com,fr}/api/2017/suggestions ; duckduckgo.com/ac/",
+   "auth": "aucune",
+   "cost": "0 €",
+   "geo_coverage": "pays via gl / mid / kl",
+   "signal_type": "présence et qualificatifs locaux (ville, prix, enseigne)",
+   "limits_and_tos": "non documenté, zone grise ; pas d'historique",
+   "tested_call": "curl 'https://suggestqueries.google.com/complete/search?client=firefox&hl=fr&gl=ma&q=chocolat%20dubai'",
+   "test_result": "200 (US, FR, MA ; YouTube FR, MA ; Amazon US, FR ; DDG)",
+   "verdict": "core"
+  },
+  {
+   "name": "Google News RSS",
+   "category": "presse",
+   "access_method": "news.google.com/rss?hl=&gl=&ceid= ; /rss/search?q=...+when:|after:|before:|site:",
+   "auth": "aucune",
+   "cost": "0 €",
+   "geo_coverage": "éditions pays × langue (pas de MA:ar → EG:ar)",
+   "signal_type": "datation de la première mention presse, volume d'articles",
+   "limits_and_tos": "≤ 100 items, 503 intermittents, liens encodés ; non documenté",
+   "tested_call": "curl 'https://news.google.com/rss/search?q=site:medias24.com+when:2d&hl=fr&gl=MA&ceid=MA:fr'",
+   "test_result": "200 (relance nécessaire sur 503)",
+   "verdict": "core"
+  },
+  {
+   "name": "Wikipedia Pageviews API",
+   "category": "attention",
+   "access_method": "wikimedia.org/api/rest_v1/metrics/pageviews/{per-article|top|top-per-country|top-by-country}/...",
+   "auth": "UA conforme (OAuth pour des limites plus hautes)",
+   "cost": "0 €",
+   "geo_coverage": "édition linguistique ; top-per-country par pays (MA très pauvre)",
+   "signal_type": "vues quotidiennes et mensuelles depuis 2015",
+   "limits_and_tos": "200 req/min avec UA conforme, 10/min sinon ; Retry-After ; ≤ 3 requêtes concurrentes",
+   "tested_call": "curl -A 'TrendArbitrageRadar/0.1 (https://<projet>; contact) curl/8.5' .../per-article/fr.wikipedia/all-access/user/Labubu/monthly/2023010100/2026110100",
+   "test_result": "200 ; 429 intermittents avec retry-after 4 à 27 s (IP partagée)",
+   "verdict": "core"
+  },
+  {
+   "name": "Wikimedia DP country_project_page",
+   "category": "attention",
+   "access_method": "GET analytics.wikimedia.org/published/datasets/country_project_page/AAAA-MM-JJ.tsv",
+   "auth": "aucune",
+   "cost": "0 €",
+   "geo_coverage": "pays × projet × page × QID ; MA 87 lignes/jour, CI 0",
+   "signal_type": "vues bruitées par pays, quotidien depuis 02/2023",
+   "limits_and_tos": "seuils DP de 90, 550 ou 1 000 ; 7 jours manquants en 2023 ; licence non précisée dans le README",
+   "tested_call": "curl .../country_project_page/2026-11-27.tsv",
+   "test_result": "200, 16 Mo, 247 639 lignes",
+   "verdict": "core"
+  },
+  {
+   "name": "Apple App Store RSS v2",
+   "category": "apps / médias",
+   "access_method": "rss.marketingtools.apple.com/api/v2/{cc}/{apps|music|podcasts|books|audio-books}/{chart}/{n}/{type}.json",
+   "auth": "aucune",
+   "cost": "0 €",
+   "geo_coverage": "storefronts pays (us, fr, ma, sn, ci, dz, tn, be, ch, ca testés)",
+   "signal_type": "tops gratuits et payants, musique, podcasts, livres",
+   "limits_and_tos": "n ≤ 100 (101 → 500) ; 502 et timeouts intermittents ; outil marketing Apple",
+   "tested_call": "curl https://rss.marketingtools.apple.com/api/v2/ma/apps/top-free/100/apps.json",
+   "test_result": "200 (mise à jour 28/11/2026 13:01 UTC)",
+   "verdict": "core"
+  },
+  {
+   "name": "iTunes RSS legacy + lookup",
+   "category": "apps",
+   "access_method": "itunes.apple.com/{cc}/rss/{topfreeapplications|topgrossingapplications|newapplications}/limit=100/genre={id}/json ; itunes.apple.com/lookup?id=&country=",
+   "auth": "aucune",
+   "cost": "0 €",
+   "geo_coverage": "storefronts pays",
+   "signal_type": "tops par genre, nouveautés, disponibilité par pays",
+   "limits_and_tos": "≤ 100 entrées",
+   "tested_call": "curl https://itunes.apple.com/ma/rss/topfreeapplications/limit=200/genre=6013/json",
+   "test_result": "200 (100 entrées)",
+   "verdict": "core"
+  },
+  {
+   "name": "Google Play top charts (batchexecute vyAe2)",
+   "category": "apps",
+   "access_method": "POST play.google.com/_/PlayStoreUi/data/batchexecute?rpcids=vyAe2&...&hl=&gl= (gabarit google-play-scraper)",
+   "auth": "aucune",
+   "cost": "0 €",
+   "geo_coverage": "pays via gl",
+   "signal_type": "top 200 par collection (gratuit, payant, revenus) et catégorie",
+   "limits_and_tos": "non officiel, gabarit fragile ; CGU Google Play",
+   "tested_call": "python3 scripts/gplay.py (POST, hl=fr, gl=ma)",
+   "test_result": "200, 200 apps pour us, fr, ma, sn",
+   "verdict": "core"
+  },
+  {
+   "name": "Apple Podcasts RSS (v2 + legacy)",
+   "category": "podcasts",
+   "access_method": "rss.marketingtools.apple.com/api/v2/{cc}/podcasts/top/50/podcasts.json ; itunes.apple.com/{cc}/rss/toppodcasts/limit=100/genre=/json",
+   "auth": "aucune",
+   "cost": "0 €",
+   "geo_coverage": "pays",
+   "signal_type": "top podcasts",
+   "limits_and_tos": "instabilité (US 502, MA timeout)",
+   "tested_call": "curl .../api/v2/fr/podcasts/top/50/podcasts.json",
+   "test_result": "FR et SN 200 ; US 502 ; MA timeout",
+   "verdict": "optional"
+  },
+  {
+   "name": "Spotify Charts public + kworb",
+   "category": "musique",
+   "access_method": "charts-spotify-com-service.spotify.com/public/v0/charts ; kworb.net/spotify/country/{cc}_daily.html",
+   "auth": "aucune (classements pays officiels = compte requis)",
+   "cost": "0 €",
+   "geo_coverage": "public = mondial seulement ; kworb = pays (fr, ma)",
+   "signal_type": "top titres et artistes",
+   "limits_and_tos": "kworb est un tiers (HTML)",
+   "tested_call": "curl https://kworb.net/spotify/country/ma_daily.html",
+   "test_result": "public v0 200 (mondial hebdo) ; kworb 200",
+   "verdict": "optional"
+  },
+  {
+   "name": "Product Hunt",
+   "category": "lancements produits",
+   "access_method": "Atom www.producthunt.com/feed ; GraphQL api.producthunt.com/v2/api/graphql",
+   "auth": "Atom aucune ; GraphQL Bearer developer_token",
+   "cost": "0 €",
+   "geo_coverage": "aucune",
+   "signal_type": "t0 des produits numériques US/mondiaux",
+   "limits_and_tos": "6 250 points de complexité / 15 min ; non commercial par défaut",
+   "tested_call": "curl https://www.producthunt.com/feed",
+   "test_result": "Atom 200 (50 entrées) ; GraphQL 401 sans jeton",
+   "verdict": "optional"
+  },
+  {
+   "name": "Hacker News (Firebase + Algolia + hnrss)",
+   "category": "tech",
+   "access_method": "hacker-news.firebaseio.com/v0/*.json ; hn.algolia.com/api/v1/search(_by_date)",
+   "auth": "aucune",
+   "cost": "0 €",
+   "geo_coverage": "aucune",
+   "signal_type": "t0 tech et IA, historique complet",
+   "limits_and_tos": "« no rate limit » (Firebase) ; MIT",
+   "tested_call": "curl 'https://hn.algolia.com/api/v1/search?query=pickleball&tags=story'",
+   "test_result": "200",
+   "verdict": "core"
+  },
+  {
+   "name": "GitHub Search API",
+   "category": "tech",
+   "access_method": "api.github.com/search/repositories?q=created:>DATE&sort=stars",
+   "auth": "optionnelle (jeton pour 30 req/min)",
+   "cost": "0 €",
+   "geo_coverage": "aucune",
+   "signal_type": "nouveaux dépôts populaires",
+   "limits_and_tos": "search 10/min sans authentification (connaissance interne), 30 avec ; gonflage d'étoiles",
+   "tested_call": "curl 'https://api.github.com/search/repositories?q=created:%3E2026-11-14&sort=stars&order=desc'",
+   "test_result": "200 ; github.com/trending 403 via le proxy",
+   "verdict": "optional"
+  },
+  {
+   "name": "OSS Insight trends / GH Archive",
+   "category": "tech",
+   "access_method": "api.ossinsight.io/v1/trends/repos ; data.gharchive.org/{h}.json.gz",
+   "auth": "aucune",
+   "cost": "0 €",
+   "geo_coverage": "aucune",
+   "signal_type": "classements d'événements GitHub",
+   "limits_and_tos": "dégradés depuis 03/2026 (capture d'environ 0,3 %)",
+   "tested_call": "curl https://api.ossinsight.io/v1/trends/repos?period=past_24_hours",
+   "test_result": "200 mais status=unavailable depuis le 01/03/2026 ; GH Archive 4,8 Mo/h contre 25 à 38 Mo",
+   "verdict": "avoid"
+  },
+  {
+   "name": "GDELT DOC 2.0",
+   "category": "presse mondiale",
+   "access_method": "api.gdeltproject.org/api/v2/doc/doc?query=X sourcecountry:FR|MO sourcelang:french&mode=artlist|timelinevolraw&format=json&timespan=",
+   "auth": "aucune",
+   "cost": "0 €",
+   "geo_coverage": "pays source (FIPS), langue",
+   "signal_type": "volume d'articles, timelines sur 24 mois",
+   "limits_and_tos": "1 req / 5 s par IP ; couverture de niche FR faible",
+   "tested_call": "curl '...query=pickleball%20sourcecountry:FR&mode=timelinevolraw&format=json&timespan=24m'",
+   "test_result": "200 une fois, puis 429 et coupures",
+   "verdict": "optional"
+  },
+  {
+   "name": "Cloudflare Radar ranking",
+   "category": "trafic web",
+   "access_method": "GET api.cloudflare.com/client/v4/radar/ranking/top?location=MA&rankingType=TRENDING_RISE ; /radar/ranking/domain/{d}",
+   "auth": "jeton API Cloudflare gratuit",
+   "cost": "0 €",
+   "geo_coverage": "pays",
+   "signal_type": "domaines populaires et montants par pays, top_locations par domaine",
+   "limits_and_tos": "licence CC BY-NC 4.0 ; quota non confirmé (10 000/jour selon un tiers)",
+   "tested_call": "curl 'https://api.cloudflare.com/client/v4/radar/ranking/top?location=MA&limit=10'",
+   "test_result": "400 sans jeton (non testé avec jeton)",
+   "verdict": "optional"
+  },
+  {
+   "name": "Chrome UX Report BigQuery (country_cc)",
+   "category": "trafic web",
+   "access_method": "BigQuery chrome-ux-report.country_ma / country_fr / experimental.country",
+   "auth": "projet GCP",
+   "cost": "0 € dans le quota gratuit (à vérifier)",
+   "geo_coverage": "pays",
+   "signal_type": "popularité mensuelle des origines (paliers 1k, 5k, 10k...)",
+   "limits_and_tos": "publication le deuxième mardi du mois suivant ; rang par pays à confirmer",
+   "tested_call": "non testé (pas d'identifiants)",
+   "test_result": "documentation lue",
+   "verdict": "optional"
+  },
+  {
+   "name": "Tranco list",
+   "category": "trafic web",
+   "access_method": "tranco-list.eu/api/lists/date/latest",
+   "auth": "aucune",
+   "cost": "0 €",
+   "geo_coverage": "mondial seulement",
+   "signal_type": "rang mondial quotidien des domaines",
+   "limits_and_tos": "ouvert",
+   "tested_call": "curl https://tranco-list.eu/api/lists/date/latest",
+   "test_result": "200 (liste du 27/11/2026)",
+   "verdict": "optional"
+  },
+  {
+   "name": "Flux RSS médias USA",
+   "category": "presse",
+   "access_method": "The Verge /rss/index.xml ; TechCrunch /feed/ ; Morning Brew /feed.xml ; Modern Retail /feed/ ; Digiday /feed/ ; Social Media Today /feeds/news/ ; Later /rss.xml ; + environ 20 autres",
+   "auth": "aucune",
+   "cost": "0 €",
+   "geo_coverage": "USA",
+   "signal_type": "t0 éditorial des tendances US",
+   "limits_and_tos": "Axios et BoF en 403 → Google News site:",
+   "tested_call": "curl -A 'Mozilla/5.0' https://www.morningbrew.com/feed.xml",
+   "test_result": "200 pour la plupart (items du 23 au 28/11/2026)",
+   "verdict": "core"
+  },
+  {
+   "name": "Flux RSS médias France",
+   "category": "presse",
+   "access_method": "Siècle Digital /feed/ ; BDM /feed/ ; Maddyness /feed/ ; FrenchWeb /feed ; JDN /rss/ ; L'ADN /feed/ ; Numerama, Presse-citron, 01net, Le Monde Pixels, Konbini",
+   "auth": "aucune",
+   "cost": "0 €",
+   "geo_coverage": "France",
+   "signal_type": "datation de l'arrivée éditoriale en FR",
+   "limits_and_tos": "Usine Digitale, Les Echos, Stratégies en 403 ; LSA, CB News, Influencia en 404",
+   "tested_call": "curl https://www.blogdumoderateur.com/feed/",
+   "test_result": "200 (items du 27 au 28/11/2026)",
+   "verdict": "core"
+  },
+  {
+   "name": "Flux RSS médias Maroc",
+   "category": "presse",
+   "access_method": "Le360 /arc/outboundfeeds/rss/?outputType=xml ; TelQuel /feed ; Hespress fr./feed ; Welovebuzz /feed/ ; Le Site Info, Challenge, La Vie Éco, LeBrief, LNT ; Medias24 et L'Economiste via Google News site:",
+   "auth": "aucune",
+   "cost": "0 €",
+   "geo_coverage": "Maroc",
+   "signal_type": "datation de l'arrivée éditoriale au MA",
+   "limits_and_tos": "Medias24, L'Economiste, Le Desk, MWN, 2M, SNRT en 403",
+   "tested_call": "curl 'https://fr.le360.ma/arc/outboundfeeds/rss/?outputType=xml'",
+   "test_result": "200 (100 items, 28/11/2026)",
+   "verdict": "core"
+  },
+  {
+   "name": "Flux RSS médias Afrique / francophonie",
+   "category": "presse",
+   "access_method": "Jeune Afrique /feed/ (pubDate vide) ; TechCabal /feed/ ; Disrupt Africa disruptafrica.com/feed/ ; WeAreTech via Google News site: ; RFI Afrique, Le Monde Afrique, Seneweb, Africanews ; Québec, Belgique, Suisse",
+   "auth": "aucune",
+   "cost": "0 €",
+   "geo_coverage": "Afrique subsaharienne, Maghreb, QC, BE, CH",
+   "signal_type": "datation éditoriale par zone",
+   "limits_and_tos": "WeAreTech 404/500 ; Techpoint 403",
+   "tested_call": "curl https://techcabal.com/feed/",
+   "test_result": "200",
+   "verdict": "optional"
+  },
+  {
+   "name": "Steam (featuredcategories, weekly top sellers, SteamSpy)",
+   "category": "jeux",
+   "access_method": "store.steampowered.com/api/featuredcategories?cc= ; IStoreTopSellersService/GetWeeklyTopSellers",
+   "auth": "aucune",
+   "cost": "0 €",
+   "geo_coverage": "pays (prix et devise), classements quasi mondiaux",
+   "signal_type": "meilleures ventes de jeux",
+   "limits_and_tos": "top hebdo identique US et MA",
+   "tested_call": "curl 'https://store.steampowered.com/api/featuredcategories?cc=ma&l=french'",
+   "test_result": "200",
+   "verdict": "avoid"
+  },
+  {
+   "name": "Amazon Best Sellers / Movers & Shakers",
+   "category": "e-commerce",
+   "access_method": "amazon.com/gp/bestsellers/<cat>/ ; amazon.fr/gp/...",
+   "auth": "aucune",
+   "cost": "0 €",
+   "geo_coverage": "US (FR bloqué)",
+   "signal_type": "meilleures ventes et plus fortes hausses",
+   "limits_and_tos": "FR captcha ; Movers en JS ; PA-API 5 dépréciée (403)",
+   "tested_call": "curl --compressed https://www.amazon.fr/gp/bestsellers/beauty/",
+   "test_result": "US 200 (30 ASIN) ; FR captcha",
+   "verdict": "avoid"
+  },
+  {
+   "name": "Kickstarter / Indiegogo",
+   "category": "crowdfunding",
+   "access_method": "kickstarter.com/discover/advanced?format=json ; projects/feed.atom ; indiegogo.com/explore",
+   "auth": "aucune",
+   "cost": "0 €",
+   "geo_coverage": "projets par pays d'origine",
+   "signal_type": "produits financés",
+   "limits_and_tos": "403 ; Atom périmé (entrées de 2022)",
+   "tested_call": "curl https://www.kickstarter.com/discover/advanced?sort=popularity&format=json",
+   "test_result": "403 / Atom 200 périmé / Indiegogo 403",
+   "verdict": "avoid"
+  },
+  {
+   "name": "Substack categories",
+   "category": "newsletters",
+   "access_method": "substack.com/api/v1/categories ; /api/v1/category/public/{id}/paid?page=",
+   "auth": "aucune",
+   "cost": "0 €",
+   "geo_coverage": "aucune (champ language)",
+   "signal_type": "top 25 publications payantes par catégorie",
+   "limits_and_tos": "non documenté",
+   "tested_call": "curl 'https://substack.com/api/v1/category/public/96/paid?page=0'",
+   "test_result": "200",
+   "verdict": "optional"
+  },
+  {
+   "name": "beehiiv discover",
+   "category": "newsletters",
+   "access_method": "beehiiv.com/discover",
+   "auth": "aucune",
+   "cost": "0 €",
+   "geo_coverage": "—",
+   "signal_type": "—",
+   "limits_and_tos": "—",
+   "tested_call": "curl https://www.beehiiv.com/discover",
+   "test_result": "404",
+   "verdict": "avoid"
+  },
+  {
+   "name": "Chrome Web Store / Shopify App Store",
+   "category": "outils",
+   "access_method": "chromewebstore.google.com/category/extensions ; apps.shopify.com/categories/<cat>",
+   "auth": "aucune",
+   "cost": "0 €",
+   "geo_coverage": "aucune",
+   "signal_type": "t0 d'extensions et d'apps marchandes",
+   "limits_and_tos": "HTML à parser",
+   "tested_call": "curl https://apps.shopify.com/categories/marketing-and-conversion",
+   "test_result": "200 (CWS 27 IDs ; Shopify 42 handles)",
+   "verdict": "optional"
+  },
+  {
+   "name": "Etsy",
+   "category": "e-commerce",
+   "access_method": "etsy.com/trends ; openapi.etsy.com/v3",
+   "auth": "clé API",
+   "cost": "0 €",
+   "geo_coverage": "—",
+   "signal_type": "—",
+   "limits_and_tos": "403",
+   "tested_call": "curl https://openapi.etsy.com/v3/application/openapi-ping",
+   "test_result": "403",
+   "verdict": "avoid"
+  },
+  {
+   "name": "npm / PyPI",
+   "category": "tech",
+   "access_method": "api.npmjs.org/downloads/range/last-month/<pkg> ; pypistats.org/api/packages/<pkg>/recent ; pypi.org/rss/packages.xml",
+   "auth": "aucune",
+   "cost": "0 €",
+   "geo_coverage": "aucune",
+   "signal_type": "adoption d'outils dev et IA",
+   "limits_and_tos": "ouvert",
+   "tested_call": "curl https://api.npmjs.org/downloads/range/last-month/next",
+   "test_result": "200",
+   "verdict": "optional"
+  },
+  {
+   "name": "Y Combinator (yc-oss + Launches)",
+   "category": "startups",
+   "access_method": "yc-oss.github.io/api/batches/fall-2026.json ; www.ycombinator.com/launches",
+   "auth": "aucune",
+   "cost": "0 €",
+   "geo_coverage": "régions déclarées",
+   "signal_type": "t0 des startups US par batch",
+   "limits_and_tos": "miroir communautaire ; Algolia YC en 403",
+   "tested_call": "curl https://yc-oss.github.io/api/meta.json",
+   "test_result": "200 (mise à jour 28/11/2026, 6 408 entreprises)",
+   "verdict": "optional"
+  },
+  {
+   "name": "Similarweb",
+   "category": "trafic web (payant)",
+   "access_method": "api.similarweb.com",
+   "auth": "clé API",
+   "cost": "option d'abonnement sur devis",
+   "geo_coverage": "pays",
+   "signal_type": "trafic et top sites",
+   "limits_and_tos": "anti-bot sur le site",
+   "tested_call": "curl https://www.similarweb.com/top-websites/france/",
+   "test_result": "202 vide / API 401",
+   "verdict": "avoid"
+  },
+  {
+   "name": "Semrush (API + MCP)",
+   "category": "SEO (payant)",
+   "access_method": "https://mcp.semrush.com/v2/mcp ; API Standard / Trends API",
+   "auth": "OAuth ou Apikey",
+   "cost": "plans éligibles avec 50 000 unités API ; Trends API Basic/Premium",
+   "geo_coverage": "pays",
+   "signal_type": "trafic, mots-clés, sites en tendance",
+   "limits_and_tos": "unités API",
+   "tested_call": "doc MCP lue ; semrush.com/trending-websites/fr/all en 200 (rendu JS)",
+   "test_result": "non testé avec clé",
+   "verdict": "paid_addon"
+  },
+  {
+   "name": "Ahrefs (API v3 + MCP, AhrefsTop)",
+   "category": "SEO (payant)",
+   "access_method": "docs.ahrefs.com ; ahrefstop.com/websites/{pays}",
+   "auth": "clé API Enterprise",
+   "cost": "Enterprise ; free test queries",
+   "geo_coverage": "pays",
+   "signal_type": "top sites par pays (HTML gratuit), mots-clés",
+   "limits_and_tos": "—",
+   "tested_call": "curl https://ahrefstop.com/websites/france",
+   "test_result": "200 HTML",
+   "verdict": "paid_addon"
+  },
+  {
+   "name": "Google Ads Transparency Center",
+   "category": "publicité",
+   "access_method": "adstransparency.google.com",
+   "auth": "aucune",
+   "cost": "0 €",
+   "geo_coverage": "pays",
+   "signal_type": "annonceurs actifs par région",
+   "limits_and_tos": "page « sorry » (429), RPC en 405 ; jeu BigQuery public à vérifier",
+   "tested_call": "curl 'https://adstransparency.google.com/?region=MA'",
+   "test_result": "429",
+   "verdict": "avoid"
+  },
+  {
+   "name": "Common Crawl index",
+   "category": "web archive",
+   "access_method": "index.commoncrawl.org/collinfo.json ; CC-MAIN-2026-47-index?url=",
+   "auth": "aucune",
+   "cost": "0 €",
+   "geo_coverage": "aucune",
+   "signal_type": "première capture d'un domaine ou d'une URL",
+   "limits_and_tos": "CDX instable",
+   "tested_call": "curl 'https://index.commoncrawl.org/CC-MAIN-2026-47-index?url=welovebuzz.com/*&output=json&limit=2'",
+   "test_result": "collinfo 200 ; CDX 502/504",
+   "verdict": "avoid"
+  }
+ ]
+}

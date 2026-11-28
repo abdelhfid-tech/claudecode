@@ -1,0 +1,181 @@
+{
+  "dossier_path": "/tmp/claude-0/-home-user-claudecode/00e88930-c277-528f-99f2-9b7f935da647/scratchpad/research/concurrence-positionnement.md",
+  "executive_summary": "Aucun outil identifié ne fait explicitement l'arbitrage géographique des tendances USA vers la francophonie avec des initiatives exécutables (confiance moyenne : le budget de recherche s'est épuisé en fin d'axe). Le plus proche est l'actor Apify « Google Trends Gap Finder » : 1 à 4 pays d'origine contre 1 pays de destination, produits seulement, 100 $ pour 1 000 alertes, 2 utilisateurs et 0 % de runs réussis au 2026-11-28. Glimpse (volumes par pays) et Treendly (19 pays, 99 $ par an) permettent une comparaison manuelle, sans modèle de décalage, de friction ni de recommandation. Repères de prix : la détection en libre-service va de 8 à 299 $ par mois (Treendly ; Exploding Topics à 39, 99 ou 249 $ ; Glimpse à 99 ou 299 $). La prospective va de 25 $ par mois (Trends.vc) à 990 $ par an (TrendWatching), puis WGSN sur devis. L'écoute sociale d'entreprise se paie à cinq chiffres par an (Brandwatch de 13,8 à 39 k£, Meltwater autour de 25 k$ de contrat moyen, Onclusive Social à partir de 15 k€). Les acteurs français (Visibrain, Onclusive Social ex-Digimind, Kolsquare, Favikon) font de l'écoute, de la crise ou de l'influence. Au Maroc, Achgal fait de l'écoute en darija, Hypeo et Zey de l'influence. Rien n'est dédié à l'Afrique subsaharienne francophone. Le MCP est devenu un standard chez les éditeurs (SparkToro, Meltwater, Brand24, Favikon, Treendly, TrendWatching, Hootsuite Lumen) et la collecte de tendances est une commodité dans Claude Code (last30days à 76,6 k étoiles, Trends MCP gratuit jusqu'à 100 requêtes par mois, plugins Virlo, TrendsAGI, ViralHunt, Manifold). Aucun ne compare des pays. Les taux de précision des concurrents ne sont pas audités (Pinterest 88 %, WGSN 94 %, Glimpse 95 %+) : un journal public de prédictions horodatées et résolues par pays est l'avantage défendable le plus crédible. Positionnement recommandé : vendre une décision datée par pays (quoi, quand, pour quelle tribu, ce qui bloque, quoi lancer), pas de la détection. Séquence : newsletter francophone gratuite, puis premium à 9 à 12 € par mois, offre agence à 149 à 399 € par mois, puis études pour les marques (2 à 8 k€) une fois 6 à 12 mois de prédictions résolues ; au Maroc, prix en dirhams et ventes B2B. Risques principaux : un acteur installé qui ajoute une fonction « gap entre pays », la dépendance aux données (API Google Trends toujours en alpha), la crédibilité, le faible consentement à payer et l'encaissement au Maroc (Stripe indisponible).",
+  "key_findings": [
+    {
+      "claim": "Aucun outil trouvé ne fait l'arbitrage USA vers francophonie (France, Belgique, Suisse, Québec, Maghreb, Afrique subsaharienne) avec un modèle de décalage par pays et des initiatives exécutables.",
+      "evidence": "Recherches ciblées en anglais et en français, revue d'une trentaine d'outils et des catalogues de plugins et de connecteurs Claude. Seul un actor Apify implémente un « gap » entre pays. Le budget de recherche s'est épuisé en fin d'axe : une absence de preuve n'est pas une preuve d'absence.",
+      "sources": ["https://apify.com/trendgap/trend-gap", "https://dercheatcode.beehiiv.com/p/from-the-us-to-europe", "https://treendly.com/", "https://meetglimpse.com/"],
+      "confidence": "medium",
+      "as_of": "2026-11-28",
+      "load_bearing": true
+    },
+    {
+      "claim": "Le concurrent le plus proche est l'actor Apify « Google Trends Gap Finder » : il repère les produits qui montent dans 1 à 4 pays d'origine (US, GB, KR par défaut) et pas encore dans un pays de destination. Tarif à partir de 100 $ pour 1 000 alertes ; 2 utilisateurs, 0,0 % de runs réussis, backtest sur 19 produits seulement.",
+      "evidence": "Page Apify lue le 2026-11-28. Règles : hausse de 1,5x sur 6 à 12 mois, destination inférieure à 50 % de l'origine, montée sur 2 mois. Dépend de Google Trends non officiel.",
+      "sources": ["https://apify.com/trendgap/trend-gap"],
+      "confidence": "high",
+      "as_of": "2026-11-28",
+      "load_bearing": true
+    },
+    {
+      "claim": "La comparaison par pays existe déjà chez Glimpse (volume absolu « pour n'importe quel pays ») et chez Treendly (19 pays plus Worldwide, seuls les USA en gratuit, Pro à 99 $ par an). Elle reste manuelle, sans décalage, friction, transposabilité ni recommandation. Exploding Topics ne documente aucun filtre pays.",
+      "evidence": "Pages officielles lues le 2026-11-28.",
+      "sources": ["https://meetglimpse.com/", "https://treendly.com/", "https://treendly.com/pricing", "https://explodingtopics.com/pricing"],
+      "confidence": "high",
+      "as_of": "2026-11-28",
+      "load_bearing": true
+    },
+    {
+      "claim": "Repères de prix. Détection en libre-service : Treendly à 99 $ par an ; Exploding Topics à 39, 99 ou 249 $ par mois ; Glimpse à 99 ou 299 $ par mois (source tierce). Prospective : Trends.vc à 25 $ par mois ou 299 $ par an ; TrendHunter Pro à 199 $ par mois ; TrendWatching Pioneer à 990 $ par an, Enterprise à partir de 7 500 $ par an ; WGSN sur devis.",
+      "evidence": "Pages de prix officielles (Exploding Topics, Treendly, Trends.vc, TrendWatching) lues le 2026-11-28 ; Glimpse via OutlierKit (vérifié le 2026-08-14) ; TrendHunter via un comparatif publié par un concurrent (2026-06-15).",
+      "sources": ["https://explodingtopics.com/pricing", "https://treendly.com/pricing", "https://access.trends.vc/", "https://www.trendwatching.com/pricing", "https://outlierkit.com/resources/glimpse-pricing/", "https://explodingtopics.com/blog/exploding-topics-vs-trendhunter"],
+      "confidence": "high",
+      "as_of": "2026-11-28",
+      "load_bearing": true
+    },
+    {
+      "claim": "L'écoute sociale d'entreprise se vend à cinq chiffres par an et cible les grands comptes (crise, e-réputation) : Brandwatch de 13 800 à 39 000 £ par an (G-Cloud 2025), Meltwater autour de 25 000 $ de contrat moyen, Onclusive Social à partir de 15 000 € par an, Talkwalker sur devis (environ 9 k$ par an selon des tiers), Visibrain autour de 600 € par mois (tiers), Brand24 de 199 à 599 $ par mois.",
+      "evidence": "Document G-Cloud 14, Vendr, Software Advice, pages de prix Brand24 et Visibrain.",
+      "sources": ["https://assets.applytosupply.digitalmarketplace.service.gov.uk/g-cloud-14/documents/93287/917870886671618-pricing-document-2025-09-26-0912.pdf", "https://www.vendr.com/marketplace/meltwater", "https://www.softwareadvice.com/competitive-intelligence/digimind-profile/", "https://brand24.com/prices/", "https://www.logiciels.pro/visibrain/"],
+      "confidence": "medium",
+      "as_of": "2026-11-28",
+      "load_bearing": false
+    },
+    {
+      "claim": "Les acteurs français se positionnent sur l'écoute, la crise ou l'influence, pas sur l'arbitrage : Visibrain (Paris, grands comptes, devis), Onclusive Social (ex-Digimind, site fermé le 2026-03-19), Kolsquare (influence, environ 15 M€ de chiffre d'affaires, rachat de Storyclash le 2026-01-20, créateurs dans 180 pays), Favikon (de 29 à 299 € par mois, MCP dans l'offre Pro).",
+      "evidence": "Pages Visibrain, Kolsquare et Favikon lues ; annonce Onclusive ; presse (FrenchWeb, Gens d'Internet).",
+      "sources": ["https://www.visibrain.com/pricing", "https://www.digimind.com/en/news/onclusive-social-website-www.digimind.com-to-close-on-19th-march-2026", "https://www.kolsquare.com/fr/blog/combien-coute-une-plateforme-de-marketing-dinfluence-guide-complet", "https://www.frenchweb.fr/kolsquare-acquiert-storyclash-un-signal-de-maturite-pour-le-marketing-dinfluence/459752", "https://www.favikon.com/pricing"],
+      "confidence": "high",
+      "as_of": "2026-11-28",
+      "load_bearing": false
+    },
+    {
+      "claim": "Le MCP est devenu un standard chez les éditeurs en 2025-2026 : SparkToro (serveur OAuth, juin 2026, inclus dès l'offre Spark à 150 $ par mois), Meltwater (depuis 2025, étendu le 2026-07-08, connecteur Claude), Brand24, Favikon (Pro), Treendly (toutes offres), TrendWatching (« Your AI » dans Claude, ChatGPT et Mistral), Hootsuite (connecteur Lumen MCP, offre Enterprise). Être présent dans Claude n'est plus un différenciateur.",
+      "evidence": "Pages officielles SparkToro, Meltwater, Brand24, Favikon, Treendly, TrendWatching et Hootsuite ; registre des connecteurs Claude interrogé le 2026-11-28.",
+      "sources": ["https://sparktoro.com/pricing", "https://sparktoro.com/mcp/docs", "https://www.meltwater.com/en/blog/meltwater-mcp", "https://brand24.com/mcp/", "https://www.favikon.com/pricing", "https://treendly.com/pricing", "https://www.trendwatching.com/pricing", "https://www.hootsuite.com/fr/plans"],
+      "confidence": "high",
+      "as_of": "2026-11-28",
+      "load_bearing": true
+    },
+    {
+      "claim": "Dans l'écosystème Claude Code, la collecte de tendances est une commodité : skill last30days (MIT, 76,6 k étoiles ; Reddit, X, YouTube, TikTok, Instagram, HN, Polymarket, web), Trends MCP (gratuit jusqu'à 100 requêtes par mois, puis de 19 à 199 $), google-trends-mcp open source, et dans le répertoire Anthropic les plugins TrendsAGI, Virlo (de 49 à 499 $ par mois), ViralHunt, Viral Swipe File, Manifold (gratuit) et vidIQ. Aucun ne compare des pays ni ne mesure une diffusion.",
+      "evidence": "Dépôt GitHub lu ; catalogues de plugins et de connecteurs interrogés depuis la session le 2026-11-28 ; page de prix Virlo.",
+      "sources": ["https://github.com/mvanhorn/last30days-skill", "https://glama.ai/mcp/servers/ng9vus0xd0", "https://socket.dev/npm/package/google-trends-mcp", "https://virlo.ai/pricing"],
+      "confidence": "high",
+      "as_of": "2026-11-28",
+      "load_bearing": true
+    },
+    {
+      "claim": "Les taux de précision publiés par les concurrents ne sont ni audités ni vérifiables : Pinterest annonce 88 % de prédictions réalisées sur six ans (méthode non publiée), WGSN 94 % « jusqu'à un an » (astérisque non expliqué), Glimpse « 95 %+ en backtest ». Aucun journal public et horodaté par pays n'a été trouvé.",
+      "evidence": "Fortune (2026-10-15), pages WGSN, page d'accueil Glimpse.",
+      "sources": ["https://fortune.com/2026/10/15/pinterest-predicts-2026-trends-accuracy-brooches-funhaus/", "https://www.wgsn.com/en/products/fashion-design", "https://meetglimpse.com/"],
+      "confidence": "high",
+      "as_of": "2026-11-28",
+      "load_bearing": true
+    },
+    {
+      "claim": "Les outils américains sont biaisés vers les USA et couvrent mal la francophonie : selon une revue, les données de Trendalytics viennent principalement de sources US, avec des volumes DACH, France et Italie « nettement plus minces » ; Spate publie surtout des données US et ne nomme pas les cinq marchés de son Beauty Pulse 2026.",
+      "evidence": "Revue ki-syndikat ; page Spate (2026-05-12).",
+      "sources": ["https://www.ki-syndikat.de/tools/trendalytics/", "https://www.spate.nyc/reports/beauty-pulse-2026-mapping-beauty-by-category-and-market"],
+      "confidence": "medium",
+      "as_of": "2026-11-28",
+      "load_bearing": false
+    },
+    {
+      "claim": "Les outils TikTok et e-commerce (Kalodata, environ 46 à 99 $ par mois, plus de 15 marchés ; FastMoss, de 49 à 139 $ par mois, plus de 20 pays dont la France ; Minea, de 49 à 399 $ ; TrendTrack, de 49 à 159 $) mesurent ce qui se vend maintenant là où TikTok Shop est ouvert. Ils n'apportent rien sur le Maroc, où TikTok Shop n'est pas ouvert, et ne font aucune transposition.",
+      "evidence": "Page FastMoss ; fiche AWS de Kalodata ; comparateurs de prix ; dossier Maroc de l'étude (TikTok Shop indisponible).",
+      "sources": ["https://www.fastmoss.com/", "https://aws.amazon.com/marketplace/pp/prodview-wdvmuktth5m7k", "https://affmaven.com/fr/minea-pricing/", "https://www.trendtrack.io/blog-post/trendtrack-review-2026"],
+      "confidence": "medium",
+      "as_of": "2026-11-28",
+      "load_bearing": false
+    },
+    {
+      "claim": "Au Maroc et en Afrique, seuls des acteurs d'écoute et d'influence sont apparus : Achgal (« première plateforme de social listening 100 % marocaine » ; darija, 3aransia, arabe, français), Hypeo AI (influence, investissement de Renew Capital en août 2025), Zey Connect (2026-02-26), Clouteye, FlashNarrative et Socella (Nigeria). Rien n'est dédié à l'Afrique subsaharienne francophone.",
+      "evidence": "Résultats de recherche et presse (Wamda, Medias24, Afrotools) ; site Achgal non joignable le 2026-11-28.",
+      "sources": ["https://achgal.ma/", "https://www.wamda.com/en/2025/08/hypeoai-secures-investment-simplify-brand-creator-collaborations", "https://medias24.com/2026/02/27/zey-connect-la-nouvelle-plateforme-marocaine-qui-professionnalise-linfluence-1635107/", "https://afrotools.com/tools/afrostream/news/clouteye-social-intelligence-african-creators-2026"],
+      "confidence": "medium",
+      "as_of": "2026-11-28",
+      "load_bearing": false
+    },
+    {
+      "claim": "Les newsletters de tendances se monétisent en anglais : The Hustle Trends à 299 $ par an au lancement en 2019 ; Trends.vc à 299 $ par an, 54 782 fondateurs revendiqués ; Garbage Day avec environ 5 % de payants et plus de 500 k$ de revenu selon un portrait de 2026. Aucune newsletter francophone sur « ce qui arrive des USA, et quand » n'a été identifiée ; Swello Fridaynews couvre l'actualité des plateformes.",
+      "evidence": "Pages Trends.vc ; Subscription Insider ; Garbage Day ; Swello.",
+      "sources": ["https://www.subscriptioninsider.com/target/consumer-b2c/the-hustle-launches-299-a-year-premium-newsletter-trends", "https://access.trends.vc/", "https://www.garbageday.email/p/happy-birthday-garbage-day-35e6", "https://swello.com/fr/blog/fridaynews-403-pinterest-palette-tiktok-tendances-2026/"],
+      "confidence": "medium",
+      "as_of": "2026-11-28",
+      "load_bearing": true
+    },
+    {
+      "claim": "TrendWatching (Pioneer à 990 $ par an) est le plus proche pour les « recommandations exécutables », avec des Ideation Playbooks à lancer dans son propre assistant IA. Il s'agit toutefois d'exemples d'innovation en anglais, sans arbitrage géographique. Trends.vc propose un « Opportunity Engine » centré sur les USA.",
+      "evidence": "Pages de prix TrendWatching et Trends.vc lues le 2026-11-28.",
+      "sources": ["https://www.trendwatching.com/pricing", "https://access.trends.vc/"],
+      "confidence": "high",
+      "as_of": "2026-11-28",
+      "load_bearing": false
+    },
+    {
+      "claim": "Le marché se consolide vers le haut : Adobe a finalisé le rachat de Semrush, maison mère d'Exploding Topics (environ 1,9 Md$, 2026-04-28) ; Onclusive a absorbé Digimind ; Hootsuite intègre Talkwalker (Lumen) ; Kolsquare (groupe team.blue) enchaîne les rachats. Les acteurs installés montent vers les grands comptes et laissent le bas de marché aux outils indépendants.",
+      "evidence": "Communiqué Adobe ; annonce Onclusive ; page Hootsuite ; presse sur Kolsquare.",
+      "sources": ["https://news.adobe.com/news/2026/04/adobe-completes-semrush-acquisition", "https://www.digimind.com/en/news/onclusive-social-website-www.digimind.com-to-close-on-19th-march-2026", "https://www.hootsuite.com/fr/plans", "https://gensdinternet.fr/2026/01/20/kolsquare-annonce-le-rachat-de-storyclash-une-plateforme-dinfluence-autrichienne/amp/"],
+      "confidence": "high",
+      "as_of": "2026-11-28",
+      "load_bearing": false
+    },
+    {
+      "claim": "Toute comparaison entre pays via Google Trends repose sur une base fragile : l'API officielle est en alpha restreinte depuis le 2025-07-24, sans prix ni date de disponibilité générale trouvés ; Apify TrendGap et les MCP open source utilisent des endpoints non officiels.",
+      "evidence": "Blog Google Search Central ; Search Engine Roundtable (oct. 2025) ; page Apify.",
+      "sources": ["https://developers.google.com/search/blog/2025/07/trends-api", "https://www.seroundtable.com/google-trends-api-seo-access-39957.html", "https://apify.com/trendgap/trend-gap"],
+      "confidence": "high",
+      "as_of": "2026-11-28",
+      "load_bearing": true
+    },
+    {
+      "claim": "Fourchettes de prix recommandées (hypothèses calées sur les repères observés) : créateurs de 7 à 15 € par mois (49 à 99 MAD au Maroc) ; e-commerçants de 39 à 99 € ; agences de 149 à 399 € par mois ; études pour marques de 2 à 8 k€ ; investisseurs et incubateurs de 1,5 à 10 k€ par an ; médias de 300 à 1 500 € par mois. Au Maroc, encaisser en dirhams et viser le B2B : les achats par carte internationale sont plafonnés à 20 000 DH par an et par particulier, et Stripe est indisponible.",
+      "evidence": "Synthèse des prix observés et des contraintes du dossier Maroc (IGOC 2026, Stripe).",
+      "sources": ["https://treendly.com/pricing", "https://www.favikon.com/pricing", "https://www.trendwatching.com/pricing", "https://stripe.com/global"],
+      "confidence": "low",
+      "as_of": "2026-11-28",
+      "load_bearing": true
+    }
+  ],
+  "implications_for_tool": [
+    "Ne pas recoder la collecte US. Brancher des briques existantes (collecteur de type last30days, Google Trends non officiel tant que l'API reste en alpha, Wikipedia, Reddit, Trends MCP en option) et concentrer le code sur la couche entre pays : statut, décalage, friction, transposabilité.",
+    "Modèle de données central Trend × Pays × Niche × Lifestyle, avec pour chaque pays un statut (absent, émergent, arrivé, bloqué), une classe de friction (format, plateforme, réglementé, paiement, culture) et une fenêtre d'arrivée avec probabilité.",
+    "Journal de prédictions en ajout seul (JSONL, chaîne SHA-256, empreinte publiée chaque semaine) : critère d'arrivée mesurable fixé à l'avance, tâche planifiée de résolution, tableau public des scores (taux de réussite par classe et par pays, score de Brier, erreur sur la date).",
+    "Backtest sur les cas datés des dossiers France et Maroc avant le lancement, pour publier une précision honnête dès le premier jour, échecs compris.",
+    "Filtre réglementaire et de paiement bloquant dans chaque fiche d'initiative : loi influenceurs, ultra fast-fashion, Evin et santé en France ; absence de TikTok Shop, Stripe indisponible et CNDP au Maroc.",
+    "Sortie principale : des fiches d'initiatives exécutables avec Claude Code (type, effort, coût, outils, canal, monétisation, risques, indicateurs), pas un tableau de bord de plus.",
+    "Distribution comme plugin Claude Code et serveur MCP dans le répertoire Anthropic, où les plugins de tendances existants (Virlo, TrendsAGI, ViralHunt) ne couvrent pas l'analyse entre pays. Newsletter et pages SEO par tendance et par pays générées à partir du même noyau.",
+    "Interopérabilité optionnelle en « bring your own key » avec des MCP payants (SparkToro, Brand24, Meltwater, Favikon), plutôt que de concurrencer l'écoute sociale.",
+    "Ne pas développer de fonctions de crise ou d'e-réputation, terrain de Visibrain, Talkwalker et Onclusive.",
+    "Gestion de la darija et des contenus mélangés français et arabe dès la première version Maroc (lexiques, translittération de l'arabizi, contrôle humain d'échantillons) : seul Achgal le fait, et uniquement pour l'écoute.",
+    "Analyse dans les deux sens (Europe vers USA) et pays sentinelles par type de tendance.",
+    "Monétisation par étapes : newsletter gratuite, premium à 9 à 12 € par mois, offre agence à 149 à 399 € par mois, études pour marques seulement après 6 à 12 mois de prédictions résolues. Encaissement via Paddle ou une entité européenne, et en dirhams pour les résidents marocains."
+  ],
+  "open_questions": [
+    "Un éditeur américain (Glimpse, Treendly, Exploding Topics sous Adobe) prépare-t-il une fonction de décalage entre pays ?",
+    "Quels sont les 19 pays du filtre Treendly ? Le Maroc et le Québec y figurent-ils, et avec quelle qualité de données ?",
+    "Quels prix et quelle couverture géographique pour TrendsAGI ? Virlo et ViralHunt couvrent-ils des pays francophones ?",
+    "Pentos, Tokboard et Achgal sont-ils encore actifs ? Leurs sites n'étaient pas joignables (erreur DNS) le 2026-11-28.",
+    "Quel consentement à payer réel chez les créateurs et e-commerçants francophones pour une alerte « arrivée dans votre pays » ? À tester par une page d'attente et des précommandes.",
+    "Quel critère d'arrivée est mesurable et accepté pour chaque pays, notamment au Maroc et en Afrique subsaharienne, où les signaux sont plus rares ?",
+    "Faut-il prioriser la France, plus solvable, ou le Maroc, moins concurrencé mais plus difficile à monétiser ?",
+    "Le répertoire de plugins Claude permet-il de monétiser directement, ou faut-il passer par un MCP avec clé payante ?",
+    "Une vérification indépendante de quelques prédictions Pinterest ou WGSN pourrait-elle servir d'argument comparatif ?",
+    "Quel est le statut CNDP de la collecte de contenus publics par une entité marocaine qui héberge hors du Maroc ?"
+  ],
+  "data_sources": [
+    {"name": "Apify Google Trends Gap Finder (trendgap/trend-gap)", "access_method": "Actor Apify (API REST ou console)", "auth": "Jeton Apify", "cost": "À partir de 100 $ pour 1 000 alertes, plus les contrôles facturés ; proxy résidentiel", "geo_coverage": "1 à 4 pays d'origine contre 1 pays de destination (codes ISO à 2 lettres)", "category": "concurrent et brique", "signal_type": "Google Trends, requêtes montantes par catégorie", "limits_and_tos": "Google Trends non officiel ; 0,0 % de runs réussis au 2026-11-28", "tested_call": "non testé", "test_result": "non testé", "verdict": "avoid"},
+    {"name": "Trends MCP (trendsmcp.ai)", "access_method": "MCP distant https://api.trendsmcp.ai/mcp", "auth": "Clé API Bearer", "cost": "Gratuit jusqu'à 100 requêtes par mois ; 19, 49 ou 199 $ par mois", "geo_coverage": "Non documentée", "category": "brique de collecte", "signal_type": "Google, TikTok, YouTube, Reddit, Amazon, Wikipedia, X, Spotify (plus de 30 sources)", "limits_and_tos": "Valeurs normalisées propriétaires ; erreur 429 au plafond", "tested_call": "non testé", "test_result": "non testé", "verdict": "optional"},
+    {"name": "last30days (skill Claude Code)", "access_method": "Skill local (git clone dans ~/.claude/skills) ou plugin", "auth": "Aucune pour Reddit, HN, Polymarket et GitHub ; clés tierces pour X, TikTok, Instagram et Brave", "cost": "Gratuit (MIT), plus le coût des clés tierces", "geo_coverage": "Mondiale, sans filtre pays natif", "category": "brique de collecte", "signal_type": "Reddit, X, YouTube, TikTok, Instagram, HN, Polymarket, web", "limits_and_tos": "Conditions d'utilisation des plateformes et des fournisseurs de scraping", "tested_call": "non testé", "test_result": "non testé", "verdict": "optional"},
+    {"name": "SparkToro MCP", "access_method": "MCP distant https://mcp.sparktoro.com/mcp", "auth": "OAuth 2.1", "cost": "Inclus dès l'offre Spark (150 $ par mois, environ 112 $ en annuel)", "geo_coverage": "Non précisée sur la page de prix", "category": "enrichissement audience et lifestyle", "signal_type": "Audiences, sites, podcasts, comptes suivis", "limits_and_tos": "10 rapports par mois sur Spark", "tested_call": "non testé", "test_result": "non testé", "verdict": "paid_addon"},
+    {"name": "Meltwater MCP", "access_method": "Connecteur Claude ou MCP Meltwater", "auth": "Compte client Meltwater", "cost": "Lié à l'abonnement (contrat moyen d'environ 25 k$ par an selon Vendr)", "geo_coverage": "Mondiale, plus de 240 langues revendiquées", "category": "écoute sociale d'entreprise", "signal_type": "Presse, réseaux sociaux, web", "limits_and_tos": "Périmètre limité aux produits souscrits", "tested_call": "non testé", "test_result": "non testé", "verdict": "paid_addon"},
+    {"name": "Brand24 MCP", "access_method": "MCP distant https://mcp.brand24.com/v1/mcp (selon un annuaire)", "auth": "OAuth", "cost": "Offres de 199 à 599 $ par mois en annuel ; API à 149 $ de plus", "geo_coverage": "Filtre langue (pays)", "category": "écoute sociale PME", "signal_type": "Mentions sur le web et les réseaux sociaux", "limits_and_tos": "Quotas de mots-clés et de mentions", "tested_call": "non testé", "test_result": "non testé", "verdict": "paid_addon"},
+    {"name": "Treendly API et MCP", "access_method": "API et MCP annoncés sur la page de prix", "auth": "Compte Treendly", "cost": "Gratuit (3 tendances suivies) ; Pro à 99 $ par an", "geo_coverage": "19 pays plus Worldwide ; seuls les USA en gratuit", "category": "concurrent et brique", "signal_type": "Tendances de recherche, bibliothèque de 52 668 tendances", "limits_and_tos": "Documentation API non lue", "tested_call": "non testé", "test_result": "non testé", "verdict": "optional"},
+    {"name": "Google Trends MCP open source (purahmanian/google-trends-mcp)", "access_method": "npx google-trends-mcp", "auth": "Aucune", "cost": "Gratuit (MIT)", "geo_coverage": "Intérêt régional par pays", "category": "brique de collecte", "signal_type": "Google Trends", "limits_and_tos": "Endpoint non officiel, peut casser ; API officielle en alpha restreinte", "tested_call": "non testé", "test_result": "non testé", "verdict": "optional"},
+    {"name": "Virlo (plugin et MCP)", "access_method": "Plugin du répertoire Anthropic, MCP hébergé", "auth": "Compte Virlo", "cost": "Starter à 49 $, Pro à 199 $, Enterprise à 499 $ par mois", "geo_coverage": "Non indiquée", "category": "concurrent dans l'écosystème Claude", "signal_type": "TikTok, YouTube Shorts, Reels, sons, hashtags", "limits_and_tos": "Crédits", "tested_call": "non testé", "test_result": "non testé", "verdict": "optional"},
+    {"name": "Manifold (plugin et MCP)", "access_method": "Plugin du répertoire Anthropic", "auth": "Une seule connexion", "cost": "Annoncé gratuit", "geo_coverage": "Non indiquée", "category": "brique de collecte marketing", "signal_type": "Google, Reddit, TikTok, Instagram, YouTube, bibliothèques publicitaires, magasins d'applications, Amazon", "limits_and_tos": "Non lues", "tested_call": "non testé", "test_result": "non testé", "verdict": "optional"},
+    {"name": "Favikon MCP", "access_method": "Connexion Claude et ChatGPT (offre Pro)", "auth": "Compte Favikon", "cost": "Pro à 239 € par mois en annuel ; API à partir de 199 € par mois", "geo_coverage": "Créateurs ; couverture par pays non indiquée", "category": "influence", "signal_type": "Profils et classements de créateurs", "limits_and_tos": "Crédits mensuels", "tested_call": "non testé", "test_result": "non testé", "verdict": "paid_addon"}
+  ]
+}

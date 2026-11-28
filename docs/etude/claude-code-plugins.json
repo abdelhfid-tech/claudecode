@@ -1,0 +1,436 @@
+{
+ "dossier_path": "/tmp/claude-0/-home-user-claudecode/00e88930-c277-528f-99f2-9b7f935da647/scratchpad/research/claude-code-plugins.md",
+ "executive_summary": "Etat au 2026-11-28, Claude Code 2.1.332 (25/11/2026). Un plugin Claude Code est un dossier avec un manifeste optionnel .claude-plugin/plugin.json (seul name est requis, en kebab-case, sans prefixe claude-/anthropic-). Il peut porter skills (SKILL.md, description tronquee a 1 536 caracteres, corps de moins de 500 lignes), agents (sans hooks, mcpServers ni permissionMode propres), hooks/hooks.json (plus de 30 evenements, 5 types de gestionnaire), .mcp.json, .lsp.json, monitors, workflows JS de fan-out (16 agents simultanes, 1 000 par run), mods, channels, bin/ et evals/. Les variables utiles sont ${CLAUDE_PLUGIN_ROOT} (change a chaque mise a jour), ${CLAUDE_PLUGIN_DATA} (persistant) et ${user_config.*}. La chaine qualite est complete : claude plugin validate --strict, claude plugin eval (bras avec et sans plugin, mocks MCP, seuil pour la CI) et claude plugin tag. Notre prototype trend-radar valide et se charge en mode -p. Les marketplaces sont des depots GitHub avec .claude-plugin/marketplace.json (name, owner, plugins). La mise a jour automatique est desactivee par defaut pour les tiers, et un champ version fige bloque les mises a jour. Piege decisif : les sessions et taches planifiees cloud ne chargent ni les plugins en scope utilisateur ni les marketplaces declarees dans le depot. Il faut passer par un plugin synchronise depuis claude.ai ou committer skills, agents et .mcp.json dans le depot. Un plugin ne peut pas se planifier seul. La recurrence passe par les taches cloud (research preview, 1 h minimum, 100 runs/h, mode auto, connecteurs claude.ai, republication d'artifacts sans confirmation), Desktop, /loop, la GitHub Action claude-code-action@v1 (inputs plugins) ou -p et l'Agent SDK (cle API, artifacts desactives). Connecteurs : Apify, Exa, Firecrawl, Tavily, Similarweb, Ahrefs et Semrush sont des connecteurs officiels claude.ai. Firecrawl, Exa, Tavily et Bright Data ont un plugin dans la marketplace officielle. DataForSEO, Brave et Perplexity n'ont qu'un MCP officiel. Il n'y a pas d'API Google Trends generale (alpha), ni de MCP YouTube ou Reddit. Cote execution, Vercel, Supabase, Stripe, Canva, Notion, Slack, Airtable, Cloudflare, Hugging Face et Postiz ont un plugin, et ElevenLabs, Gmail/Drive et Shopify un connecteur. Stripe est absent au Maroc et au Senegal. Recommandation : un plugin trend-radar sans bin/, avec 7 skills, 5 agents, un workflow, des hooks de budget et de provenance et un MCP local radar-store. MVP des sources : Apify + DataForSEO + YouTube API + Exa, publication par Artifacts.",
+ "key_findings": [
+  {
+   "claim": "plugin.json est optionnel ; seul 'name' est requis (kebab-case). Les noms commencant par claude-, anthropic-, anthropics-, cc-plugin- ou contenant 'official' a cote de claude/anthropic sont refuses par le validateur.",
+   "sources": [
+    "https://code.claude.com/docs/en/plugins/manifest-reference.md"
+   ],
+   "confidence": "high",
+   "evidence": "Table Fields et section name de la reference du manifeste ; prototype trend-radar valide en --strict.",
+   "as_of": "2026-11-28",
+   "load_bearing": true
+  },
+  {
+   "claim": "Composants d'un plugin : skills/, commands/ (format ancien), agents/, hooks/hooks.json, .mcp.json, .lsp.json, output-styles/, workflows/, themes/ et monitors/ (sous experimental), bin/, evals/, plus les mods (modules dans hooks.json) et les channels. skills s'ajoute au dossier par defaut ; commands, agents, outputStyles et workflows le remplacent ; hooks, mcpServers et lspServers fusionnent.",
+   "sources": [
+    "https://code.claude.com/docs/en/plugins/manifest-reference.md",
+    "https://code.claude.com/docs/en/plugins/components.md"
+   ],
+   "confidence": "high",
+   "evidence": "Sections Standard layout et How each key combines with its default location.",
+   "as_of": "2026-11-28",
+   "load_bearing": true
+  },
+  {
+   "claim": "${CLAUDE_PLUGIN_ROOT} change a chaque mise a jour (ne jamais y ecrire d'etat). ${CLAUDE_PLUGIN_DATA} (~/.claude/plugins/data/<id>/) persiste d'une mise a jour a l'autre. Ces variables ne sont pas dans l'environnement des commandes Bash lancees par Claude : il faut les ecrire dans le corps des skills, ou elles sont substituees.",
+   "sources": [
+    "https://code.claude.com/docs/en/plugins/manifest-reference.md",
+    "https://code.claude.com/docs/en/plugins/components.md"
+   ],
+   "confidence": "high",
+   "evidence": "Section Environment variables / Where each variable resolves.",
+   "as_of": "2026-11-28",
+   "load_bearing": true
+  },
+  {
+   "claim": "Les sessions cloud, donc les taches planifiees cloud, ne chargent pas les plugins actives en scope utilisateur, et n'ajoutent pas les marketplaces listees dans extraKnownMarketplaces du depot (environnement heberge par Anthropic). Pour y utiliser un plugin, il faut l'ajouter au compte claude.ai (plugin synchronise) ou committer .claude/skills, .claude/agents et .mcp.json dans le depot.",
+   "sources": [
+    "https://code.claude.com/docs/en/cloud-environments.md",
+    "https://code.claude.com/docs/en/plugins/install.md",
+    "https://code.claude.com/docs/en/plugins/loading.md"
+   ],
+   "confidence": "high",
+   "evidence": "Tableau What carries over from your setup ; onglet Cloud session de la page Install ; section Plugins synced from claude.ai. Observe ici : plugins @synced charges dans une session cloud.",
+   "as_of": "2026-11-28",
+   "load_bearing": true
+  },
+  {
+   "claim": "claude.ai et Cowork refusent d'installer un plugin qui contient un dossier bin/ a la racine. Un tel plugin ne peut donc pas etre synchronise vers les sessions cloud via le compte claude.ai.",
+   "sources": [
+    "https://claude.com/docs/plugins/platform-support.md",
+    "https://code.claude.com/docs/en/plugins/components.md"
+   ],
+   "confidence": "high",
+   "evidence": "Tableau de support des composants : Executables in a top-level bin/ -> Can't be installed (Chat, Cowork).",
+   "as_of": "2026-11-28",
+   "load_bearing": true
+  },
+  {
+   "claim": "Taches planifiees cloud (ex-routines) : research preview ; plans Pro, Max, Ultra, Team et Enterprise ; intervalle minimum 1 h ; 100 runs planifies par heure et par compte ; declencheurs schedule, API (/fire avec jeton Bearer) et GitHub ; demarrage en mode auto ; connecteurs claude.ai choisis par tache ou .mcp.json du depot unique ; reseau Limited par defaut ; pause de 72 h si GitHub est deconnecte, puis desactivation.",
+   "sources": [
+    "https://code.claude.com/docs/en/routines.md",
+    "https://code.claude.com/docs/en/scheduled-tasks.md"
+   ],
+   "confidence": "high",
+   "evidence": "Sections Configure triggers, Connectors, Permission prompts, Usage and limits.",
+   "as_of": "2026-11-28",
+   "load_bearing": true
+  },
+  {
+   "claim": "Un plugin ne peut pas declarer de planification : le manifeste n'a aucun champ prevu, les hooks ne reagissent qu'aux evenements d'une session ouverte et les monitors ne demarrent pas en -p ni dans un plugin de depot. La recurrence exige un hote externe (tache cloud, Desktop, /loop, GitHub Actions, cron + claude -p, Agent SDK).",
+   "sources": [
+    "https://code.claude.com/docs/en/plugins/manifest-reference.md",
+    "https://code.claude.com/docs/en/plugins/components.md",
+    "https://code.claude.com/docs/en/plugins/loading.md"
+   ],
+   "confidence": "high",
+   "evidence": "Absence de champ de planification dans la table Fields ; restrictions des monitors.",
+   "as_of": "2026-11-28",
+   "load_bearing": true
+  },
+  {
+   "claim": "Artifacts : pages statiques de 16 Mio au plus, avec une CSP stricte, privees par defaut, sur Pro et au-dessus avec connexion claude.ai. Desactives par defaut en -p, dans l'Agent SDK et dans la GitHub Action. Une page peut appeler les connecteurs claude.ai du lecteur, pas les MCP locaux. En tache planifiee en mode auto, Claude publie ou republie un artifact existant sans demander.",
+   "sources": [
+    "https://code.claude.com/docs/en/artifacts.md",
+    "https://code.claude.com/docs/en/routines.md"
+   ],
+   "confidence": "high",
+   "evidence": "Sections Page constraints, Availability, Pull live data with MCP connectors ; When a run publishes an artifact without asking.",
+   "as_of": "2026-11-28",
+   "load_bearing": true
+  },
+  {
+   "claim": "La GitHub Action officielle anthropics/claude-code-action@v1 installe des plugins (inputs plugin_marketplaces et plugins) et tourne sur cron. GitHub desactive les workflows planifies apres 60 jours sans activite sur un depot public. Authentification par ANTHROPIC_API_KEY ou CLAUDE_CODE_OAUTH_TOKEN.",
+   "sources": [
+    "https://code.claude.com/docs/en/github-actions.md"
+   ],
+   "confidence": "high",
+   "evidence": "Sections Run a skill, Run on a schedule, Action parameters.",
+   "as_of": "2026-11-28",
+   "load_bearing": false
+  },
+  {
+   "claim": "claude plugin validate [--strict --json] controle manifeste, catalogue et entrees MCP, et affiche aussi les controles de l'annuaire (README, icone). claude plugin eval (v2.1.269+) lance chaque cas 3 fois avec et 3 fois sans le plugin, accepte des mocks MCP (evals/mocks/<serveur>/<outil>.md) et rend un code de sortie utilisable en CI (--threshold, --max-cost-usd). Chaque run est facture.",
+   "sources": [
+    "https://code.claude.com/docs/en/plugins/cli-reference.md",
+    "https://code.claude.com/docs/en/plugin-evals.md"
+   ],
+   "confidence": "high",
+   "evidence": "Test : validate --strict reussi sur le prototype et sa marketplace ; claude plugin eval --help disponible.",
+   "as_of": "2026-11-28",
+   "load_bearing": true
+  },
+  {
+   "claim": "Mise a jour des plugins : auto-update desactive par defaut pour une marketplace tierce. Un champ version fixe garde les utilisateurs sur leur copie tant qu'il n'est pas incremente ; sans champ version, chaque commit compte comme version. Le nom d'entree de la marketplace doit egaler le name du plugin.json.",
+   "sources": [
+    "https://code.claude.com/docs/en/plugins/host-marketplace.md",
+    "https://code.claude.com/docs/en/plugins/create-marketplace.md"
+   ],
+   "confidence": "high",
+   "evidence": "Sections Turn on auto-update, Release a new version, Keep the entry name and the manifest name the same.",
+   "as_of": "2026-11-28",
+   "load_bearing": true
+  },
+  {
+   "claim": "Bonnes pratiques officielles pour les skills : divulgation progressive (SKILL.md de moins de 500 lignes, references a un seul niveau, table des matieres au-dela de 100 lignes), description a la troisieme personne, scripts embarques executes plutot que du code genere, schema planifier puis valider puis executer avec fichier intermediaire, evaluations ecrites avant la skill, noms MCP complets.",
+   "sources": [
+    "https://platform.claude.com/docs/en/agents-and-tools/agent-skills/best-practices",
+    "https://code.claude.com/docs/en/skills.md"
+   ],
+   "confidence": "high",
+   "evidence": "Sections Progressive disclosure patterns, Provide utility scripts, Create verifiable intermediate outputs, Build evaluations first.",
+   "as_of": "2026-11-28",
+   "load_bearing": false
+  },
+  {
+   "claim": "Sortie des outils MCP plafonnee par defaut a 25 000 tokens (MAX_MCP_OUTPUT_TOKENS), avec un avertissement a 10 000. Le MCP local du radar doit donc ecrire les donnees brutes sur disque et ne renvoyer que des identifiants et des agregats.",
+   "sources": [
+    "https://code.claude.com/docs/en/mcp.md"
+   ],
+   "confidence": "high",
+   "evidence": "Section sur les limites de sortie MCP.",
+   "as_of": "2026-11-28",
+   "load_bearing": true
+  },
+  {
+   "claim": "Connecteurs officiels de collecte dans l'annuaire claude.com (partner, distants, surface claude-code annoncee) : Apify, Exa (mcp.exa.ai), Firecrawl, Tavily, Similarweb, Ahrefs, Semrush, ainsi que Product Hunt et vidIQ. Plugins de la marketplace officielle : exa, firecrawl, tavily, brightdata-plugin. Apify publie sa propre marketplace apify/agent-skills (scrapers TikTok, IG, YouTube, Reddit, Google Trends).",
+   "sources": [
+    "https://claude.com/connectors",
+    "https://raw.githubusercontent.com/anthropics/claude-plugins-official/main/.claude-plugin/marketplace.json",
+    "https://raw.githubusercontent.com/apify/agent-skills/main/.claude-plugin/marketplace.json"
+   ],
+   "confidence": "high",
+   "evidence": "Donnees JSON de l'annuaire analysees (environ 1 228 entrees) ; catalogue officiel de 317 plugins analyse.",
+   "as_of": "2026-11-28",
+   "load_bearing": true
+  },
+  {
+   "claim": "DataForSEO, Brave Search et Perplexity n'ont ni plugin officiel ni connecteur claude.ai, mais disposent d'un MCP officiel. DataForSEO : MCP heberge https://mcp.dataforseo.com/v3/mcp, paiement a l'usage avec recharge minimale de 50 $. Brave : 5 $ les 1 000 requetes, stockage des resultats reserve a un plan sur mesure.",
+   "sources": [
+    "https://dataforseo.com/model-context-protocol",
+    "https://dataforseo.com/pricing",
+    "https://brave.com/search/api/"
+   ],
+   "confidence": "high",
+   "evidence": "Pages officielles consultees ; absence verifiee dans les catalogues official, community et knowledge-work et dans l'annuaire.",
+   "as_of": "2026-11-28",
+   "load_bearing": true
+  },
+  {
+   "claim": "Il n'existe pas d'API Google Trends generale : l'API officielle est en alpha sur candidature (5 ans glissants, du jour a l'annee, pays et sous-regions, ni quota ni prix publies). YouTube Data API v3 : 10 000 unites par jour, plus une limite separee de 100 appels search.list par jour. Aucun MCP officiel YouTube ou Reddit trouve.",
+   "sources": [
+    "https://developers.google.com/search/apis/trends",
+    "https://developers.google.com/youtube/v3/determine_quota_cost"
+   ],
+   "confidence": "high",
+   "evidence": "Pages Google consultees.",
+   "as_of": "2026-11-28",
+   "load_bearing": true
+  },
+  {
+   "claim": "Stripe n'est pas propose au Maroc, au Senegal, en Tunisie ni en Algerie ; la Cote d'Ivoire est en 'Extended network' ; France, Belgique, Suisse et Canada sont pris en charge. Postiz n'a pas d'offre gratuite (29 $ a 99 $ par mois, MCP sur tous les plans). Le plan gratuit Supabase met un projet en pause apres 1 semaine d'inactivite.",
+   "sources": [
+    "https://stripe.com/global",
+    "https://docs.postiz.com/cloud/plans.md",
+    "https://supabase.com/pricing"
+   ],
+   "confidence": "high",
+   "evidence": "Pages officielles consultees.",
+   "as_of": "2026-11-28",
+   "load_bearing": true
+  },
+  {
+   "claim": "Cout de contexte : les descriptions de chaque skill et agent des plugins actifs sont dans le contexte a chaque tour. Mesure ici : une requete claude -p triviale avec environ 29 plugins charges a ete estimee a 0,43 $ au prix public (total_cost_usd).",
+   "sources": [
+    "https://code.claude.com/docs/en/plugins/overview.md",
+    "test local claude -p --plugin-dir (2026-11-28)"
+   ],
+   "confidence": "medium",
+   "evidence": "Mesure unique, modele par defaut de la session ; ordre de grandeur seulement.",
+   "as_of": "2026-11-28",
+   "load_bearing": false
+  },
+  {
+   "claim": "Agent SDK : sauf accord prealable, un produit tiers ne peut pas proposer la connexion claude.ai ni les limites d'abonnement ; il faut une cle API. Cela pese sur le cout d'un futur radar en SaaS.",
+   "sources": [
+    "https://code.claude.com/docs/en/agent-sdk/overview.md"
+   ],
+   "confidence": "high",
+   "evidence": "Note de la section Get started.",
+   "as_of": "2026-11-28",
+   "load_bearing": false
+  }
+ ],
+ "implications_for_tool": [
+  "Construire un plugin unique 'trend-radar' (sans bin/, version incrementee par claude plugin tag) dans une marketplace GitHub privee 'trend-radar-mkt', ajoutee au compte claude.ai pour qu'il soit synchronise dans les taches cloud.",
+  "Composants : skills radar-setup, radar-scan, radar-diffusion, radar-transpose (references/markets/*.md et lifestyles.md, context: fork), radar-initiatives, radar-report, radar-sources (user-invocable: false). Agents us-signal-scout, eu-diffusion-analyst, market-analyst, initiative-strategist, skeptic-verifier. Un workflow weekly-radar.js pour le fan-out tendance x marche.",
+  "MCP local 'radar-store' (stdio Python) : upsert_signal, query_signals, diffusion_lag, score_market, budget_status. Donnees brutes stockees sur disque (${CLAUDE_PLUGIN_DATA} en local, depot radar-data en cloud), seuls des identifiants et des agregats sont renvoyes (plafond de 25 000 tokens).",
+  "Hooks : SessionStart (venv Python dans ${CLAUDE_PLUGIN_DATA}), PreToolUse garde budgetaire sur mcp__plugin_trend-radar_radar-store__collect_.*, PostToolUse journal de provenance (URL et date), Stop validation du schema du rapport avec compteur anti-boucle.",
+  "Recurrence : tache planifiee cloud hebdomadaire (minute non ronde) sur le depot radar-data, avec les connecteurs Apify et Exa ; hotes autorises et network secrets pour DataForSEO et YouTube ; republication d'un artifact de tableau de bord existant ; declencheur API pour relancer a la demande.",
+  "CI : claude plugin validate --strict et claude plugin eval avec mocks MCP, --threshold et --max-cost-usd, dans GitHub Actions. Aucun appel payant de collecte en CI.",
+  "MVP des sources : Apify (signaux sociaux US), DataForSEO (demande de recherche et tendances par pays), YouTube Data API (diffusion video, avec cache vu la limite de 100 search.list par jour), Exa (reprises dans les medias UE et francophones). Similarweb, Semrush et Ahrefs en options payantes.",
+  "Chaque score de transposabilite doit citer ses sources et dates (verifie par skeptic-verifier et par validate_report.py) ; un score sans provenance est refuse.",
+  "Les initiatives generees doivent tenir compte des contraintes de paiement par pays (Stripe absent au Maroc et au Senegal) et du cout des outils (Postiz payant, mise en pause Supabase)."
+ ],
+ "open_questions": [
+  "Les workflows dynamiques livres par un plugin tournent-ils dans une tache planifiee cloud, et avec quelle concurrence ?",
+  "Un plugin place dans .claude/skills/<plugin>/ du depot se charge-t-il en session cloud hebergee par Anthropic, compte tenu du controle de confiance ?",
+  "DataForSEO couvre-t-il Google Trends et Keywords Data pour le Maroc, le Senegal et la Cote d'Ivoire, et a quel prix par requete ?",
+  "Quels sont la fiabilite et le cout par millier de resultats des actors Apify TikTok, Instagram et Reddit sur des requetes en francais, en darija et en arabe ?",
+  "Quelles sont les conditions officielles 2026 de l'API Reddit pour un usage commercial (chiffres disponibles uniquement via des revendeurs) ?",
+  "Quel plan Ahrefs le MCP exige-t-il ? Quelle est la version courante de l'endpoint Semrush (v1 dans l'annuaire, v2 citee par des tiers) ?",
+  "Le plan Vercel Hobby est-il toujours restreint a un usage non commercial (texte non retrouve) ?",
+  "Quand et comment obtenir l'alpha de l'API Google Trends ?",
+  "Peut-on creer une tache cloud par API (et pas seulement depuis le web, Desktop ou /schedule) pour une version SaaS multi-utilisateur ?",
+  "Le paquet npm @perplexity-ai/mcp-server est-il bien le MCP officiel de Perplexity (identifie seulement via un annuaire tiers) ?"
+ ],
+ "data_sources": [
+  {
+   "name": "Apify (MCP + marketplace apify/agent-skills)",
+   "category": "collecte-social",
+   "access_method": "Connecteur claude.ai (distant) ou https://mcp.apify.com ; plugin apify-ultimate-scraper depuis la marketplace apify/agent-skills",
+   "auth": "OAuth ou jeton API Apify",
+   "cost": "Free 0 $ (5 $ d'usage par mois) ; Starter 19 $ ; Scale 199 $ ; Business 999 $ ; unite de calcul de 0,2 a 0,13 $ ; prix propre a chaque actor",
+   "geo_coverage": "Mondial (selon l'actor et ses proxys)",
+   "signal_type": "Posts et tendances TikTok, Instagram, YouTube, X, Reddit, Google Trends",
+   "limits_and_tos": "5 runs simultanes en Free ; conditions d'utilisation des plateformes scrapees",
+   "test_result": "Connecteur present dans l'annuaire (partner, claude-code) ; marketplace apify/agent-skills recuperee",
+   "tested_call": "Lecture du JSON de l'annuaire et du marketplace.json (pas d'appel d'actor)",
+   "verdict": "core"
+  },
+  {
+   "name": "DataForSEO MCP",
+   "category": "collecte-search",
+   "access_method": "MCP officiel heberge https://mcp.dataforseo.com/v3/mcp ou npx ou Docker ; pas de plugin ni de connecteur",
+   "auth": "Basic (login/mot de passe API)",
+   "cost": "Paiement a l'usage, recharge minimale de 50 $, 1 $ offert, solde sans expiration",
+   "geo_coverage": "Localisations Google mondiales (Maroc et Afrique de l'Ouest a verifier)",
+   "signal_type": "SERP, volumes de mots-cles, Google Trends via Keywords Data, Labs, Business Data, AI Optimization",
+   "limits_and_tos": "Facturation par requete selon l'API",
+   "test_result": "Non appele (pas de cle)",
+   "tested_call": "",
+   "verdict": "core"
+  },
+  {
+   "name": "YouTube Data API v3",
+   "category": "collecte-video",
+   "access_method": "API REST avec cle ; pas de MCP officiel",
+   "auth": "Cle API Google",
+   "cost": "Gratuit",
+   "geo_coverage": "Mondial (regionCode, relevanceLanguage)",
+   "signal_type": "Videos, vues et dates de publication par pays (decalage de diffusion)",
+   "limits_and_tos": "10 000 unites par jour plus 100 appels search.list par jour",
+   "test_result": "Quota verifie sur la documentation",
+   "tested_call": "",
+   "verdict": "core"
+  },
+  {
+   "name": "Exa",
+   "category": "collecte-web",
+   "access_method": "Plugin exa (claude-plugins-official, knowledge-work-plugins) et connecteur https://mcp.exa.ai/mcp",
+   "auth": "Cle API ou OAuth du connecteur",
+   "cost": "10 $ de credit par mois ; recherche 4 a 7 $ les 1 000 ; deep 12 $ les 1 000 ; contenus 1 $ les 1 000 pages",
+   "geo_coverage": "Web mondial",
+   "signal_type": "Articles et pages similaires dates (reprise UE et francophone)",
+   "limits_and_tos": "",
+   "test_result": "Present dans l'annuaire et dans le catalogue officiel",
+   "tested_call": "",
+   "verdict": "core"
+  },
+  {
+   "name": "Firecrawl",
+   "category": "collecte-web",
+   "access_method": "Plugin firecrawl (officiel) et connecteur https://mcp.firecrawl.dev/v2/mcp-search",
+   "auth": "Cle API",
+   "cost": "Free 1 000 credits ; Hobby 19 $ ; Standard 99 $ ; Growth 399 $ ; 1 credit par page",
+   "geo_coverage": "Web mondial",
+   "signal_type": "Extraction de pages en markdown, recherche",
+   "limits_and_tos": "Concurrence de 2 a 50 selon le plan",
+   "test_result": "",
+   "tested_call": "",
+   "verdict": "optional"
+  },
+  {
+   "name": "Tavily",
+   "category": "collecte-web",
+   "access_method": "Plugin tavily (officiel, KWP) et connecteur https://mcp.tavily.com/mcp",
+   "auth": "Cle API",
+   "cost": "1 000 credits gratuits par mois ; 0,008 $ par credit ; Project 30 $ pour 4 000 credits",
+   "geo_coverage": "Web mondial",
+   "signal_type": "Recherche et extraction",
+   "limits_and_tos": "",
+   "test_result": "",
+   "tested_call": "",
+   "verdict": "optional"
+  },
+  {
+   "name": "Brave Search API",
+   "category": "collecte-web",
+   "access_method": "MCP officiel brave/brave-search-mcp-server ; ni plugin ni connecteur",
+   "auth": "Cle API",
+   "cost": "Search 5 $ les 1 000 avec 5 $ de credit mensuel ; Answers 4 $ les 1 000 plus 5 $ par million de tokens",
+   "geo_coverage": "Mondial (parametre pays)",
+   "signal_type": "Web et actualites, index independant",
+   "limits_and_tos": "Stockage ou entrainement des resultats reserve a un plan sur mesure",
+   "test_result": "",
+   "tested_call": "",
+   "verdict": "optional"
+  },
+  {
+   "name": "Perplexity API",
+   "category": "collecte-web",
+   "access_method": "MCP npm @perplexity-ai/mcp-server (identifie via un annuaire tiers) ; le connecteur claude.ai est 'Perplexity Computer'",
+   "auth": "Cle API",
+   "cost": "Search API 5 $ les 1 000 (fast 1 $) ; Agent API au token plus web_search a 2,50 $ les 1 000",
+   "geo_coverage": "Mondial",
+   "signal_type": "Syntheses sourcees",
+   "limits_and_tos": "",
+   "test_result": "",
+   "tested_call": "",
+   "verdict": "avoid"
+  },
+  {
+   "name": "Bright Data MCP",
+   "category": "collecte-web",
+   "access_method": "Plugin brightdata-plugin (officiel, KWP) ; MCP heberge",
+   "auth": "Jeton API",
+   "cost": "5 000 requetes gratuites par mois ; 1,5 $ les 1 000 ; Scale 499 $ par mois ; navigateurs 8 $ par Go",
+   "geo_coverage": "Mondial",
+   "signal_type": "Scraping anti-blocage, SERP",
+   "limits_and_tos": "",
+   "test_result": "",
+   "tested_call": "",
+   "verdict": "optional"
+  },
+  {
+   "name": "Google Trends API (alpha)",
+   "category": "collecte-search",
+   "access_method": "Candidature a l'alpha ; pas de MCP officiel",
+   "auth": "Selon l'alpha",
+   "cost": "Non publie",
+   "geo_coverage": "Pays et sous-regions",
+   "signal_type": "Interet de recherche normalise sur 5 ans",
+   "limits_and_tos": "Acces restreint aux testeurs",
+   "test_result": "",
+   "tested_call": "",
+   "verdict": "optional"
+  },
+  {
+   "name": "Reddit Data API",
+   "category": "collecte-social",
+   "access_method": "API OAuth ; pas de MCP ni de connecteur officiel",
+   "auth": "OAuth apres approbation",
+   "cost": "Gratuit hors usage commercial (sources tierces) ; contrat pour l'usage commercial",
+   "geo_coverage": "Mondial",
+   "signal_type": "Discussions de niche",
+   "limits_and_tos": "Contrat exige en usage commercial (sources tierces, a verifier)",
+   "test_result": "",
+   "tested_call": "",
+   "verdict": "avoid"
+  },
+  {
+   "name": "Similarweb MCP",
+   "category": "collecte-trafic",
+   "access_method": "Connecteur https://mcp.similarweb.com ; inclus dans le plugin KWP marketing",
+   "auth": "Compte Similarweb",
+   "cost": "Abonnement avec acces API/MCP (API-only, Business, Enterprise) ; credits de donnees",
+   "geo_coverage": "Mondial par pays",
+   "signal_type": "Trafic web et apps, mots-cles",
+   "limits_and_tos": "",
+   "test_result": "",
+   "tested_call": "",
+   "verdict": "paid_addon"
+  },
+  {
+   "name": "Semrush MCP",
+   "category": "collecte-search",
+   "access_method": "Connecteur https://mcp.semrush.com/claude/v1/mcp",
+   "auth": "Compte Semrush",
+   "cost": "Plans SEO avec 50 000 unites d'API (source secondaire)",
+   "geo_coverage": "Bases pays Semrush",
+   "signal_type": "Mots-cles, trafic, marches",
+   "limits_and_tos": "",
+   "test_result": "",
+   "tested_call": "",
+   "verdict": "paid_addon"
+  },
+  {
+   "name": "Ahrefs MCP",
+   "category": "collecte-search",
+   "access_method": "Connecteur https://api.ahrefs.com/mcp/mcp ; inclus dans KWP marketing",
+   "auth": "Compte Ahrefs",
+   "cost": "Plan requis non verifie",
+   "geo_coverage": "Mondial",
+   "signal_type": "SEO et visibilite dans la recherche IA",
+   "limits_and_tos": "",
+   "test_result": "",
+   "tested_call": "",
+   "verdict": "paid_addon"
+  },
+  {
+   "name": "Product Hunt MCP",
+   "category": "collecte-tech",
+   "access_method": "Connecteur https://mcp.producthunt.com/mcp",
+   "auth": "OAuth",
+   "cost": "Non verifie",
+   "geo_coverage": "Surtout US",
+   "signal_type": "Lancements de produits tech",
+   "limits_and_tos": "",
+   "test_result": "",
+   "tested_call": "",
+   "verdict": "optional"
+  }
+ ]
+}
