@@ -41,22 +41,23 @@ def test_health_report_verdicts():
 def test_cli_collect_end_to_end(workspace, monkeypatch, capsys):
     v2 = {"feed": {"results": [{"id": "111", "name": "Alpha", "artistName": "A", "genres": []}]}}
     lookup = {"results": [{"trackId": 111, "trackName": "Alpha"}]}
-    fake = FakeClient({"api/v2": (200, json.dumps(v2)), "lookup": (200, json.dumps(lookup)),
-                       "topgrossing": (200, json.dumps({"feed": {"entry": []}}))})
+    fake = FakeClient({"api/v2/us": (200, json.dumps(v2)), "api/v2/ma": (200, json.dumps({"feed": {"results": []}})),
+                       "lookup": (200, json.dumps(lookup))})
     monkeypatch.setattr(cli, "HttpClient", lambda **kw: fake)
     code = cli.main(["collect", "--only", "apple_charts,apple_lookup", "--zones", "US,MA"])
     assert code == 0
     out = capsys.readouterr().out
     assert "[apple_charts]" in out and "[apple_lookup]" in out
     raw = list((workspace / "data" / "raw").rglob("*.jsonl.gz"))
-    assert {p.parts[-3] for p in raw} == {"apple_charts", "apple_lookup"}
+    assert {p.parts[-4] for p in raw} == {"apple_charts", "apple_lookup"}
     watch = json.loads((workspace / "watchlist.json").read_text())
     assert "111" in watch["apps"]["ios"]
     runs = [json.loads(line) for line in (workspace / "data" / "runs").glob("*.jsonl").__next__().read_text().splitlines()]
     assert {r["source"] for r in runs} == {"apple_charts", "apple_lookup"}
-    # US et MA relèvent aussi le classement des revenus (zones.toml), vide ici : deux unités échouées, signalées
+    # Classement marocain vide : une unité échouée, signalée
     charts = [r for r in runs if r["source"] == "apple_charts"][0]
-    assert charts["units_total"] == 4 and charts["units_ok"] == 2 and len(charts["errors"]) == 2
+    assert charts["units_total"] == 2 and charts["units_ok"] == 1 and len(charts["errors"]) == 1
+    assert (workspace / "data" / "state.json").exists()
 
 
 def test_cli_rejects_unknown_source(workspace, capsys):
@@ -67,7 +68,21 @@ def test_cli_dry_run_writes_nothing(workspace, monkeypatch):
     fake = FakeClient({"api/v2": (200, json.dumps({"feed": {"results": []}}))})
     monkeypatch.setattr(cli, "HttpClient", lambda **kw: fake)
     cli.main(["collect", "--only", "apple_charts", "--zones", "MA", "--dry-run"])
-    assert not (workspace / "data").exists()
+    assert not (workspace / "data" / "raw").exists() and not (workspace / "data" / "runs").exists()
+
+
+def test_cli_refuses_a_second_concurrent_collection(workspace, monkeypatch, capsys):
+    from radar.storage import run_lock
+    with run_lock(workspace / "data"):
+        assert cli.main(["collect", "--only", "apple_charts", "--zones", "MA"]) == 3
+    assert "déjà en cours" in capsys.readouterr().err
+
+
+def test_zones_filter_applies_to_every_source(workspace, monkeypatch):
+    fake = FakeClient({"suggestqueries": (200, json.dumps(["x", ["x"]])), "trending/rss": (200, "<rss></rss>")})
+    monkeypatch.setattr(cli, "HttpClient", lambda **kw: fake)
+    cli.main(["collect", "--only", "autocomplete,gtrends_daily", "--zones", "FR"])
+    assert fake.calls and all("gl=fr" in c or "geo=FR" in c for c in fake.calls)
 
 
 def test_http_delta():

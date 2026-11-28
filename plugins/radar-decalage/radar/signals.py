@@ -164,10 +164,20 @@ def rank_to_strength(rank: int | None, depth: int = 100) -> float:
 
 
 def _velocity(values: Sequence[float], periods: int = 8) -> float:
+    """Pente de log(1 + y') où y' = 100 × y / max(y) : l'ancre « doubler en 4 périodes vaut 1 »
+    ne dépend plus de l'unité de la série (vues, indice, force de rang dans [0 ; 1])."""
     tail = list(values[-periods:])
     if len(tail) < 3:
         return 0.0
-    return theil_sen([math.log1p(max(v, 0.0)) for v in tail])
+    scale = max((abs(v) for v in values), default=0.0)
+    if scale <= 0:
+        return 0.0
+    return theil_sen([math.log1p(100 * max(v, 0.0) / scale) for v in tail])
+
+
+def _is_count_series(values: Sequence[float]) -> bool:
+    """Kleinberg suppose des comptages (émissions de Poisson) : entiers positifs d'ordre de grandeur suffisant."""
+    return bool(values) and all(v >= 0 and float(v).is_integer() for v in values) and max(values) >= 5
 
 
 def _clip(x: float) -> float:
@@ -192,8 +202,14 @@ def strength(series: list[FamilySeries]) -> Strength:
             flags.append(f"{fs.family} : persistance non testable ({mk['n']} points, {MK_MIN_POINTS} au minimum)")
         elif mk["n"] < MK_RECOMMENDED_POINTS:
             flags.append(f"{fs.family} : persistance testée sur {mk['n']} points ({MK_RECOMMENDED_POINTS} recommandés)")
-        p_score = (1.0 - mk["p"]) if mk["valid"] else 0.0
-        b = kleinberg_online(fs.values)[-1] if len(fs.values) >= 3 else 0
+        # Sans tendance (S ≤ 0), la persistance vaut 0, pas Φ(z) ≈ 0,5.
+        p_score = (1.0 - mk["p"]) if mk["valid"] and mk["S"] > 0 else 0.0
+        if len(fs.values) >= 3 and _is_count_series(fs.values):
+            b = kleinberg_online(fs.values)[-1]
+        else:
+            b = 0
+            if len(fs.values) >= 3:
+                flags.append(f"{fs.family} : pas de détection de rafale (série qui n'est pas un comptage)")
         if v > 0 and (p_score > 0.9 or b):
             rising.append(fs.family)
         hl = half_life_after_peak(fs.values)
@@ -240,8 +256,12 @@ def stage(series: list[FamilySeries], rising: list[str], period_days: int = 1) -
     # classerait jamais en déclin.
     if len(y) - 1 - peak_i >= periods_28_days and y[-1] < 0.5 * y[peak_i] and v <= 0:
         return "declin"
-    flat_near_peak = y[-1] >= 0.8 * y[peak_i] and abs(v) < 0.02 and len(y) >= MK_RECOMMENDED_POINTS
-    if flat_near_peak or len(series) >= 5:
+    # « Mainstream » exige un signal réellement présent : niveau élevé (ancre de la source) ou
+    # présence récente dans au moins 5 familles ; une série morte ou minuscule n'est pas mainstream.
+    present = [fs for fs in series if len(fs.values) >= 3 and all(x > 0 for x in fs.values[-3:])]
+    flat_near_peak = (y[peak_i] > 0 and y[-1] >= 0.8 * y[peak_i] and abs(v) < 0.02
+                      and len(y) >= MK_RECOMMENDED_POINTS and longest.level >= 0.5)
+    if flat_near_peak or len(present) >= 5:
         return "mainstream"
     if v > 0 and len(rising) >= 3:
         return "acceleration"

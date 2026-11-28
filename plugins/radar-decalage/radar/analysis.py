@@ -106,6 +106,8 @@ def gaps(store: RawStore, day: date | None = None, max_origin_rank: int = 50,
     if not d_lookup or not d_charts:
         return []
     avail, meta = availability(store.read("apple_lookup", d_lookup))
+    previous_days = [d for d in store.days("apple_lookup") if d < d_lookup]
+    prev_avail = availability(store.read("apple_lookup", previous_days[-1]))[0] if previous_days else {}
     ranks, info = chart_ranks(store.read("apple_charts", d_charts))
     n_store = max((len(z) for z in avail.values()), default=0)
     today = day or d_lookup
@@ -125,6 +127,9 @@ def gaps(store: RawStore, day: date | None = None, max_origin_rank: int = 50,
         best_zone, best_rank = min(origin.items(), key=lambda kv: kv[1])
         name = info.get(app, {}).get("name") or meta.get(app, {}).get("name", "")
         flags = []
+        unconfirmed = [t for t in missing if prev_avail.get(app, {}).get(t) != 0]
+        if unconfirmed:
+            flags.append(f"absence non confirmée ({', '.join(unconfirmed)}) : un seul relevé négatif")
         if sum(zone_avail.values()) == 1:
             flags.append("une seule vitrine : service national ou lancement en cours ?")
         if REWARD_APP.search(name):
@@ -144,23 +149,30 @@ def gaps(store: RawStore, day: date | None = None, max_origin_rank: int = 50,
     return rows
 
 
-def arrivals(store: RawStore, source: str = "apple_lookup") -> dict[tuple[str, str], str]:
-    """Première date où chaque (app, vitrine) est observée disponible après une absence observée.
+def arrivals(store: RawStore, source: str = "apple_lookup", confirm: int = 2) -> dict[tuple[str, str], str]:
+    """Première date où chaque (app, vitrine) est disponible après une absence CONFIRMÉE.
 
-    Une app disponible dès le premier relevé n'a pas de date d'arrivée : on sait
-    seulement qu'elle est arrivée avant le début de la collecte.
+    Une absence n'est retenue qu'après `confirm` relevés négatifs consécutifs : une réponse
+    vide ou un incident d'un jour ne fabrique pas de fausse « arrivée ». Une app disponible
+    dès le premier relevé n'a pas de date d'arrivée (elle est arrivée avant la collecte).
     """
-    seen_absent: set[tuple[str, str]] = set()
+    streak: dict[tuple[str, str], int] = {}
+    confirmed_absent: set[tuple[str, str]] = set()
     first_present: dict[tuple[str, str], str] = {}
     for d in store.days(source):
+        day_values: dict[tuple[str, str], int] = {}
         for r in store.read(source, d):
-            if r.get("kind") != "availability":
-                continue
-            k = (r["key"], r["zone"])
-            if r["value"] == 0:
-                seen_absent.add(k)
-            elif k in seen_absent and k not in first_present:
-                first_present[k] = d.isoformat()
+            if r.get("kind") == "availability":
+                day_values[(r["key"], r["zone"])] = int(r["value"])
+        for k, v in day_values.items():
+            if v == 0:
+                streak[k] = streak.get(k, 0) + 1
+                if streak[k] >= confirm:
+                    confirmed_absent.add(k)
+            else:
+                if k in confirmed_absent and k not in first_present:
+                    first_present[k] = d.isoformat()
+                streak[k] = 0
     return first_present
 
 

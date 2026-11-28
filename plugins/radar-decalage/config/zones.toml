@@ -3,7 +3,7 @@
 #
 # group : origine (USA), sentinelle (marché qui reçoit tôt), test (marché-test des plateformes),
 #         cible (France, Maroc, francophonie), relais (Golfe, Égypte : apps arabophones)
-# apple : code de vitrine App Store ; apple_grossing : relever aussi le classement des revenus
+# apple : code de vitrine App Store
 # play  : code pays Google Play ; hl : langue d'affichage
 
 [[zone]]
@@ -11,7 +11,6 @@ code = "US"
 name = "États-Unis"
 group = "origine"
 apple = "us"
-apple_grossing = true
 play = "us"
 hl = "en"
 
@@ -28,7 +27,6 @@ code = "GB"
 name = "Royaume-Uni"
 group = "sentinelle"
 apple = "gb"
-apple_grossing = true
 play = "gb"
 hl = "en"
 
@@ -55,7 +53,6 @@ code = "DE"
 name = "Allemagne"
 group = "sentinelle"
 apple = "de"
-apple_grossing = true
 play = "de"
 hl = "de"
 
@@ -90,7 +87,6 @@ code = "FR"
 name = "France"
 group = "cible"
 apple = "fr"
-apple_grossing = true
 play = "fr"
 hl = "fr"
 
@@ -163,7 +159,6 @@ code = "MA"
 name = "Maroc"
 group = "cible"
 apple = "ma"
-apple_grossing = true
 play = "ma"
 hl = "fr"
 

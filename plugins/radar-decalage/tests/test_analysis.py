@@ -63,12 +63,28 @@ def test_reward_apps_and_single_storefront_are_flagged(tmp_path):
     assert any("récompenses" in f for f in flags) and any("une seule vitrine" in f for f in flags)
 
 
-def test_arrivals_need_an_observed_absence_first(tmp_path):
+def test_arrivals_need_a_confirmed_absence_first(tmp_path):
     store = RawStore(tmp_path)
-    put(store, date(2026, 11, 28), "apple_lookup", lookup_recs("muse", {"US"}) + lookup_recs("old", {"US", "FR"}))
-    put(store, date(2026, 12, 3), "apple_lookup", lookup_recs("muse", {"US", "FR"}) + lookup_recs("old", {"US", "FR"}))
+    put(store, date(2026, 11, 26), "apple_lookup", lookup_recs("muse", {"US"}) + lookup_recs("old", {"US", "FR"}))
+    put(store, date(2026, 11, 27), "apple_lookup", lookup_recs("muse", {"US"}) + lookup_recs("old", {"US"}))
+    put(store, date(2026, 11, 28), "apple_lookup", lookup_recs("muse", {"US", "FR"}) + lookup_recs("old", {"US", "FR"}))
     arr = analysis.arrivals(store)
-    assert arr == {("ios:muse", "FR"): "2026-12-03"}  # « old » était déjà disponible : pas de date d'arrivée
+    # muse : absente deux jours de suite en France, puis présente : arrivée datée.
+    # old : un seul relevé négatif (incident ou réponse vide) : pas de fausse arrivée.
+    assert arr[("ios:muse", "FR")] == "2026-11-28"
+    assert ("ios:old", "FR") not in arr
+
+
+def test_single_negative_snapshot_is_flagged_as_unconfirmed(tmp_path):
+    store = RawStore(tmp_path)
+    d = date(2026, 11, 28)
+    put(store, d, "apple_lookup", lookup_recs("muse", {"US", "CA", "GB", "JP", "AU"}, "2026-09-08"))
+    put(store, d, "apple_charts", [rank_rec("muse", "US", 3, "Muse")])
+    assert any("non confirmée" in f for f in analysis.gaps(store, d)[0]["flags"])
+    d2 = date(2026, 11, 29)
+    put(store, d2, "apple_lookup", lookup_recs("muse", {"US", "CA", "GB", "JP", "AU"}, "2026-09-08"))
+    put(store, d2, "apple_charts", [rank_rec("muse", "US", 3, "Muse")])
+    assert not any("non confirmée" in f for f in analysis.gaps(store, d2)[0]["flags"])
 
 
 def test_no_data_means_no_gap(tmp_path):

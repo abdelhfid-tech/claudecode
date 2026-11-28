@@ -63,7 +63,7 @@ class GoogleTrendsDaily(Collector):
 
     def collect(self, ctx: Context) -> Result:
         res = Result()
-        geos = ctx.source_config.get("geos", ["US", "FR", "MA"])
+        geos = [g for g in ctx.source_config.get("geos", ["US", "FR", "MA"]) if ctx.zone_ok(g)]
         for geo in geos:
             r = ctx.client.request(URL.format(geo=geo))
             if not r.ok:

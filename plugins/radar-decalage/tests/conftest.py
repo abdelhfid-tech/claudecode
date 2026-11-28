@@ -17,6 +17,15 @@ class FakeClient:
         self.routes = routes
         self.calls = []
         self.stats = {}
+        self.blocked = {}
+
+    def download(self, url, dest, headers=None):
+        r = self.request(url)
+        if r.ok:
+            dest.parent.mkdir(parents=True, exist_ok=True)
+            dest.write_bytes(r.body)
+            r.path, r.body = dest, b""
+        return r
 
     def request(self, url, data=None, headers=None, method=None):
         self.calls.append(url)

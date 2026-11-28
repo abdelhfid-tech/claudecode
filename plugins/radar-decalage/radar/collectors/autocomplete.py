@@ -3,6 +3,10 @@
 Seul capteur fin de présence locale au Maroc (« labubu prix maroc ») : il n'a
 pas d'historique, il est donc historisé dès le premier jour. Les requêtes sont
 plafonnées par exécution.
+
+robots.txt : suggestqueries.google.com n'en publie pas (404, donc autorisé) ;
+completion.amazon.* interdit tout (« Disallow: / ») : aucun couple Amazon n'est
+configuré par défaut, et le client refuserait de toute façon ces adresses.
 """
 
 from __future__ import annotations
@@ -59,11 +63,15 @@ class Autocomplete(Collector):
     def collect(self, ctx: Context) -> Result:
         res = Result()
         cfg = ctx.source_config
-        queries = plan_queries(ctx.terms, cfg.get("pairs", []), int(cfg.get("max_queries", 300)))
+        pairs = [p for p in cfg.get("pairs", []) if ctx.zone_ok(p["zone"])]
+        queries = plan_queries(ctx.terms, pairs, int(cfg.get("max_queries", 300)))
         for q in queries:
             engine = q["engine"]
             if engine == "amazon":
-                tld = q["amazon"]
+                tld = q.get("amazon")
+                if tld not in AMAZON_MARKETS:
+                    res.unit(False, f"amazon {q['zone']} : place de marché inconnue « {tld} »")
+                    continue
                 url = AMAZON.format(tld=tld, mid=AMAZON_MARKETS[tld], q=quote(q["query"]))
             else:
                 url = (YOUTUBE if engine == "youtube" else GOOGLE).format(hl=q["hl"], gl=q["gl"], q=quote(q["query"]))
@@ -73,7 +81,7 @@ class Autocomplete(Collector):
                 res.unit(False, f"{label}: {r.status or r.error}")
                 continue
             try:
-                payload = json.loads(r.body.decode(r.headers.get("charset", "utf-8"), "replace"))
+                payload = json.loads(r.body.decode("utf-8", "replace"))
                 suggestions = parse_amazon(payload) if engine == "amazon" else parse_google(payload)
             except (ValueError, TypeError) as exc:
                 res.unit(False, f"{label}: illisible ({exc})")

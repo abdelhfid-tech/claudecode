@@ -8,7 +8,11 @@ Version 2, validée sur le principe le 28 novembre 2026.
 - Collecteur des 6 sources gratuites (`plugins/radar-decalage/radar/`). Premier passage réel : 100 % des unités réussies, soit 32 classements App Store, 13 Google Play, 162 vérifications de disponibilité sur 27 vitrines, 3 flux Google Trends, 314 autocomplétions et 3 fichiers Wikimedia par pays. Durée : 17 minutes, ramenée à environ 14 en passant au flux historique d'Apple (le flux v2 a dépassé ses délais 11 fois). Volume : environ 730 Ko par jour compressés.
 - Règles datées et sourcées par pays : rails de paiement, plateformes, réglementation, fiscalité et change.
 - Modules A (force du signal), B (délais d'arrivée et sentinelles), C (portes acheteur et vendeur), D (rendement des initiatives, avec la correction du défaut de coût horaire), journal de prédictions chaîné, analyse des écarts de disponibilité.
-- Plugin `radar-decalage` : 6 skills, 3 agents ; `claude plugin validate` passe. 91 tests hors ligne.
+- Plugin `radar-decalage` : 6 skills, 3 agents ; `claude plugin validate` passe.
+- Revue de code indépendante : 15 problèmes relevés, tous corrigés, 120 tests hors ligne. Les deux plus graves :
+  - trois points d'accès étaient interdits par robots.txt (flux historique d'Apple, Google Play, autocomplétion d'Amazon) : le client lit désormais robots.txt, et ces sources sont abandonnées ou désactivées ;
+  - une réponse Apple vide aurait marqué toutes les apps « indisponibles » sans alerte : c'est désormais un échec, et une absence n'est confirmée qu'après deux relevés négatifs.
+  - Autres corrections : disjoncteur après un refus, Retry-After respecté, écriture atomique par exécution et verrou, jours Wikimedia repris après un échec, journal de prédictions protégé contre l'antidatage et la troncature (ancres), portes qui multiplient le score entier, calage des délais quand le P10 vaut 0.
 - Études complémentaires sur l'affiliation et sur Amazon KDP, l'impression à la demande et les places de marché : rédigées, contre-vérification en cours.
 
 **Premiers signaux réels**
@@ -143,13 +147,13 @@ Toutes ont été testées depuis le conteneur le 28 novembre 2026. Un passage un
 | Source | Ce qu'elle mesure | Pays | Fréquence | Remarques |
 |---|---|---|---|---|
 | App Store : recherche par identifiant, sur environ 25 vitrines | Disponibilité d'une app par pays, date de première apparition | US, CA, GB, IE, AU, NZ, DE, ES, IT, PT, NL, FR, BE, CH, LU, JP, MX, PH, TH, AE, SA, EG, MA, DZ, TN, SN, CI | Quotidienne, identifiants groupés | Mesure principale : 14 des 18 apps US « absentes » en France y sont en fait indisponibles. La date de sortie n'est utilisée que si elle est postérieure à l'ouverture de la vitrine (avril 2020 au Maroc) |
-| App Store : classements (flux RSS v2 et historique) | Rang par pays | mêmes pays | Quotidienne | Flux v2 instable (12 échecs sur 24 en rafale) : reprises et repli sur le flux historique |
-| Google Play : classements | Rang par pays | US, FR, MA, BE, CH, CA, SN, CI, DZ, TN | Quotidienne | Point d'accès non officiel ; Android domine au Maghreb et en Afrique |
+| App Store : classements (flux RSS v2) | Rang par pays | mêmes pays | Quotidienne | Flux v2 instable (12 échecs sur 24 en rafale) : reprises bornées. Le flux historique et le classement des revenus sont interdits par le robots.txt d'Apple : non utilisés |
+| ~~Google Play : classements~~ | — | — | — | **Désactivé** : le robots.txt de play.google.com interdit le point d'accès utilisé. Conséquence : pas de signal Android gratuit, alors qu'Android domine au Maghreb et en Afrique. Remplacement possible par une API payante (fournisseur de données d'apps) quand le budget s'ouvre |
 | Wikimedia, jeu quotidien par pays | Date d'arrivée d'un concept par pays (identifiant Wikidata, seuil de 90 vues par jour) | US, CA, GB, DE, FR, BE, CH… | Quotidienne, historique depuis 2023 | Meilleur capteur gratuit pour l'Europe et le Canada (Labubu : Canada +17 j, France +159 j). Filtré aux entités suivies (le fichier brut pèse 16 Mo par jour) |
 | Wikipedia, vues par article | Intérêt par langue (en, fr, ar, darija), historique depuis 2015 | par langue | Hebdomadaire | Regrouper les renommages avant tout calcul ; agent utilisateur avec contact obligatoire |
 | Google Trends, comparaison | Courbes US, FR et MA sur une échelle commune, 5 ans d'historique | tous | Hebdomadaire et backtest | Non officiel : interrupteur et repli payant (DataForSEO à 0,0027 $ la requête). Le décalage dépend du seuil : pour Labubu, 6 à 28 semaines selon la définition. Un 0 au Maroc veut dire « sous le seuil » |
 | Google Trends, tendances du jour | Recherches qui montent | US, FR, MA | Toutes les heures | 10 éléments par flux, dominés par le sport et la politique : poids faible |
-| Autocomplétion Google et YouTube | Présence locale d'un terme (« prix maroc », nom d'enseigne), par graphie | par pays et langue | Quotidienne, historisée dès le premier jour | Seul capteur de présence fin au Maroc ; sans historique, il faut le constituer |
+| Autocomplétion Google et YouTube | Présence locale d'un terme (« prix maroc », nom d'enseigne), par graphie | par pays et langue | Quotidienne, historisée dès le premier jour | Seul capteur de présence fin au Maroc ; sans historique, il faut le constituer. L'autocomplétion d'Amazon est exclue (robots.txt : tout interdit) |
 | Google News et flux RSS de médias | Première mention dans la presse d'un pays | US, FR, MA, Afrique | Quotidienne | Listes de titres curées ; l'édition choisie selon le pays du titre. Une première mention trouvée ainsi n'est qu'une date au plus tard |
 | Pinterest Trends | Mots-clés lifestyle montants | US, FR, CA, GB, groupes DACH et Benelux | Hebdomadaire | Indice relatif plafonné à 100 ; point d'accès non contractuel |
 | Bluesky, Mastodon francophone | Signaux précoces | global, filtre de langue | Quotidienne | Poids faible |

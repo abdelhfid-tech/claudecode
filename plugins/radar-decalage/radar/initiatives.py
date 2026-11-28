@@ -6,11 +6,13 @@ Ordre du calcul :
   3. espérance de revenu net sur 24 mois (grille du dossier économie), ajustée par la
      tendance : facteur de fenêtre f = min(1, fenêtre restante / temps de lancement) et
      multiplicateur de probabilité 0,5 + F/100 (hypothèse à calibrer avec le journal des initiatives) ;
-  4. taux horaire implicite (gain net / heures), comparé à votre coût horaire sur une
+  4. la porte multiplie le score entier (pas seulement le revenu) ; le revenu espéré et le
+     taux horaire affichés sont « si le rail fonctionne » ;
+  5. taux horaire implicite (gain net / heures), comparé à votre coût horaire sur une
      échelle fixe. Correction du défaut relevé par les deux études complémentaires :
      avec un ROI ratio, un coût horaire plus élevé rendait moins négatif le score d'une
      initiative perdante. Ici, le score décroît toujours quand le coût horaire augmente ;
-  5. incertitude par Monte-Carlo (p12, revenu, coût horaire, fiscalité et porte de
+  6. incertitude par Monte-Carlo (p12, revenu, coût horaire, fiscalité et porte de
      paiement varient) ; classement sur le P10.
 """
 
@@ -180,17 +182,18 @@ def evaluate(name: str, buyer_zone: str, seller_zone: str, profile: Profile, tre
         if i == 0:  # premier tirage : valeurs centrales
             kp = kr = kw = 1.0
             kt = 0.0
-            kg = ev.gate
+            kg = 1.0
         else:
             kp, kr = rng.lognormvariate(0, 0.4), rng.lognormvariate(0, 0.4)
             kw = rng.uniform(0.5, 1.5)
             kt = rng.uniform(-0.05, 0.05)
-            kg = min(1.0, max(0.0, ev.gate * rng.uniform(0.7, 1.15)))
+            kg = min(1.0, max(0.0, ev.gate * rng.uniform(0.7, 1.15))) / ev.gate if ev.gate else 0.0
         p = min(0.95, a["p12"] * fit * trend_mult * kp)
-        e24 = _e24({**a, "Rs": a["Rs"] * kr}, p, kg, arpu, min(0.9, max(0.0, tax + kt)), retention, window)
+        # Revenu espéré « si le rail fonctionne » ; la porte multiplie ensuite le score entier (plan, module C).
+        e24 = _e24({**a, "Rs": a["Rs"] * kr}, p, 1.0, arpu, min(0.9, max(0.0, tax + kt)), retention, window)
         rate = (e24 - cash) / hours
         sub = _subscores(a, rate, w0 * kw)
-        scores.append(100 * sum(WEIGHTS[k] * sub[k] for k in WEIGHTS))
+        scores.append(ev.gate * kg * 100 * sum(WEIGHTS[k] * sub[k] for k in WEIGHTS))
         rates.append(rate)
         e24s.append(e24)
     ev.score_p10, ev.score_p50 = _q(scores, 0.10), _q(scores, 0.50)

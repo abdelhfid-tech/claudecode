@@ -14,7 +14,7 @@ from __future__ import annotations
 import hashlib
 import json
 from dataclasses import dataclass
-from datetime import date, datetime, timezone
+from datetime import date, datetime, timedelta, timezone
 from pathlib import Path
 from typing import Any, Iterable, Iterator
 
@@ -37,21 +37,56 @@ class LedgerError(ValueError):
 
 @dataclass
 class Ledger:
+    """`clock` donne l'heure courante (remplaçable dans les tests). `allow_backdate` n'est
+    permis que pour un journal de backtest, jamais pour le journal de production."""
     path: Path
+    clock: Any = None
+    allow_backdate: bool = False
+
+    def _now(self) -> datetime:
+        return (self.clock or (lambda: datetime.now(timezone.utc)))()
+
+    def _check_time(self, when: datetime | None, label: str) -> datetime:
+        now = self._now()
+        when = when or now
+        if when.tzinfo is None:
+            raise LedgerError(f"{label} doit porter un fuseau horaire")
+        if not self.allow_backdate:
+            if when > now + timedelta(minutes=5):
+                raise LedgerError(f"{label} dans le futur")
+            if when < now - timedelta(days=1):
+                raise LedgerError(f"{label} antidaté : le journal de production n'accepte que l'heure courante")
+        last = self.last_time()
+        if last is not None and when < last:
+            raise LedgerError(f"{label} antérieur à la dernière ligne du journal")
+        return when
 
     def lines(self) -> Iterator[dict[str, Any]]:
+        """Lignes lisibles ; une ligne illisible est rendue sous la forme {"type": "illisible"}."""
         if not self.path.exists():
             return
-        with self.path.open(encoding="utf-8") as fh:
-            for line in fh:
+        with self.path.open(encoding="utf-8", errors="replace") as fh:
+            for n, line in enumerate(fh, start=1):
                 line = line.strip()
-                if line:
+                if not line:
+                    continue
+                try:
                     yield json.loads(line)
+                except json.JSONDecodeError:
+                    yield {"type": "illisible", "line": n}
 
     def head(self) -> str:
         last = GENESIS
         for rec in self.lines():
-            last = rec["hash"]
+            last = rec.get("hash", last)
+        return last
+
+    def last_time(self) -> datetime | None:
+        last = None
+        for rec in self.lines():
+            stamp = rec.get("created") or rec.get("resolved")
+            if stamp:
+                last = datetime.fromisoformat(stamp)
         return last
 
     def _append(self, body: dict[str, Any]) -> dict[str, Any]:
@@ -78,9 +113,10 @@ class Ledger:
         return out
 
     def predict(self, *, entity: str, zone: str, question: str, event: dict[str, Any], horizon: date,
-                probability: float, created: datetime, model_version: str, friction_class: str | None = None,
-                justification: str = "", interval_days: dict[str, float] | None = None,
-                inputs: dict[str, Any] | None = None) -> dict[str, Any]:
+                probability: float, model_version: str, created: datetime | None = None,
+                friction_class: str | None = None, justification: str = "",
+                interval_days: dict[str, float] | None = None, inputs: dict[str, Any] | None = None) -> dict[str, Any]:
+        created = self._check_time(created, "created")
         if not 0.0 <= probability <= 1.0:
             raise LedgerError("probabilité hors de [0 ; 1]")
         if event.get("type") not in EVENT_TYPES:
@@ -101,11 +137,18 @@ class Ledger:
             raise LedgerError("prédiction déjà enregistrée")
         return self._append(body)
 
-    def resolve(self, prediction_id: str, *, outcome: int | None, resolved: datetime, evidence: dict[str, Any],
-                observed_delay_days: float | None = None) -> dict[str, Any]:
+    def resolve(self, prediction_id: str, *, outcome: int | None, evidence: dict[str, Any],
+                resolved: datetime | None = None, observed_delay_days: float | None = None) -> dict[str, Any]:
         """outcome : 1 arrivé, 0 non arrivé à l'horizon, None annulée (données manquantes)."""
-        if prediction_id not in self.predictions():
+        resolved = self._check_time(resolved, "resolved")
+        preds = self.predictions()
+        if prediction_id not in preds:
             raise LedgerError(f"prédiction inconnue : {prediction_id}")
+        pred = preds[prediction_id]
+        if resolved < datetime.fromisoformat(pred["created"]):
+            raise LedgerError("résolution antérieure à la prédiction")
+        if outcome == 0 and resolved.date() < date.fromisoformat(pred["horizon"]):
+            raise LedgerError("« non arrivé » ne se constate qu'à l'horizon, pas avant")
         if prediction_id in self.resolutions():
             raise LedgerError("prédiction déjà résolue")
         if outcome not in (0, 1, None):
@@ -115,16 +158,32 @@ class Ledger:
                              "status": "annulee" if outcome is None else "resolue", "evidence": evidence,
                              "observed_delay_days": observed_delay_days})
 
-    def verify(self) -> list[str]:
-        """Chaîne intacte ? Renvoie la liste des ruptures (vide si tout va bien)."""
+    def verify(self, anchors_path: Path | None = None) -> list[str]:
+        """Chaîne intacte, et conforme aux ancres publiées ? Renvoie la liste des ruptures."""
         problems, prev = [], GENESIS
+        heads: list[str] = []
         for n, rec in enumerate(self.lines(), start=1):
+            if rec.get("type") == "illisible":
+                problems.append(f"ligne {n} : illisible")
+                heads.append("")
+                continue
+            heads.append(rec.get("hash", ""))
             if rec.get("prev") != prev:
                 problems.append(f"ligne {n} : maillon précédent inattendu")
             expected = chain_hash(rec.get("prev", ""), {k: v for k, v in rec.items() if k != "hash"})
             if rec.get("hash") != expected:
                 problems.append(f"ligne {n} : empreinte invalide (ligne modifiée ?)")
             prev = rec.get("hash", "")
+        if anchors_path is not None and Path(anchors_path).exists():
+            for line in Path(anchors_path).read_text(encoding="utf-8").splitlines():
+                if not line.strip():
+                    continue
+                anchor = json.loads(line)
+                k = int(anchor["lines"])
+                if k > len(heads):
+                    problems.append(f"ancre du {anchor['at']} : le journal a été tronqué ({len(heads)} lignes au lieu d'au moins {k})")
+                elif k and heads[k - 1] != anchor["head"]:
+                    problems.append(f"ancre du {anchor['at']} : la ligne {k} ne correspond plus (journal réécrit)")
         return problems
 
     def anchor(self, anchors_path: Path, when: datetime) -> dict[str, Any]:
@@ -177,8 +236,17 @@ def scoreboard(ledger: Ledger, min_per_class: int = 50) -> dict[str, Any]:
     by_class: dict[str, list[tuple[float, int]]] = {}
     for p, r in resolved:
         by_class.setdefault(p.get("friction_class") or "?", []).append((p["probability"], r["outcome"]))
-    intervals = [interval_score(p["interval_days"]["p10"], p["interval_days"]["p90"], r["observed_delay_days"])
-                 for p, r in resolved if p.get("interval_days") and r.get("observed_delay_days") is not None]
+    intervals = []
+    for p, r in resolved:
+        iv = p.get("interval_days")
+        if not iv:
+            continue
+        observed = r.get("observed_delay_days")
+        if observed is None and r["outcome"] == 0:
+            # Jamais arrivé à l'horizon : le délai est au moins celui de l'horizon (observation censurée).
+            observed = (date.fromisoformat(p["horizon"]) - datetime.fromisoformat(p["created"]).date()).days
+        if observed is not None:
+            intervals.append(interval_score(iv["p10"], iv["p90"], observed))
     return {
         "predictions": len(preds), "resolved": len(resolved),
         "cancelled": sum(1 for r in res.values() if r["outcome"] is None),

@@ -18,10 +18,17 @@ class Context:
     source_config: dict[str, Any]
     now: datetime
     state: dict[str, Any] = field(default_factory=dict)
+    zone_filter: set[str] | None = None   # --zones : restreint toutes les sources, pas seulement les vitrines
+    work_dir: Any = None                  # répertoire de travail temporaire (téléchargements)
 
     @property
     def day(self) -> date:
         return self.now.date()
+
+    def zone_ok(self, code: str) -> bool:
+        if not self.zone_filter:
+            return True
+        return code in self.zone_filter or code.split("-")[0] in self.zone_filter
 
 
 @dataclass

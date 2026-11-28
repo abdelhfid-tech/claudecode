@@ -4,7 +4,8 @@ Loi du délai (en jours après l'arrivée dans le pays d'origine) : mélange de
   - une masse « n'arrive jamais » (p_never),
   - une masse « simultanée » quand le P10 du dossier vaut 0 (une log-normale ne
     sait pas représenter un délai nul),
-  - une log-normale à deux pentes, calée exactement sur la médiane, le P10 et le P90.
+  - une log-normale à deux pentes, calée exactement sur la médiane, le P10 et le P90
+    (ou, quand le P10 vaut 0, calée pour que la loi mélangée ait la médiane et le P90).
 Une arrivée avant le pays d'origine (flux inverse) se traite comme un statut
 (« en avance »), pas comme un délai négatif de cette loi.
 """
@@ -67,10 +68,32 @@ class DelayPrior:
     def simultaneous(self) -> float:
         return SIMULTANEOUS_MASS if self.p10 <= 0 else 0.0
 
+    # Quand P10 > 0 : log-normale à deux pentes calée exactement sur P10, médiane, P90.
+    # Quand P10 = 0 : masse simultanée w0, puis une log-normale calée sur les quantiles
+    # conditionnels (q − w0)/(1 − w0), pour que la loi MÉLANGÉE ait la médiane et le P90 du dossier.
+
+    @property
+    def _p90(self) -> float:
+        return self.p90 if self.p90 > 0 else NO_UPPER_BOUND_DAYS
+
+    @property
+    def _cond_z(self) -> tuple[float, float]:
+        w0 = self.simultaneous
+        return _phi_inv((0.5 - w0) / (1 - w0)), _phi_inv((0.9 - w0) / (1 - w0))
+
+    @property
+    def mu(self) -> float:
+        if self.simultaneous == 0:
+            return math.log(self.median)
+        z50, _ = self._cond_z
+        return math.log(self.median) - z50 * self.sigma_high
+
     @property
     def sigma_high(self) -> float:
-        p90 = self.p90 if self.p90 > 0 else NO_UPPER_BOUND_DAYS
-        return max((math.log(p90) - math.log(self.median)) / Z90, 1e-6)
+        if self.simultaneous == 0:
+            return max((math.log(self._p90) - math.log(self.median)) / Z90, 1e-6)
+        z50, z90 = self._cond_z
+        return max((math.log(self._p90) - math.log(self.median)) / (z90 - z50), 1e-6)
 
     @property
     def sigma_low(self) -> float:
@@ -85,9 +108,11 @@ class DelayPrior:
         w0 = self.simultaneous
         if days == 0:
             base = w0
+        elif w0 > 0:
+            base = w0 + (1 - w0) * _phi((math.log(days) - self.mu) / self.sigma_high)
         else:
             sigma = self.sigma_low if days < self.median else self.sigma_high
-            base = w0 + (1 - w0) * _phi((math.log(days) - math.log(self.median)) / sigma)
+            base = _phi((math.log(days) - self.mu) / sigma)
         return (1 - self.p_never) * base
 
     def quantile(self, q: float) -> float | None:
@@ -103,8 +128,10 @@ class DelayPrior:
             return 0.0
         u = (base - w0) / (1 - w0)
         z = _phi_inv(u)
+        if w0 > 0:
+            return math.exp(self.mu + z * self.sigma_high)
         sigma = self.sigma_low if z < 0 else self.sigma_high
-        return math.exp(math.log(self.median) + z * sigma)
+        return math.exp(self.mu + z * sigma)
 
     def updated_by_sentinel(self, observed_lag: float, prior_lag: float, rho: float = 0.5) -> "DelayPrior":
         """m' = m × exp(ρ [ln(ℓ_obs + 1) − ln(ℓ_prior + 1)]), appliqué aussi aux quantiles.

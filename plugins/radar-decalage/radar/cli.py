@@ -20,25 +20,12 @@ from . import __version__, health, paths, settings
 from .collectors import BY_NAME, REGISTRY
 from .collectors.base import Context
 from .net import HttpClient
-from .storage import RawStore, RunLog, iso
+from .storage import AlreadyRunning, RawStore, RunLog, iso, load_json, run_lock, save_json
 from .watchlist import Watchlist, load_terms
 
 
 def _state_path() -> Path:
     return paths.data_dir() / "state.json"
-
-
-def _load_state() -> dict[str, Any]:
-    p = _state_path()
-    return json.loads(p.read_text(encoding="utf-8")) if p.exists() else {}
-
-
-def _save_state(state: dict[str, Any]) -> None:
-    p = _state_path()
-    p.parent.mkdir(parents=True, exist_ok=True)
-    tmp = p.with_suffix(".tmp")
-    tmp.write_text(json.dumps(state, indent=1, sort_keys=True), encoding="utf-8")
-    tmp.replace(p)
 
 
 def http_delta(before: dict[str, dict[str, int]], after: dict[str, dict[str, int]]) -> dict[str, dict[str, int]]:
@@ -78,51 +65,72 @@ def cmd_collect(args: argparse.Namespace) -> int:
             print(f"sources inconnues : {', '.join(unknown)}", file=sys.stderr)
             return 2
     zones = settings.zones()
-    if args.zones:
-        keep = {z.strip() for z in args.zones.split(",")}
-        zones.items = [z for z in zones.items if z["code"] in keep]
+    zone_filter = {z.strip() for z in args.zones.split(",")} if args.zones else None
+    if zone_filter:
+        zones.items = [z for z in zones.items if z["code"] in zone_filter]
+    data_dir = paths.data_dir()
+    try:
+        with run_lock(data_dir):
+            return _collect(args, sources_cfg, sources_raw, zones, zone_filter, only, data_dir)
+    except AlreadyRunning as exc:
+        print(f"collecte annulée : {exc}", file=sys.stderr)
+        return 3
+
+
+def _collect(args, sources_cfg, sources_raw, zones, zone_filter, only, data_dir) -> int:
     client = HttpClient(host_policies=sources_raw.get("host", {}))
-    store = RawStore(paths.data_dir())
-    runlog = RunLog(paths.data_dir())
+    store = RawStore(data_dir)
+    runlog = RunLog(data_dir)
     watch = Watchlist(paths.workspace() / "watchlist.json")
+    state, warn = load_json(_state_path(), {})
+    for w in (warn, watch.warning):
+        if w:
+            print(f"attention : {w}", file=sys.stderr)
     terms = load_terms()
-    state = _load_state()
     now = datetime.now(timezone.utc)
+    work_dir = data_dir / "tmp"
     exit_code = 0
     for cls in select_sources(sources_cfg, only, args.cadence):
         collector = cls()
         cfg = sources_cfg.get(cls.name, {})
+        snapshot = json.loads(json.dumps(state))
         ctx = Context(client=client, zones=zones, watchlist=watch, terms=terms, source_config=cfg,
-                      now=now, state=state)
+                      now=now, state=state, zone_filter=zone_filter, work_dir=work_dir)
         before = {h: dict(v) for h, v in client.stats.items()}
         t0 = time.monotonic()
         try:
             result = collector.collect(ctx)
         except Exception as exc:  # une source en panne ne doit pas arrêter les autres
+            state.clear()
+            state.update(snapshot)  # l'état n'avance pas pour une source qui a planté
             print(f"[{cls.name}] erreur : {type(exc).__name__}: {exc}", file=sys.stderr)
-            runlog.append({"ts": iso(now), "source": cls.name, "units_total": 1, "units_ok": 0, "records": 0,
-                           "errors": [f"{type(exc).__name__}: {exc}"], "duration_s": round(time.monotonic() - t0, 1)})
+            if not args.dry_run:
+                runlog.append({"ts": iso(now), "source": cls.name, "units_total": 1, "units_ok": 0, "records": 0,
+                               "errors": [f"{type(exc).__name__}: {exc}"],
+                               "duration_s": round(time.monotonic() - t0, 1)})
             exit_code = 1
             continue
-        written = 0 if args.dry_run else store.append(cls.name, result.records, now.date())
         added = 0
-        if cls.name in ("apple_charts", "google_play"):
-            added = watch.observe_ranks(result.records, now.date(), int(cfg.get("watch_max_rank", 100)))
-        http = http_delta(before, client.stats)
-        entry = {"ts": iso(now), "source": cls.name, "units_total": result.units_total, "units_ok": result.units_ok,
-                 "records": len(result.records), "errors": result.errors[:10],
-                 "duration_s": round(time.monotonic() - t0, 1), "http": http}
         if not args.dry_run:
-            runlog.append(entry)
+            store.append(cls.name, result.records, now.date())
+            if cls.name in ("apple_charts", "google_play"):
+                added = watch.observe_ranks(result.records, now.date(), int(cfg.get("watch_max_rank", 100)))
+                watch.save()
+            save_json(_state_path(), state)  # après l'écriture des relevés, jamais avant
+            runlog.append({"ts": iso(now), "source": cls.name, "units_total": result.units_total,
+                           "units_ok": result.units_ok, "records": len(result.records),
+                           "errors": result.errors[:10], "duration_s": round(time.monotonic() - t0, 1),
+                           "http": http_delta(before, client.stats)})
         rate = f"{result.units_ok}/{result.units_total}"
         extra = f", {added} apps ajoutées au suivi" if added else ""
         print(f"[{cls.name}] unités réussies {rate}, {len(result.records)} enregistrements{extra}"
               f"{' (essai, rien écrit)' if args.dry_run else ''}")
         for err in result.errors[:3]:
             print(f"    - {err}")
-    if not args.dry_run:
-        watch.save()
-        _save_state(state)
+    for host, reason in sorted(client.blocked.items()):
+        print(f"hôte coupé pendant l'exécution : {host} ({reason})", file=sys.stderr)
+    for w in store.warnings:
+        print(f"attention : {w}", file=sys.stderr)
     return exit_code
 
 
@@ -207,8 +215,14 @@ def cmd_initiatives(args: argparse.Namespace) -> int:
 def cmd_ledger(args: argparse.Namespace) -> int:
     from .ledger import Ledger, scoreboard
 
-    led = Ledger(paths.workspace() / "ledger" / "predictions.jsonl")
-    problems = led.verify()
+    folder = paths.workspace() / "ledger"
+    led = Ledger(folder / "predictions.jsonl")
+    anchors = folder / "anchors.jsonl"
+    if args.anchor:
+        entry = led.anchor(anchors, datetime.now(timezone.utc))
+        print(f"empreinte de tête à publier hors du dépôt : {entry['head']} ({entry['lines']} lignes, {entry['at']})")
+        return 0
+    problems = led.verify(anchors)
     board = scoreboard(led)
     print(json.dumps({"chain_ok": not problems, "problems": problems, **board}, ensure_ascii=False, indent=1))
     return 1 if problems else 0
@@ -233,7 +247,7 @@ def build_parser() -> argparse.ArgumentParser:
     c = sub.add_parser("collect", help="relever les sources")
     c.add_argument("--only", help="sources à relever, séparées par des virgules")
     c.add_argument("--cadence", choices=["hourly", "daily"], default="daily")
-    c.add_argument("--zones", help="restreindre aux zones données (codes séparés par des virgules)")
+    c.add_argument("--zones", help="restreindre toutes les sources aux zones données (codes séparés par des virgules)")
     c.add_argument("--dry-run", action="store_true", help="interroger sans rien écrire")
     c.set_defaults(func=cmd_collect)
     h = sub.add_parser("health", help="santé des sources")
@@ -257,7 +271,9 @@ def build_parser() -> argparse.ArgumentParser:
     i.add_argument("--regulatory", help="catégories réglementées touchées (identifiants de regulatory.toml)")
     i.add_argument("--json", action="store_true")
     i.set_defaults(func=cmd_initiatives)
-    sub.add_parser("ledger", help="vérifier le journal de prédictions et afficher les scores").set_defaults(func=cmd_ledger)
+    lg = sub.add_parser("ledger", help="vérifier le journal de prédictions (chaîne et ancres) et afficher les scores")
+    lg.add_argument("--anchor", action="store_true", help="noter l'empreinte de tête, à publier hors du dépôt")
+    lg.set_defaults(func=cmd_ledger)
     sub.add_parser("rules", help="contrôler les règles par pays (validité, péremption)").set_defaults(func=cmd_rules)
     return p
 

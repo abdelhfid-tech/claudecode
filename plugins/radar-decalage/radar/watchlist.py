@@ -13,22 +13,19 @@ from pathlib import Path
 from typing import Any, Iterable
 
 from . import settings
+from .storage import load_json, save_json
 
 
 class Watchlist:
     def __init__(self, path: Path):
         self.path = Path(path)
-        self.data: dict[str, Any] = {"version": 1, "apps": {"ios": {}, "android": {}}}
-        if self.path.exists():
-            self.data = json.loads(self.path.read_text(encoding="utf-8"))
-            self.data.setdefault("apps", {}).setdefault("ios", {})
-            self.data["apps"].setdefault("android", {})
+        data, self.warning = load_json(self.path, {"version": 1, "apps": {"ios": {}, "android": {}}})
+        self.data: dict[str, Any] = data if isinstance(data, dict) else {"version": 1, "apps": {}}
+        self.data.setdefault("apps", {}).setdefault("ios", {})
+        self.data["apps"].setdefault("android", {})
 
     def save(self) -> None:
-        self.path.parent.mkdir(parents=True, exist_ok=True)
-        tmp = self.path.with_suffix(".tmp")
-        tmp.write_text(json.dumps(self.data, ensure_ascii=False, indent=1, sort_keys=True), encoding="utf-8")
-        tmp.replace(self.path)
+        save_json(self.path, self.data)
 
     def observe_ranks(self, records: Iterable[dict[str, Any]], day: date, max_rank: int = 100) -> int:
         """Ajoute ou rafraîchit les apps vues dans un classement. Renvoie le nombre d'apps nouvelles."""

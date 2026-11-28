@@ -26,42 +26,29 @@ V2 = {"feed": {"results": [
     {"id": "111", "name": "Alpha", "artistName": "A Inc", "genres": [{"name": "Lifestyle"}]},
     {"id": "222", "name": "Beta", "artistName": "B Inc", "genres": []},
 ]}}
-LEGACY = {"feed": {"entry": [
-    {"id": {"attributes": {"im:id": "333"}}, "im:name": {"label": "Gamma"}, "im:artist": {"label": "C"},
-     "category": {"attributes": {"label": "Finance"}}},
-]}}
 
 
-def test_parse_v2_and_legacy():
+def test_parse_v2():
     assert [r["id"] for r in apple.parse_v2(V2)] == ["111", "222"]
     assert apple.parse_v2(V2)[0]["genres"] == ["Lifestyle"]
-    legacy = apple.parse_legacy(LEGACY)
-    assert legacy == [{"rank": 1, "id": "333", "name": "Gamma", "artist": "C", "genres": ["Finance"]}]
-    single = {"feed": {"entry": LEGACY["feed"]["entry"][0]}}
-    assert apple.parse_legacy(single)[0]["id"] == "333"
 
 
-def test_charts_use_legacy_first_and_v2_as_fallback(now, tmp_path):
+def test_charts_use_only_the_v2_feed_allowed_by_robots(now, tmp_path):
     client = FakeClient({
         "marketingtools.apple.com/api/v2/us": (502, ""),
         "marketingtools.apple.com/api/v2/ma": (200, json.dumps(V2)),
-        "itunes.apple.com/us/rss/topfreeapplications": (200, json.dumps(LEGACY)),
-        "itunes.apple.com/us/rss/topgrossingapplications": (200, json.dumps(LEGACY)),
-        "itunes.apple.com/ma/rss/topfreeapplications": (503, ""),
     })
     res = apple.AppleCharts().collect(ctx_for(client, now, tmp_path=tmp_path))
-    assert res.units_total == 3 and res.units_ok == 3
-    us_free = [r for r in res.records if r["zone"] == "US" and r["meta"]["chart"] == "top-free"]
-    assert us_free[0]["meta"]["feed"] == "legacy" and us_free[0]["key"] == "ios:333"
-    assert not any("api/v2/us" in c for c in client.calls)  # le flux historique a suffi
+    assert res.units_total == 2 and res.units_ok == 1 and res.errors
+    assert not any("itunes.apple.com" in c for c in client.calls)  # flux historique interdit par robots.txt
     ma = [r for r in res.records if r["zone"] == "MA"]
     assert [r["value"] for r in ma] == [1, 2] and ma[0]["meta"]["feed"] == "v2"
 
 
-def test_charts_report_failure_when_both_feeds_fail(now, tmp_path):
-    client = FakeClient({"apple.com": (503, "")})
+def test_charts_report_unreadable_or_empty_feeds(now, tmp_path):
+    client = FakeClient({"api/v2/us": (200, "{not json"), "api/v2/ma": (200, json.dumps({"feed": {"results": []}}))})
     res = apple.AppleCharts().collect(ctx_for(client, now, tmp_path=tmp_path))
-    assert res.units_ok == 0 and res.units_total == 3 and res.errors
+    assert res.units_ok == 0 and res.units_total == 2 and len(res.errors) == 2
 
 
 def test_lookup_marks_missing_apps_unavailable(now, tmp_path):
@@ -78,6 +65,15 @@ def test_lookup_marks_missing_apps_unavailable(now, tmp_path):
     assert res.units_ok == 2
     avail = [r for r in res.records if r["value"] == 1][0]
     assert avail["meta"]["release_date"] == "2020-04-09"
+
+
+def test_lookup_empty_or_changed_response_is_a_failure_not_mass_unavailability(now, tmp_path):
+    watch = Watchlist(tmp_path / "w.json")
+    watch.observe_ranks([{"kind": "rank", "key": "ios:111", "value": 1, "zone": "US", "meta": {}}], now.date())
+    for body in ({"resultCount": 0, "results": []}, {"items": [{"id": 111}]}):
+        client = FakeClient({"lookup": (200, json.dumps(body))})
+        res = apple.AppleLookup().collect(ctx_for(client, now, watch=watch, tmp_path=tmp_path))
+        assert res.records == [] and res.units_ok == 0 and res.units_total == 2
 
 
 # ---------- Google Play ----------
@@ -202,7 +198,7 @@ TSV = "\n".join([
 
 
 def test_wikimedia_select_topn_forced_qids_and_coverage():
-    rows = list(wikimedia.parse_rows(TSV))
+    rows = lambda: wikimedia.parse_rows(TSV.splitlines())
     kept, cov = wikimedia.select(rows, {"FR", "MA"}, {"fr.wikipedia", "en.wikipedia"}, top_n=1, qids={"Q3"})
     keys = sorted((r["code"], r["page_id"]) for r in kept)
     # top 1 par (pays, projet) + toutes les lignes du QID suivi Q3 ; ar.wikipedia hors projets suivis
@@ -218,7 +214,7 @@ def test_wikimedia_follows_origin_top_qids_in_every_country():
         "France\tFR\tfr.wikipedia\t51\tTendance_US_fr\tQ100\t95",   # sous le top local, mais QID suivi
         "Morocco\tMA\tfr.wikipedia\t60\tLocal_MA\tQ300\t120",
     ])
-    kept, _ = wikimedia.select(list(wikimedia.parse_rows(tsv)), {"US", "FR", "MA"}, {"en.wikipedia", "fr.wikipedia"},
+    kept, _ = wikimedia.select(lambda: wikimedia.parse_rows(tsv.splitlines()), {"US", "FR", "MA"}, {"en.wikipedia", "fr.wikipedia"},
                                top_n=1, qids=set(), origins={"US"}, top_n_origin=1)
     keys = sorted((r["code"], r["qid"]) for r in kept)
     assert ("FR", "Q100") in keys  # la tendance US est suivie en France même hors du top français
@@ -227,19 +223,44 @@ def test_wikimedia_follows_origin_top_qids_in_every_country():
     # Q100 n'a aucune ligne au Maroc : sous le seuil de publication, pas forcément absent.
 
 
-def test_wikimedia_collect_skips_unpublished_days_and_tracks_state(now, tmp_path):
+def wiki_ctx(client, now, state, tmp_path):
+    cfg = {"countries": ["FR", "MA"], "projects": ["fr.wikipedia"], "top_n": 5, "origins": []}
+    c = ctx_for(client, now, cfg, state=state, tmp_path=tmp_path)
+    c.work_dir = tmp_path / "work"
+    return c
+
+
+def test_wikimedia_collect_skips_unpublished_days_and_tracks_done_days(now, tmp_path):
     published = (now.date() - timedelta(days=2)).isoformat()
-    client = FakeClient({published: (200, TSV)})
     state = {}
-    cfg = {"countries": ["FR", "MA"], "projects": ["fr.wikipedia"], "top_n": 5}
-    res = wikimedia.WikimediaCountry().collect(ctx_for(client, now, cfg, state=state, tmp_path=tmp_path))
+    res = wikimedia.WikimediaCountry().collect(wiki_ctx(FakeClient({published: (200, TSV)}), now, state, tmp_path))
     assert res.units_ok == res.units_total == 1
-    assert state["wikimedia_last_day"] == published
-    kinds = {r["kind"] for r in res.records}
-    assert kinds == {"coverage", "pageviews"}
+    assert state["wikimedia_done_days"] == [published]
+    assert {r["kind"] for r in res.records} == {"coverage", "pageviews"}
     assert all(r["meta"]["data_day"] == published for r in res.records)
-    # Deuxième passage le même jour : rien à refaire, ce n'est pas une panne.
+    assert not list((tmp_path / "work").glob("*"))  # fichier téléchargé supprimé après lecture
+    # Deuxième passage : le jour fait n'est pas retéléchargé ; rien de publié n'est une panne.
     client2 = FakeClient({})
-    res2 = wikimedia.WikimediaCountry().collect(ctx_for(client2, now, cfg, state=state, tmp_path=tmp_path))
+    res2 = wikimedia.WikimediaCountry().collect(wiki_ctx(client2, now, state, tmp_path))
     assert res2.units_ok == res2.units_total == 1 and res2.records == []
-    assert len(client2.calls) == 1  # seul J-1, postérieur au dernier jour traité, est tenté
+    assert not any(published in c for c in client2.calls)
+
+
+def test_wikimedia_failed_day_is_retried_next_time(now, tmp_path):
+    d1, d2, d3 = (now.date() - timedelta(days=k) for k in (1, 2, 3))
+    state = {}
+    client = FakeClient({d3.isoformat(): (200, TSV), d2.isoformat(): (503, ""), d1.isoformat(): (200, TSV)})
+    res = wikimedia.WikimediaCountry().collect(wiki_ctx(client, now, state, tmp_path))
+    assert res.units_ok == 2 and res.units_total == 3
+    assert d2.isoformat() not in state["wikimedia_done_days"]  # le jour en échec sera repris
+    client2 = FakeClient({d2.isoformat(): (200, TSV)})
+    wikimedia.WikimediaCountry().collect(wiki_ctx(client2, now, state, tmp_path))
+    assert d2.isoformat() in state["wikimedia_done_days"]
+
+
+def test_wikimedia_unreadable_file_is_a_failure(now, tmp_path):
+    day = (now.date() - timedelta(days=1)).isoformat()
+    state = {}
+    client = FakeClient({day: (200, "<html>maintenance</html>\n<p>oops</p>")})
+    res = wikimedia.WikimediaCountry().collect(wiki_ctx(client, now, state, tmp_path))
+    assert res.units_ok == 0 and res.records == [] and day not in state["wikimedia_done_days"]
