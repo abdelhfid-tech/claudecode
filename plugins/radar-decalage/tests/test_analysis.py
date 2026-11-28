@@ -35,19 +35,32 @@ def test_gaps_keep_new_limited_apps_and_drop_national_services(tmp_path):
     put(store, d, "apple_charts", [rank_rec("muse", "US", 3, "Muse"), rank_rec("walmart", "US", 13, "Walmart"),
                                    rank_rec("chatgpt", "US", 6, "ChatGPT"), rank_rec("whatnot", "US", 5, "Whatnot")])
     rows = analysis.gaps(store, d)
-    names = [r["name"] for r in rows]
-    assert names == ["Muse", "Whatnot"]  # Walmart : service national ; ChatGPT : partout
+    assert [r["name"] for r in rows] == ["Muse"]  # Walmart : service national ; ChatGPT : partout ; Whatnot : établie
     muse = rows[0]
-    assert muse["missing_targets"] == ["FR", "MA"] and muse["class"] == "récente, diffusion limitée"
-    whatnot = rows[1]
-    assert whatnot["missing_targets"] == ["MA"] and whatnot["target_status"]["FR"] == "disponible"
+    assert muse["missing_targets"] == ["FR", "MA"] and muse["class"] == "récente"
     table = analysis.render_gaps(rows)
     assert "Muse" in table and "indisponible" in table
+    # Les absences structurelles (apps établies) ne sortent qu'à la demande ; jamais les services nationaux.
+    full = analysis.gaps(store, d, include_established=True)
+    assert [r["name"] for r in full] == ["Muse", "Whatnot"]
+    whatnot = full[1]
+    assert whatnot["missing_targets"] == ["MA"] and whatnot["class"] == "établie"
 
 
 def test_release_date_only_trusted_from_us_storefront():
     assert analysis.age_days({"meta_zone": "MA", "release_date": "2020-04-09"}, date(2026, 11, 28)) is None
     assert analysis.age_days({"meta_zone": "US", "release_date": "2026-09-08"}, date(2026, 11, 28)) == 81
+    assert analysis.age_days({"meta_zone": "DE", "release_date": "2026-09-08"}, date(2026, 11, 28)) == 81
+    assert analysis.age_days({"meta_zone": "SN", "release_date": "2020-04-09"}, date(2026, 11, 28)) is None
+
+
+def test_reward_apps_and_single_storefront_are_flagged(tmp_path):
+    store = RawStore(tmp_path)
+    d = date(2026, 11, 28)
+    put(store, d, "apple_lookup", lookup_recs("rw", {"US"}, "2026-06-01"))
+    put(store, d, "apple_charts", [rank_rec("rw", "US", 1, "Playful Rewards: Earn Cash")])
+    flags = analysis.gaps(store, d)[0]["flags"]
+    assert any("récompenses" in f for f in flags) and any("une seule vitrine" in f for f in flags)
 
 
 def test_arrivals_need_an_observed_absence_first(tmp_path):

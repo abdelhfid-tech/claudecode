@@ -165,7 +165,8 @@ def cmd_gaps(args: argparse.Namespace) -> int:
     from . import analysis
 
     targets = tuple(t.strip() for t in args.targets.split(","))
-    rows = analysis.gaps(RawStore(paths.data_dir()), max_origin_rank=args.max_rank, targets=targets)
+    rows = analysis.gaps(RawStore(paths.data_dir()), max_origin_rank=args.max_rank, targets=targets,
+                         include_established=args.established)
     if args.json:
         print(json.dumps(rows, ensure_ascii=False, indent=1))
     else:
@@ -193,6 +194,7 @@ def build_parser() -> argparse.ArgumentParser:
     g.add_argument("--targets", default="FR,MA")
     g.add_argument("--max-rank", type=int, default=50)
     g.add_argument("--limit", type=int, default=30)
+    g.add_argument("--established", action="store_true", help="ajouter les absences structurelles (apps de plus de 3 ans)")
     g.add_argument("--json", action="store_true")
     g.set_defaults(func=cmd_gaps)
     return p

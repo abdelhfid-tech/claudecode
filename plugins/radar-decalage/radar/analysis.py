@@ -7,6 +7,7 @@ au fil des relevés quotidiens.
 
 from __future__ import annotations
 
+import re
 from collections import defaultdict
 from datetime import date
 from typing import Any, Iterable
@@ -15,6 +16,9 @@ from .storage import RawStore
 
 ORIGIN_ZONES = ("US", "GB", "CA", "AU", "DE", "JP", "MX")
 TARGET_ZONES = ("FR", "BE", "CH", "MA", "DZ", "TN", "SN", "CI")
+# Vitrines ouvertes en 2020 : la date de sortie y est tronquée à l'ouverture (avril 2020).
+TRUNCATED_STOREFRONTS = {"MA", "CI", "SN", "DZ", "TN"}
+REWARD_APP = re.compile(r"reward|cashback|coupon|\bearn\b|points|gagne|récompense|bons? plans?", re.I)
 
 
 def latest_day(store: RawStore, source: str, on_or_before: date | None = None) -> date | None:
@@ -23,16 +27,22 @@ def latest_day(store: RawStore, source: str, on_or_before: date | None = None) -
 
 
 def availability(records: Iterable[dict[str, Any]]) -> tuple[dict[str, dict[str, int]], dict[str, dict[str, Any]]]:
-    """({app: {zone: 0/1}}, {app: méta de la vitrine US si disponible, sinon de la première vitrine})."""
+    """({app: {zone: 0/1}}, {app: méta d'une vitrine à date fiable, la vitrine US de préférence})."""
     avail: dict[str, dict[str, int]] = defaultdict(dict)
     meta: dict[str, dict[str, Any]] = {}
+
+    def priority(zone: str) -> int:
+        return 0 if zone == "US" else (2 if zone in TRUNCATED_STOREFRONTS else 1)
+
     for r in records:
         if r.get("kind") != "availability" or not r["key"].startswith("ios:"):
             continue
         app = r["key"][4:]
         avail[app][r["zone"]] = int(r["value"])
-        if r["value"] and r.get("meta") and (app not in meta or r["zone"] == "US"):
-            meta[app] = {**r["meta"], "meta_zone": r["zone"]}
+        if r["value"] and r.get("meta"):
+            current = meta.get(app)
+            if current is None or priority(r["zone"]) < priority(current["meta_zone"]):
+                meta[app] = {**r["meta"], "meta_zone": r["zone"]}
     return dict(avail), meta
 
 
@@ -56,10 +66,10 @@ def chart_ranks(records: Iterable[dict[str, Any]], chart: str = "top-free",
 def age_days(meta: dict[str, Any], today: date) -> int | None:
     """Ancienneté d'après la date de sortie, seulement si elle vient d'une vitrine fiable.
 
-    La date est tronquée à l'ouverture de la vitrine au Maroc et en Côte d'Ivoire
-    (avril 2020) : on ne l'utilise que si elle vient de la vitrine US.
+    La date est tronquée à l'ouverture des vitrines ouvertes en 2020 (Maroc, Côte
+    d'Ivoire, Sénégal, Algérie, Tunisie) : elle n'est pas utilisée quand elle en vient.
     """
-    if meta.get("meta_zone") != "US" or not meta.get("release_date"):
+    if meta.get("meta_zone") in TRUNCATED_STOREFRONTS or not meta.get("release_date"):
         return None
     try:
         return (today - date.fromisoformat(meta["release_date"])).days
@@ -69,18 +79,28 @@ def age_days(meta: dict[str, Any], today: date) -> int | None:
 
 def classify(zones_available: dict[str, int], n_storefronts: int, age: int | None) -> str:
     n_yes = sum(zones_available.values())
+    if n_yes <= 2 and age is not None and age > 3 * 365:
+        return "nationale établie"  # service local par nature : Walmart, La Poste, opérateurs
+    if age is not None and age > 3 * 365:
+        return "établie"            # plus une tendance émergente : absence structurelle
     if n_storefronts and n_yes >= 0.8 * n_storefronts:
         return "mondiale"
-    if n_yes <= 2 and age is not None and age > 3 * 365:
-        return "nationale établie"  # service local par nature : Walmart, banques, opérateurs
-    if age is not None and age <= 540:
-        return "récente, diffusion limitée"
-    return "diffusion limitée"
+    if age is None:
+        return "âge inconnu"
+    if age <= 540:
+        return "récente"
+    return "intermédiaire"
 
 
 def gaps(store: RawStore, day: date | None = None, max_origin_rank: int = 50,
-         targets: tuple[str, ...] = ("FR", "MA")) -> list[dict[str, Any]]:
-    """Apps fortes dans un marché d'origine, indisponibles dans au moins une cible."""
+         targets: tuple[str, ...] = ("FR", "MA"), include_established: bool = False) -> list[dict[str, Any]]:
+    """Apps fortes dans un marché d'origine, indisponibles dans au moins une cible.
+
+    Par défaut, seules les apps de moins de trois ans (ou d'âge inconnu) sont des
+    tendances candidates ; `include_established` ajoute les absences structurelles
+    (apps établies), utiles pour les clones localisés. Les services nationaux établis
+    ne sont jamais retenus.
+    """
     d_lookup = latest_day(store, "apple_lookup", day)
     d_charts = latest_day(store, "apple_charts", day)
     if not d_lookup or not d_charts:
@@ -100,11 +120,17 @@ def gaps(store: RawStore, day: date | None = None, max_origin_rank: int = 50,
             continue
         age = age_days(meta.get(app, {}), today)
         cls = classify(zone_avail, n_store, age)
-        if cls == "nationale établie":
+        if cls == "nationale établie" or (cls == "établie" and not include_established):
             continue
         best_zone, best_rank = min(origin.items(), key=lambda kv: kv[1])
+        name = info.get(app, {}).get("name") or meta.get(app, {}).get("name", "")
+        flags = []
+        if sum(zone_avail.values()) == 1:
+            flags.append("une seule vitrine : service national ou lancement en cours ?")
+        if REWARD_APP.search(name):
+            flags.append("app à récompenses : rang faussé")
         rows.append({
-            "app": app, "name": info.get(app, {}).get("name") or meta.get(app, {}).get("name", ""),
+            "app": app, "name": name, "flags": flags,
             "genres": info.get(app, {}).get("genres", []),
             "best_origin": f"{best_zone} n°{best_rank}", "best_rank": best_rank,
             "available_in": sorted(z for z, v in zone_avail.items() if v),
@@ -141,14 +167,14 @@ def arrivals(store: RawStore, source: str = "apple_lookup") -> dict[tuple[str, s
 def render_gaps(rows: list[dict[str, Any]], limit: int = 30) -> str:
     if not rows:
         return "Aucun écart : il faut au moins un relevé des classements et de la disponibilité."
-    lines = ["| App | Genre | Meilleur rang d'origine | Disponible | FR | MA | BE | SN | Âge | Classe |",
+    lines = ["| App | Meilleur rang d'origine | Disponible | FR | MA | BE | SN | Âge | Classe | Signalement |",
              "|---|---|---|---|---|---|---|---|---|---|"]
     for r in rows[:limit]:
         st = r["target_status"]
         age = f"{r['age_days'] // 30} mois" if r["age_days"] is not None else "?"
-        lines.append(f"| {r['name'][:38]} | {', '.join(g for g in r['genres'] if g)[:18]} | {r['best_origin']} | "
+        lines.append(f"| {r['name'][:38]} | {r['best_origin']} | "
                      f"{r['available_count']} | {st.get('FR', '?')} | {st.get('MA', '?')} | {st.get('BE', '?')} | "
-                     f"{st.get('SN', '?')} | {age} | {r['class']} |")
+                     f"{st.get('SN', '?')} | {age} | {r['class']} | {'; '.join(r.get('flags', []))} |")
     if len(rows) > limit:
         lines.append(f"\n{len(rows) - limit} autres écarts non affichés.")
     return "\n".join(lines)
