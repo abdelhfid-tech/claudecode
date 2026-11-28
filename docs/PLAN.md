@@ -74,7 +74,9 @@ Toutes ces sources ont été testées depuis le conteneur le 28 novembre 2026.
 | Google Trends, comparaison | Courbes US, FR et MA sur une échelle commune, 5 ans d'historique | tous | Hebdomadaire et backtest | Non officiel : dégradation propre, jamais seul signal |
 | Autocomplétion Google et YouTube | Présence locale d'un terme (« prix maroc », nom d'enseigne) | par pays et langue | Hebdomadaire | Signal de présence, pas de volume ; clé pour le Maroc |
 | Google News et flux RSS de médias | Première mention dans la presse d'un pays | US, FR, MA, Afrique | Quotidienne | Listes de titres marocains curées ; l'édition « Maroc » de Google News n'est pas la presse marocaine |
-| Wikipedia (vues par article) | Intérêt par langue (en, fr, ar, darija) | par langue | Hebdomadaire | Consolider les renommages avant tout calcul |
+| Wikimedia, jeu quotidien par pays | Date d'arrivée d'un concept par pays (identifiant Wikidata, seuil de 90 vues par jour) | US, CA, GB, DE, FR, BE, CH… ; Maghreb et Afrique presque invisibles | Quotidienne, historique depuis 2023 | Meilleur capteur gratuit pour dater une arrivée en Europe et au Canada. Labubu : Canada +17 j, France +159 j, Maroc +187 j |
+| Wikipedia (vues par article) | Intérêt par langue (en, fr, ar, darija), historique depuis 2015 | par langue | Hebdomadaire | Consolider les renommages avant tout calcul |
+| Recherche App Store par pays | Offre locale : nombre d'apps sur un concept dans une vitrine | par pays | Hebdomadaire | Mesure « l'offre absente » face à une attention présente |
 | Pinterest Trends | Mots-clés lifestyle montants | US, FR, CA, GB, groupes DACH et Benelux | Hebdomadaire | Indice relatif, pas un volume |
 | Bluesky, Mastodon francophone | Signaux précoces | global, filtre de langue | Quotidienne | Poids faible |
 | Hacker News, Product Hunt, recherche GitHub, TrustMRR | Tech, IA, revenus vérifiés de petits logiciels | global | Quotidienne | Product Hunt : usage interne seulement |
@@ -95,17 +97,62 @@ Toutes ces sources ont été testées depuis le conteneur le 28 novembre 2026.
 - **Observation typée** : valeur, unité, type de métrique, pays, période, source, niveau de preuve, date. Deux types différents ne sont jamais comparés ni additionnés (audience publicitaire, sondage et recensement donnent des signes opposés pour la même plateforme).
 - **Règles par pays dans des fichiers datés et sourcés** : paiement, change, fiscalité, plateformes disponibles, réglementation par catégorie. Elles ne sont ni dans le code ni dans la mémoire du modèle.
 
-### 5.2 Calculs
+### 5.2 Les quatre modules de calcul
 
-1. **Force du signal aux USA** : persistance sur plusieurs relevés, vitesse et accélération, corroboration par au moins deux familles de sources, et détection du profil « pic puis chute » (Sora). Le bruit est filtré : saisonnalité (Black Friday), apps à récompenses, enseignes purement locales.
-2. **Statut par pays** : absent, intérêt (recherches, presse), disponible, adopté, bloqué, muté (équivalent local) ou en avance (flux inverse). Deux dates sont gardées : celle de l'intérêt et celle de la disponibilité.
-3. **Fenêtre** : la classe de friction donne une fourchette ; le temps écoulé depuis l'émergence US dit si la fenêtre est ouverte, se ferme ou est passée. Le Royaume-Uni et le Canada servent d'alerte précoce (Muse : +10 jours au Canada, +11 semaines au Royaume-Uni).
-4. **Score de cellule pays × niche × lifestyle** : formule de l'axe taxonomie (taille, croissance, retard sur les USA, faisabilité), après passage du filtre de verrous. Les notes a priori ne déclenchent jamais d'initiative : changer une note d'un cran déplace une cellule de 22 rangs au plus.
-5. **Score d'initiative** : grille de l'axe économie (retour attendu ajusté du risque sur 24 mois à partir des taux de base, délai au premier revenu, levier de Claude Code, défendabilité, capital requis), avec un test de sensibilité qui donne la probabilité d'être dans le top 3. Un rail de paiement absent bloque l'initiative.
-6. **Journal de prédictions** : fichier en ajout seul, chaque ligne chaînée par empreinte SHA-256. Une prédiction a un critère d'arrivée fixé à l'avance (« l'app X entre dans le top 100 iOS France avant le 30 juin 2027 »), une probabilité et une date. La résolution est automatique ; le score de Brier est calculé par classe et par pays.
-7. **Backtest avant mise en service** : 15 à 20 cas datés (Labubu, Threads, TikTok Shop en France et en Belgique, Whatnot, Temu, micro-dramas, Skool, Hyrox, padel, BeReal, Muse, Apple Pay…) mesurés sur les courbes Google Trends et Wikipedia, pour recalibrer les fourchettes et afficher dès le départ une erreur honnête, échecs compris.
+Chaque score va de 0 à 100 et porte un intervalle P10-P50-P90. Les portes bloquantes passent avant les sommes pondérées. Les pondérations ci-dessous sont des valeurs de départ, à réestimer par le backtest.
 
-La section 5.2 sera complétée par les formules de l'axe méthode, dont l'agent finit la rédaction (détection de rupture, gestion du démarrage à froid, protocole de backtest).
+**Module A, force de la tendance aux USA.** Le module est aussi appliqué au pays d'origine quand la tendance naît ailleurs.
+
+`F_US = 100 × [0,25 vitesse + 0,15 niveau + 0,15 persistance + 0,30 corroboration + 0,05 accélération + 0,10 rafale]`
+
+Chaque terme est un percentile parmi les entités suivies la même semaine, ce qui permet de noter une entité sans historique. La vitesse est la pente robuste (Theil-Sen) sur 8 périodes. La persistance est le test de Mann-Kendall, valable dès 5 points. La corroboration est la part des familles de sources en hausse ; elle pèse le plus, parce qu'un signal à source unique trompe (Google Flu Trends). Le score est multiplié par 0,6 si une seule famille monte, et plafonné à 40 pour un pic d'un jour.
+
+Stades par règles explicites : signal faible, émergent, accélération, mainstream, déclin. Le déclin couvre le profil « pic puis chute » (Sora).
+
+Le bruit est filtré : saisonnalité (Black Friday), apps à récompenses, enseignes purement locales.
+
+**Module B, écart de diffusion par pays.**
+
+- **Arrivée observée** : premier jour où l'entité dépasse le seuil d'une source au moins 3 jours sur 7.
+- **Deux dates par pays** : l'intérêt (recherches, Wikipedia, presse) et la disponibilité (store, lancement officiel). L'attention précède souvent l'offre : Pokémon Go a atteint la mi-hauteur de son intérêt en français 7 jours avant son lancement en France.
+- **Délai attendu** : loi log-normale par classe de friction et groupe de pays (UE francophone, Québec, Maghreb, Afrique subsaharienne), avec une probabilité « jamais » pour les produits réglementés. Par exemple, une app sans verrou met en médiane 75 jours à arriver en UE francophone et 180 jours au Maghreb.
+- **Mise à jour par pays sentinelle** quand un pays relais décolle : le Royaume-Uni pour les plateformes et le commerce social, l'Allemagne pour la santé et le fitness, l'Espagne pour le sport et les services vers le Maroc, la France pour le Maghreb et l'Afrique, le Golfe pour les apps arabophones.
+- **Indice d'opportunité** : élevé quand l'attention locale est arrivée mais que l'offre locale (apps, vidéos, articles, vendeurs en langue locale) manque encore. C'est la fenêtre d'arbitrage.
+- `G_pays = F_US × (1 − intensité relative) × P(arrivée avant l'horizon) × porte`
+
+**Module C, transposabilité pays × niche × lifestyle.**
+
+`T = 100 × produit des portes × somme pondérée des proximités`
+
+- **Portes** (paiement, plateforme, loi) valant 0, 0,3, 0,6 ou 1. Par exemple, le paiement à la livraison vaut 0,6 au Maroc.
+- **Sept proximités** : culture, administration, géographie, économie, infrastructure, lifestyle, absence de substitut. La culture est mesurée depuis le pays relais le plus proche déjà touché : l'écart culturel Maroc-USA vaut 1,71 contre 0,51 pour Maroc-France.
+- **Pondérations propres à chaque groupe de niches** : la culture compte pour un contenu, l'administration pour un produit réglementé, l'infrastructure pour une pratique physique.
+- **Sans donnée de segment**, le lifestyle reste « inconnu » et l'outil l'affiche comme tel.
+- **Pas de scores Hofstede en V1** : ils ne sont libres que pour la recherche, et un usage commercial demande une licence. La proximité culturelle part alors de la langue et du pays relais, notée avec son niveau de preuve.
+- **Notes a priori** : la formule de l'axe taxonomie sert seulement à amorcer la matrice. Ces notes ne déclenchent jamais d'initiative, car changer une note d'un cran déplace une cellule de 22 rangs au plus.
+
+**Module D, rendement d'une initiative.** Combinaison de deux approches :
+- **La grille de l'axe économie** : retour attendu sur 24 mois à partir des taux de base réels, délai au premier revenu, levier de Claude Code, défendabilité, capital requis.
+- **Le calcul de l'axe méthode** : la probabilité de succès part d'un taux de base de 15 % et s'ajuste selon les modules A à C. S'y ajoutent un facteur de fenêtre (temps de lancement face à la fenêtre restante) et la valeur par utilisateur du pays, variable qui domine au Maghreb.
+
+Le classement se fait sur le P10, donc de façon prudente. Un rail de paiement absent bloque l'initiative. Les contraintes du studio sont appliquées comme filtres : moins de 10 h par semaine, moins de 1 000 €, premier euro visé en moins de 8 semaines.
+
+**Incertitude et abstention.** Chaque entrée porte une confiance tirée de son niveau de preuve. Un tirage Monte-Carlo produit P10, P50 et P90. L'outil répond « données insuffisantes » si la confiance moyenne est inférieure à 0,4 ou si un pays a moins de deux familles de sources. C'est souvent le cas du Maroc, où le jeu Wikimedia par pays ne publie que 74 lignes par jour, contre 10 684 pour la France. On n'y conclut jamais à l'absence d'une tendance sur cette seule source.
+
+### 5.3 Journal de prédictions et backtest
+
+**Journal.** Fichier en ajout seul, chaque ligne chaînée par empreinte SHA-256. Une prédiction est un événement binaire proche, jamais une taille finale (« l'app X entre dans le top 100 iOS France avant le 30 juin 2027 »). Elle porte une probabilité, un horizon et une règle de résolution écrite à l'avance. La résolution est automatique. Les scores sont calculés par classe et par pays :
+- score de Brier, et sa version relative au taux de base ;
+- couverture des intervalles à 80 % ;
+- erreur sur le délai.
+
+**Backtest avant mise en service.** Il porte sur 20 cas datés : Pokémon Go, fidget spinner, Squid Game, Clubhouse, Wordle, ChatGPT, quiet quitting, BeReal, Threads, Skibidi Toilet, chocolat de Dubaï, Labubu, Italian brainrot, Apple Pay, Netflix, TikTok Shop, commerce ultra-rapide, hard seltzer, pickleball, Hyrox. Le jeu compte six cas nés hors des USA et quatre échecs. La procédure :
+1. Prédictions avec les seules données disponibles à la date de détection.
+2. Comparaison à trois références naïves : taux de base, délai constant, table de classes sans sentinelle.
+3. Validation croisée qui exclut un cas à la fois.
+4. Critères d'acceptation fixés avant de lancer : faire mieux que le taux de base à 90 et 365 jours, et une couverture à 80 % comprise entre 0,65 et 0,95. Si la mise à jour par sentinelle ne fait pas mieux que la table seule, elle est retirée.
+
+Le jeu manque de cas propres à l'Afrique subsaharienne et de cas marocains bien datés : ce sera la priorité de la collecte.
 
 ---
 
