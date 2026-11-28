@@ -72,8 +72,8 @@ seul peux trancher, par ordre de priorité.
 - **Le tout premier toucher après le chargement** (relevé par l'essai de Poki, 2.48) : un bouton du jeu ignore un toucher
   dans les 600 premières millisecondes de la page (`tapable`, `v2/src/core/ui.js` : son compteur anti-double part de 0, et
   l'horloge de la page aussi). Avec les polices embarquées, l'écran-titre paraît avant : un toucher très rapide sur
-  « Continuer » ou « Nouvelle partie » ne fait rien, le second marche. Une ligne à corriger (l'agent le fait à la prochaine
-  version, avec sa batterie) ; rien à décider.
+  « Continuer » ou « Nouvelle partie » ne fait rien, le second marche. **Corrigé dans la 2.49** (D242 : le compteur part de
+  −∞) ; rien à décider.
 - **Proposition** : que le jeu, ou le pont de l'application, prévienne le joueur quand l'appareil refuse de garder sa
   partie (cadre d'itch.io sous Safari) ou quand l'application n'a pas pu écrire son fichier : aujourd'hui, rien n'est dit.
   Un texte nouveau, donc à valider et à écrire dans chaque langue.

@@ -240,6 +240,14 @@ cette séquence et si le dernier reçu a **resservi** sans aide (`I.lecons.reemp
 le besoin se représentera. La partie garde `lecons` : `{ seq, recus: { outil: séquence }, re: { outil: fois }, dernier,
 donne }` ; `I.lecons.journal` (non gardé) sert au contrôle.
 
+**Les outils libres (2.49, D242 ; le décideur, 28 novembre : « Toujours jouables »).** Un outil marqué `libre` dans
+`D.OUTILS` — les activités des quartiers (`borne`, `etal`, `ecran`, `manege`) et les virages de Sâlim (`virages`) — est
+toujours donné au premier besoin : `L.proposer` note sa séquence dans `recus`, l'inscrit au journal (`libre: true`) et dit
+sa leçon, sans toucher à `dernier` ni à `donne`. Il n'attend donc aucun réemploi, et ne retarde aucun outil des récits :
+la règle reste entière pour eux. `I.lecons.libre(id)` le dit au moteur (`circuit.js`, `peutApprendre`). Avant la 2.49,
+ces outils passaient par la règle commune : dans les quartiers, où presque rien ne fait avancer la progression, une
+activité ne disait souvent que « Idris a encore la tête ailleurs… », et Sâlim ne venait pas.
+
 | Outil | Le besoin | Le réemploi |
 |---|---|---|
 | `marcher` | le premier objectif du prologue | atteindre un lieu sans y avoir été conduit (`W._mene`) |
@@ -960,9 +968,12 @@ la tribune, et leur chimère, « Le Pari », Idris la voit et la combat. Choix, 
   voitures l'attendent (`TR.gele`) — et se gare sur le trottoir (`TR.garees` : un corps comme celui d'une voiture ; jamais sur
   Idris) ; Sâlim (`salim_q`, le héros `salim` de l'histoire-cadre : il n'est pas un Compagnon, il a son visage) en descend,
   dit deux répliques (Idris une), et propose : « Monter derrière Sâlim ? » — « Monter derrière Sâlim » / « Pas maintenant »
-  (B). Non : il reste, sa moto garée ; on peut lui reparler. Le joueur de test du moteur ne le fait pas venir. Dans une partie
-  neuve, il ne vient que si l'outil des virages pourra être donné en montant (`I.lecons.pret(1)`) : sinon, le besoin se
-  représentera.
+  (B). Non : il reste, sa moto garée ; on peut lui reparler. Le joueur de test du moteur ne le fait pas venir. Jusqu'à la
+  2.48, dans une partie neuve, il ne venait que si l'outil des virages pouvait être donné en montant (`I.lecons.pret(1)`) ;
+  depuis la 2.49 (D242), `virages` est un outil `libre` (`peutApprendre`, `I.lecons.libre`) : il vient au premier passage,
+  quoi que la progression attende d'autre. La page d'aide « Les quartiers de la Cité » et l'objectif du refuge (`C.objectif`,
+  tant que `cite.course.salim` est nul : « Te promener dans les quartiers · Sâlim t'attend au circuit, au sud · la ruelle de
+  l'est mène à la vieille mosquée ») disent où le trouver.
 - **Le tour de moto** (`CI.balade`) : la leçon de l'outil `virages` (« Prendre les virages », `D.OUTILS`), dite par Sâlim au
   moment de monter (`I.lecons.proposer`, après `I.lecons.sequence` : un tour est une séquence, comme un combat ; texte au
   doigt ou au clavier, `coeur.js`, `lecons.virages`). Puis la course, vue de dessus (la scène `CI.scene`) : Sâlim pilote sur
@@ -1107,8 +1118,10 @@ quartiers : manèges etc ». Choix, textes, nombres et dessin de l'agent, valid�
   tasses tournent sur elles-mêmes. Après un tour de manège, la pensée d'Idris (`maneges`). Rien d'autre ne bouge sur la carte.
 - **La progression** (`essayer`) : un outil par activité (`D.OUTILS` : `borne`, `etal`, `ecran`, `manege` — la roue et les deux
   manèges ; l'écran et les manèges sont de simples gestes), dit au premier essai (`I.lecons.proposer`, après `I.lecons.sequence`)
-  dans le fil (`I.lecons.dit`) ; si la progression ne peut pas encore le donner (`I.lecons.pret(1)`), l'activité attend, et une
-  ligne le dit (`attend`). Chaque essai suivant est une séquence, et l'outil y resert (`I.lecons.reemploi`, à la fin de la partie,
+  dans le fil (`I.lecons.dit`). Depuis la 2.49 (D242), ce sont des outils `libre` : la leçon se dit au premier essai, toujours,
+  et l'activité ne l'attend jamais (avant, si la progression ne pouvait pas encore le donner, l'activité attendait et la ligne
+  `attend` le disait — elle n'existe plus). Elles répondent aussi pendant le prologue, qui traverse les quartiers
+  (`ouvertes()` : le refuge, ou la carte `quartiers` du chapitre `p1`). Chaque essai suivant est une séquence, et l'outil y resert (`I.lecons.reemploi`, à la fin de la partie,
   de la visite de l'étal, du tour, ou en s'asseyant). Hors de la progression (une partie d'avant), la leçon se dit une fois
   (`cite.activites.essais`). Payer n'est pas une leçon.
 - **La partie** garde `cite.activites` : `{ borne: { record, parties }, tours: { roue, chaises, tasses }, ecran, achats,
@@ -1662,6 +1675,15 @@ un carton du récit ou une ligne du fil la même chose dans une autre langue —
     jamais dans la partie, dont le format ne change pas.
   - L'incident (`I.onError`) et la sauvegarde refusée passent outre (`{ urgent: true }`) : tout de suite, même pendant
     une lecture. Une annonce née dans la halte s'écrit sous son titre (`S.filHalte`, `#menu header .dit`).
+  - **La légende** (2.49, D242 ; le décideur, 28 novembre : « je veux pouvoir me déplacer même pendant l'affichage des
+    textes »). L'opération de récit `['legende', texte]` pose une narration dans le fil (`{ recit: true }`, avec sa langue
+    secondaire) et rend la main aussitôt : le script continue, Idris marche pendant qu'elle se lit. Une ligne de récit reste
+    `S.lectureRecit` (1,5 s plus 65 ms par signe pesé, et 45 ms par signe de sa seconde langue, entre 4 et 22 s), passe
+    seule (elle ne se joint à aucune autre), n'est jamais retirée par la règle des trois en attente, et reprend après une
+    lecture au moins 3 s. Elle a sa mise en page (`#toasts.recit` : plus large, de deux à trois lignes ; en hauteur, en
+    15 points). Elle sert aux arrivées de 2084 — la rue, les quartiers et la ruelle du prologue, l'arrivée du refuge, la
+    Citadelle —, texte inchangé ; un dialogue, une scène, un carton ou ce qui précède un choix restent bloquants.
+    `longueurs.js` la mesure dans le fil (partie 4).
   - Le combat ne vide plus `#toasts` : le fil s'y tait, et ce qui y attend passe après. La Chaîne, elle, vide la file
     (`S.filVide`) : le récit est quitté. L'écran-titre aussi, depuis la 2.48 (D240), sauf ce qui est urgent (`S.filVide(true)` : un incident du chargement s'y lit jusqu'au bout) : sans quoi une leçon d'un récit quitté
     par « Écran-titre » paraissait dans celui qu'on reprenait par la liste de « Continuer ».

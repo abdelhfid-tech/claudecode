@@ -58,7 +58,8 @@ Le jeu en développement est la **2.x**, dans `v2/` : `v2/src/`, `v2/tools/`, `v
   chaque réplique, narration et ligne du moteur qui passe par la boîte de dialogue, et chaque carton du récit, dans les quatre
   langues — l'arabe vocalisé compris —, sur 390 × 844, 844 × 390, 360 × 640 et 1280 × 720, puis avec l'arabe en langue
   secondaire : chaque page entière dans sa place, aucune police sous dix points au doigt, aucun mot coupé, l'italique
-  fermé, les pages bout à bout redonnent le texte ; un témoin sans pages doit déborder : « LONGUEURS CONFORMES ») : aucun
+  fermé, les pages bout à bout redonnent le texte ; depuis la 2.49, chaque légende dans le fil, entière, hors de la
+  manette ; un témoin sans pages doit déborder : « LONGUEURS CONFORMES ») : aucun
   « REFUS », « BLOQUÉ », « ABSENT », « INACCESSIBLE », « INVISIBLE », « TRAIT », « ÉCART », « RECOUVERT », « DÉBORDE ». Le grand personnage (32 × 48) a ses propres
   gabarits, dessinés d'après les modèles du décideur : `v2/docs/architecture.md`, « Les personnages ». Les textes de la 2.0
   disent « Idris » : on n'y écrit jamais le nom d'un joueur, c'est `v2/src/core/perso.js` qui le pose à l'affichage. Une partie de la 2.0 a
@@ -93,7 +94,11 @@ Le jeu en développement est la **2.x**, dans `v2/` : `v2/src/`, `v2/tools/`, `v
   leçon ne se dit que par `I.lecons.proposer(id, dire)`, quand le besoin se présente ; une commande ou une page que
   l'outil commande ne se montre qu'une fois l'outil reçu. Ajouter un système au jeu, c'est lui donner son outil, son
   besoin et son réemploi — jamais un message de plus au début d'un chapitre. Contrôle : `node v2/tools/progression.js`
-  (« PROGRESSION CONFORME »).
+  (« PROGRESSION CONFORME »). **Exception (2.49, D242 ; le décideur, 28 novembre : « Toujours jouables »)** : les outils
+  marqués `libre` dans `D.OUTILS` — les activités des quartiers (`borne`, `etal`, `ecran`, `manege`) et les virages de
+  Sâlim (`virages`) — se disent au premier essai, toujours, sans devenir le dernier outil reçu ni occuper la séquence
+  (`L.proposer`, `L.libre`) : ils ne retardent aucune leçon des récits et rien ne les attend. Un outil des récits n'est
+  jamais `libre`.
 - Dans la 2.x, les figures — « postures » dans le code et dans l'exigence 24 : `v2/src/core/postures.js`, `D.POSTURES`,
   `D.TEMPERAMENTS`.
 - Dans la 2.x, toutes les sagas sont ouvertes, chacune gardée à sa place (2.48, D240 ; le décideur, 27 novembre : « je veux
@@ -178,6 +183,9 @@ Le jeu en développement est la **2.x**, dans `v2/` : `v2/src/`, `v2/tools/`, `v
   penche dans chaque virage (le joystick ou les flèches vers l'intérieur) : bien penché, la moto garde sa vitesse ; mal
   penché, elle ralentit — sans chute ni blessure. C'est la leçon de l'outil `virages` (« Prendre les virages », `D.OUTILS`),
   dite par Sâlim au moment de monter (`I.lecons.proposer`), jamais au début d'un chapitre ; elle resert à la première course.
+  Depuis la 2.49 (D242), `virages` est un outil `libre` : Sâlim vient au premier passage, quoi que la progression attende
+  d'autre ; la page d'aide « Les quartiers de la Cité » (`U.AIDE`) et l'objectif du refuge, tant qu'il n'est pas venu,
+  disent qu'il attend au circuit, tout au sud des quartiers.
   La moto est inventée et dessinée par le jeu (`gfx.js`, `qmoto`, `G.dessus`) : ni marque, ni logo, ni plaque. **Cinq
   circuits** (`D.CIRCUITS`, `defs.js` : tracé, tours, temps à battre, adversaires, leur vitesse et leur adresse — aucun nombre
   dans un récit ; `D.COURSE` : la voiture, la moto, le podium, le plafond) : on les court seul, en voiture, vue de dessus, sur
@@ -203,7 +211,8 @@ Le jeu en développement est la **2.x**, dans `v2/` : `v2/src/`, `v2/tools/`, `v
   cité miroir sont omniprésents des le début et peuvent faire l'objet de jeux légers quelque soit l'avancement dans la saga » ;
   « il faut qu'idriss puisse "faire les activités" en les payant dans les quartiers : manèges etc » ; choix, textes, nombres et
   dessin de l'agent, validés par le décideur le 22 novembre), **les activités des quartiers** (`v2/src/core/activites.js`), dès que Idris peut y venir, quel
-  que soit le maillon : **la borne** du milieu de la salle de jeux (les autres restent du décor) se joue — *Les lueurs*, un jeu
+  que soit le maillon — depuis la 2.49 (D242 : « Ouvertes dès le prologue »), aussi quand le prologue traverse les quartiers
+  (`AC.ici`) : **la borne** du milieu de la salle de jeux (les autres restent du décor) se joue — *Les lueurs*, un jeu
   d'adresse inventé par le jeu (ni copie, ni nom, ni allure d'un autre) : le joystick ou les flèches mènent une lueur, A lui
   donne un élan, on rassemble les lueurs, on évite les ombres ; une minute au plus (`D.BORNE`), le même tirage à chaque partie
   (seule l'adresse fait le score), le meilleur score gardé ; B met en pause puis offre de quitter (B revient d'un cran).
@@ -222,8 +231,9 @@ Le jeu en développement est la **2.x**, dans `v2/` : `v2/src/`, `v2/tools/`, `v
   qu'on paie ne rapporte rien (ni dirhams, ni lot, ni objet : la borne ne donne que son score) ; aucun hasard ne décide de ce
   qu'on reçoit ; `regles.js` le vérifie (`D.ACTIVITES` et `D.BORNE` n'ont que leurs champs déclarés, chaque prix est un entier
   positif, aucun texte des activités ne porte les mots du pari ni ne nomme l'Agrégor, dans chaque langue). Un outil par
-  activité (`borne`, `etal`, `ecran`, `manege`, `D.OUTILS`), dit au premier essai par `I.lecons.proposer` ; si la progression
-  ne peut pas encore le donner, l'activité attend ; payer n'est pas une leçon. La partie garde `cite.activites` (des comptes ;
+  activité (`borne`, `etal`, `ecran`, `manege`, `D.OUTILS`), dit au premier essai par `I.lecons.proposer` ; depuis la 2.49
+  (D242), ce sont des outils `libre` : l'activité ne l'attend jamais, une activité après l'autre (« Idris a encore la tête
+  ailleurs… » n'existe plus) ; payer n'est pas une leçon. La partie garde `cite.activites` (des comptes ;
   valeur de départ dans `migrer`, le format reste le 2). `v2/docs/architecture.md`, « Les activités des quartiers ».
   Contrôle : `node v2/tools/cite.js` (« CITÉ CONFORME » ; partie 16 ; `… activites` : elle seule).
 - Dans la 2.x (2.28, D218 ; le décideur, 22 novembre : « Dans la 2.28 je veux pouvoir accéder à la "cité vivante" sans devoir
@@ -685,6 +695,11 @@ Le détail est dans `docs/schema-saga.md`. À retenir :
   dans tout chapitre, `_2084_agregor` — le nom de l'Agrégor est reçu — et, dans une rencontre, `_2084_etape_k`) sont posés
   par le moteur à leur ouverture : un récit les lit par `if`, il ne les écrit pas. Une fiche du Recueil qui nomme l'Agrégor
   porte `avant`, son texte tant que le nom n'est pas reçu (D240).
+- Dans la 2.x (2.49, D242), `['legende', texte]` est une narration qui ne retient pas le joueur : le moteur la pose dans le
+  fil des annonces, avec sa langue secondaire, et rend la main aussitôt ; Idris marche pendant qu'elle se lit. Elle sert à
+  l'arrivée dans un lieu, quand rien n'est à suivre ni à répondre ; un dialogue, une scène, un carton, une parole citée ou
+  ce qui précède un choix restent bloquants (`say`, `nar`, `title`, `quote`). Au plus 240 signes (`regles.js`) ; les langues
+  la relèvent comme `nar` (`langue.js`), et `longueurs.js` la mesure dans le fil.
 - L'idole d'un chapitre (le membre de plus haut palier d'un combat lancé avec `boss: true`) porte une
   `racine` prise dans `D.RACINES`. Aucun combattant, aucune compétence, aucun personnage ne porte le nom
   d'Iblîs, d'un démon ou d'un djinn : le validateur le refuse.

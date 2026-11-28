@@ -2723,6 +2723,48 @@ pages privées de son compte.
   du site ISNAD » ; le site se refait avec ses réponses. La fiche des gestes : `plateformes/site/netlify.md`, d'après la
   documentation de Netlify lue le 27 novembre (dépôt par glisser-déposer du dossier, `_headers` et `404.html` pris d'eux-mêmes,
   le domaine, la formule gratuite et son plafond). L'agent ne crée aucun compte et ne dépose rien.
+- [ ] **D242. Les activités et Sâlim toujours là ; une seule page de titre par saga ; marcher pendant les narrations
+  d'arrivée ; trouver Sâlim (version 2.49 ; le décideur, 28 novembre ; deux textes nouveaux de l'agent, à valider).**
+  « Pourquoi j'arrive plus à faire les activités dans les quartiers? Et je ne sais pas comment rencontrer Salim ? Aussi les
+  pages des saga s'affichent 2 fois lors du lancement et enfin je veux pouvoir me déplacer même pendant l'affichage des
+  textes (je reste bloqué à l'entrée du quartier jusqu'à la fin du texte c'est perturbant on dirait un bug) ». Ses choix, à
+  nos quatre questions : les activités et Sâlim, « Toujours jouables » ; les activités, « Ouvertes dès le prologue » (Sâlim,
+  lui, après) ; « Narrations d'arrivée » (non bloquantes ; les dialogues et les scènes ne changent pas) ; pour trouver
+  Sâlim, « Aide + objectif ». Les deux défauts des sagas sont des bogues, corrigés sans question.
+  - **Les activités et Sâlim, hors de « un outil à la fois »** (D217 et D216 les faisaient attendre). La règle (`L.pret`,
+    `lecons.js`) les bloquait : après la première activité, ou tant qu'un outil d'une saga n'avait pas resservi, une
+    activité ne disait que « Idris a encore la tête ailleurs… », et Sâlim ne venait pas, sans un mot. Les outils `borne`,
+    `etal`, `ecran`, `manege` et `virages` sont marqués `libre` (`D.OUTILS`) : leur leçon se dit au premier essai, toujours,
+    sans devenir le dernier outil reçu ni occuper la séquence, et ne retarde aucune leçon des récits ; la règle reste entière
+    pour tout le reste (`L.proposer`, `L.libre`). Le texte « Idris a encore la tête ailleurs… » (`cite.activites.attend`)
+    ne sert plus : il sort du français, de l'arabe, du vocalisé et de l'anglais.
+  - **Les activités pendant le prologue** : depuis D238, le prologue traverse les quartiers, mais les activités n'y
+    répondaient pas (elles exigeaient le refuge). Elles y répondent (`AC.ici`, `AC.touche`) ; rien d'autre ne change dans le
+    prologue (ni chimère, ni la rue, ni Sâlim, ni le circuit, ses objectifs).
+  - **Une seule page de titre** : `U.startSaga` posait la carte du moteur (le nom de la saga) devant une introduction qui
+    commence par la sienne, au même nom — dans les cinq sagas, depuis la 2.0. La carte du moteur ne vient plus que si
+    l'introduction n'en a pas. **Reprise à l'objectif 0** : un récit quitté avant son premier objectif rejouait son
+    ouverture et repartait du début du lieu (la reprise exigeait un objectif passé) ; son point de reprise vaut désormais
+    reprise, à sa place.
+  - **Marcher pendant les narrations d'arrivée** : une opération de récit nouvelle, `['legende', texte]` (`D.OPS`,
+    `docs/schema-saga.md`), pose la phrase dans le fil des annonces, avec sa langue secondaire, et rend la main aussitôt ;
+    Idris marche pendant qu'elle se lit. Une ligne de récit a un temps fait pour la prose (de 4 à 22 secondes selon sa
+    longueur), n'est jamais retirée pour faire place, et a sa mise en page (plus large, en deux ou trois lignes). Douze
+    narrations d'arrivée de 2084 passent de `nar` à `legende`, texte inchangé au signe près : la rue, les quartiers, la
+    ruelle (le prologue, objectifs 1 à 3) ; l'arrivée du refuge par la rue, par la porte, et les deux de la première
+    arrivée ; les trois de la Citadelle. Les dialogues, les cartons et les scènes ne changent pas. Leurs textes arabe,
+    vocalisé et anglais restent (mêmes clés : `langue.js` relève `legende` comme `nar`).
+  - **Trouver Sâlim** (propositions de l'agent, à valider ; en français, en arabe — avec sa forme vocalisée — et en
+    anglais) : une page d'aide, « Les quartiers de la Cité » (`U.AIDE`) : comment y revenir, les activités (qu'on paie avec
+    la bourse d'Idris, où rien ne se gagne, le banc libre devant le grand écran), et Sâlim qui attend au circuit, tout au sud,
+    « une fois la Chaîne ouverte » ; et l'objectif du refuge, tant que Sâlim n'est pas venu : « Te promener dans les
+    quartiers · Sâlim t'attend au circuit, au sud · la ruelle de l'est mène à la vieille mosquée ».
+  - **Le premier toucher** (relevé en 2.48, `plateformes/a-decider.md`) : un bouton touché dans les 600 premières
+    millisecondes de la page n'était pas pris ; il l'est (`tapable`, `ui.js`).
+  `v2/docs/architecture.md` (« La progression », « Les activités des quartiers », « Sâlim et la course », « Le fil des
+  annonces »), `AGENTS.md`. Contrôles : `cite.js` (une activité après l'autre, sans attente ; Sâlim avec un outil d'un récit
+  en suspens), `retours.js` (une carte par nom au lancement des cinq sagas ; une saga quittée à l'objectif 0, rangée puis
+  quittée après quelques pas, reprise à sa place sans ouverture), `progression.js`, puis la batterie.
 - [ ] **Proposition de reformulation de l'exigence 2 (formulation de l'agent, à valider ; l'exigence elle-même n'est pas
   réécrite).** Après D205, on propose d'ajouter à l'exigence 2 : « L'émotion d'un Compagnon passe par l'attitude du corps
   et les bulles ; celle des autres peut aussi passer par le visage. » (aujourd'hui, l'exigence dit : « Le caractère et

@@ -57,7 +57,8 @@ let anomalies = 0; const ok = m => console.log('OK  ' + m), ko = m => { anomalie
     T.maillon = nom => [...document.querySelectorAll('#chain .links .link')].find(b => ((b.querySelector('h3') || {}).textContent || '').indexOf(nom) === 0);
     T.pied = nom => [...document.querySelectorAll('#chain .chainfoot button')].find(b => b.textContent === nom);
     // 2.48 : ce qui se dit (répliques, narrations, fiches données), dans l'ordre — S.run reçoit chaque liste, branches de « if » comprises
-    T.dits = []; { const or = S.run; S.run = function (ops) { (Array.isArray(ops) ? ops : []).forEach(o => { if (Array.isArray(o) && ['say', 'nar', 'legende', 'codex'].includes(o[0])) T.dits.push(o[0] === 'say' ? o[2] : o[0] === 'nar' || o[0] === 'legende' ? o[1] : 'codex:' + o[1]); }); return or.apply(this, arguments); }; }
+    // 2.49 : et les cartes de titre (T.titres), pour qu'un lancement n'en montre pas deux au même nom
+    T.dits = []; T.titres = []; { const or = S.run; S.run = function (ops) { (Array.isArray(ops) ? ops : []).forEach(o => { if (Array.isArray(o) && o[0] === 'title') T.titres.push(String(o[1])); if (Array.isArray(o) && ['say', 'nar', 'legende', 'codex'].includes(o[0])) T.dits.push(o[0] === 'say' ? o[2] : o[0] === 'nar' || o[0] === 'legende' ? o[1] : 'codex:' + o[1]); }); return or.apply(this, arguments); }; }
     T.dernier = () => { const b = [...document.querySelectorAll('#chain .links .link')].find(x => (x.querySelector('.ord') || {}).textContent && /DERNIER MAILLON/.test(x.querySelector('.ord').textContent)); return b ? { scelle: b.disabled && b.classList.contains('locked'), nom: (((b.querySelector('.ep') || {}).childNodes || [])[0] || {}).textContent ? b.querySelector('.ep').childNodes[0].textContent.trim() : '', tl: (b.querySelector('.tl') || {}).textContent || '', el: b } : null; };
     // l'écran-titre : ses boutons ; ceux de la liste des récits en cours portent leur clé (data-reprise)
     T.titre = () => [...document.querySelectorAll('#title .vmenu > button')].map(b => ({ t: (b.childNodes[0] || {}).textContent || '', small: (b.querySelector('small') || {}).textContent || '', k: b.dataset.reprise || '', sel: b.classList.contains('sel') }));
@@ -75,18 +76,47 @@ let anomalies = 0; const ok = m => console.log('OK  ' + m), ko = m => { anomalie
     if (s0.maillons.length !== 5 || fermes.length) ko('ÉCART après le prologue, un maillon n’est pas ouvert : ' + JSON.stringify(fermes.length ? fermes : s0.maillons)); else ok(`après le prologue, les ${s0.maillons.length} maillons sont ouverts (« Maillon à ouvrir », « Ouvrir ▸ ») — « ${s0.entete} »`);
     if (!s0.dernier || !s0.dernier.scelle) ko('ÉCART le dernier maillon n’est pas scellé avant les cinq sagas : ' + JSON.stringify(s0.dernier)); else ok(`le dernier maillon reste scellé (« ${s0.dernier.tl} »)`);
     // chacun s'ouvre par son bouton, du V au I : la saga commence, et celle qu'on quitte pour une autre est rangée à sa place
-    const ouverts = [];
+    const ouverts = [], titresVus = [];
     for (const m of s0.maillons.slice().reverse()) {
       const r = await ev(async id => { const I = window.ISNAD, W = I.world, T = window.__t; document.querySelectorAll('.screen').forEach(e => { e.hidden = true; }); I.input.reset(); await I.ui.showChain();
-        const b = T.maillon(I.sagas[id].name); if (!b || b.disabled) return { id, ferme: true }; I.debug.auto = true; T.toucher(b);
+        const b = T.maillon(I.sagas[id].name); if (!b || b.disabled) return { id, ferme: true }; T.titres = []; I.debug.auto = true; T.toucher(b);
         const v = await T.attendre(() => W.saga && W.saga.id === id && W.ch === I.sagas[id].chapters[0] && T.calme(), 90000); I.debug.auto = false; await T.attendre(() => T.calme(), 20000);
-        return { id, v, ch: W.ch && W.ch.id, ranges: Object.keys(I.save.data.cps || {}).sort() }; }, m.id);
+        return { id, v, ch: W.ch && W.ch.id, nom: I.sagas[id].name, titres: T.titres.slice(), ranges: Object.keys(I.save.data.cps || {}).sort() }; }, m.id);
       if (!r.v) ko(`BLOQUÉ le maillon « ${m.nom} » ne s’ouvre pas par son bouton : ${JSON.stringify(r)}`); else ouverts.push(`${m.nom} (${r.ch})`);
+      // 2.49 (le décideur, 28 novembre : « les pages des saga s'affichent 2 fois lors du lancement ») : une carte par nom
+      if (r.v) { const fois = r.titres.filter(t => t === r.nom).length, doubles = r.titres.filter((t, i) => r.titres.indexOf(t) !== i);
+        if (fois !== 1 || doubles.length) ko(`ÉCART au lancement de « ${m.nom} », une carte de titre en double : ${JSON.stringify(r.titres)}`); else titresVus.push(r.titres.join(' / ')); }
     }
+    if (titresVus.length === 5) ok('au lancement, chaque saga montre son nom une seule fois (' + titresVus.join(' ; ') + ')');
     const s0b = await ev(async () => { const I = window.ISNAD, T = window.__t; document.querySelectorAll('.screen').forEach(e => { e.hidden = true; }); I.input.reset(); I.save.data.cp && window.ISNAD.world.ranger(); await I.ui.showChain(); const d = T.dernier(); return { ranges: Object.keys(I.save.data.cps || {}).sort(), enRoute: T.chaine().maillons.filter(m => /en route/.test(m.etat || '')).length, dernier: d && d.scelle }; });
     await cap('0b-chaine-cinq-en-route');
     if (ouverts.length !== 5 || s0b.ranges.length !== 5 || s0b.enRoute !== 5 || !s0b.dernier) ko('ÉCART les cinq maillons ouverts l’un après l’autre, du V au I : ' + JSON.stringify({ ouverts, s0b }));
-    else ok(`les cinq s’ouvrent par leur bouton, du V au I (${ouverts.join(', ')}) ; chacun est rangé à sa place, « en route » sur la Chaîne ; le dernier maillon reste scellé`); }
+    else ok(`les cinq s’ouvrent par leur bouton, du V au I (${ouverts.join(', ')}) ; chacun est rangé à sa place, « en route » sur la Chaîne ; le dernier maillon reste scellé`);
+
+  // ---------- 0 bis. 2.49 : un récit quitté avant son premier objectif reprend à sa place, sans rejouer son ouverture ----------
+    { const id = s0.maillons[4].id, nom = s0.maillons[4].nom;
+      const reprendre0 = () => ev(async id => { const I = window.ISNAD, W = I.world, T = window.__t; document.querySelectorAll('.screen').forEach(e => { e.hidden = true; }); I.input.reset(); await I.ui.showChain();
+        const sv = I.save.data, c = sv.cp && sv.cp.saga === id ? sv.cp : (sv.cps || {})[id]; if (!c) return { absent: true };
+        const avant = { obj: c.obj, map: c.map, pos: c.pos.slice() }; T.titres = []; const n0 = T.dits.length; T.toucher(T.maillon(I.sagas[id].name));
+        const v = await T.attendre(() => W.saga && W.saga.id === id && T.calme(), 30000); await new Promise(r => setTimeout(r, 400));
+        return { v, avant, apres: { obj: W.objIndex, map: W.map && W.map.id, pos: [Math.round(W.player.x), Math.round(W.player.y)] }, titres: T.titres.slice(), dits: T.dits.slice(n0) }; }, id);
+      const pareil = r => r.v && r.avant.obj === r.apres.obj && r.avant.map === r.apres.map && Math.hypot(r.avant.pos[0] - r.apres.pos[0], r.avant.pos[1] - r.apres.pos[1]) <= 2 && !r.titres.length;
+      // (a) rangé à l'objectif 0, tel qu'il s'est ouvert, puis repris par son bouton
+      const a = await reprendre0();
+      if (a.absent || a.avant.obj !== 0) ko(`ÉCART « ${nom} » n’est pas rangé à l’objectif 0 avant sa reprise : ` + JSON.stringify(a));
+      else if (!pareil(a)) ko(`ÉCART « ${nom} », rangé à l’objectif 0, ne reprend pas à sa place ou rejoue son ouverture : ` + JSON.stringify(a));
+      else ok(`« ${nom} », rangé à l’objectif 0, reprend par son bouton à sa place (${a.apres.map}, ${a.apres.pos.join(' × ')}), sans carte de titre ni introduction`);
+      // (b) Idris fait quelques pas, la halte s'ouvre et se referme (la partie se garde), on revient à la Chaîne, puis on reprend
+      let bouge = null;
+      for (const k of ['ArrowRight', 'ArrowLeft', 'ArrowDown', 'ArrowUp']) { const p0 = await ev(() => [window.ISNAD.world.player.x, window.ISNAD.world.player.y]);
+        await page.keyboard.down(k); await page.waitForTimeout(500); await page.keyboard.up(k); await page.waitForTimeout(250);
+        const p1 = await ev(() => [window.ISNAD.world.player.x, window.ISNAD.world.player.y]); if (Math.hypot(p1[0] - p0[0], p1[1] - p0[1]) > 6) { bouge = k; break; } }
+      await ev(() => { window.__t.halte('—'); }); await page.waitForTimeout(400);
+      const b = await reprendre0();
+      if (!bouge) ko(`BLOQUÉ Idris ne bouge pas dans « ${nom} », à l’objectif 0`);
+      else if (b.absent || b.avant.obj !== 0) ko(`ÉCART « ${nom} » n’est plus à l’objectif 0 après quelques pas : ` + JSON.stringify(b));
+      else if (!pareil(b)) ko(`ÉCART « ${nom} », quitté à l’objectif 0 après quelques pas, ne reprend pas là où Idris s’est arrêté : ` + JSON.stringify(b));
+      else ok(`après quelques pas (${bouge}) et la halte refermée, « ${nom} » reprend là où Idris s’est arrêté (${b.apres.pos.join(' × ')}), toujours sans ouverture`); } }
 
   // ---------- 1. une partie neuve, le prologue derrière soi ; deux sagas entamées, quittées par la halte ----------
   await ev(() => { const I = window.ISNAD; I.save.reset(); const sv = I.save.data; sv.started = true; sv.prologue = true; document.querySelectorAll('.screen').forEach(e => { e.hidden = true; }); I.input.reset(); I.ui.showChain(); });

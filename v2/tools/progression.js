@@ -90,11 +90,21 @@ let anomalies = 0; const ok = m => console.log('OK  ' + m), ko = m => { anomalie
       if (await T.main()) { const e = await T.etat(); if (e.sorte === 'goto') await atteindre(); else if (e.sorte === 'talk') { await p.evaluate(() => { const I = window.ISNAD, W = I.world, n = W.npcs.find(q => q.id === W.cur().talk); W.player.x = n.x - 16; W.player.y = n.y; W.player.dir = 2; }); await p.keyboard.press('Enter'); } }
       await T.entree(); await p.waitForTimeout(170);
     }
-    const e2 = await T.etat(), seqs = e2.journal.map(j => j.seq), uniques = new Set(seqs).size === seqs.length;
+    // (2.49, D242 : un outil `libre` — une activité des quartiers, les virages de Sâlim — n'occupe pas la séquence)
+    const e2 = await T.etat(), seqs = e2.journal.filter(j => !j.libre).map(j => j.seq), uniques = new Set(seqs).size === seqs.length;
     si(await T.visible('#chain'), 'le prologue se joue jusqu’à la Chaîne dans ce mode', 'BLOQUÉ le prologue ne mène pas à la Chaîne en mode d’apprentissage : ' + JSON.stringify(e2));
     { const r = await p.evaluate(() => ({ annonces: window.__dits.filter(x => /^Recueil/.test(x.t)).length, feuillets: window.ISNAD.save.data.codex.filter(k => /^idris\//.test(k)).length }));
       si(r.annonces === 0 && r.feuillets >= 5, `pendant le prologue, ${r.feuillets} feuillets sont entrés au Recueil sans une annonce : « retrouver une source » ne s'enseigne pas encore`, `les annonces du Recueil pendant le prologue : ${JSON.stringify(r)}`); }
-    si(uniques && e2.journal.length >= 3 && e2.journal.map(j => j.id).slice(0, 3).join(',') === 'marcher,parler,frapper', `le prologue : ${e2.journal.length} outils reçus (${e2.journal.map(j => j.id + '@' + j.seq).join(', ')}), jamais deux dans la même séquence`, `le journal des leçons : ${JSON.stringify(e2.journal)}`);
+    si(uniques && e2.journal.length >= 3 && e2.journal.filter(j => !j.libre).map(j => j.id).slice(0, 3).join(',') === 'marcher,parler,frapper', `le prologue : ${e2.journal.length} outils reçus (${e2.journal.map(j => j.id + '@' + j.seq).join(', ')}), jamais deux dans la même séquence`, `le journal des leçons : ${JSON.stringify(e2.journal)}`);
+    // 2.49 (D242 ; le décideur : « Toujours jouables ») : un outil libre (la borne des quartiers) se donne au premier besoin,
+    // une fois, même dans la séquence où un autre vient d'être donné — sans devenir le dernier reçu ni occuper la séquence :
+    // ce qu'attendent les outils des récits n'en change pas (la partie est rendue telle quelle ensuite)
+    { const r = await p.evaluate(() => { const I = window.ISNAD, L = I.lecons, d = I.save.data.lecons, avant = JSON.stringify(d), nj = L.journal.length;
+        const pret0 = L.pret(), pret1 = L.pret(1), dernier = d.dernier, donne = d.donne; let dit = 0;
+        const donne1 = L.proposer('borne', () => { dit++; });
+        const r = { donne1, recu: d.recus.borne === d.seq, libre: (L.journal[nj] || {}).libre === true, dernier: d.dernier === dernier, donne: d.donne === donne, pret: L.pret() === pret0 && L.pret(1) === pret1, unefois: L.proposer('borne', () => { dit++; }) === false && dit === 1, regle: L.libre('borne') && !L.libre('source') && !L.libre('frapper') };
+        I.save.data.lecons = JSON.parse(avant); L.journal.length = nj; return r; });
+      si(Object.values(r).every(v => v === true), `un outil libre (la borne des quartiers) se donne au premier besoin, une seule fois, sans devenir le dernier reçu ni occuper la séquence ; les outils des récits ne sont pas libres`, `l'outil libre : ${JSON.stringify(r)}`); }
     // la halte, au sortir du prologue : seulement ce que l'on a rencontré
     const avantRecit = (await T.etat()).journal.length;
     await p.evaluate(() => { document.querySelector('#chain .links .link').click(); }); await p.waitForTimeout(900); await calme(120);

@@ -21,7 +21,10 @@
      dans l'écran, hors de la boîte, jamais sous dix points, et elle défile si elle ne tient pas (jamais coupée). Chaque
      carton du récit (un titre, une parole citée et sa source, l'ouverture d'un pourparler, une idée noire, un attribut et
      son verset, le secours et son verset) est posé dans #card et tenu par ISNAD.script.tenirCarton : il tient dans l'écran,
-     hors de la manette, sans police sous dix points.
+     hors de la manette, sans police sous dix points. Depuis la 2.49 (D242), chaque légende — une narration d'arrivée
+     (['legende', …]) que le jeu pose dans le fil des annonces pendant qu'on marche — y est posée comme le fait le jeu
+     (ISNAD.script.toast, sa seconde langue comprise) : elle tient dans l'écran, hors de la manette (en hauteur, au-dessus
+     de sa bande ; en largeur, entre ses zones), n'est pas coupée, et sa police n'est pas sous dix points au doigt.
      Par défaut : fr, ar, arv (l'arabe vocalisé), en ; 390x844, 844x390, 360x640 (un petit téléphone), 1280x720 (le
      bureau) ; puis le couple fr-ar (le français, et l'arabe en langue secondaire) sur les quatre écrans.
      Il écrit dans .smoke/longueurs/ : pages.json (tout), et pages-fr-390x844.txt — les textes français qui demandent plus
@@ -103,7 +106,7 @@ const CONTROLE = ({ LIGNES, liste, temoin }) => {
   // le chapitre d'un texte (pour le retrouver), par l'objet où il est rangé
   const ou = new Map();
   /* 1. les textes */
-  const T = [], C = [], vus = new Set(), OPS = { say: v => v.length >= 3 && typeof v[1] === 'string' && typeof v[2] === 'string', nar: v => typeof v[1] === 'string', quote: v => typeof v[1] === 'string' && typeof v[2] === 'string', title: v => typeof v[1] === 'string', parley: v => !!v[1] && Array.isArray(v[1].rounds) };
+  const T = [], C = [], Lg = [], vus = new Set(), OPS = { say: v => v.length >= 3 && typeof v[1] === 'string' && typeof v[2] === 'string', nar: v => typeof v[1] === 'string', legende: v => typeof v[1] === 'string', quote: v => typeof v[1] === 'string' && typeof v[2] === 'string', title: v => typeof v[1] === 'string', parley: v => !!v[1] && Array.isArray(v[1].rounds) };
   const dire = x => { const k = x.kind + '|' + x.nom + '|' + x.t; if (!x.t || vus.has(k)) return; vus.add(k); T.push(x); };
   const parcourir = (v, fn, vu, ch) => { if (!v || typeof v !== 'object' || vu.has(v)) return; vu.add(v);
     if (Array.isArray(v)) { if (typeof v[0] === 'string' && OPS[v[0]] && OPS[v[0]](v)) fn(v, ch); v.forEach(x => parcourir(x, fn, vu, ch)); }
@@ -113,6 +116,7 @@ const CONTROLE = ({ LIGNES, liste, temoin }) => {
     parcourir(s, (op, ch) => { const lieu = s.id + (ch ? '/' + ch : '');
       if (op[0] === 'say') dire({ kind: 'say', nom: nomDe(s, op[1]), t: op[2], src: [op, 2], fic: f, lieu });
       else if (op[0] === 'nar') dire({ kind: 'nar', nom: nar, t: op[1], src: [op, 1], fic: f, lieu });
+      else if (op[0] === 'legende') { if (!Lg.some(y => y.t === op[1])) Lg.push({ t: op[1], src: [op, 1], fic: f, lieu }); }   // (2.49 : dans le fil, partie 4)
       else if (op[0] === 'quote' || op[0] === 'title') C.push({ cls: op[0], html: () => S.carton(op), fic: f, lieu, t: op[1] });
       else if (op[0] === 'parley') { const P = op[1], qui = nomDe(s, P.with);
         C.push({ cls: 'title parley', html: () => S.cartonPourparler(P, true), fic: f, lieu, t: P.title || '' });
@@ -212,6 +216,25 @@ const CONTROLE = ({ LIGNES, liste, temoin }) => {
     if (PADS.some(p => croise(contenu, p))) ici('le carton est sous la manette');
     card.hidden = true; card.className = ''; card.innerHTML = ''; card.style.removeProperty('--k2'); B.classList.remove('en-carton');
   }
+
+  /* 4. les légendes (2.49, D242) : une narration d'arrivée posée dans le fil des annonces, pendant qu'on marche — entière dans
+     l'écran, hors de la manette (en hauteur, au-dessus de sa bande ; en largeur, entre ses zones), sa seconde langue comprise,
+     jamais coupée, jamais sous dix points au doigt */
+  res.legendes = 0; res.legendesMin = 99; res.legendesHaut = 0;
+  const fil = $('#toasts');
+  for (const y of Lg) {
+    S.filVide(); const t2 = L.l2() ? L.second(y.t, y.src[0], y.src[1]) : null, el = S.toast(I.fmt(y.t), { recit: true, l2: t2 });
+    [...fil.children].forEach(e => { e.hidden = e !== el; }); fil.dir = el.dir; fil.classList.add('recit', 'montre'); fil.classList.remove('lecon', 'evite'); if (I.ui.padEvite) I.ui.padEvite();
+    const r = fil.getBoundingClientRect(), polices = [el, ...el.querySelectorAll('*')].filter(e => [...e.childNodes].some(c => c.nodeType === 3 && c.textContent.trim())).map(e => parseFloat(getComputedStyle(e).fontSize)), mini = Math.min(...polices);
+    res.legendes++; res.legendesMin = Math.min(res.legendesMin, mini); res.legendesHaut = Math.max(res.legendesHaut, Math.round(r.height));
+    const ici = q => faute({ fic: y.fic, lieu: y.lieu, t: 'légende : ' + y.t }, q);
+    if (r.top < -0.5 || r.bottom > vh + 0.5 || r.left < -0.5 || r.right > vw + 0.5) ici(`la légende sort de l’écran (${Math.round(r.left)}, ${Math.round(r.top)} → ${Math.round(r.right)}, ${Math.round(r.bottom)})`);
+    if (portrait && r.bottom > padHaut + 0.5) ici(`la légende descend sous la manette (bas ${Math.round(r.bottom)}, manette ${Math.round(padHaut)})`);
+    if (!portrait && PADS.some(p => croise(r, p))) ici('la légende est sous la manette');
+    if (fil.scrollHeight > fil.clientHeight + 2 || el.scrollHeight > el.clientHeight + 2) ici('la légende est coupée');
+    if (tactile && mini < 9.95) ici(`une police de ${mini.toFixed(1)} points`);
+  }
+  S.filVide();
   S.pages = vrai; if (!liste) res.liste = res.liste.length;
   return res;
 };
@@ -229,9 +252,10 @@ async function controle(args) {
     const p = await ouvrirJeu(browser, P.l, { width: w, height: h }, P.l2); await chapitre(p);
     const r = await p.evaluate(CONTROLE, { LIGNES, liste: true }); rapport[nom] = r;
     const libre = r.l2.bulles ? ` ; ${r.l2.bulles} secondes bulles (${r.l2.defile} défilent, ${r.l2.sousManette} gagnent la bande de la manette, qui s'efface le temps de les lire ; police ${r.l2.minPolice2.toFixed(1)} points au moins)` : '';
-    console.log(`${nom} · ${r.textes} textes : ${r.plusieurs} en plusieurs pages (au plus ${r.maxPages}), ${r.resserres} resserrés ; police ${r.minPolice.toFixed(1)} points au moins${libre} · ${r.cartons} cartons, ${r.cartonsResserres} resserrés (police ${r.cartonsMin.toFixed(1)} points au moins) · ${((Date.now() - t0) / 1000).toFixed(0)} s`);
+    console.log(`${nom} · ${r.textes} textes : ${r.plusieurs} en plusieurs pages (au plus ${r.maxPages}), ${r.resserres} resserrés ; police ${r.minPolice.toFixed(1)} points au moins${libre} · ${r.cartons} cartons, ${r.cartonsResserres} resserrés (police ${r.cartonsMin.toFixed(1)} points au moins) · ${r.legendes} légendes dans le fil (${r.legendesHaut} px de haut au plus, police ${r.legendesMin.toFixed(1)} points au moins) · ${((Date.now() - t0) / 1000).toFixed(0)} s`);
     r.fautes.slice(0, 12).forEach(f => console.log(`  DÉBORDE ${nom} · ${f.fic} ${f.lieu} — ${f.quoi} — « ${f.debut}… »`)); if (r.fautes.length > 12) console.log(`  DÉBORDE ${nom} · … et ${r.fautes.length - 12} autres (pages.json)`);
     deborde += r.fautes.length;
+    if (!r.legendes) { deborde++; console.log(`  DÉBORDE ${nom} · aucune légende mesurée dans le fil : le contrôle ne les trouve plus`); }
     if (p.__errs.length) { erreurs += p.__errs.length; console.log('  ERREUR console : ' + [...new Set(p.__errs)].slice(0, 3).join(' | ')); }
     await p.context().close();
   }
