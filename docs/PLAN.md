@@ -1,6 +1,28 @@
 # Radar d'arbitrage de tendances : plan V1
 
-Version 2, soumise à validation le 28 novembre 2026. Rien n'est codé avant votre accord.
+Version 2, validée sur le principe le 28 novembre 2026.
+
+## État d'avancement (28 novembre 2026)
+
+**Fait**
+- Collecteur des 6 sources gratuites (`plugins/radar-decalage/radar/`). Premier passage réel : 100 % des unités réussies, soit 32 classements App Store, 13 Google Play, 162 vérifications de disponibilité sur 27 vitrines, 3 flux Google Trends, 314 autocomplétions et 3 fichiers Wikimedia par pays. Durée : 17 minutes, ramenée à environ 14 en passant au flux historique d'Apple (le flux v2 a dépassé ses délais 11 fois). Volume : environ 730 Ko par jour compressés.
+- Règles datées et sourcées par pays : rails de paiement, plateformes, réglementation, fiscalité et change.
+- Modules A (force du signal), B (délais d'arrivée et sentinelles), C (portes acheteur et vendeur), D (rendement des initiatives, avec la correction du défaut de coût horaire), journal de prédictions chaîné, analyse des écarts de disponibilité.
+- Plugin `radar-decalage` : 6 skills, 3 agents ; `claude plugin validate` passe. 91 tests hors ligne.
+- Études complémentaires sur l'affiliation et sur Amazon KDP, l'impression à la demande et les places de marché : rédigées, contre-vérification en cours.
+
+**Premiers signaux réels**
+- Écarts de disponibilité : Muse (agent IA de Meta) est n°1 au Canada, sortie il y a 2 mois, présente dans 6 vitrines sur 27, absente de France, du Maroc, de Belgique et du Sénégal. PineDrama (micro-dramas de TikTok) est n°16 aux USA, absente de France et du Maroc.
+- Flux inverse : Instants (Instagram) et Whee (TikTok) sont disponibles au Maroc mais pas en France. Pour les nouveaux formats de Meta et de TikTok, le Maroc reçoit avant l'UE.
+- Demande locale sans offre locale au Maroc (autocomplétion) : « tiktok shop maroc », « tiktok shop affiliate maroc », « vinted maroc », alors que ni TikTok Shop ni Vinted n'y sont disponibles.
+- Présence locale établie au Maroc : padel, Hyrox, pilates reformer, matcha, chocolat de Dubaï, gourde Stanley, créatine (villes, « prix maroc »).
+- Le Maroc reste presque invisible dans le jeu Wikimedia par pays : 74 à 98 lignes par jour, contre plus de 10 000 pour la France.
+
+**Constat de la grille sous vos contraintes** : avec 10 h par semaine et 1 000 € au plus, 15 des 19 archétypes de l'étude sont écartés (exploitation au-delà de 25 h par mois, ou construction au-delà de 12 mois). Il faut des versions réduites des services rentables, avec une offre à prix fixe, et les archétypes légers des études complémentaires.
+
+**En attente de vos réponses** : visibilité du dépôt, module de contenu réactif, synthèse hebdomadaire, structure juridique, Basma Home, contact pour l'identifiant envoyé à Wikimedia.
+
+**Prochaines étapes** : planification du pilote de 14 jours (après la décision sur le dépôt), intégration des archétypes complémentaires et des versions réduites, backtest pré-enregistré, tableau de bord, premier brief réel.
 
 Ce plan s'appuie sur une étude préalable en 13 axes : sources de données, plugins Claude Code, méthode de scoring, marchés France, Maroc, Afrique et Québec, taxonomie, tendances US, concurrence, économie des initiatives. Chaque axe a été contre-vérifié par un agent indépendant. Le plan lui-même a été soumis à une critique adverse. La version 2 en tient compte. Les corrections principales sont en annexe A.
 
