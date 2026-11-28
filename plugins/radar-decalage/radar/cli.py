@@ -174,6 +174,58 @@ def cmd_gaps(args: argparse.Namespace) -> int:
     return 0
 
 
+def cmd_initiatives(args: argparse.Namespace) -> int:
+    from . import initiatives
+
+    profile = initiatives.load_profile()
+    trend = None
+    if args.strength is not None:
+        trend = initiatives.TrendInput(strength=args.strength, window_days=args.window,
+                                       regulatory=[r for r in (args.regulatory or "").split(",") if r])
+    ranked = initiatives.rank(args.buyer, args.seller, profile, trend)
+    if args.json:
+        print(json.dumps([e.__dict__ for e in ranked], ensure_ascii=False, indent=1, default=str))
+        return 0
+    if profile.is_default:
+        print("Profil par défaut : remplissez workspace/profile.toml (modèle : config/profile.example.toml).\n")
+    print(f"Acheteur {args.buyer}, vendeur {args.seller}" + (f", tendance F={args.strength}" if trend else ""))
+    print(f"{'archétype':24} {'P10':>5} {'P50':>5} {'€/h P10':>8} {'€/h P50':>8} {'porte':>5}  remarques")
+    for e in ranked:
+        if e.excluded:
+            continue
+        note = "; ".join(e.flags + e.reasons)[:90]
+        print(f"{e.archetype:24} {e.score_p10:>5} {e.score_p50:>5} {e.rate_eur_h['p10']:>8} {e.rate_eur_h['p50']:>8} "
+              f"{e.gate:>5}  {note}")
+    excluded = [e for e in ranked if e.excluded]
+    if excluded:
+        print(f"\nÉcartés ({len(excluded)}) :")
+        for e in excluded:
+            print(f"  {e.archetype:24} {'; '.join(e.reasons)[:110]}")
+    return 0
+
+
+def cmd_ledger(args: argparse.Namespace) -> int:
+    from .ledger import Ledger, scoreboard
+
+    led = Ledger(paths.workspace() / "ledger" / "predictions.jsonl")
+    problems = led.verify()
+    board = scoreboard(led)
+    print(json.dumps({"chain_ok": not problems, "problems": problems, **board}, ensure_ascii=False, indent=1))
+    return 1 if problems else 0
+
+
+def cmd_rules(args: argparse.Namespace) -> int:
+    from . import rules
+
+    problems = rules.check(rules.load_rules(), datetime.now(timezone.utc).date())
+    if not problems:
+        print("Règles valides et à jour.")
+        return 0
+    for p in problems:
+        print(f"- {p}")
+    return 1
+
+
 def build_parser() -> argparse.ArgumentParser:
     p = argparse.ArgumentParser(prog="radar", description="Radar d'arbitrage de tendances (radar-decalage)")
     p.add_argument("--version", action="version", version=__version__)
@@ -197,6 +249,16 @@ def build_parser() -> argparse.ArgumentParser:
     g.add_argument("--established", action="store_true", help="ajouter les absences structurelles (apps de plus de 3 ans)")
     g.add_argument("--json", action="store_true")
     g.set_defaults(func=cmd_gaps)
+    i = sub.add_parser("initiatives", help="classer les archétypes pour une cellule acheteur × vendeur")
+    i.add_argument("--buyer", default="FR")
+    i.add_argument("--seller", default="FR")
+    i.add_argument("--strength", type=float, help="force de la tendance (0-100)")
+    i.add_argument("--window", type=float, help="fenêtre restante en jours")
+    i.add_argument("--regulatory", help="catégories réglementées touchées (identifiants de regulatory.toml)")
+    i.add_argument("--json", action="store_true")
+    i.set_defaults(func=cmd_initiatives)
+    sub.add_parser("ledger", help="vérifier le journal de prédictions et afficher les scores").set_defaults(func=cmd_ledger)
+    sub.add_parser("rules", help="contrôler les règles par pays (validité, péremption)").set_defaults(func=cmd_rules)
     return p
 
 
