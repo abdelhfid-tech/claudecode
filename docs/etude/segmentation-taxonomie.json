@@ -1,0 +1,4139 @@
+{
+ "dossier_path": "/tmp/claude-0/-home-user-claudecode/00e88930-c277-528f-99f2-9b7f935da647/scratchpad/research/segmentation-taxonomie.md",
+ "executive_summary": "La francophonie du radar n'est pas un marché unique : 12 pays, le Québec, 10 sous-zones et 5 zones virtuelles (diasporas, expatriés), avec une langue commune seulement partielle. L'OIF compte 396 M de francophones (2026), mais surtout par changement de méthode ; la part réelle va de 42 % (Algérie) à 63 % (Tunisie) et de 45 % (Sénégal) à 60 % (RDC), et le contenu de masse y est en darija, wolof, lingala ou nouchi. Audience et argent sont dissociés : l'indice de pouvoir d'achat numérique (PIB/hab. USD x détention d'un compte, France = 100) vaut 232 en Suisse, 123 en Belgique, 113 au Canada, mais 4,3 au Maroc et 0,7 en RDC ; la croissance des identités sociales est en Afrique (RDC +32,5 %, Sénégal +18,3 %). Le mix de plateformes change de nature : TikTok touche 93,6 % des adultes algériens et 72 % des marocains contre 45,7 % en France ; au Québec Facebook domine (76 %). La diaspora est le plus gros segment solvable issu du Maghreb et d'Afrique : 4,87 M de personnes d'origine maghrébine et 2,93 M d'origine subsaharienne en France (Insee 2025). Les lifestyles demandés ne sont pas mutuellement exclusifs (étape de vie, génération, travail, origine, valeurs, passions mêlés) ; GWI met en doute Gen Z comme audience distincte. Je propose 7 facettes (une exclusive, l'étape de vie, complétée d'une valeur « adultes 35-59 » pour l'exhaustivité) portant 36 valeurs, 25 niches commerciales plus 2 techniques (environ 130 sous-niches), des identifiants stables (ISO 3166, BCP 47 avec écriture, ary-Arab / ary-Latn) et des amorces de mots-clés FR/EN/AR/darija à valider. Les tailles de segments n'existent guère que pour la France (3,05 M d'étudiants, 3,031 M d'auto-entrepreneurs, 40,2 M de joueurs, 15,3 M de 65+). Priorisation : S = 100 x (T/5)^0,30 x (C/5)^0,20 x (R/5)^0,25 x (F/5)^0,25 après filtre réglementaire, niveau de preuve A/B/C affiché à part. Top 5 a priori : France x nutrition (accompagnement GLP-1) x adultes 35-59 (88), France x IA x solopreneurs (84), Maroc x tourisme x expatriés et visiteurs (84), France x sport pratiqué x jeunes actifs (83), France x relations et amitié x jeunes actifs (80). 12 des 20 cellules sont françaises ; 19/20 restent dans le top 20 sous deux autres pondérations, mais l'écart de scores (71 à 88) rend les notes d'entrée plus décisives que les poids. Limites : budget de recherche web épuisé après ~30 requêtes ; Statistique Canada et Ined inaccessibles ; GWI payant ; TikTok non publié au Sénégal, en Côte d'Ivoire et au Cameroun.",
+ "key_findings": [
+  {
+   "claim": "La part réelle de francophones varie de 42 % à 63 % au Maghreb et de 45 % à 60 % en Afrique subsaharienne ; le total OIF de 396 M (contre 321 M en 2022) reflète surtout l'ajout des élèves de 6 à 9 ans (méthode 2).",
+   "evidence": "OIF 2026 : RDC 60,1 % (67,8 M), Côte d'Ivoire 52,2 % (17,1 M), Maroc 47,8 % (18,7 M), Sénégal 45,2 % (8,56 M), Cameroun 47 %, Algérie 42 %, Tunisie 63 % ; la méthode 2 porte six pays de 106,5 M à 132,5 M.",
+   "sources": [
+    "https://www.francophonie.org/sites/default/files/2026-04/Synthese_rapport_Langue_francaise_dans_le_monde_2026.pdf"
+   ],
+   "as_of": "2026-04 (estimations 2025)",
+   "confidence": "high",
+   "load_bearing": true
+  },
+  {
+   "claim": "L'audience et le pouvoir d'achat sont dans des pays différents : l'IPAN (PIB/hab. USD x taux de compte, France = 100) vaut 232 en Suisse, 123 en Belgique, 113 au Canada, 4,3 au Maroc, 4,4 en Algérie, 3,1 au Sénégal, 0,7 en RDC ; en masse adressable, le Canada pèse 68 % de la France et le Maroc 2,4 %.",
+   "evidence": "Calcul sur PIB/hab. 2025 et Findex 2024 de la Banque mondiale (maj 2026-11-11) et internautes DataReportal (oct. 2026). Indicateur construit par l'auteur.",
+   "sources": [
+    "https://api.worldbank.org/v2/country/MAR/indicator/NY.GDP.PCAP.CD?format=json",
+    "https://api.worldbank.org/v2/country/MAR/indicator/FX.OWN.TOTL.ZS?format=json",
+    "https://datareportal.com/reports/digital-2027-morocco"
+   ],
+   "as_of": "2026-11-11",
+   "confidence": "medium",
+   "load_bearing": true
+  },
+  {
+   "claim": "Le mix de plateformes change de nature selon le pays : TikTok atteint 93,6 % des adultes en Algérie, 79,2 % en Tunisie, 72,0 % au Maroc contre 45,7 % en France et 36,5 % en Suisse ; en RDC TikTok (13,8 M) dépasse Facebook (9,35 M) ; au Québec Facebook est utilisé par 76 % des internautes adultes et TikTok par 25 %.",
+   "evidence": "Audiences publicitaires DataReportal Digital 2027 ; usage déclaré NETendances 2025 (n = 992, sept. 2025).",
+   "sources": [
+    "https://datareportal.com/reports/digital-2027-algeria",
+    "https://datareportal.com/reports/digital-2027-morocco",
+    "https://datareportal.com/reports/digital-2027-france",
+    "https://datareportal.com/reports/digital-2027-democratic-republic-of-the-congo",
+    "https://transformation-numerique.ulaval.ca/wp-content/uploads/2026/02/netendances25-reseaux-sociaux-divertissement.pdf"
+   ],
+   "as_of": "2026-10",
+   "confidence": "high",
+   "load_bearing": true
+  },
+  {
+   "claim": "La croissance des audiences est en Afrique, le revenu en Europe et au Canada : identités sociales sur 12 mois RDC +32,5 %, Sénégal +18,3 %, Algérie +7,2 %, Belgique +6,4 %, France +3,9 %, Maroc +0,7 %, Tunisie -0,8 % ; pénétration d'Internet RDC 19,7 %, Côte d'Ivoire 41,4 %, Cameroun 46,3 %, Sénégal 62,3 %.",
+   "evidence": "DataReportal Digital 2027 (l'éditeur avertit que des corrections de source peuvent expliquer les variations). GSMA : 28 % des Africains connectés à l'Internet mobile, 63 % couverts mais non connectés (2024).",
+   "sources": [
+    "https://datareportal.com/reports/digital-2027-senegal",
+    "https://datareportal.com/reports/digital-2027-democratic-republic-of-the-congo",
+    "https://www.gsma.com/solutions-and-impact/connectivity-for-good/mobile-economy/wp-content/uploads/2026/06/The-Mobile-Economy-Africa-2026.pdf"
+   ],
+   "as_of": "2026-10",
+   "confidence": "medium",
+   "load_bearing": false
+  },
+  {
+   "claim": "Les lifestyles demandés ne forment pas une liste mutuellement exclusive ; il faut un modèle à facettes : une facette exclusive « étape de vie » (ado, étudiants, jeunes actifs, jeunes parents, familles, adultes 35-59, seniors) et six facettes multi-étiquettes (cohorte, habitat, travail, origine, valeurs, passions).",
+   "evidence": "GWI publie en 2026 « Does Gen Z really exist? » et demande si Gen Z est « a distinct audience a brand can build around » ; seuls 41 % des 12-28 ans français s'identifient à la notion de Gen Z (Ipsos, juin 2024). Recouvrements évidents (étudiants inclus dans Gen Z, gamers redondants avec la niche jeu vidéo).",
+   "sources": [
+    "https://www.gwi.com/reports/generation-z",
+    "https://www.ipsos.com/fr-fr/node/1025321"
+   ],
+   "as_of": "2026",
+   "confidence": "medium",
+   "load_bearing": true
+  },
+  {
+   "claim": "La diaspora est le segment solvable le plus important issu du Maghreb et d'Afrique : en France en 2025, 2,333 M d'immigrés nés au Maghreb et 2,538 M de descendants (4,87 M), 1,590 M d'immigrés nés dans le reste de l'Afrique et 1,341 M de descendants (2,93 M).",
+   "evidence": "Insee, données provisoires 2025 (estimations de population et enquête Emploi) ; transferts reçus 2025 : Maroc 13,66 Md$ (7,5 % du PIB), Tunisie 3,88 Md$ (6,7 %) ; Sénégal 10,6 % du PIB (2023).",
+   "sources": [
+    "https://www.insee.fr/fr/statistiques/2381755",
+    "https://www.insee.fr/fr/statistiques/4186761",
+    "https://api.worldbank.org/v2/country/MAR/indicator/BX.TRF.PWKR.CD.DT?format=json"
+   ],
+   "as_of": "2025",
+   "confidence": "high",
+   "load_bearing": true
+  },
+  {
+   "claim": "Les Français du Maroc forment un segment petit mais solvable : plus de 50 000 inscrits au consulat (mai 2026), environ 80 000 présents ; le chiffre de 61 000 retraités circule sans date ni méthode.",
+   "evidence": "Hespress (mai 2026) ; Le360 (mai 2026) ; Bladi (non daté).",
+   "sources": [
+    "https://fr.hespress.com/475547-elections-consulaires-un-scrutin-discret-aux-enjeux-cruciaux-pour-les-francais-du-maroc.html",
+    "https://fr.le360.ma/politique/francais-du-maroc-quand-la-diaspora-est-appelee-a-donner-de-la-voix_FA7JUPRWBZHMDJ7E5UA2S2WIXM/",
+    "https://www.bladi.net/retraite-maroc-francais-saute,119708.html"
+   ],
+   "as_of": "2026-05",
+   "confidence": "medium",
+   "load_bearing": false
+  },
+  {
+   "claim": "Les freelances et solopreneurs sont un segment mesuré et en croissance en France : 3,031 M d'auto-entrepreneurs administrativement actifs fin 2025 (+4,5 %), dont 2,18 M avec un chiffre d'affaires positif, et l'IA générative est utilisée par 48 % de la population (33 % un an plus tôt), 85 % des 18-24 ans, 15 % des 70 ans et plus.",
+   "evidence": "URSSAF via Le Journal des Entreprises (juil. 2026) ; Baromètre du numérique 2026 (CRÉDOC, terrain juin 2025, n = 4 145).",
+   "sources": [
+    "https://www.lejournaldesentreprises.com/article/lurssaf-recense-494-millions-de-travailleurs-independants-fin-2025-2147701",
+    "https://www.credoc.fr/download/pdf/Sou/Sou2026-5064.pdf"
+   ],
+   "as_of": "2026-07",
+   "confidence": "high",
+   "load_bearing": true
+  },
+  {
+   "claim": "Les tailles de segments par étape de vie et passion existent pour la France et presque nulle part ailleurs : 3,05 M d'étudiants (2025-2026), 643 905 naissances (2025), 15,3 M de 65 ans et plus, 40,2 M de joueurs de jeux vidéo (76 % chaque semaine), 61 % des 15 ans et plus sportifs chaque semaine.",
+   "evidence": "SIES (note flash 2026-17), Insee (bilan démographique 2025), DataReportal (structure par âge), SELL (sept. 2025 et avril 2026), ministère des Sports (synthèse INJEP, 15 janv. 2026 ; série par âge incohérente avec la moyenne).",
+   "sources": [
+    "https://www.enseignementsup-recherche.gouv.fr/fr/les-effectifs-etudiants-dans-l-enseignement-superieur-en-2025-2026-103242",
+    "https://www.insee.fr/fr/statistiques/8721209",
+    "https://www.sell.fr/sites/default/files/essentiel-jeu-video/ejv_avril_2026_final_.pdf",
+    "https://www.sports.gouv.fr/sport-en-france-une-progression-continue-depuis-2018-boostee-par-les-jeux-de-paris-2024-10055"
+   ],
+   "as_of": "2026",
+   "confidence": "high",
+   "load_bearing": false
+  },
+  {
+   "claim": "Le lifestyle halal et la mode modeste relèvent d'un arbitrage depuis le Golfe, la Turquie et l'Asie du Sud-Est plutôt que depuis les USA : dépenses des consommateurs musulmans 2 600 Md$ (2024), mode modeste 347 Md$ (444 Md$ en 2029), halal alimentaire 1 530 Md$ ; en France, environ 10 % des 18-59 ans se déclarent musulmans (TeO2), 7 % des 15 ans et plus selon l'Ifop 2025.",
+   "evidence": "DinarStandard SGIE 2025/26 (synthèse) ; résumés TeO2 et Ifop.",
+   "sources": [
+    "https://www.dinarstandard.com/insights/state-of-the-global-islamic-economy-report-2025-26",
+    "https://www.insee.fr/fr/statistiques/6793308"
+   ],
+   "as_of": "2025-2026",
+   "confidence": "medium",
+   "load_bearing": false
+  },
+  {
+   "claim": "L'économie de la débrouille est une cible B2B (commerçants) plus qu'un segment de consommateurs : emploi informel environ 85 % en Afrique (OIT) ; au Maroc 2,03 M d'unités de production informelles (77,3 % urbaines), 33,1 % de l'emploi non agricole, et 84,1 % des acheteurs en ligne paient à la livraison.",
+   "evidence": "HCP via Le360 (enquête 2023-2024) ; OIT et CEA via Le360 Afrique ; dossier Maroc de l'étude pour le paiement à la livraison.",
+   "sources": [
+    "https://fr.le360.ma/economie/secteur-informel-le-diagnostic-detaille-du-hcp_45XPLJ5C4VGBDHERYSMN3CZLPA/",
+    "https://afrique.le360.ma/economie/en-afrique-lemploi-informel-est-le-plus-eleve-au-monde-le-classement-des-sous-regions-et-ce-quil_2H7YLONBJRG6DENCSJOD4JHW4U/"
+   ],
+   "as_of": "2025-2026",
+   "confidence": "medium",
+   "load_bearing": false
+  },
+  {
+   "claim": "Les données de base contiennent des anomalies que l'outil doit détecter : Luxembourg à 44,1 % d'identités sociales pour 99 % d'internautes, Guadeloupe à 398 000 adultes TikTok pour 372 000 habitants, DROM à 52-67 % d'internautes, France à 66,8 M (ONU) contre 69,1 M (Insee, 1er janv. 2026) ; DataReportal attribue désormais l'analyse à « Manochi » et non plus à Kepios.",
+   "evidence": "Pages DataReportal Digital 2027 lues et extraites par script ; Insee bilan démographique 2025.",
+   "sources": [
+    "https://datareportal.com/reports/digital-2027-luxembourg",
+    "https://datareportal.com/reports/digital-2027-guadeloupe",
+    "https://datareportal.com/reports/digital-2027-france",
+    "https://www.insee.fr/fr/statistiques/8721209"
+   ],
+   "as_of": "2026-11",
+   "confidence": "high",
+   "load_bearing": true
+  },
+  {
+   "claim": "La langue du contenu impose un détecteur multi-écritures : au Maroc la darija est parlée par 91,9 % de la population, en graphie arabe et latine (arabizi), le français n'est lu et écrit que par 57,7 % des alphabétisés de 10 ans et plus ; au Sénégal le wolof est véhiculaire ; en RDC le lingala et le swahili dominent ; aucune mesure de la part de chaque écriture n'existe.",
+   "evidence": "Recensement HCP repris par le dossier Maroc ; OIF 2026 ; résumés ANSD. Langues codées en BCP 47 (ary-Arab, ary-Latn, arq, aeb, wo, ln).",
+   "sources": [
+    "https://hcp.ma/file/242663",
+    "https://www.francophonie.org/sites/default/files/2026-04/Synthese_rapport_Langue_francaise_dans_le_monde_2026.pdf"
+   ],
+   "as_of": "2024-2026",
+   "confidence": "medium",
+   "load_bearing": true
+  },
+  {
+   "claim": "Taxonomie MECE proposée : 25 niches commerciales de niveau 1 (dont N25 relations et amitié, ajoutée) plus N26 information et N27 non classé, environ 130 sous-niches ; règle de classement par objet de la dépense principale ; sujets réglementés gardés dans leur niche avec un drapeau ; voyage et tourisme fusionnés en N10 avec deux sous-niches.",
+   "evidence": "Construction de l'auteur à partir de la liste de la commande et des 60 tendances US du dossier tendances.",
+   "sources": [
+    "file:segmentation-taxonomie.md#3"
+   ],
+   "as_of": "2026-11-28",
+   "confidence": "medium",
+   "load_bearing": true
+  },
+  {
+   "claim": "Application a priori de la formule : top 5 France x nutrition (GLP-1) x adultes 35-59 (88,0, preuve A), France x IA x solopreneurs (84,2, A), Maroc x tourisme x expatriés et visiteurs (83,7, B), France x sport pratiqué x jeunes actifs (83,2, B), France x relations et amitié x jeunes actifs (80,0, B) ; 12 cellules sur 20 en France, 5 de niveau A, 10 B, 5 C ; aucune cellule algérienne, tunisienne, camerounaise ou congolaise.",
+   "evidence": "Script seg_score.py sur 33 cellules candidates ; 19/20 restent dans le top 20 avec poids égaux et avec F à 0,40 ; scores de 71,4 à 88,0.",
+   "sources": [
+    "file:scripts/seg_score.py",
+    "file:segmentation-taxonomie.json"
+   ],
+   "as_of": "2026-11-28",
+   "confidence": "medium",
+   "load_bearing": true
+  },
+  {
+   "claim": "Un arbitrage interne à la francophonie est mesurable : TikTok Shop a ouvert en Belgique le 15 juin 2026, 14,5 mois après la France (31 mars 2025) ; la cellule Belgique x entrepreneuriat x vendeurs obtient R = 5 et F = 5.",
+   "evidence": "Repris du dossier France-Europe (annonce TikTok du 28 mai 2026).",
+   "sources": [
+    "https://newsroom.tiktok.com/tiktok-shop-expands-across-europe?lang=en-150"
+   ],
+   "as_of": "2026-06",
+   "confidence": "high",
+   "load_bearing": true
+  },
+  {
+   "claim": "Au Maroc et en Afrique subsaharienne, les plateformes dominantes sont souvent les moins observables ; chaque cellule doit porter une liste de plateformes observables (YouTube par région, RSS, Pinterest Trends dont un groupe incluant le Maroc, classements Apple et Google Play, bibliothèques publicitaires DSA pour l'UE et la Suisse).",
+   "evidence": "Repris du dossier sources sociales (sondes du 28 nov. 2026) ; absence d'audience TikTok publiée au Sénégal, en Côte d'Ivoire et au Cameroun (DataReportal).",
+   "sources": [
+    "https://datareportal.com/reports/digital-2027-senegal",
+    "https://datareportal.com/reports/digital-2027-cote-divoire",
+    "file:sources-social.md"
+   ],
+   "as_of": "2026-11-28",
+   "confidence": "high",
+   "load_bearing": true
+  },
+  {
+   "claim": "Le Québec est un marché francophone solvable et proche des USA : 9,05 M d'habitants (1er juil. 2025), 21,7 % de 65 ans et plus ; 94 % des internautes adultes sur les réseaux sociaux, temps passé en hausse d'environ 51 minutes par jour en un an ; chez les 18-34 ans Instagram 62 %, TikTok 49 % ; 80 % des internautes jouent aux jeux vidéo.",
+   "evidence": "ISQ (résumé) ; NETendances 2025 (PDF lu).",
+   "sources": [
+    "https://statistique.quebec.ca/en/fichier/panorama-des-regions-du-quebec-2026-demographie.pdf",
+    "https://transformation-numerique.ulaval.ca/wp-content/uploads/2026/02/netendances25-reseaux-sociaux-divertissement.pdf"
+   ],
+   "as_of": "2025-09 à 2026-02",
+   "confidence": "high",
+   "load_bearing": false
+  }
+ ],
+ "implications_for_tool": [
+  "Livrer la taxonomie en fichiers de configuration versionnés : zones.yaml, niches.yaml, lifestyles.yaml, keywords/<niche>.<langue>.yaml, regulatory.yaml, cells_priors.yaml ; identifiants jamais réutilisés (deprecated + replaced_by).",
+  "Identifiants : zones en ISO 3166-1/3166-2 (FR, MA, CA-QC, BE-WAL) et codes propres préfixés (CH-ROM, DIA-MAGH@FR, EXP-FR@MA) ; niches N01-N27 et N01.01 ; lifestyles L-<facette>-<valeur> ; langues en BCP 47 avec écriture (ary-Arab, ary-Latn, arq, aeb, wo, ln, fr-CI-x-nouchi).",
+  "Modéliser les lifestyles en 7 facettes (LS exclusive, CO et HA exclusives, WM, OM, VI, PA multi-étiquettes) ; une cellule permanente = zone x niche N1 x une valeur de facette ; les croisements de facettes sont des requêtes, pas des cellules (environ 25 000 cellules théoriques, ne calculer que celles qui ont une mesure ou un a priori).",
+  "Typer chaque chiffre (value, unit, metric_type, as_of, source_url, evidence V/S/R/E/H/M) et interdire la comparaison de types différents ; contrôles de plausibilité automatiques (audience > population, identités < 60 % des internautes dans un pays riche, variation > 30 % sans événement, changement d'analyste).",
+  "Traiter les diasporas comme zones virtuelles (origine, résidence) qui héritent de la langue de l'origine et des rails de paiement, du droit et du pouvoir d'achat de la résidence ; ne jamais les additionner au pays d'origine.",
+  "Calculer pour chaque zone l'IPAN (PIB/hab. USD x taux de compte Findex, France = 100) et la masse adressable (IPAN x internautes) depuis l'API Banque mondiale ; garder la PPA pour les biens locaux.",
+  "Détecteur multilingue : normalisation de l'arabizi (3, 7, 9), alternance français-darija, classifieur par plongements amorcé par les mots-clés de la section 5.5, mots-clés négatifs, validation humaine des listes arabe et darija, variantes algériennes et tunisiennes.",
+  "Associer à chaque cellule des plateformes observables (pas seulement dominantes) à partir de la matrice zone x plateforme du dossier sources ; produire soi-même les mesures manquantes (part des écritures, taille de lifestyle via bios de panels de créateurs, Pinterest Trends par région, classements d'apps par pays).",
+  "Ajouter des arêtes de retard internes à la francophonie (FR->BE, FR->CH, FR->QC, FR->MA, MA->diaspora) en plus de USA->zone ; étalonner avec TikTok Shop Belgique (14,5 mois) ; marquer les flux inverses (Vinted, artisanat marocain) comme opportunités d'export.",
+  "Score de cellule : filtre réglementaire bloquant, puis S = 100 x (T/5)^0,30 x (C/5)^0,20 x (R/5)^0,25 x (F/5)^0,25 ; niveau de preuve A/B/C affiché à part ; seules les cellules A ou B peuvent déclencher une initiative ; les C alimentent la file de validation ; recalcul hebdomadaire, provenance de chaque note conservée (a priori, mesurée, éditée).",
+  "Initialiser cells_priors.yaml avec les 33 cellules notées dans ce dossier, dont le top 20, puis remplacer les notes a priori par des mesures ; prévoir un rétro-test des pondérations sur les cas historiques d'arrivée de tendances.",
+  "Réserver les études payantes (GWI) au calibrage ponctuel des tailles de lifestyles dans 3 ou 4 pays, pas à l'alimentation continue."
+ ],
+ "open_questions": [
+  "Part de la darija écrite en graphie arabe et en graphie latine, par plateforme : aucune mesure trouvée.",
+  "Comment estimer l'audience TikTok au Sénégal, en Côte d'Ivoire et au Cameroun, que les outils publicitaires ne publient pas ?",
+  "Part réelle de francophones au Québec (Statistique Canada inaccessible depuis l'environnement), en Belgique (4,6 M estimés) et en Suisse romande en 2025.",
+  "Séries fiables sur étudiants, naissances, freelances et seniors connectés au Maroc, en Algérie, en Tunisie et en Afrique subsaharienne.",
+  "Faut-il acheter un accès GWI, et sur quels pays (couverture de l'Afrique subsaharienne francophone non vérifiée) ?",
+  "Divergence entre dossiers sur la loi française relative aux réseaux sociaux avant 15 ans (article 1er censuré le 14 août 2026 ou loi promulguée le 24 août 2026) : décide si la valeur L-LS-ADO est ciblable en France.",
+  "Incohérence de la synthèse INJEP 2025 (61 % en moyenne contre 84 %, 75 % et 61 % par âge) : quelle série retenir ?",
+  "Les taux d'internautes de 52 à 67 % dans les DROM publiés par DataReportal sont-ils réels ?",
+  "Faut-il inclure les diasporas maghrébines d'Espagne, d'Italie et des Pays-Bas (contenu en darija, pays non francophones) ?",
+  "Points non recherchés faute de budget de recherche web : mobile money (Wave, Orange Money), soft life francophone, frugalisme, luxe aspirationnel, néo-ruraux après 2023, nomades numériques au Maroc.",
+  "Étalonnage des pondérations du score par rétro-test sur les arrivées de tendances passées (16 cas du dossier France, cas marocains)."
+ ],
+ "data_sources": [
+  {
+   "name": "DataReportal Digital 2027 (pages par pays)",
+   "category": "statistiques d'usage numérique",
+   "access_method": "HTML public, extraction par script",
+   "auth": "aucune",
+   "cost": "gratuit",
+   "geo_coverage": "tous les pays et territoires du périmètre",
+   "signal_type": "population, internautes, identités sociales, audiences publicitaires par plateforme, structure par âge",
+   "limits_and_tos": "une édition par an (novembre) ; audiences publicitaires, pas d'utilisateurs uniques ; TikTok absent pour SN, CI, CM ; anomalies (LU, GP)",
+   "tested_call": "curl https://datareportal.com/reports/digital-2027-morocco",
+   "test_result": "200, 185 Ko, 19 pages extraites par regex le 2026-11-28",
+   "verdict": "core"
+  },
+  {
+   "name": "API Banque mondiale v2",
+   "category": "macroéconomie",
+   "access_method": "API JSON",
+   "auth": "aucune",
+   "cost": "gratuit",
+   "geo_coverage": "mondial (pas de sous-zones)",
+   "signal_type": "PIB/hab. USD et PPA, Findex, transferts",
+   "limits_and_tos": "séries annuelles avec un à deux ans de retard",
+   "tested_call": "https://api.worldbank.org/v2/country/FRA;MAR;SEN/indicator/NY.GDP.PCAP.CD?format=json&mrv=3",
+   "test_result": "200, valeurs 2025 (maj 2026-11-11)",
+   "verdict": "core"
+  },
+  {
+   "name": "Insee (tableaux immigrés, descendants, démographie)",
+   "category": "statistique publique",
+   "access_method": "HTML et fichiers",
+   "auth": "aucune",
+   "cost": "gratuit",
+   "geo_coverage": "France",
+   "signal_type": "tailles de diaspora, naissances, structure par âge",
+   "limits_and_tos": "données 2025 provisoires",
+   "tested_call": "curl https://www.insee.fr/fr/statistiques/2381755",
+   "test_result": "200, tableau 2020-2025 lisible",
+   "verdict": "core"
+  },
+  {
+   "name": "ATN Université Laval, NETendances",
+   "category": "enquête d'usage",
+   "access_method": "PDF public",
+   "auth": "aucune",
+   "cost": "gratuit",
+   "geo_coverage": "Québec",
+   "signal_type": "usage déclaré par plateforme, âge, genre",
+   "limits_and_tos": "annuel, n de l'ordre de 1 000",
+   "tested_call": "PDF netendances25-reseaux-sociaux-divertissement.pdf",
+   "test_result": "200, 6,6 Mo, texte extrait",
+   "verdict": "core"
+  },
+  {
+   "name": "OIF, La langue française dans le monde",
+   "category": "démolinguistique",
+   "access_method": "PDF public",
+   "auth": "aucune",
+   "cost": "gratuit",
+   "geo_coverage": "espace francophone",
+   "signal_type": "nombre et part de francophones par pays",
+   "limits_and_tos": "tous les quatre ans ; rupture de méthode en 2026",
+   "tested_call": "PDF Synthese_rapport_Langue_francaise_dans_le_monde_2026.pdf",
+   "test_result": "200, 38 pages",
+   "verdict": "optional"
+  },
+  {
+   "name": "CRÉDOC, Baromètre du numérique",
+   "category": "enquête d'usage",
+   "access_method": "PDF public",
+   "auth": "aucune",
+   "cost": "gratuit",
+   "geo_coverage": "France",
+   "signal_type": "équipement, IA générative par âge, messageries",
+   "limits_and_tos": "annuel (terrain juin, publication février)",
+   "tested_call": "https://www.credoc.fr/download/pdf/Sou/Sou2026-5064.pdf",
+   "test_result": "200, synthèse de 4 pages",
+   "verdict": "core"
+  },
+  {
+   "name": "GSMA Mobile Economy Africa",
+   "category": "télécoms",
+   "access_method": "PDF public",
+   "auth": "aucune",
+   "cost": "gratuit (rapport), payant (GSMA Intelligence)",
+   "geo_coverage": "Afrique (agrégats)",
+   "signal_type": "connectivité, écart d'usage",
+   "limits_and_tos": "peu de chiffres par pays dans la version gratuite",
+   "tested_call": "PDF The-Mobile-Economy-Africa-2026.pdf",
+   "test_result": "200",
+   "verdict": "optional"
+  },
+  {
+   "name": "SELL, L'Essentiel du jeu vidéo",
+   "category": "étude sectorielle",
+   "access_method": "PDF public",
+   "auth": "aucune",
+   "cost": "gratuit",
+   "geo_coverage": "France",
+   "signal_type": "joueurs, fréquence, profils",
+   "limits_and_tos": "deux éditions par an",
+   "tested_call": "ejv_avril_2026_final_.pdf",
+   "test_result": "200, 6,3 Mo",
+   "verdict": "optional"
+  },
+  {
+   "name": "DinarStandard SGIE",
+   "category": "économie islamique",
+   "access_method": "page de synthèse, rapport complet sur formulaire",
+   "auth": "formulaire",
+   "cost": "gratuit (synthèse)",
+   "geo_coverage": "mondial",
+   "signal_type": "halal, mode modeste, finance islamique",
+   "limits_and_tos": "annuel",
+   "tested_call": "https://www.dinarstandard.com/insights/state-of-the-global-islamic-economy-report-2025-26",
+   "test_result": "200",
+   "verdict": "optional"
+  },
+  {
+   "name": "GWI",
+   "category": "panel de consommateurs",
+   "access_method": "plateforme payante, rapports derrière formulaire",
+   "auth": "compte",
+   "cost": "payant",
+   "geo_coverage": "plus de 50 pays dont FR, BE, CH, CA, MA (via DataReportal) ; Afrique subsaharienne francophone non vérifiée",
+   "signal_type": "intérêts, plateformes, attitudes par segment",
+   "limits_and_tos": "licence commerciale",
+   "tested_call": "https://www.gwi.com/hubfs/Website/PDFs/Does%20Gen%20Z%20really%20exist.pdf",
+   "test_result": "renvoie une page HTML (formulaire), pas le PDF",
+   "verdict": "paid_addon"
+  },
+  {
+   "name": "Statistique Canada (recensement)",
+   "category": "statistique publique",
+   "access_method": "HTML",
+   "auth": "aucune",
+   "cost": "gratuit",
+   "geo_coverage": "Canada, Québec",
+   "signal_type": "langues",
+   "limits_and_tos": "vérification JavaScript bloquante pour un client automatisé",
+   "tested_call": "page Focus sur la géographie, Québec, thème langue",
+   "test_result": "page « Vérification de sécurité », contenu inaccessible",
+   "verdict": "optional"
+  },
+  {
+   "name": "Ined",
+   "category": "démographie",
+   "access_method": "HTML",
+   "auth": "aucune",
+   "cost": "gratuit",
+   "geo_coverage": "France",
+   "signal_type": "religion, populations",
+   "limits_and_tos": "site indisponible pour une durée indéterminée au 2026-11-28",
+   "tested_call": "https://www.ined.fr/fr/tout-savoir-population/focus-sur/religion-en-france",
+   "test_result": "page « Site web indisponible »",
+   "verdict": "avoid"
+  }
+ ],
+ "trends": [
+  {
+   "name": "Soft life contre « lock-in »",
+   "niche": "N06 sante_bien_etre / L-VI-SOFT_LIFE",
+   "description": "Récits concurrents chez les jeunes : vie douce et refus de l'effort affiché contre discipline intense par périodes ; non mesuré en francophonie.",
+   "us_stage": "mainstream",
+   "us_emergence": "2022-2023 (soft life) ; automne 2025 (lock-in)",
+   "francophone_status": "non mesuré ; hypothèse d'écho dans les capitales d'Afrique de l'Ouest",
+   "lifestyle_segments": [
+    "L-VI-SOFT_LIFE",
+    "L-CO-GENZ"
+   ],
+   "monetization": "routines, bien-être, coaching",
+   "evidence": "YPulse : environ 460 000 publications « soft life » (repris du dossier tendances US)",
+   "sources": [
+    "https://www.ypulse.com/newsfeed/2025/12/30/gen-zs-soft-life-trend-is-the-full-day-extension-of-their-viral-soft-mornings/"
+   ]
+  },
+  {
+   "name": "Sous-consommation et défis « no buy »",
+   "niche": "N02 mode / L-VI-FRUGAL, L-VI-ECO",
+   "description": "Contenus valorisant le fait d'acheter moins ; pic en janvier.",
+   "us_stage": "mainstream",
+   "us_emergence": "été 2024",
+   "francophone_status": "Maroc : créateurs TikTok appelant à déconsommer (SNRT) ; France non mesuré",
+   "lifestyle_segments": [
+    "L-VI-FRUGAL",
+    "L-VI-ECO"
+   ],
+   "monetization": "revente, réparation, contenus budget",
+   "evidence": "repris du dossier tendances US",
+   "sources": [
+    "https://www.kunm.org/text/local-news/2026-01-14/overconsumption-core-is-trending-online-what-does-it-mean"
+   ]
+  },
+  {
+   "name": "Nomades numériques (plateau)",
+   "niche": "N10 voyage_tourisme / L-WM-NOMADE",
+   "description": "Segment installé mais qui ne croît presque plus aux USA.",
+   "us_stage": "mainstream",
+   "us_emergence": "2020-2022",
+   "francophone_status": "Maroc destination (Taghazout, Dakhla) sans visa dédié ni comptage",
+   "lifestyle_segments": [
+    "L-WM-NOMADE"
+   ],
+   "monetization": "coliving, workation, services",
+   "evidence": "MBO Partners : 18,5 M de nomades américains en 2025 (+2,2 %)",
+   "sources": [
+    "https://www.mbopartners.com/state-of-independence/digital-nomads/"
+   ]
+  }
+ ],
+ "taxonomie": {
+  "zones": [
+   {
+    "id": "FR",
+    "type": "pays",
+    "content_languages": [
+     "fr-FR"
+    ],
+    "francophones": "quasi-totalite",
+    "metrics": {
+     "population": "66.8 million",
+     "internautes": "63.9 million (95.7 %)",
+     "identites_sociales": "53.5 million (80.1 %)",
+     "identites_18plus": "47.5 million 88.5",
+     "evolution_identites_12m": "increased 2.0 million (+3.9 percent)",
+     "age_median": "42.5",
+     "connexions_mobiles": "77.4 million",
+     "tiktok_18plus": "24.5 million",
+     "tiktok_pct_adultes": "45.7",
+     "youtube": "53.5 million",
+     "facebook": "30.4 million",
+     "instagram": "27.4 million",
+     "linkedin_membres": "43.0 million",
+     "snapchat": "31.0 million",
+     "pib_hab_usd_2025": 48985.73,
+     "pib_hab_ppa_2025": 63975.35,
+     "compte_findex_2024": 99.19,
+     "transferts_pct_pib": 1.32,
+     "ipan_fr100": 100.0,
+     "masse_adressable_fr100": 100.0
+    },
+    "sources": [
+     "https://datareportal.com/reports/digital-2027-france",
+     "https://api.worldbank.org/v2/country/FRA/indicator/NY.GDP.PCAP.CD?format=json",
+     "https://www.francophonie.org/sites/default/files/2026-04/Synthese_rapport_Langue_francaise_dans_le_monde_2026.pdf"
+    ],
+    "as_of": "2026-10 (DataReportal) ; 2025 (PIB) ; 2024 (Findex)",
+    "evidence": "V"
+   },
+   {
+    "id": "BE",
+    "type": "pays",
+    "content_languages": [
+     "fr-BE",
+     "nl-BE"
+    ],
+    "francophones": "~4,6 M (~40 %) [R,E]",
+    "metrics": {
+     "population": "11.8 million",
+     "internautes": "11.4 million (96.9 %)",
+     "identites_sociales": "9.66 million (82.0 %)",
+     "identites_18plus": "8.57 million 89.8",
+     "evolution_identites_12m": "increased 580 thousand (+6.4 percent)",
+     "age_median": "42.1",
+     "connexions_mobiles": "12.0 million",
+     "tiktok_18plus": "4.37 million",
+     "tiktok_pct_adultes": "45.8",
+     "youtube": "9.66 million",
+     "facebook": "6.10 million",
+     "instagram": "5.00 million",
+     "linkedin_membres": "6.90 million",
+     "snapchat": "4.39 million",
+     "pib_hab_usd_2025": 60750.27,
+     "pib_hab_ppa_2025": 74675.61,
+     "compte_findex_2024": 98.24,
+     "transferts_pct_pib": 2.25,
+     "ipan_fr100": 122.8,
+     "masse_adressable_fr100": 21.9
+    },
+    "sources": [
+     "https://datareportal.com/reports/digital-2027-belgium",
+     "https://api.worldbank.org/v2/country/BEL/indicator/NY.GDP.PCAP.CD?format=json",
+     "https://www.francophonie.org/sites/default/files/2026-04/Synthese_rapport_Langue_francaise_dans_le_monde_2026.pdf"
+    ],
+    "as_of": "2026-10 (DataReportal) ; 2025 (PIB) ; 2024 (Findex)",
+    "evidence": "V"
+   },
+   {
+    "id": "CH",
+    "type": "pays",
+    "content_languages": [
+     "fr-CH",
+     "de-CH",
+     "it-CH"
+    ],
+    "francophones": "~2,0 M Suisse romande (22,8 %) [R]",
+    "metrics": {
+     "population": "9.02 million",
+     "internautes": "8.93 million (99.0 %)",
+     "identites_sociales": "7.67 million (85.1 %)",
+     "identites_18plus": "6.87 million 92.7",
+     "evolution_identites_12m": "increased 400 thousand (+5.5 percent)",
+     "age_median": "43.2",
+     "connexions_mobiles": "11.5 million",
+     "tiktok_18plus": "2.70 million",
+     "tiktok_pct_adultes": "36.5",
+     "youtube": "7.67 million",
+     "facebook": "2.80 million",
+     "instagram": "3.60 million",
+     "linkedin_membres": "5.80 million",
+     "snapchat": "2.94 million",
+     "pib_hab_usd_2025": 114769.01,
+     "pib_hab_ppa_2025": 102513.35,
+     "compte_findex_2024": 98.41,
+     "transferts_pct_pib": 0.37,
+     "ipan_fr100": 232.4,
+     "masse_adressable_fr100": 32.5
+    },
+    "sources": [
+     "https://datareportal.com/reports/digital-2027-switzerland",
+     "https://api.worldbank.org/v2/country/CHE/indicator/NY.GDP.PCAP.CD?format=json",
+     "https://www.francophonie.org/sites/default/files/2026-04/Synthese_rapport_Langue_francaise_dans_le_monde_2026.pdf"
+    ],
+    "as_of": "2026-10 (DataReportal) ; 2025 (PIB) ; 2024 (Findex)",
+    "evidence": "V"
+   },
+   {
+    "id": "LU",
+    "type": "pays",
+    "content_languages": [
+     "lb",
+     "fr-LU",
+     "de-LU",
+     "en",
+     "pt"
+    ],
+    "francophones": "langue principale 14,9 % [R]",
+    "metrics": {
+     "population": "689 thousand",
+     "internautes": "682 thousand (99.0 %)",
+     "identites_sociales": "304 thousand (44.1 %)",
+     "identites_18plus": "304 thousand 54.3",
+     "evolution_identites_12m": "decreased 9,250 * (-3.0 percent)",
+     "age_median": "39.7",
+     "connexions_mobiles": "926 thousand",
+     "tiktok_18plus": "229 thousand",
+     "tiktok_pct_adultes": "41.0",
+     "youtube": null,
+     "facebook": "304 thousand",
+     "instagram": "282 thousand",
+     "linkedin_membres": "550 thousand",
+     "snapchat": "495 thousand",
+     "pib_hab_usd_2025": 147252.18,
+     "pib_hab_ppa_2025": 156542.08,
+     "compte_findex_2024": null,
+     "transferts_pct_pib": 2.67,
+     "ipan_fr100": 300.0,
+     "masse_adressable_fr100": 3.2
+    },
+    "sources": [
+     "https://datareportal.com/reports/digital-2027-luxembourg",
+     "https://api.worldbank.org/v2/country/LUX/indicator/NY.GDP.PCAP.CD?format=json",
+     "https://www.francophonie.org/sites/default/files/2026-04/Synthese_rapport_Langue_francaise_dans_le_monde_2026.pdf"
+    ],
+    "as_of": "2026-10 (DataReportal) ; 2025 (PIB) ; 2024 (Findex)",
+    "evidence": "V"
+   },
+   {
+    "id": "CA",
+    "type": "pays",
+    "content_languages": [
+     "fr-CA",
+     "en-CA"
+    ],
+    "francophones": "Quebec 9,05 M habitants [S ISQ]",
+    "metrics": {
+     "population": "40.5 million",
+     "internautes": "38.6 million (95.2 %)",
+     "identites_sociales": "34.7 million (85.6 %)",
+     "identites_18plus": "31.3 million 94.2",
+     "evolution_identites_12m": "increased 1.7 million (+5.2 percent)",
+     "age_median": "40.8",
+     "connexions_mobiles": "42.8 million",
+     "tiktok_18plus": "18.0 million",
+     "tiktok_pct_adultes": "54.1",
+     "youtube": "34.7 million",
+     "facebook": "25.0 million",
+     "instagram": "21.4 million",
+     "linkedin_membres": "32.0 million",
+     "snapchat": "12.7 million",
+     "pib_hab_usd_2025": 55697.66,
+     "pib_hab_ppa_2025": 66745.82,
+     "compte_findex_2024": 98.4,
+     "transferts_pct_pib": 0.04,
+     "ipan_fr100": 112.8,
+     "masse_adressable_fr100": 68.1
+    },
+    "sources": [
+     "https://datareportal.com/reports/digital-2027-canada",
+     "https://api.worldbank.org/v2/country/CAN/indicator/NY.GDP.PCAP.CD?format=json",
+     "https://www.francophonie.org/sites/default/files/2026-04/Synthese_rapport_Langue_francaise_dans_le_monde_2026.pdf"
+    ],
+    "as_of": "2026-10 (DataReportal) ; 2025 (PIB) ; 2024 (Findex)",
+    "evidence": "V"
+   },
+   {
+    "id": "MA",
+    "type": "pays",
+    "content_languages": [
+     "ary-Arab",
+     "ary-Latn",
+     "ar",
+     "zgh",
+     "fr-MA",
+     "en"
+    ],
+    "francophones": "18,7 M (47,8 %) OIF 2026 methode 2",
+    "metrics": {
+     "population": "38.8 million",
+     "internautes": "35.8 million (92.3 %)",
+     "identites_sociales": "22.9 million (59.0 %)",
+     "identites_18plus": "21.8 million 79.9",
+     "evolution_identites_12m": "increased 150 thousand (+0.7 percent)",
+     "age_median": "30.1",
+     "connexions_mobiles": "56.1 million",
+     "tiktok_18plus": "19.6 million",
+     "tiktok_pct_adultes": "72.0",
+     "youtube": "22.9 million",
+     "facebook": "21.8 million",
+     "instagram": "16.2 million",
+     "linkedin_membres": "8.40 million",
+     "snapchat": "8.16 million",
+     "pib_hab_usd_2025": 4672.47,
+     "pib_hab_ppa_2025": 11111.71,
+     "compte_findex_2024": 44.39,
+     "transferts_pct_pib": 7.49,
+     "ipan_fr100": 4.3,
+     "masse_adressable_fr100": 2.4
+    },
+    "sources": [
+     "https://datareportal.com/reports/digital-2027-morocco",
+     "https://api.worldbank.org/v2/country/MAR/indicator/NY.GDP.PCAP.CD?format=json",
+     "https://www.francophonie.org/sites/default/files/2026-04/Synthese_rapport_Langue_francaise_dans_le_monde_2026.pdf"
+    ],
+    "as_of": "2026-10 (DataReportal) ; 2025 (PIB) ; 2024 (Findex)",
+    "evidence": "V"
+   },
+   {
+    "id": "DZ",
+    "type": "pays",
+    "content_languages": [
+     "arq",
+     "kab",
+     "ar",
+     "fr-DZ"
+    ],
+    "francophones": "42 % OIF 2026",
+    "metrics": {
+     "population": "48.2 million",
+     "internautes": "41.0 million (85.2 %)",
+     "identites_sociales": "29.4 million (61.1 %)",
+     "identites_18plus": "29.4 million 93.6",
+     "evolution_identites_12m": "increased 2.0 million (+7.2 percent)",
+     "age_median": "28.8",
+     "connexions_mobiles": "58.6 million",
+     "tiktok_18plus": "29.4 million",
+     "tiktok_pct_adultes": "93.6",
+     "youtube": "27.8 million",
+     "facebook": "26.0 million",
+     "instagram": "13.7 million",
+     "linkedin_membres": "6.90 million",
+     "snapchat": "11.0 million",
+     "pib_hab_usd_2025": 6051.0,
+     "pib_hab_ppa_2025": 18586.26,
+     "compte_findex_2024": 35.29,
+     "transferts_pct_pib": 0.59,
+     "ipan_fr100": 4.4,
+     "masse_adressable_fr100": 2.8
+    },
+    "sources": [
+     "https://datareportal.com/reports/digital-2027-algeria",
+     "https://api.worldbank.org/v2/country/DZA/indicator/NY.GDP.PCAP.CD?format=json",
+     "https://www.francophonie.org/sites/default/files/2026-04/Synthese_rapport_Langue_francaise_dans_le_monde_2026.pdf"
+    ],
+    "as_of": "2026-10 (DataReportal) ; 2025 (PIB) ; 2024 (Findex)",
+    "evidence": "V"
+   },
+   {
+    "id": "TN",
+    "type": "pays",
+    "content_languages": [
+     "aeb",
+     "ar",
+     "fr-TN"
+    ],
+    "francophones": "63 % OIF 2026",
+    "metrics": {
+     "population": "12.4 million",
+     "internautes": "10.5 million (84.7 %)",
+     "identites_sociales": "7.77 million (62.5 %)",
+     "identites_18plus": "7.40 million 82.4",
+     "evolution_identites_12m": "decreased 60 thousand * (-0.8 percent)",
+     "age_median": "33.4",
+     "connexions_mobiles": "15.7 million",
+     "tiktok_18plus": "7.11 million",
+     "tiktok_pct_adultes": "79.2",
+     "youtube": "7.77 million",
+     "facebook": "7.40 million",
+     "instagram": "4.15 million",
+     "linkedin_membres": "3.30 million",
+     "snapchat": "2.03 million",
+     "pib_hab_usd_2025": 4656.64,
+     "pib_hab_ppa_2025": 15233.49,
+     "compte_findex_2024": 37.84,
+     "transferts_pct_pib": 6.74,
+     "ipan_fr100": 3.6,
+     "masse_adressable_fr100": 0.6
+    },
+    "sources": [
+     "https://datareportal.com/reports/digital-2027-tunisia",
+     "https://api.worldbank.org/v2/country/TUN/indicator/NY.GDP.PCAP.CD?format=json",
+     "https://www.francophonie.org/sites/default/files/2026-04/Synthese_rapport_Langue_francaise_dans_le_monde_2026.pdf"
+    ],
+    "as_of": "2026-10 (DataReportal) ; 2025 (PIB) ; 2024 (Findex)",
+    "evidence": "V"
+   },
+   {
+    "id": "SN",
+    "type": "pays",
+    "content_languages": [
+     "wo",
+     "ff",
+     "srr",
+     "fr-SN"
+    ],
+    "francophones": "8,56 M (45,2 %) OIF 2026 methode 2",
+    "metrics": {
+     "population": "19.5 million",
+     "internautes": "12.1 million (62.3 %)",
+     "identites_sociales": "6.41 million (32.9 %)",
+     "identites_18plus": "5.94 million 54.5",
+     "evolution_identites_12m": "increased 990 thousand (+18.3 percent)",
+     "age_median": "19.8",
+     "connexions_mobiles": "23.9 million",
+     "tiktok_18plus": null,
+     "tiktok_pct_adultes": null,
+     "youtube": "6.41 million",
+     "facebook": "3.45 million",
+     "instagram": "1.50 million",
+     "linkedin_membres": "1.80 million",
+     "snapchat": null,
+     "pib_hab_usd_2025": 1954.71,
+     "pib_hab_ppa_2025": 5463.22,
+     "compte_findex_2024": 76.46,
+     "transferts_pct_pib": 10.64,
+     "ipan_fr100": 3.1,
+     "masse_adressable_fr100": 0.6
+    },
+    "sources": [
+     "https://datareportal.com/reports/digital-2027-senegal",
+     "https://api.worldbank.org/v2/country/SEN/indicator/NY.GDP.PCAP.CD?format=json",
+     "https://www.francophonie.org/sites/default/files/2026-04/Synthese_rapport_Langue_francaise_dans_le_monde_2026.pdf"
+    ],
+    "as_of": "2026-10 (DataReportal) ; 2025 (PIB) ; 2024 (Findex)",
+    "evidence": "V"
+   },
+   {
+    "id": "CI",
+    "type": "pays",
+    "content_languages": [
+     "fr-CI",
+     "fr-CI-x-nouchi",
+     "dyu",
+     "bci"
+    ],
+    "francophones": "17,1 M (52,2 %) OIF 2026 methode 2",
+    "metrics": {
+     "population": "33.7 million",
+     "internautes": "14.0 million (41.4 %)",
+     "identites_sociales": "8.70 million (25.8 %)",
+     "identites_18plus": "8.70 million 48.6",
+     "evolution_identites_12m": "increased 300 thousand (+3.6 percent)",
+     "age_median": "18.5",
+     "connexions_mobiles": "51.0 million",
+     "tiktok_18plus": null,
+     "tiktok_pct_adultes": null,
+     "youtube": null,
+     "facebook": "8.70 million",
+     "instagram": "881 thousand",
+     "linkedin_membres": "2.20 million",
+     "snapchat": null,
+     "pib_hab_usd_2025": 3050.1,
+     "pib_hab_ppa_2025": 8208.91,
+     "compte_findex_2024": 57.57,
+     "transferts_pct_pib": 2.03,
+     "ipan_fr100": 3.6,
+     "masse_adressable_fr100": 0.8
+    },
+    "sources": [
+     "https://datareportal.com/reports/digital-2027-cote-divoire",
+     "https://api.worldbank.org/v2/country/CIV/indicator/NY.GDP.PCAP.CD?format=json",
+     "https://www.francophonie.org/sites/default/files/2026-04/Synthese_rapport_Langue_francaise_dans_le_monde_2026.pdf"
+    ],
+    "as_of": "2026-10 (DataReportal) ; 2025 (PIB) ; 2024 (Findex)",
+    "evidence": "V"
+   },
+   {
+    "id": "CM",
+    "type": "pays",
+    "content_languages": [
+     "fr-CM",
+     "en-CM",
+     "wes",
+     "fr-CM-x-camfranglais"
+    ],
+    "francophones": "47 % OIF 2026",
+    "metrics": {
+     "population": "30.8 million",
+     "internautes": "14.3 million (46.3 %)",
+     "identites_sociales": "6.10 million (19.8 %)",
+     "identites_18plus": "6.10 million 37.7",
+     "evolution_identites_12m": "increased 200 thousand (+3.4 percent)",
+     "age_median": "18.2",
+     "connexions_mobiles": "32.1 million",
+     "tiktok_18plus": null,
+     "tiktok_pct_adultes": null,
+     "youtube": null,
+     "facebook": "6.10 million",
+     "instagram": "548 thousand",
+     "linkedin_membres": "1.80 million",
+     "snapchat": null,
+     "pib_hab_usd_2025": 1972.38,
+     "pib_hab_ppa_2025": 5787.85,
+     "compte_findex_2024": 60.87,
+     "transferts_pct_pib": 1.29,
+     "ipan_fr100": 2.5,
+     "masse_adressable_fr100": 0.6
+    },
+    "sources": [
+     "https://datareportal.com/reports/digital-2027-cameroon",
+     "https://api.worldbank.org/v2/country/CMR/indicator/NY.GDP.PCAP.CD?format=json",
+     "https://www.francophonie.org/sites/default/files/2026-04/Synthese_rapport_Langue_francaise_dans_le_monde_2026.pdf"
+    ],
+    "as_of": "2026-10 (DataReportal) ; 2025 (PIB) ; 2024 (Findex)",
+    "evidence": "V"
+   },
+   {
+    "id": "CD",
+    "type": "pays",
+    "content_languages": [
+     "ln",
+     "sw",
+     "kg",
+     "lua",
+     "fr-CD"
+    ],
+    "francophones": "67,8 M (60,1 %) OIF 2026 methode 2",
+    "metrics": {
+     "population": "117 million",
+     "internautes": "23.1 million (19.7 %)",
+     "identites_sociales": "13.8 million (11.8 %)",
+     "identites_18plus": "13.8 million 24.7",
+     "evolution_identites_12m": "increased 3.4 million (+32.5 percent)",
+     "age_median": "15.9",
+     "connexions_mobiles": "78.1 million",
+     "tiktok_18plus": "13.8 million",
+     "tiktok_pct_adultes": "24.7",
+     "youtube": null,
+     "facebook": "9.35 million",
+     "instagram": "1.00 million",
+     "linkedin_membres": "1.30 million",
+     "snapchat": null,
+     "pib_hab_usd_2025": 806.78,
+     "pib_hab_ppa_2025": 1919.82,
+     "compte_findex_2024": 39.21,
+     "transferts_pct_pib": 3.65,
+     "ipan_fr100": 0.7,
+     "masse_adressable_fr100": 0.3
+    },
+    "sources": [
+     "https://datareportal.com/reports/digital-2027-democratic-republic-of-the-congo",
+     "https://api.worldbank.org/v2/country/COD/indicator/NY.GDP.PCAP.CD?format=json",
+     "https://www.francophonie.org/sites/default/files/2026-04/Synthese_rapport_Langue_francaise_dans_le_monde_2026.pdf"
+    ],
+    "as_of": "2026-10 (DataReportal) ; 2025 (PIB) ; 2024 (Findex)",
+    "evidence": "V"
+   },
+   {
+    "id": "CA-QC",
+    "type": "subdivision",
+    "parent": "CA",
+    "content_languages": [
+     "fr-CA",
+     "en-CA"
+    ],
+    "metrics": {
+     "population": "9,05 M (1er juillet 2025)",
+     "pct_65plus": 21.7,
+     "usage_reseaux_internautes_18plus": "94 %",
+     "facebook": "76 %",
+     "messenger": "59 %",
+     "instagram": "38 %",
+     "tiktok": "25 %",
+     "youtube_mensuel": "87 %",
+     "jeux_video_mensuel": "80 %"
+    },
+    "sources": [
+     "https://statistique.quebec.ca/en/fichier/panorama-des-regions-du-quebec-2026-demographie.pdf",
+     "https://transformation-numerique.ulaval.ca/wp-content/uploads/2026/02/netendances25-reseaux-sociaux-divertissement.pdf"
+    ],
+    "evidence": "S (population) / V (usages)"
+   },
+   {
+    "id": "BE-WAL",
+    "type": "subdivision",
+    "parent": "BE"
+   },
+   {
+    "id": "BE-BRU",
+    "type": "subdivision",
+    "parent": "BE"
+   },
+   {
+    "id": "CH-ROM",
+    "type": "sous_zone",
+    "parent": "CH",
+    "note": "code propre ; CH-FR designe le canton de Fribourg en ISO 3166-2"
+   },
+   {
+    "id": "RE",
+    "type": "outre_mer",
+    "parent": "FR",
+    "metrics": {
+     "population": "887 thousand",
+     "internautes": "594 thousand (66.9 %)",
+     "identites_sociales": "545 thousand",
+     "age_median": "38.4",
+     "tiktok_18plus": null
+    },
+    "sources": [
+     "https://datareportal.com/reports/digital-2027-reunion"
+    ],
+    "evidence": "V",
+    "plausibilite": "suspect"
+   },
+   {
+    "id": "GP",
+    "type": "outre_mer",
+    "parent": "FR",
+    "metrics": {
+     "population": "372 thousand",
+     "internautes": "232 thousand (62.3 %)",
+     "identites_sociales": "177 thousand",
+     "age_median": "47.4",
+     "tiktok_18plus": "398 thousand"
+    },
+    "sources": [
+     "https://datareportal.com/reports/digital-2027-guadeloupe"
+    ],
+    "evidence": "V",
+    "plausibilite": "suspect"
+   },
+   {
+    "id": "MQ",
+    "type": "outre_mer",
+    "parent": "FR",
+    "metrics": {
+     "population": "337 thousand",
+     "internautes": "220 thousand (65.3 %)",
+     "identites_sociales": "166 thousand",
+     "age_median": "50.2",
+     "tiktok_18plus": "104 thousand"
+    },
+    "sources": [
+     "https://datareportal.com/reports/digital-2027-martinique"
+    ],
+    "evidence": "V",
+    "plausibilite": "suspect"
+   },
+   {
+    "id": "GF",
+    "type": "outre_mer",
+    "parent": "FR",
+    "metrics": {
+     "population": "320 thousand",
+     "internautes": "180 thousand (56.2 %)",
+     "identites_sociales": "95.3 thousand",
+     "age_median": "24.9",
+     "tiktok_18plus": "64.0 thousand"
+    },
+    "sources": [
+     "https://datareportal.com/reports/digital-2027-french-guiana"
+    ],
+    "evidence": "V",
+    "plausibilite": "suspect"
+   },
+   {
+    "id": "YT",
+    "type": "outre_mer",
+    "parent": "FR",
+    "metrics": {
+     "population": "350 thousand",
+     "internautes": "181 thousand (51.8 %)",
+     "identites_sociales": "105 thousand",
+     "age_median": "17.3",
+     "tiktok_18plus": null
+    },
+    "sources": [
+     "https://datareportal.com/reports/digital-2027-mayotte"
+    ],
+    "evidence": "V",
+    "plausibilite": "suspect"
+   },
+   {
+    "id": "NC",
+    "type": "outre_mer",
+    "parent": "FR",
+    "metrics": {
+     "population": "299 thousand",
+     "internautes": "245 thousand (82.0 %)",
+     "identites_sociales": "166 thousand",
+     "age_median": "34.8",
+     "tiktok_18plus": null
+    },
+    "sources": [
+     "https://datareportal.com/reports/digital-2027-new-caledonia"
+    ],
+    "evidence": "V",
+    "plausibilite": "ok"
+   },
+   {
+    "id": "PF",
+    "type": "outre_mer",
+    "parent": "FR",
+    "metrics": {
+     "population": "283 thousand",
+     "internautes": "206 thousand (72.7 %)",
+     "identites_sociales": "205 thousand",
+     "age_median": "36.7",
+     "tiktok_18plus": "170 thousand"
+    },
+    "sources": [
+     "https://datareportal.com/reports/digital-2027-french-polynesia"
+    ],
+    "evidence": "V",
+    "plausibilite": "ok"
+   },
+   {
+    "id": "DIA-MAGH@FR",
+    "type": "diaspora",
+    "origin": [
+     "MA",
+     "DZ",
+     "TN"
+    ],
+    "residence": "FR",
+    "metrics": {
+     "immigres_2025": 2333000,
+     "descendants_2025": 2538000
+    },
+    "sources": [
+     "https://www.insee.fr/fr/statistiques/2381755",
+     "https://www.insee.fr/fr/statistiques/4186761"
+    ],
+    "evidence": "V (provisoire)"
+   },
+   {
+    "id": "DIA-SSA@FR",
+    "type": "diaspora",
+    "origin": [
+     "SN",
+     "CI",
+     "CM",
+     "CD",
+     "autres"
+    ],
+    "residence": "FR",
+    "metrics": {
+     "immigres_2025": 1590000,
+     "descendants_2025": 1341000
+    },
+    "sources": [
+     "https://www.insee.fr/fr/statistiques/2381755",
+     "https://www.insee.fr/fr/statistiques/4186761"
+    ],
+    "evidence": "V (provisoire)"
+   },
+   {
+    "id": "DIA-MA@*",
+    "type": "diaspora",
+    "origin": [
+     "MA"
+    ],
+    "residence": "*",
+    "metrics": {
+     "population": "5 a 6 M (presse)",
+     "transferts_2025_usd": 13656589125
+    },
+    "evidence": "S / V (transferts)"
+   },
+   {
+    "id": "EXP-FR@MA",
+    "type": "expatries",
+    "origin": [
+     "FR"
+    ],
+    "residence": "MA",
+    "metrics": {
+     "inscrits_consulat": "> 50 000 (mai 2026)",
+     "presents_estimes": "> 80 000",
+     "retraites": "> 61 000 (non date, faible)"
+    },
+    "sources": [
+     "https://fr.hespress.com/475547-elections-consulaires-un-scrutin-discret-aux-enjeux-cruciaux-pour-les-francais-du-maroc.html",
+     "https://www.bladi.net/retraite-maroc-francais-saute,119708.html"
+    ],
+    "evidence": "S"
+   },
+   {
+    "id": "ETU-INTL@FR",
+    "type": "etudiants_internationaux",
+    "residence": "FR",
+    "metrics": {
+     "effectif_2025_2026": 352800
+    },
+    "evidence": "S"
+   }
+  ],
+  "niches": [
+   {
+    "id": "N01",
+    "slug": "beaute_soins",
+    "level": 1,
+    "labels": {
+     "fr": "Beaute et soins",
+     "en": "Beauty and personal care"
+    },
+    "children": [
+     {
+      "id": "N01.01",
+      "slug": "skincare"
+     },
+     {
+      "id": "N01.02",
+      "slug": "maquillage"
+     },
+     {
+      "id": "N01.03",
+      "slug": "cheveux"
+     },
+     {
+      "id": "N01.04",
+      "slug": "parfum"
+     },
+     {
+      "id": "N01.05",
+      "slug": "grooming_masculin"
+     },
+     {
+      "id": "N01.06",
+      "slug": "esthetique_medicale"
+     }
+    ],
+    "keywords_seed": {
+     "fr": [
+      "skincare",
+      "routine soin",
+      "serum",
+      "maquillage",
+      "parfum",
+      "dupe",
+      "K-beauty"
+     ],
+     "en": [
+      "skincare",
+      "makeup",
+      "serum",
+      "fragrance",
+      "dupe",
+      "glass skin",
+      "grooming"
+     ],
+     "ar": [
+      "العناية بالبشرة",
+      "مكياج",
+      "عطر",
+      "روتين"
+     ],
+     "ary-Latn": [
+      "routine dyal lwjh",
+      "lbachra",
+      "makiyaj",
+      "krim"
+     ],
+     "ary-Arab": [
+      "روتين ديال الوجه",
+      "البشرة",
+      "الماكياج"
+     ]
+    },
+    "keywords_status": "amorces a valider par locuteur natif (ar, ary)",
+    "observation_platforms": [
+     "tiktok",
+     "instagram",
+     "youtube",
+     "tiktok_shop"
+    ],
+    "scoring": "inclus"
+   },
+   {
+    "id": "N02",
+    "slug": "mode_accessoires",
+    "level": 1,
+    "labels": {
+     "fr": "Mode et accessoires",
+     "en": "Fashion and accessories"
+    },
+    "children": [
+     {
+      "id": "N02.01",
+      "slug": "mode_modeste"
+     },
+     {
+      "id": "N02.02",
+      "slug": "seconde_main_vintage"
+     },
+     {
+      "id": "N02.03",
+      "slug": "streetwear_sneakers"
+     },
+     {
+      "id": "N02.04",
+      "slug": "tenue_traditionnelle"
+     },
+     {
+      "id": "N02.05",
+      "slug": "bijoux_montres"
+     }
+    ],
+    "keywords_seed": {
+     "fr": [
+      "tenue",
+      "haul",
+      "friperie",
+      "seconde main",
+      "mode pudique",
+      "abaya",
+      "caftan",
+      "wax"
+     ],
+     "en": [
+      "outfit",
+      "OOTD",
+      "haul",
+      "thrift",
+      "modest fashion",
+      "streetwear"
+     ],
+     "ar": [
+      "موضة",
+      "أزياء",
+      "لباس محتشم",
+      "عباية",
+      "قفطان"
+     ],
+     "ary-Latn": [
+      "lbas",
+      "hwayej",
+      "takchita",
+      "jellaba",
+      "jouteya"
+     ],
+     "ary-Arab": [
+      "لبسة",
+      "حوايج",
+      "تكشيطة",
+      "جلابة",
+      "الجوطية"
+     ]
+    },
+    "keywords_status": "amorces a valider par locuteur natif (ar, ary)",
+    "observation_platforms": [
+     "instagram",
+     "tiktok",
+     "pinterest",
+     "vinted"
+    ],
+    "scoring": "inclus"
+   },
+   {
+    "id": "N03",
+    "slug": "sport_pratique",
+    "level": 1,
+    "labels": {
+     "fr": "Sport pratique et fitness",
+     "en": "Sports and fitness participation"
+    },
+    "children": [
+     {
+      "id": "N03.01",
+      "slug": "running_run_clubs"
+     },
+     {
+      "id": "N03.02",
+      "slug": "salle_musculation"
+     },
+     {
+      "id": "N03.03",
+      "slug": "hyrox_courses_fitness"
+     },
+     {
+      "id": "N03.04",
+      "slug": "pilates_yoga"
+     },
+     {
+      "id": "N03.05",
+      "slug": "raquette_padel"
+     },
+     {
+      "id": "N03.06",
+      "slug": "combat_pratique"
+     },
+     {
+      "id": "N03.07",
+      "slug": "plein_air"
+     }
+    ],
+    "keywords_seed": {
+     "fr": [
+      "run club",
+      "course a pied",
+      "salle",
+      "musculation",
+      "padel",
+      "pilates",
+      "Hyrox"
+     ],
+     "en": [
+      "run club",
+      "gym",
+      "workout",
+      "padel",
+      "pilates reformer",
+      "hyrox"
+     ],
+     "ar": [
+      "رياضة",
+      "لياقة بدنية",
+      "الجري",
+      "بادل"
+     ],
+     "ary-Latn": [
+      "salle",
+      "sport",
+      "padel",
+      "jri"
+     ],
+     "ary-Arab": [
+      "الصالة",
+      "الرياضة",
+      "البادل",
+      "الجري"
+     ]
+    },
+    "keywords_status": "amorces a valider par locuteur natif (ar, ary)",
+    "observation_platforms": [
+     "instagram",
+     "strava",
+     "tiktok",
+     "youtube"
+    ],
+    "scoring": "inclus"
+   },
+   {
+    "id": "N04",
+    "slug": "sport_spectacle_football",
+    "level": 1,
+    "labels": {
+     "fr": "Sport spectacle et football",
+     "en": "Spectator sports and football"
+    },
+    "children": [
+     {
+      "id": "N04.01",
+      "slug": "football"
+     },
+     {
+      "id": "N04.02",
+      "slug": "grandes_competitions"
+     },
+     {
+      "id": "N04.03",
+      "slug": "sports_us"
+     },
+     {
+      "id": "N04.04",
+      "slug": "sport_feminin"
+     },
+     {
+      "id": "N04.05",
+      "slug": "combat_spectacle"
+     },
+     {
+      "id": "N04.06",
+      "slug": "paris_sportifs"
+     }
+    ],
+    "keywords_seed": {
+     "fr": [
+      "foot",
+      "Ligue 1",
+      "CAN",
+      "Mondial 2030",
+      "Lions de l'Atlas",
+      "Fennecs",
+      "Lions de la Teranga",
+      "Elephants",
+      "Lions indomptables",
+      "Leopards"
+     ],
+     "en": [
+      "football",
+      "soccer",
+      "AFCON",
+      "World Cup 2030"
+     ],
+     "ar": [
+      "كرة القدم",
+      "كأس أمم أفريقيا",
+      "كأس العالم 2030",
+      "أسود الأطلس"
+     ],
+     "ary-Latn": [
+      "lkoura",
+      "lmatch",
+      "lmontakhab",
+      "Wydad",
+      "Raja",
+      "Botola"
+     ],
+     "ary-Arab": [
+      "الكورة",
+      "الماتش",
+      "المنتخب",
+      "الوداد",
+      "الرجاء"
+     ]
+    },
+    "keywords_status": "amorces a valider par locuteur natif (ar, ary)",
+    "observation_platforms": [
+     "youtube",
+     "tiktok",
+     "facebook",
+     "x_fr"
+    ],
+    "scoring": "inclus"
+   },
+   {
+    "id": "N05",
+    "slug": "nutrition_poids",
+    "level": 1,
+    "labels": {
+     "fr": "Nutrition, poids et alimentation sante",
+     "en": "Nutrition and weight"
+    },
+    "children": [
+     {
+      "id": "N05.01",
+      "slug": "perte_poids_glp1"
+     },
+     {
+      "id": "N05.02",
+      "slug": "proteines_fibres"
+     },
+     {
+      "id": "N05.03",
+      "slug": "complements"
+     },
+     {
+      "id": "N05.04",
+      "slug": "regimes_jeune"
+     },
+     {
+      "id": "N05.05",
+      "slug": "nutrition_sportive"
+     }
+    ],
+    "keywords_seed": {
+     "fr": [
+      "perte de poids",
+      "reequilibrage",
+      "GLP-1",
+      "proteines",
+      "fibres",
+      "jeune intermittent"
+     ],
+     "en": [
+      "weight loss",
+      "GLP-1",
+      "protein",
+      "fibermaxxing",
+      "fasting"
+     ],
+     "ar": [
+      "تغذية",
+      "إنقاص الوزن",
+      "رجيم",
+      "بروتين",
+      "صيام متقطع"
+     ],
+     "ary-Latn": [
+      "rjim",
+      "nqes lwazn",
+      "makla sihiya"
+     ],
+     "ary-Arab": [
+      "الريجيم",
+      "نقص الوزن",
+      "ماكلة صحية"
+     ]
+    },
+    "keywords_status": "amorces a valider par locuteur natif (ar, ary)",
+    "observation_platforms": [
+     "tiktok",
+     "instagram",
+     "youtube"
+    ],
+    "scoring": "inclus"
+   },
+   {
+    "id": "N06",
+    "slug": "sante_bien_etre",
+    "level": 1,
+    "labels": {
+     "fr": "Sante mentale et bien-etre",
+     "en": "Mental health and wellbeing"
+    },
+    "children": [
+     {
+      "id": "N06.01",
+      "slug": "sante_mentale"
+     },
+     {
+      "id": "N06.02",
+      "slug": "sommeil"
+     },
+     {
+      "id": "N06.03",
+      "slug": "sante_feminine_menopause"
+     },
+     {
+      "id": "N06.04",
+      "slug": "meditation_dev_perso"
+     },
+     {
+      "id": "N06.05",
+      "slug": "ia_confident"
+     },
+     {
+      "id": "N06.06",
+      "slug": "longevite"
+     }
+    ],
+    "keywords_seed": {
+     "fr": [
+      "sante mentale",
+      "anxiete",
+      "burn-out",
+      "sommeil",
+      "meditation",
+      "menopause"
+     ],
+     "en": [
+      "mental health",
+      "anxiety",
+      "burnout",
+      "sleep",
+      "menopause",
+      "self-care"
+     ],
+     "ar": [
+      "الصحة النفسية",
+      "القلق",
+      "الاكتئاب",
+      "النوم",
+      "التأمل"
+     ],
+     "ary-Latn": [
+      "stress",
+      "l9ala9",
+      "n3as"
+     ],
+     "ary-Arab": [
+      "الستريس",
+      "القلق",
+      "النعاس"
+     ]
+    },
+    "keywords_status": "amorces a valider par locuteur natif (ar, ary)",
+    "observation_platforms": [
+     "tiktok",
+     "instagram",
+     "youtube",
+     "podcasts"
+    ],
+    "scoring": "inclus"
+   },
+   {
+    "id": "N07",
+    "slug": "parentalite_famille",
+    "level": 1,
+    "labels": {
+     "fr": "Parentalite et famille",
+     "en": "Parenting and family"
+    },
+    "children": [
+     {
+      "id": "N07.01",
+      "slug": "grossesse_naissance"
+     },
+     {
+      "id": "N07.02",
+      "slug": "petite_enfance"
+     },
+     {
+      "id": "N07.03",
+      "slug": "education_ecrans"
+     },
+     {
+      "id": "N07.04",
+      "slug": "vie_famille"
+     }
+    ],
+    "keywords_seed": {
+     "fr": [
+      "maman",
+      "grossesse",
+      "bebe",
+      "allaitement",
+      "parentalite",
+      "ecrans"
+     ],
+     "en": [
+      "mom life",
+      "pregnancy",
+      "toddler",
+      "gentle parenting",
+      "screen-free"
+     ],
+     "ar": [
+      "الأمومة",
+      "الحمل",
+      "الرضيع",
+      "تربية الأطفال"
+     ],
+     "ary-Latn": [
+      "drari",
+      "wlidat",
+      "trbiya",
+      "lmama"
+     ],
+     "ary-Arab": [
+      "الدراري",
+      "الوليدات",
+      "التربية"
+     ]
+    },
+    "keywords_status": "amorces a valider par locuteur natif (ar, ary)",
+    "observation_platforms": [
+     "instagram",
+     "pinterest",
+     "facebook_groupes",
+     "youtube"
+    ],
+    "scoring": "inclus"
+   },
+   {
+    "id": "N08",
+    "slug": "cuisine_boissons",
+    "level": 1,
+    "labels": {
+     "fr": "Cuisine, gastronomie et boissons",
+     "en": "Food, cooking and drinks"
+    },
+    "children": [
+     {
+      "id": "N08.01",
+      "slug": "recettes"
+     },
+     {
+      "id": "N08.02",
+      "slug": "street_food_restaurants"
+     },
+     {
+      "id": "N08.03",
+      "slug": "cafe_matcha_boissons"
+     },
+     {
+      "id": "N08.04",
+      "slug": "sans_alcool"
+     },
+     {
+      "id": "N08.05",
+      "slug": "patisserie"
+     },
+     {
+      "id": "N08.06",
+      "slug": "cuisine_ramadan"
+     }
+    ],
+    "keywords_seed": {
+     "fr": [
+      "recette",
+      "cuisine",
+      "street food",
+      "cafe de specialite",
+      "matcha",
+      "mocktail"
+     ],
+     "en": [
+      "recipe",
+      "foodtok",
+      "street food",
+      "matcha",
+      "mocktail"
+     ],
+     "ar": [
+      "طبخ",
+      "وصفات",
+      "حلويات",
+      "مطاعم"
+     ],
+     "ary-Latn": [
+      "chhiwat",
+      "tyab",
+      "lmakla",
+      "7alawiyat"
+     ],
+     "ary-Arab": [
+      "شهيوات",
+      "الطياب",
+      "الماكلة",
+      "حلويات"
+     ]
+    },
+    "keywords_status": "amorces a valider par locuteur natif (ar, ary)",
+    "observation_platforms": [
+     "youtube",
+     "tiktok",
+     "instagram",
+     "facebook_ma"
+    ],
+    "scoring": "inclus"
+   },
+   {
+    "id": "N09",
+    "slug": "maison_deco_jardin",
+    "level": 1,
+    "labels": {
+     "fr": "Maison, deco et jardin",
+     "en": "Home, decor and garden"
+    },
+    "children": [
+     {
+      "id": "N09.01",
+      "slug": "deco"
+     },
+     {
+      "id": "N09.02",
+      "slug": "bricolage_diy"
+     },
+     {
+      "id": "N09.03",
+      "slug": "rangement_menage"
+     },
+     {
+      "id": "N09.04",
+      "slug": "jardinage"
+     },
+     {
+      "id": "N09.05",
+      "slug": "equipement"
+     }
+    ],
+    "keywords_seed": {
+     "fr": [
+      "deco",
+      "avant-apres",
+      "DIY",
+      "bricolage",
+      "rangement",
+      "jardin"
+     ],
+     "en": [
+      "home decor",
+      "room makeover",
+      "DIY",
+      "cleantok",
+      "gardening"
+     ],
+     "ar": [
+      "ديكور",
+      "تزيين المنزل",
+      "تنظيف",
+      "حديقة"
+     ],
+     "ary-Latn": [
+      "dekor dyal dar",
+      "tnqia",
+      "jnan"
+     ],
+     "ary-Arab": [
+      "ديكور الدار",
+      "التنقية",
+      "الجنان"
+     ]
+    },
+    "keywords_status": "amorces a valider par locuteur natif (ar, ary)",
+    "observation_platforms": [
+     "pinterest",
+     "instagram",
+     "tiktok",
+     "youtube"
+    ],
+    "scoring": "inclus"
+   },
+   {
+    "id": "N10",
+    "slug": "voyage_tourisme",
+    "level": 1,
+    "labels": {
+     "fr": "Voyage et tourisme",
+     "en": "Travel and tourism"
+    },
+    "children": [
+     {
+      "id": "N10.01",
+      "slug": "voyage_sortant"
+     },
+     {
+      "id": "N10.02",
+      "slug": "tourisme_receptif"
+     },
+     {
+      "id": "N10.03",
+      "slug": "retour_au_pays"
+     },
+     {
+      "id": "N10.04",
+      "slug": "voyage_sportif_passion"
+     },
+     {
+      "id": "N10.05",
+      "slug": "workation"
+     }
+    ],
+    "keywords_seed": {
+     "fr": [
+      "voyage",
+      "vacances",
+      "bons plans",
+      "road trip",
+      "riad",
+      "retour au bled"
+     ],
+     "en": [
+      "travel",
+      "itinerary",
+      "solo travel",
+      "workation"
+     ],
+     "ar": [
+      "سفر",
+      "سياحة",
+      "عطلة"
+     ],
+     "ary-Latn": [
+      "safar",
+      "l3otla",
+      "lbled",
+      "riad"
+     ],
+     "ary-Arab": [
+      "السفر",
+      "العطلة",
+      "البلاد"
+     ]
+    },
+    "keywords_status": "amorces a valider par locuteur natif (ar, ary)",
+    "observation_platforms": [
+     "instagram",
+     "tiktok",
+     "youtube",
+     "pinterest"
+    ],
+    "scoring": "inclus"
+   },
+   {
+    "id": "N11",
+    "slug": "finance_perso",
+    "level": 1,
+    "labels": {
+     "fr": "Finance personnelle et investissement",
+     "en": "Personal finance and investing"
+    },
+    "children": [
+     {
+      "id": "N11.01",
+      "slug": "budget_epargne"
+     },
+     {
+      "id": "N11.02",
+      "slug": "bourse_etf"
+     },
+     {
+      "id": "N11.03",
+      "slug": "crypto"
+     },
+     {
+      "id": "N11.04",
+      "slug": "finance_islamique"
+     },
+     {
+      "id": "N11.05",
+      "slug": "credit"
+     },
+     {
+      "id": "N11.06",
+      "slug": "tontines"
+     }
+    ],
+    "keywords_seed": {
+     "fr": [
+      "budget",
+      "epargne",
+      "investir",
+      "bourse",
+      "ETF",
+      "PEA",
+      "crypto",
+      "finance islamique",
+      "tontine"
+     ],
+     "en": [
+      "budgeting",
+      "saving",
+      "investing",
+      "ETF",
+      "crypto",
+      "FIRE"
+     ],
+     "ar": [
+      "ادخار",
+      "استثمار",
+      "بورصة",
+      "العملات الرقمية",
+      "التمويل الإسلامي"
+     ],
+     "ary-Latn": [
+      "flouss",
+      "tawfir",
+      "dart",
+      "crypto"
+     ],
+     "ary-Arab": [
+      "الفلوس",
+      "التوفير",
+      "دارت"
+     ]
+    },
+    "keywords_status": "amorces a valider par locuteur natif (ar, ary)",
+    "observation_platforms": [
+     "youtube",
+     "tiktok",
+     "reddit_fr_qc",
+     "newsletters"
+    ],
+    "scoring": "inclus"
+   },
+   {
+    "id": "N12",
+    "slug": "immobilier_logement",
+    "level": 1,
+    "labels": {
+     "fr": "Immobilier et logement",
+     "en": "Real estate and housing"
+    },
+    "children": [
+     {
+      "id": "N12.01",
+      "slug": "achat_residence"
+     },
+     {
+      "id": "N12.02",
+      "slug": "investissement_locatif"
+     },
+     {
+      "id": "N12.03",
+      "slug": "location_colocation"
+     },
+     {
+      "id": "N12.04",
+      "slug": "immobilier_diaspora"
+     },
+     {
+      "id": "N12.05",
+      "slug": "credit_immobilier"
+     }
+    ],
+    "keywords_seed": {
+     "fr": [
+      "immobilier",
+      "achat appartement",
+      "investissement locatif",
+      "colocation",
+      "credit immo"
+     ],
+     "en": [
+      "real estate",
+      "rental property",
+      "house hunting"
+     ],
+     "ar": [
+      "عقار",
+      "شقة للبيع",
+      "كراء"
+     ],
+     "ary-Latn": [
+      "chqa",
+      "dar",
+      "lkra",
+      "terrain"
+     ],
+     "ary-Arab": [
+      "شقة",
+      "دار للبيع",
+      "الكرا"
+     ]
+    },
+    "keywords_status": "amorces a valider par locuteur natif (ar, ary)",
+    "observation_platforms": [
+     "youtube",
+     "facebook_annonces",
+     "instagram"
+    ],
+    "scoring": "inclus"
+   },
+   {
+    "id": "N13",
+    "slug": "carriere_emploi_etudes",
+    "level": 1,
+    "labels": {
+     "fr": "Carriere, emploi et etudes",
+     "en": "Careers, jobs and studies"
+    },
+    "children": [
+     {
+      "id": "N13.01",
+      "slug": "recherche_emploi"
+     },
+     {
+      "id": "N13.02",
+      "slug": "orientation_admission"
+     },
+     {
+      "id": "N13.03",
+      "slug": "etudes_etranger"
+     },
+     {
+      "id": "N13.04",
+      "slug": "alternance_stages"
+     },
+     {
+      "id": "N13.05",
+      "slug": "reconversion"
+     },
+     {
+      "id": "N13.06",
+      "slug": "concours"
+     }
+    ],
+    "keywords_seed": {
+     "fr": [
+      "emploi",
+      "CV",
+      "entretien",
+      "alternance",
+      "Parcoursup",
+      "reconversion",
+      "etudes a l'etranger"
+     ],
+     "en": [
+      "job search",
+      "resume",
+      "interview",
+      "career",
+      "study abroad"
+     ],
+     "ar": [
+      "وظيفة",
+      "سيرة ذاتية",
+      "مباراة",
+      "منحة",
+      "الدراسة في الخارج"
+     ],
+     "ary-Latn": [
+      "khdma",
+      "concours",
+      "stage",
+      "CV"
+     ],
+     "ary-Arab": [
+      "الخدمة",
+      "المباراة",
+      "السطاج"
+     ]
+    },
+    "keywords_status": "amorces a valider par locuteur natif (ar, ary)",
+    "observation_platforms": [
+     "linkedin",
+     "tiktok",
+     "youtube"
+    ],
+    "scoring": "inclus"
+   },
+   {
+    "id": "N14",
+    "slug": "entrepreneuriat_revenus",
+    "level": 1,
+    "labels": {
+     "fr": "Entrepreneuriat et revenus complementaires",
+     "en": "Entrepreneurship and side income"
+    },
+    "children": [
+     {
+      "id": "N14.01",
+      "slug": "ecommerce_cod_dropshipping"
+     },
+     {
+      "id": "N14.02",
+      "slug": "commerce_social_live"
+     },
+     {
+      "id": "N14.03",
+      "slug": "freelance_services"
+     },
+     {
+      "id": "N14.04",
+      "slug": "monetisation_createurs"
+     },
+     {
+      "id": "N14.05",
+      "slug": "revente_seconde_main"
+     },
+     {
+      "id": "N14.06",
+      "slug": "side_business"
+     }
+    ],
+    "keywords_seed": {
+     "fr": [
+      "entreprendre",
+      "micro-entreprise",
+      "e-commerce",
+      "dropshipping",
+      "TikTok Shop",
+      "side business"
+     ],
+     "en": [
+      "side hustle",
+      "entrepreneur",
+      "dropshipping",
+      "TikTok Shop",
+      "creator economy"
+     ],
+     "ar": [
+      "ريادة الأعمال",
+      "مشروع",
+      "تجارة إلكترونية",
+      "الربح من الإنترنت"
+     ],
+     "ary-Latn": [
+      "machrou3",
+      "lbi3 w chra",
+      "COD",
+      "dropshipping",
+      "rb7 mn lantirnit"
+     ],
+     "ary-Arab": [
+      "مشروع",
+      "البيع والشرا",
+      "الربح من الأنترنيت"
+     ]
+    },
+    "keywords_status": "amorces a valider par locuteur natif (ar, ary)",
+    "observation_platforms": [
+     "youtube",
+     "tiktok",
+     "facebook_groupes",
+     "linkedin"
+    ],
+    "scoring": "inclus"
+   },
+   {
+    "id": "N15",
+    "slug": "ia_tech_outils",
+    "level": 1,
+    "labels": {
+     "fr": "IA, tech et outils numeriques",
+     "en": "AI, tech and digital tools"
+    },
+    "children": [
+     {
+      "id": "N15.01",
+      "slug": "ia_generative"
+     },
+     {
+      "id": "N15.02",
+      "slug": "productivite_no_code"
+     },
+     {
+      "id": "N15.03",
+      "slug": "smartphones_gadgets"
+     },
+     {
+      "id": "N15.04",
+      "slug": "cybersecurite"
+     },
+     {
+      "id": "N15.05",
+      "slug": "applications"
+     }
+    ],
+    "keywords_seed": {
+     "fr": [
+      "IA",
+      "intelligence artificielle",
+      "ChatGPT",
+      "prompt",
+      "automatisation",
+      "no-code"
+     ],
+     "en": [
+      "AI",
+      "ChatGPT",
+      "prompt",
+      "AI agent",
+      "vibe coding"
+     ],
+     "ar": [
+      "الذكاء الاصطناعي",
+      "تطبيقات"
+     ],
+     "ary-Latn": [
+      "l'IA",
+      "ChatGPT",
+      "tilifoun",
+      "application"
+     ],
+     "ary-Arab": [
+      "الذكاء الاصطناعي",
+      "التيليفون"
+     ]
+    },
+    "keywords_status": "amorces a valider par locuteur natif (ar, ary)",
+    "observation_platforms": [
+     "youtube",
+     "linkedin",
+     "tiktok",
+     "x",
+     "app_stores"
+    ],
+    "scoring": "inclus"
+   },
+   {
+    "id": "N16",
+    "slug": "gaming_esport",
+    "level": 1,
+    "labels": {
+     "fr": "Jeux video et e-sport",
+     "en": "Gaming and esports"
+    },
+    "children": [
+     {
+      "id": "N16.01",
+      "slug": "jeux_mobiles"
+     },
+     {
+      "id": "N16.02",
+      "slug": "console_pc"
+     },
+     {
+      "id": "N16.03",
+      "slug": "esport"
+     },
+     {
+      "id": "N16.04",
+      "slug": "streaming_jeu"
+     }
+    ],
+    "keywords_seed": {
+     "fr": [
+      "jeux video",
+      "gaming",
+      "e-sport",
+      "stream",
+      "FC 26"
+     ],
+     "en": [
+      "gaming",
+      "esports",
+      "Twitch",
+      "Free Fire",
+      "PUBG Mobile"
+     ],
+     "ar": [
+      "ألعاب الفيديو",
+      "الرياضات الإلكترونية"
+     ],
+     "ary-Latn": [
+      "gaming",
+      "Free Fire",
+      "PUBG",
+      "eFootball"
+     ],
+     "ary-Arab": [
+      "الألعاب"
+     ]
+    },
+    "keywords_status": "amorces a valider par locuteur natif (ar, ary)",
+    "observation_platforms": [
+     "youtube",
+     "twitch",
+     "discord",
+     "tiktok"
+    ],
+    "scoring": "inclus"
+   },
+   {
+    "id": "N17",
+    "slug": "auto_moto_mobilite",
+    "level": 1,
+    "labels": {
+     "fr": "Auto, moto et mobilite",
+     "en": "Cars, motorbikes and mobility"
+    },
+    "children": [
+     {
+      "id": "N17.01",
+      "slug": "voiture"
+     },
+     {
+      "id": "N17.02",
+      "slug": "moto_scooter"
+     },
+     {
+      "id": "N17.03",
+      "slug": "electrique"
+     },
+     {
+      "id": "N17.04",
+      "slug": "permis"
+     },
+     {
+      "id": "N17.05",
+      "slug": "occasion"
+     }
+    ],
+    "keywords_seed": {
+     "fr": [
+      "voiture",
+      "moto",
+      "scooter",
+      "electrique",
+      "permis",
+      "occasion"
+     ],
+     "en": [
+      "car",
+      "EV",
+      "motorbike"
+     ],
+     "ar": [
+      "سيارات",
+      "دراجة نارية",
+      "سيارة كهربائية"
+     ],
+     "ary-Latn": [
+      "tomobil",
+      "moto",
+      "motor",
+      "lpermis"
+     ],
+     "ary-Arab": [
+      "الطوموبيل",
+      "الموطور",
+      "البيرمي"
+     ]
+    },
+    "keywords_status": "amorces a valider par locuteur natif (ar, ary)",
+    "observation_platforms": [
+     "youtube",
+     "facebook_marketplace",
+     "tiktok"
+    ],
+    "scoring": "inclus"
+   },
+   {
+    "id": "N18",
+    "slug": "animaux",
+    "level": 1,
+    "labels": {
+     "fr": "Animaux de compagnie",
+     "en": "Pets"
+    },
+    "children": [
+     {
+      "id": "N18.01",
+      "slug": "chats"
+     },
+     {
+      "id": "N18.02",
+      "slug": "chiens"
+     },
+     {
+      "id": "N18.03",
+      "slug": "alimentation_animale"
+     },
+     {
+      "id": "N18.04",
+      "slug": "sante_animale"
+     }
+    ],
+    "keywords_seed": {
+     "fr": [
+      "chat",
+      "chien",
+      "animaux",
+      "croquettes"
+     ],
+     "en": [
+      "pets",
+      "cat",
+      "dog",
+      "pettok"
+     ],
+     "ar": [
+      "حيوانات أليفة",
+      "قطط",
+      "كلاب"
+     ],
+     "ary-Latn": [
+      "mch",
+      "mchicha",
+      "kelb"
+     ],
+     "ary-Arab": [
+      "المش",
+      "المشيشة",
+      "الكلب"
+     ]
+    },
+    "keywords_status": "amorces a valider par locuteur natif (ar, ary)",
+    "observation_platforms": [
+     "tiktok",
+     "instagram"
+    ],
+    "scoring": "inclus"
+   },
+   {
+    "id": "N19",
+    "slug": "mariage_evenementiel",
+    "level": 1,
+    "labels": {
+     "fr": "Mariage et evenementiel",
+     "en": "Weddings and events"
+    },
+    "children": [
+     {
+      "id": "N19.01",
+      "slug": "mariage"
+     },
+     {
+      "id": "N19.02",
+      "slug": "fiancailles_henne"
+     },
+     {
+      "id": "N19.03",
+      "slug": "fetes_anniversaires"
+     },
+     {
+      "id": "N19.04",
+      "slug": "fetes_religieuses_naissance"
+     }
+    ],
+    "keywords_seed": {
+     "fr": [
+      "mariage",
+      "fiancailles",
+      "henne",
+      "robe de mariee",
+      "traiteur",
+      "neggafa"
+     ],
+     "en": [
+      "wedding",
+      "bridal",
+      "engagement",
+      "wedding planning"
+     ],
+     "ar": [
+      "عرس",
+      "زفاف",
+      "خطوبة",
+      "حناء"
+     ],
+     "ary-Latn": [
+      "3ers",
+      "neggafa",
+      "takchita",
+      "l3amariya",
+      "lhenna"
+     ],
+     "ary-Arab": [
+      "العرس",
+      "النكافة",
+      "العمارية",
+      "الحنة"
+     ]
+    },
+    "keywords_status": "amorces a valider par locuteur natif (ar, ary)",
+    "observation_platforms": [
+     "instagram",
+     "tiktok",
+     "pinterest",
+     "facebook"
+    ],
+    "scoring": "inclus"
+   },
+   {
+    "id": "N20",
+    "slug": "religion_spiritualite",
+    "level": 1,
+    "labels": {
+     "fr": "Religion et spiritualite",
+     "en": "Religion and spirituality"
+    },
+    "children": [
+     {
+      "id": "N20.01",
+      "slug": "islam_pratique"
+     },
+     {
+      "id": "N20.02",
+      "slug": "christianisme"
+     },
+     {
+      "id": "N20.03",
+      "slug": "spiritualites_alternatives"
+     },
+     {
+      "id": "N20.04",
+      "slug": "retraites"
+     }
+    ],
+    "keywords_seed": {
+     "fr": [
+      "Ramadan",
+      "priere",
+      "Coran",
+      "rappel",
+      "foi",
+      "bapteme",
+      "astrologie"
+     ],
+     "en": [
+      "faith",
+      "prayer",
+      "Ramadan",
+      "Bible",
+      "astrology",
+      "tarot"
+     ],
+     "ar": [
+      "رمضان",
+      "القرآن",
+      "الدعاء",
+      "الصلاة",
+      "تذكير"
+     ],
+     "ary-Latn": [
+      "rmdan",
+      "salat",
+      "d3a",
+      "lftour"
+     ],
+     "ary-Arab": [
+      "رمضان",
+      "الصلاة",
+      "الدعاء",
+      "الفطور"
+     ]
+    },
+    "keywords_status": "amorces a valider par locuteur natif (ar, ary)",
+    "observation_platforms": [
+     "youtube",
+     "tiktok",
+     "instagram",
+     "app_stores"
+    ],
+    "scoring": "inclus"
+   },
+   {
+    "id": "N21",
+    "slug": "divertissement_humour_fandoms",
+    "level": 1,
+    "labels": {
+     "fr": "Divertissement, humour et fandoms",
+     "en": "Entertainment, comedy and fandoms"
+    },
+    "children": [
+     {
+      "id": "N21.01",
+      "slug": "humour_sketchs"
+     },
+     {
+      "id": "N21.02",
+      "slug": "series_microdramas"
+     },
+     {
+      "id": "N21.03",
+      "slug": "celebrites_telerealite"
+     },
+     {
+      "id": "N21.04",
+      "slug": "anime_manga_kpop"
+     },
+     {
+      "id": "N21.05",
+      "slug": "cinema"
+     },
+     {
+      "id": "N21.06",
+      "slug": "lecture_booktok"
+     }
+    ],
+    "keywords_seed": {
+     "fr": [
+      "humour",
+      "sketch",
+      "serie",
+      "micro-drama",
+      "telerealite",
+      "manga",
+      "K-pop"
+     ],
+     "en": [
+      "comedy",
+      "skit",
+      "microdrama",
+      "reality TV",
+      "anime",
+      "fandom"
+     ],
+     "ar": [
+      "كوميديا",
+      "مسلسل",
+      "مشاهير"
+     ],
+     "ary-Latn": [
+      "dhk",
+      "nokat",
+      "mosalsal",
+      "lflm"
+     ],
+     "ary-Arab": [
+      "الضحك",
+      "النكت",
+      "مسلسل"
+     ]
+    },
+    "keywords_status": "amorces a valider par locuteur natif (ar, ary)",
+    "observation_platforms": [
+     "tiktok",
+     "youtube",
+     "instagram",
+     "snapchat_fr"
+    ],
+    "scoring": "inclus"
+   },
+   {
+    "id": "N22",
+    "slug": "musique",
+    "level": 1,
+    "labels": {
+     "fr": "Musique",
+     "en": "Music"
+    },
+    "children": [
+     {
+      "id": "N22.01",
+      "slug": "rap_urbain"
+     },
+     {
+      "id": "N22.02",
+      "slug": "musiques_maghreb"
+     },
+     {
+      "id": "N22.03",
+      "slug": "musiques_afrique"
+     },
+     {
+      "id": "N22.04",
+      "slug": "pop_variete"
+     },
+     {
+      "id": "N22.05",
+      "slug": "concerts_festivals"
+     },
+     {
+      "id": "N22.06",
+      "slug": "musique_ia"
+     }
+    ],
+    "keywords_seed": {
+     "fr": [
+      "rap",
+      "son",
+      "clip",
+      "concert",
+      "festival",
+      "rai",
+      "afro"
+     ],
+     "en": [
+      "music",
+      "rap",
+      "afrobeats",
+      "concert"
+     ],
+     "ar": [
+      "موسيقى",
+      "أغنية",
+      "راب",
+      "حفل"
+     ],
+     "ary-Latn": [
+      "lghna",
+      "chaabi",
+      "gnawa",
+      "rap"
+     ],
+     "ary-Arab": [
+      "الغنا",
+      "الشعبي",
+      "كناوة"
+     ]
+    },
+    "keywords_status": "amorces a valider par locuteur natif (ar, ary)",
+    "observation_platforms": [
+     "youtube",
+     "tiktok",
+     "spotify_deezer_charts"
+    ],
+    "scoring": "inclus"
+   },
+   {
+    "id": "N23",
+    "slug": "education_langues",
+    "level": 1,
+    "labels": {
+     "fr": "Education et langues",
+     "en": "Education and languages"
+    },
+    "children": [
+     {
+      "id": "N23.01",
+      "slug": "langues"
+     },
+     {
+      "id": "N23.02",
+      "slug": "soutien_scolaire_examens"
+     },
+     {
+      "id": "N23.03",
+      "slug": "competences_pro"
+     },
+     {
+      "id": "N23.04",
+      "slug": "numerique_ia_pour_tous"
+     },
+     {
+      "id": "N23.05",
+      "slug": "culture_generale"
+     }
+    ],
+    "keywords_seed": {
+     "fr": [
+      "apprendre l'anglais",
+      "cours",
+      "revisions",
+      "bac",
+      "methode",
+      "formation"
+     ],
+     "en": [
+      "learn English",
+      "study with me",
+      "tutoring",
+      "online course"
+     ],
+     "ar": [
+      "تعلم الإنجليزية",
+      "دروس",
+      "الباكالوريا",
+      "امتحان"
+     ],
+     "ary-Latn": [
+      "t3allam l'anglais",
+      "dourous",
+      "lbac",
+      "l'examen"
+     ],
+     "ary-Arab": [
+      "الدروس",
+      "الباك",
+      "الامتحان"
+     ]
+    },
+    "keywords_status": "amorces a valider par locuteur natif (ar, ary)",
+    "observation_platforms": [
+     "youtube",
+     "tiktok",
+     "whatsapp_chaines"
+    ],
+    "scoring": "inclus"
+   },
+   {
+    "id": "N24",
+    "slug": "terroir_artisanat",
+    "level": 1,
+    "labels": {
+     "fr": "Terroir, artisanat et fabrication locale",
+     "en": "Local produce and crafts"
+    },
+    "children": [
+     {
+      "id": "N24.01",
+      "slug": "produits_terroir"
+     },
+     {
+      "id": "N24.02",
+      "slug": "artisanat"
+     },
+     {
+      "id": "N24.03",
+      "slug": "fabrique_localement"
+     },
+     {
+      "id": "N24.04",
+      "slug": "savoir_faire"
+     }
+    ],
+    "keywords_seed": {
+     "fr": [
+      "artisanat",
+      "fait main",
+      "terroir",
+      "produits locaux",
+      "tapis berbere",
+      "argan"
+     ],
+     "en": [
+      "handmade",
+      "artisan",
+      "local products",
+      "berber rug"
+     ],
+     "ar": [
+      "الصناعة التقليدية",
+      "منتجات محلية",
+      "زربية",
+      "أركان"
+     ],
+     "ary-Latn": [
+      "beldi",
+      "zerbiya",
+      "argan",
+      "amlou"
+     ],
+     "ary-Arab": [
+      "بلدي",
+      "الزربية",
+      "أركان",
+      "أملو"
+     ]
+    },
+    "keywords_status": "amorces a valider par locuteur natif (ar, ary)",
+    "observation_platforms": [
+     "pinterest",
+     "instagram",
+     "etsy",
+     "tiktok"
+    ],
+    "scoring": "inclus"
+   },
+   {
+    "id": "N25",
+    "slug": "relations_amitie",
+    "level": 1,
+    "labels": {
+     "fr": "Relations, rencontres et amitie",
+     "en": "Dating, relationships and friendship"
+    },
+    "children": [
+     {
+      "id": "N25.01",
+      "slug": "rencontres"
+     },
+     {
+      "id": "N25.02",
+      "slug": "amitie_sociabilite"
+     },
+     {
+      "id": "N25.03",
+      "slug": "couple"
+     },
+     {
+      "id": "N25.04",
+      "slug": "vie_solo"
+     }
+    ],
+    "keywords_seed": {
+     "fr": [
+      "celibataire",
+      "rencontre",
+      "appli de rencontre",
+      "couple",
+      "amitie",
+      "sortir seul"
+     ],
+     "en": [
+      "dating",
+      "situationship",
+      "friendship",
+      "solo life"
+     ],
+     "ar": [
+      "علاقات",
+      "صداقة",
+      "زواج"
+     ],
+     "ary-Latn": [
+      "lhob",
+      "s7ab",
+      "zwaj"
+     ],
+     "ary-Arab": [
+      "الحب",
+      "الصحاب",
+      "الزواج"
+     ]
+    },
+    "keywords_status": "amorces a valider par locuteur natif (ar, ary)",
+    "observation_platforms": [
+     "tiktok",
+     "instagram",
+     "app_stores"
+    ],
+    "scoring": "inclus"
+   },
+   {
+    "id": "N26",
+    "slug": "info_societe",
+    "level": 1,
+    "labels": {
+     "fr": "Information et societe (technique, hors score)",
+     "en": "News and society"
+    },
+    "children": [
+     {
+      "id": "N26.01",
+      "slug": "actualite"
+     },
+     {
+      "id": "N26.02",
+      "slug": "politique"
+     },
+     {
+      "id": "N26.03",
+      "slug": "causes"
+     },
+     {
+      "id": "N26.04",
+      "slug": "environnement_militant"
+     }
+    ],
+    "keywords_seed": {
+     "fr": [
+      "actualite",
+      "politique",
+      "election"
+     ],
+     "en": [
+      "news",
+      "politics"
+     ],
+     "ar": [
+      "أخبار",
+      "سياسة"
+     ],
+     "ary-Latn": [
+      "lakhbar"
+     ],
+     "ary-Arab": [
+      "الأخبار"
+     ]
+    },
+    "keywords_status": "amorces a valider par locuteur natif (ar, ary)",
+    "observation_platforms": [
+     "x_fr",
+     "youtube",
+     "facebook"
+    ],
+    "scoring": "exclu"
+   },
+   {
+    "id": "N27",
+    "slug": "non_classe",
+    "level": 1,
+    "labels": {
+     "fr": "Non classe (technique)",
+     "en": "Unclassified"
+    },
+    "children": [
+     {
+      "id": "N27.01",
+      "slug": "file_de_revue"
+     }
+    ],
+    "keywords_seed": {},
+    "keywords_status": "amorces a valider par locuteur natif (ar, ary)",
+    "observation_platforms": [],
+    "scoring": "exclu"
+   }
+  ],
+  "facettes": [
+   {
+    "id": "LS",
+    "label": "etape_de_vie",
+    "exclusive": true,
+    "values": [
+     "L-LS-ADO",
+     "L-LS-ETUDIANTS",
+     "L-LS-JEUNES_ACTIFS",
+     "L-LS-JEUNES_PARENTS",
+     "L-LS-FAMILLES",
+     "L-LS-ADULTES",
+     "L-LS-SENIORS"
+    ]
+   },
+   {
+    "id": "CO",
+    "label": "cohorte",
+    "exclusive": true,
+    "values": [
+     "L-CO-ALPHA",
+     "L-CO-GENZ",
+     "L-CO-MILLENNIAL",
+     "L-CO-GENX",
+     "L-CO-BOOMER"
+    ]
+   },
+   {
+    "id": "HA",
+    "label": "habitat",
+    "exclusive": true,
+    "values": [
+     "L-HA-METROPOLE",
+     "L-HA-URBAIN",
+     "L-HA-PERIURBAIN",
+     "L-HA-RURAL",
+     "L-HA-NEO_RURAL(drapeau)"
+    ]
+   },
+   {
+    "id": "WM",
+    "label": "mode_de_travail",
+    "exclusive": false,
+    "values": [
+     "L-WM-SALARIE",
+     "L-WM-SOLO",
+     "L-WM-NOMADE",
+     "L-WM-DEBROUILLE",
+     "L-WM-SANS_EMPLOI"
+    ]
+   },
+   {
+    "id": "OM",
+    "label": "origine_mobilite",
+    "exclusive": false,
+    "values": [
+     "L-OM-SEDENTAIRE",
+     "L-OM-DIASPORA",
+     "L-OM-EXPAT",
+     "L-OM-RETRAITE_EXPAT",
+     "L-OM-ETUDIANT_INTL",
+     "L-OM-FRONTALIER"
+    ]
+   },
+   {
+    "id": "VI",
+    "label": "valeurs_identite",
+    "exclusive": false,
+    "values": [
+     "L-VI-HALAL",
+     "L-VI-ECO",
+     "L-VI-FRUGAL",
+     "L-VI-SOFT_LIFE",
+     "L-VI-LUXE_ASPI",
+     "L-VI-TRADITION"
+    ]
+   },
+   {
+    "id": "PA",
+    "label": "passion",
+    "exclusive": false,
+    "derived_from": "affinite_de_niche",
+    "values": [
+     "L-PA-GAMER",
+     "L-PA-SPORTIF"
+    ]
+   }
+  ],
+  "lifestyles": [
+   {
+    "id": "L-CO-GENZ",
+    "label": "Gen Z urbaine (x L-HA-URBAIN)",
+    "size": {
+     "FR_18_24": "5,95 M",
+     "MA_18_24": "4,27 M",
+     "DZ_18_24": "4,63 M",
+     "CD_18_24": "14,7 M"
+    },
+    "platforms": [
+     "tiktok",
+     "instagram",
+     "snapchat_fr",
+     "youtube"
+    ],
+    "evidence": "E sur V"
+   },
+   {
+    "id": "L-LS-ETUDIANTS",
+    "size": {
+     "FR": "3,05 M (2025-2026)",
+     "FR_etrangers": 352800
+    },
+    "platforms": [
+     "instagram",
+     "tiktok",
+     "snapchat",
+     "discord",
+     "youtube"
+    ],
+    "evidence": "S"
+   },
+   {
+    "id": "L-LS-JEUNES_ACTIFS",
+    "size": {
+     "FR_25_34": "7,68 M",
+     "MA_25_34": "5,74 M",
+     "DZ_25_34": "6,22 M",
+     "CI_25_34": "4,65 M",
+     "QC_25_34": "1,28 M (E)"
+    },
+    "platforms": [
+     "instagram",
+     "linkedin",
+     "youtube",
+     "tiktok"
+    ],
+    "evidence": "E sur V"
+   },
+   {
+    "id": "L-LS-JEUNES_PARENTS",
+    "size": {
+     "FR_naissances_2025": 643905,
+     "FR_enfants_0_5": "~3,9 M (E)"
+    },
+    "platforms": [
+     "instagram",
+     "pinterest",
+     "facebook_groupes",
+     "whatsapp"
+    ],
+    "evidence": "S"
+   },
+   {
+    "id": "L-LS-FAMILLES",
+    "size": {
+     "FR_13_17": "4,07 M"
+    },
+    "platforms": [
+     "facebook",
+     "whatsapp",
+     "youtube"
+    ],
+    "evidence": "E"
+   },
+   {
+    "id": "L-LS-ADULTES",
+    "size": {
+     "FR_35_54": "16,3 M"
+    },
+    "platforms": [
+     "facebook",
+     "youtube",
+     "instagram",
+     "linkedin"
+    ],
+    "evidence": "E",
+    "note": "ajoute pour rendre la facette exhaustive"
+   },
+   {
+    "id": "L-LS-SENIORS",
+    "size": {
+     "FR_65plus": "15,3 M (22,9 %)",
+     "QC_65plus": "21,7 %",
+     "FR_70plus_ia": "15 %"
+    },
+    "platforms": [
+     "facebook",
+     "whatsapp",
+     "youtube"
+    ],
+    "evidence": "V"
+   },
+   {
+    "id": "L-WM-SOLO",
+    "size": {
+     "FR_auto_entrepreneurs": 3031000,
+     "FR_avec_CA": 2180000,
+     "MA_auto_entrepreneurs": 463383
+    },
+    "platforms": [
+     "linkedin",
+     "youtube",
+     "instagram",
+     "skool_discord"
+    ],
+    "evidence": "S / R"
+   },
+   {
+    "id": "L-WM-NOMADE",
+    "size": {
+     "US": "18,5 M (2025)",
+     "MA": "aucun comptage, pas de visa dedie"
+    },
+    "platforms": [
+     "youtube",
+     "instagram",
+     "reddit",
+     "groupes"
+    ],
+    "evidence": "R / S"
+   },
+   {
+    "id": "L-OM-DIASPORA",
+    "size": {
+     "DIA-MAGH@FR": 4871000,
+     "DIA-SSA@FR": 2931000,
+     "MRE": "5 a 6 M (presse)"
+    },
+    "platforms": [
+     "facebook",
+     "instagram",
+     "tiktok",
+     "youtube",
+     "whatsapp"
+    ],
+    "evidence": "V / S"
+   },
+   {
+    "id": "L-OM-EXPAT",
+    "size": {
+     "EXP-FR@MA_inscrits": "> 50 000",
+     "EXP-FR@MA_presents": "> 80 000"
+    },
+    "platforms": [
+     "facebook_groupes",
+     "whatsapp",
+     "youtube"
+    ],
+    "evidence": "S"
+   },
+   {
+    "id": "L-OM-RETRAITE_EXPAT",
+    "size": {
+     "FR_retraites_au_MA": "> 61 000 (faible)"
+    },
+    "evidence": "S faible"
+   },
+   {
+    "id": "L-VI-HALAL",
+    "size": {
+     "FR_18_59_musulmans": "~10 % (TeO2)",
+     "FR_15plus_Ifop_2025": "7 %",
+     "monde_depense_musulmans_2024": "2 600 Md$"
+    },
+    "platforms": [
+     "instagram",
+     "tiktok",
+     "youtube",
+     "apps"
+    ],
+    "evidence": "S"
+   },
+   {
+    "id": "L-VI-ECO",
+    "size": {
+     "FR_conso_responsable": "~40 % (ObSoCo, non date)",
+     "FR_smartphone_occasion": "20 %",
+     "FR_reparation_3_ans": "38 %"
+    },
+    "platforms": [
+     "instagram",
+     "pinterest",
+     "vinted",
+     "youtube"
+    ],
+    "evidence": "V / S"
+   },
+   {
+    "id": "L-VI-SOFT_LIFE",
+    "size": {
+     "US_publications": "~460 000 (YPulse 12/2025)",
+     "francophonie": "non mesure"
+    },
+    "platforms": [
+     "tiktok",
+     "instagram",
+     "pinterest"
+    ],
+    "evidence": "R / H"
+   },
+   {
+    "id": "L-VI-FRUGAL",
+    "size": {
+     "francophonie": "non mesure"
+    },
+    "platforms": [
+     "youtube",
+     "reddit",
+     "newsletters"
+    ],
+    "evidence": "H"
+   },
+   {
+    "id": "L-VI-LUXE_ASPI",
+    "size": {
+     "francophonie": "non mesure"
+    },
+    "platforms": [
+     "instagram",
+     "tiktok"
+    ],
+    "evidence": "H"
+   },
+   {
+    "id": "L-PA-GAMER",
+    "size": {
+     "FR_joueurs": 40200000,
+     "QC_internautes_joueurs": "80 %",
+     "MA_discord": "6 % des internautes 16+"
+    },
+    "platforms": [
+     "youtube",
+     "twitch",
+     "discord",
+     "tiktok"
+    ],
+    "evidence": "V"
+   },
+   {
+    "id": "L-PA-SPORTIF",
+    "size": {
+     "FR_pratique_hebdo_15plus": "61 %",
+     "FR_coureurs": "13,2 M"
+    },
+    "platforms": [
+     "strava",
+     "instagram",
+     "youtube",
+     "tiktok"
+    ],
+    "evidence": "V / R"
+   },
+   {
+    "id": "L-HA-NEO_RURAL",
+    "size": {
+     "FR_demenagements_ville_vers_campagne": "~14 % (POPSU 2023)"
+    },
+    "platforms": [
+     "facebook_groupes_locaux",
+     "youtube",
+     "instagram"
+    ],
+    "evidence": "S"
+   },
+   {
+    "id": "L-WM-DEBROUILLE",
+    "size": {
+     "Afrique_emploi_informel": "~85 % (OIT) ou 83 % (CEA 2024)",
+     "MA_unites_informelles": 2030000,
+     "MA_emploi_informel_non_agricole": "33,1 %"
+    },
+    "platforms": [
+     "facebook",
+     "whatsapp",
+     "tiktok"
+    ],
+    "evidence": "S"
+   }
+  ]
+ },
+ "priorisation": {
+  "formule": "S = 100 x (T/5)^0.30 x (C/5)^0.20 x (R/5)^0.25 x (F/5)^0.25",
+  "poids": {
+   "T": 0.3,
+   "C": 0.2,
+   "R": 0.25,
+   "F": 0.25
+  },
+  "filtre_bloquant": "table niche x zone -> autorise | restreint | interdit | en_changement ; interdit => cellule exclue",
+  "niveaux_preuve": {
+   "A": "faits primaires des deux cotes",
+   "B": "primaire d'un cote, secondaire de l'autre",
+   "C": "surtout hypotheses ou secondaire"
+  },
+  "rubrique": {
+   "T": "1 <0,3 M ou IPAN<2 ; 2 0,3-1 M ; 3 1-3 M ; 4 3-10 M ou 1-3 M a IPAN>100 ; 5 >10 M ou >3 M a IPAN>100",
+   "C": "1 recul ; 2 0-3 %/an ; 3 3-10 % ; 4 10-20 % ; 5 >20 % ou ouverture de canal",
+   "R": "1 bloque ou pas d'avance US ; 2 local mainstream ou flux inverse ; 3 local en acceleration ; 4 local emergent ; 5 US acceleration/mainstream et local absent, friction faible",
+   "F": "1 bloque ; 2 lourde ; 3 notable (COD, mobile money, allegations sante) ; 4 legere ; 5 produit numerique, Stripe/Paddle, FR, sans regulation"
+  },
+  "cellules": [
+   {
+    "cell_id": "FR.N05.L-LS-ADULTES",
+    "pays": "FR",
+    "niche": "N05 nutrition_poids",
+    "lifestyle": "L-LS-ADULTES (35-59)",
+    "T": 5,
+    "C": 5,
+    "R": 5,
+    "F": 3,
+    "score": 88.0,
+    "score_poids_egaux": 88.0,
+    "score_faisabilite_40": 81.5,
+    "niveau_preuve": "A",
+    "flux": "USA->FR",
+    "justification": "GLP-1 rembourse a 65 % depuis le 15/06/2026, ventes +74 % en volume en 11 semaines ; USA 11 % des adultes sous GLP-1 ; accompagnement nutrition/proteines/coaching quasi vide ; allegations sante encadrees",
+    "rang": 1,
+    "rang_poids_egaux": 1,
+    "rang_faisabilite_40": 4
+   },
+   {
+    "cell_id": "FR.N15.L-WM-SOLO",
+    "pays": "FR",
+    "niche": "N15 ia_tech_outils",
+    "lifestyle": "L-WM-SOLO (freelances, solopreneurs)",
+    "T": 5,
+    "C": 4,
+    "R": 3,
+    "F": 5,
+    "score": 84.2,
+    "score_poids_egaux": 83.2,
+    "score_faisabilite_40": 87.3,
+    "niveau_preuve": "A",
+    "flux": "USA->FR",
+    "justification": "3,031 M d'auto-entrepreneurs actifs fin 2025 (+4,5 %), 2,18 M avec CA ; IA generative 48 % de la population (33 % en 2024) ; agents et vibe coding US",
+    "rang": 2,
+    "rang_poids_egaux": 3,
+    "rang_faisabilite_40": 1
+   },
+   {
+    "cell_id": "MA.N10.L-OM-EXPAT",
+    "pays": "MA",
+    "niche": "N10 voyage_tourisme",
+    "lifestyle": "L-OM-EXPAT / visiteurs europeens",
+    "T": 4,
+    "C": 5,
+    "R": 4,
+    "F": 4,
+    "score": 83.7,
+    "score_poids_egaux": 84.6,
+    "score_faisabilite_40": 82.7,
+    "niveau_preuve": "B",
+    "flux": "USA->FR->MA",
+    "justification": "Recettes voyages 138,6 Md DH en 2025 (+21 %) ; voyage pilote par le sport (Hyrox Marrakech ~2 076 EUR/8 j) ; clients payant en euros ; entite MA sans Stripe",
+    "rang": 3,
+    "rang_poids_egaux": 2,
+    "rang_faisabilite_40": 2
+   },
+   {
+    "cell_id": "FR.N03.L-LS-JEUNES_ACTIFS",
+    "pays": "FR",
+    "niche": "N03 sport_pratique",
+    "lifestyle": "L-LS-JEUNES_ACTIFS",
+    "T": 5,
+    "C": 5,
+    "R": 3,
+    "F": 4,
+    "score": 83.2,
+    "score_poids_egaux": 83.2,
+    "score_faisabilite_40": 82.6,
+    "niveau_preuve": "B",
+    "flux": "USA<->EU",
+    "justification": "13,2 M de coureurs, 80 % des nouveaux < 35 ans ; Hyrox Grand Palais > 22 000 participants ; Club Pilates 14 studios (07/2026) ; 61 % des 15+ pratiquent chaque semaine",
+    "rang": 4,
+    "rang_poids_egaux": 4,
+    "rang_faisabilite_40": 3
+   },
+   {
+    "cell_id": "FR.N25.L-LS-JEUNES_ACTIFS",
+    "pays": "FR",
+    "niche": "N25 relations_amitie",
+    "lifestyle": "L-LS-JEUNES_ACTIFS / vie en solo",
+    "T": 4,
+    "C": 4,
+    "R": 4,
+    "F": 4,
+    "score": 80.0,
+    "score_poids_egaux": 80.0,
+    "score_faisabilite_40": 80.0,
+    "niveau_preuve": "B",
+    "flux": "USA->FR",
+    "justification": "Fatigue des applis de rencontre (Match -6 % de payeurs) ; diners entre inconnus (Timeleft FR/BE) ; run-dating ; formats evenementiels payants",
+    "rang": 5,
+    "rang_poids_egaux": 5,
+    "rang_faisabilite_40": 7
+   },
+   {
+    "cell_id": "FR.N01.L-LS-GENZ",
+    "pays": "FR",
+    "niche": "N01 beaute_soins",
+    "lifestyle": "L-CO-GENZ x urbain",
+    "T": 5,
+    "C": 4,
+    "R": 3,
+    "F": 4,
+    "score": 79.6,
+    "score_poids_egaux": 78.7,
+    "score_faisabilite_40": 79.9,
+    "niveau_preuve": "B",
+    "flux": "Asie/USA->FR",
+    "justification": "K-beauty 2.0 (2 Md$ US, +37 %), grooming masculin, dupes ; TikTok Shop FR depuis 31/03/2025, 33 000 vendeurs ; affiliation",
+    "rang": 6,
+    "rang_poids_egaux": 7,
+    "rang_faisabilite_40": 8
+   },
+   {
+    "cell_id": "QC.N15.L-WM-SOLO",
+    "pays": "QC",
+    "niche": "N15 ia_tech_outils",
+    "lifestyle": "L-WM-SOLO",
+    "T": 3,
+    "C": 4,
+    "R": 4,
+    "F": 5,
+    "score": 77.6,
+    "score_poids_egaux": 78.7,
+    "score_faisabilite_40": 81.4,
+    "niveau_preuve": "C",
+    "flux": "USA->QC",
+    "justification": "Contenu et outils IA abondants en anglais, version francaise en retard [H] ; Canada marche-sas des lancements US ; Stripe et CAD disponibles",
+    "rang": 7,
+    "rang_poids_egaux": 8,
+    "rang_faisabilite_40": 5
+   },
+   {
+    "cell_id": "FR.N14.L-VI-ECO",
+    "pays": "FR",
+    "niche": "N14 entrepreneuriat_revenus",
+    "lifestyle": "L-VI-ECO (revendeurs seconde main)",
+    "T": 5,
+    "C": 4,
+    "R": 2,
+    "F": 5,
+    "score": 76.1,
+    "score_poids_egaux": 75.2,
+    "score_faisabilite_40": 80.5,
+    "niveau_preuve": "A",
+    "flux": "FR->USA (inverse)",
+    "justification": "Vinted 1,1 Md EUR de CA 2025 (+38 %), GMV 10,8 Md EUR, 1er vendeur de vetements en volume ; France en avance : flux inverse",
+    "rang": 8,
+    "rang_poids_egaux": 9,
+    "rang_faisabilite_40": 6
+   },
+   {
+    "cell_id": "BE.N14.L-WM-SOLO",
+    "pays": "BE",
+    "niche": "N14 entrepreneuriat_revenus",
+    "lifestyle": "L-WM-SOLO (vendeurs TikTok Shop)",
+    "T": 2,
+    "C": 5,
+    "R": 5,
+    "F": 5,
+    "score": 76.0,
+    "score_poids_egaux": 79.5,
+    "score_faisabilite_40": 79.5,
+    "niveau_preuve": "A",
+    "flux": "FR->BE",
+    "justification": "TikTok Shop ouvert en Belgique le 15/06/2026, 14,5 mois apres la France ; playbooks FR reutilisables sans traduction ; Bancontact",
+    "rang": 9,
+    "rang_poids_egaux": 6,
+    "rang_faisabilite_40": 9
+   },
+   {
+    "cell_id": "FR.N20.L-VI-HALAL",
+    "pays": "FR",
+    "niche": "N20 religion_spiritualite",
+    "lifestyle": "L-VI-HALAL / pratiquants",
+    "T": 4,
+    "C": 3,
+    "R": 4,
+    "F": 4,
+    "score": 75.5,
+    "score_poids_egaux": 74.4,
+    "score_faisabilite_40": 76.6,
+    "niveau_preuve": "B",
+    "flux": "USA->FR",
+    "justification": "Musulmans ~10 % des 18-59 ans (TeO2) ; apps de priere US en croissance (Hallow ~40 M$) ; baptemes d'adultes x3 depuis 2016",
+    "rang": 10,
+    "rang_poids_egaux": 10,
+    "rang_faisabilite_40": 11
+   },
+   {
+    "cell_id": "FR.N07.L-LS-JEUNES_PARENTS",
+    "pays": "FR",
+    "niche": "N07 parentalite_famille",
+    "lifestyle": "L-LS-JEUNES_PARENTS",
+    "T": 4,
+    "C": 3,
+    "R": 4,
+    "F": 4,
+    "score": 75.5,
+    "score_poids_egaux": 74.4,
+    "score_faisabilite_40": 76.6,
+    "niveau_preuve": "B",
+    "flux": "USA->FR",
+    "justification": "643 905 naissances en 2025 ; enfance sans smartphone (USA en acceleration) ; debat legislatif FR sur les moins de 15 ans",
+    "rang": 11,
+    "rang_poids_egaux": 11,
+    "rang_faisabilite_40": 12
+   },
+   {
+    "cell_id": "DIA.N12.L-OM-DIASPORA",
+    "pays": "DIA-MAGH-FR",
+    "niche": "N12 immobilier_logement",
+    "lifestyle": "L-OM-DIASPORA (Maghreb en France)",
+    "T": 5,
+    "C": 3,
+    "R": 3,
+    "F": 4,
+    "score": 75.2,
+    "score_poids_egaux": 73.3,
+    "score_faisabilite_40": 76.5,
+    "niveau_preuve": "B",
+    "flux": "USA->diaspora",
+    "justification": "4,87 M d'immigres et descendants d'origine maghrebine en France (Insee 2025) ; transferts MA 13,66 Md$ (7,5 % du PIB) ; paiement en euros",
+    "rang": 12,
+    "rang_poids_egaux": 15,
+    "rang_faisabilite_40": 13
+   },
+   {
+    "cell_id": "FR.N23.L-LS-SENIORS",
+    "pays": "FR",
+    "niche": "N23 education_langues (IA/numerique)",
+    "lifestyle": "L-LS-SENIORS",
+    "T": 5,
+    "C": 3,
+    "R": 3,
+    "F": 4,
+    "score": 75.2,
+    "score_poids_egaux": 73.3,
+    "score_faisabilite_40": 76.5,
+    "niveau_preuve": "B",
+    "flux": "interne",
+    "justification": "65+ = 22,9 % de la population ; 15 % des 70+ utilisent l'IA generative contre 85 % des 18-24 ans (ecart de 70 points)",
+    "rang": 13,
+    "rang_poids_egaux": 16,
+    "rang_faisabilite_40": 14
+   },
+   {
+    "cell_id": "FR.N09.L-LS-JEUNES_ACTIFS",
+    "pays": "FR",
+    "niche": "N09 maison_deco_jardin",
+    "lifestyle": "L-LS-JEUNES_ACTIFS",
+    "T": 5,
+    "C": 2,
+    "R": 4,
+    "F": 4,
+    "score": 74.5,
+    "score_poids_egaux": 71.1,
+    "score_faisabilite_40": 76.2,
+    "niveau_preuve": "C",
+    "flux": "USA->FR / MA->FR",
+    "justification": "Deco maximaliste afro-boheme et berbere (Pinterest Predicts 2026) ; Pinterest FR 18,2 M (-0,9 %)",
+    "rang": 14,
+    "rang_poids_egaux": 20,
+    "rang_faisabilite_40": 15
+   },
+   {
+    "cell_id": "FR.N21.L-LS-JEUNES_ACTIFS",
+    "pays": "FR",
+    "niche": "N21 divertissement (micro-dramas)",
+    "lifestyle": "L-LS-JEUNES_ACTIFS (femmes 25-44)",
+    "T": 4,
+    "C": 4,
+    "R": 4,
+    "F": 3,
+    "score": 74.4,
+    "score_poids_egaux": 74.4,
+    "score_faisabilite_40": 71.3,
+    "niveau_preuve": "B",
+    "flux": "Asie/USA->FR",
+    "justification": "Micro-dramas mainstream US, emergents FR (>5 M$/mois d'apps, ~70 % feminin, ARTE et France.tv en 2026) ; budgets /3 ou /4",
+    "rang": 15,
+    "rang_poids_egaux": 12,
+    "rang_faisabilite_40": 19
+   },
+   {
+    "cell_id": "MA.N24.EXPORT",
+    "pays": "MA",
+    "niche": "N24 terroir_artisanat",
+    "lifestyle": "export vers FR/USA + L-OM-DIASPORA",
+    "T": 4,
+    "C": 4,
+    "R": 4,
+    "F": 3,
+    "score": 74.4,
+    "score_poids_egaux": 74.4,
+    "score_faisabilite_40": 71.3,
+    "niveau_preuve": "C",
+    "flux": "MA->FR/USA (inverse)",
+    "justification": "Le Maroc est l'origine d'une partie de l'offre (tapis, motifs berberes) ; logistique export et rails de paiement a resoudre",
+    "rang": 16,
+    "rang_poids_egaux": 13,
+    "rang_faisabilite_40": 20
+   },
+   {
+    "cell_id": "FR.N13.L-LS-ETUDIANTS",
+    "pays": "FR",
+    "niche": "N13 carriere_emploi_etudes",
+    "lifestyle": "L-LS-ETUDIANTS",
+    "T": 4,
+    "C": 3,
+    "R": 3,
+    "F": 5,
+    "score": 74.3,
+    "score_poids_egaux": 73.3,
+    "score_faisabilite_40": 79.1,
+    "niveau_preuve": "A",
+    "flux": "interne",
+    "justification": "3,05 M d'etudiants (+1,1 %), 628 500 apprentis du superieur ; 85 % des 18-24 ans utilisent l'IA generative",
+    "rang": 17,
+    "rang_poids_egaux": 17,
+    "rang_faisabilite_40": 10
+   },
+   {
+    "cell_id": "MA.N14.L-WM-DEBROUILLE",
+    "pays": "MA",
+    "niche": "N14 entrepreneuriat_revenus",
+    "lifestyle": "L-WM-DEBROUILLE (commercants COD)",
+    "T": 3,
+    "C": 4,
+    "R": 4,
+    "F": 4,
+    "score": 73.4,
+    "score_poids_egaux": 74.4,
+    "score_faisabilite_40": 74.4,
+    "niveau_preuve": "B",
+    "flux": "USA->MA",
+    "justification": "Paiement a la livraison 84,1 % des acheteurs, 20-40 % de refus ; 2,03 M d'unites informelles ; creatifs publicitaires en darija par IA ; clientele B2B solvable",
+    "rang": 18,
+    "rang_poids_egaux": 14,
+    "rang_faisabilite_40": 17
+   },
+   {
+    "cell_id": "DIA.N19.L-OM-DIASPORA",
+    "pays": "DIA-MAGH-FR",
+    "niche": "N19 mariage_evenementiel",
+    "lifestyle": "L-OM-DIASPORA + MA jeunes actifs",
+    "T": 3,
+    "C": 3,
+    "R": 5,
+    "F": 4,
+    "score": 73.3,
+    "score_poids_egaux": 73.3,
+    "score_faisabilite_40": 74.6,
+    "niveau_preuve": "C",
+    "flux": "USA->diaspora/MA",
+    "justification": "Planification de mariage assistee par IA (USA acceleration) ; mariages maghrebins tres depensiers, peu outilles [H] ; mariages au bled",
+    "rang": 19,
+    "rang_poids_egaux": 18,
+    "rang_faisabilite_40": 16
+   },
+   {
+    "cell_id": "SN.N23.L-LS-ETUDIANTS",
+    "pays": "SN",
+    "niche": "N23 education_langues",
+    "lifestyle": "L-LS-ETUDIANTS / lyceens",
+    "T": 3,
+    "C": 5,
+    "R": 4,
+    "F": 3,
+    "score": 71.4,
+    "score_poids_egaux": 73.3,
+    "score_faisabilite_40": 68.6,
+    "niveau_preuve": "C",
+    "flux": "USA->SN",
+    "justification": "Age median 19,8 ans ; identites sociales +18,3 % en un an ; tutorat IA sur WhatsApp [H] ; mobile money",
+    "rang": 20,
+    "rang_poids_egaux": 19,
+    "rang_faisabilite_40": 23
+   },
+   {
+    "cell_id": "DIA-SSA.N14.L-OM-DIASPORA",
+    "pays": "DIA-SSA-FR",
+    "niche": "N14/N10 services a la famille",
+    "lifestyle": "L-OM-DIASPORA (Afrique subsaharienne)",
+    "T": 4,
+    "C": 3,
+    "R": 3,
+    "F": 4,
+    "score": 70.3,
+    "score_poids_egaux": 69.3,
+    "score_faisabilite_40": 72.3,
+    "niveau_preuve": "B",
+    "flux": "interne",
+    "justification": "2,93 M d'immigres et descendants d'Afrique subsaharienne en France (Insee 2025) ; transferts SN 10,6 % du PIB (2023)",
+    "rang": 21,
+    "rang_poids_egaux": 21,
+    "rang_faisabilite_40": 18
+   },
+   {
+    "cell_id": "FR.N08.L-LS-GENZ",
+    "pays": "FR",
+    "niche": "N08 cuisine_boissons",
+    "lifestyle": "L-CO-GENZ x urbain",
+    "T": 5,
+    "C": 3,
+    "R": 3,
+    "F": 3,
+    "score": 69.9,
+    "score_poids_egaux": 68.2,
+    "score_faisabilite_40": 68.2,
+    "niveau_preuve": "B",
+    "flux": "USA/Asie->FR",
+    "justification": "Biere sans alcool +12 %, matcha, proteines (+12 % en valeur) ; produit physique et allegations",
+    "rang": 22,
+    "rang_poids_egaux": 27,
+    "rang_faisabilite_40": 24
+   },
+   {
+    "cell_id": "FR.N11.L-LS-JEUNES_ACTIFS",
+    "pays": "FR",
+    "niche": "N11 finance_perso",
+    "lifestyle": "L-LS-JEUNES_ACTIFS",
+    "T": 5,
+    "C": 3,
+    "R": 3,
+    "F": 3,
+    "score": 69.9,
+    "score_poids_egaux": 68.2,
+    "score_faisabilite_40": 68.2,
+    "niveau_preuve": "C",
+    "flux": "USA->FR",
+    "justification": "Moneymaxxing US ; influence financiere encadree par la loi de 2023 ; pas de mesure FR trouvee",
+    "rang": 23,
+    "rang_poids_egaux": 28,
+    "rang_faisabilite_40": 25
+   },
+   {
+    "cell_id": "QC.N11.L-LS-JEUNES_ACTIFS",
+    "pays": "QC",
+    "niche": "N11 finance_perso",
+    "lifestyle": "L-LS-JEUNES_ACTIFS",
+    "T": 3,
+    "C": 3,
+    "R": 4,
+    "F": 4,
+    "score": 69.3,
+    "score_poids_egaux": 69.3,
+    "score_faisabilite_40": 71.3,
+    "niveau_preuve": "C",
+    "flux": "USA->QC",
+    "justification": "Ecart de contenu en francais [H] ; Quebec 9,05 M d'habitants ; regulation AMF Quebec",
+    "rang": 24,
+    "rang_poids_egaux": 22,
+    "rang_faisabilite_40": 21
+   },
+   {
+    "cell_id": "CH.N11.L-LS-JEUNES_ACTIFS",
+    "pays": "CH-ROM",
+    "niche": "N11 finance_perso",
+    "lifestyle": "L-LS-JEUNES_ACTIFS / expats",
+    "T": 3,
+    "C": 3,
+    "R": 4,
+    "F": 4,
+    "score": 69.3,
+    "score_poids_egaux": 69.3,
+    "score_faisabilite_40": 71.3,
+    "niveau_preuve": "C",
+    "flux": "USA->CH",
+    "justification": "Suisse romande ~2,0 M ; PIB/hab 114 769 $ ; pas de loi influenceurs ; TWINT",
+    "rang": 25,
+    "rang_poids_egaux": 23,
+    "rang_faisabilite_40": 22
+   },
+   {
+    "cell_id": "MA.N03.L-LS-JEUNES_ACTIFS",
+    "pays": "MA",
+    "niche": "N03 sport_pratique",
+    "lifestyle": "L-LS-JEUNES_ACTIFS diplomes urbains",
+    "T": 3,
+    "C": 4,
+    "R": 4,
+    "F": 3,
+    "score": 68.3,
+    "score_poids_egaux": 69.3,
+    "score_faisabilite_40": 66.4,
+    "niveau_preuve": "B",
+    "flux": "EU/USA->MA",
+    "justification": "~200 pistes de padel, 60 clubs ; etapes FIP 2026 ; salles Hyrox Casablanca/Marrakech ; paiement local",
+    "rang": 26,
+    "rang_poids_egaux": 24,
+    "rang_faisabilite_40": 26
+   },
+   {
+    "cell_id": "MA.N08.L-LS-GENZ",
+    "pays": "MA",
+    "niche": "N08 cuisine_boissons",
+    "lifestyle": "L-CO-GENZ x urbain",
+    "T": 3,
+    "C": 4,
+    "R": 4,
+    "F": 3,
+    "score": 68.3,
+    "score_poids_egaux": 69.3,
+    "score_faisabilite_40": 66.4,
+    "niveau_preuve": "C",
+    "flux": "USA->MA",
+    "justification": "Coffee shops de specialite, matcha, mocktails dans un marche structurellement sans alcool [H]",
+    "rang": 27,
+    "rang_poids_egaux": 25,
+    "rang_faisabilite_40": 27
+   },
+   {
+    "cell_id": "CI.N14.L-WM-DEBROUILLE",
+    "pays": "CI",
+    "niche": "N14 entrepreneuriat_revenus",
+    "lifestyle": "L-WM-DEBROUILLE",
+    "T": 3,
+    "C": 4,
+    "R": 4,
+    "F": 3,
+    "score": 68.3,
+    "score_poids_egaux": 69.3,
+    "score_faisabilite_40": 66.4,
+    "niveau_preuve": "C",
+    "flux": "USA/NG->CI",
+    "justification": "Emploi informel ~85 % en Afrique (OIT) ; commerce WhatsApp/Facebook ; mobile money",
+    "rang": 28,
+    "rang_poids_egaux": 26,
+    "rang_faisabilite_40": 28
+   },
+   {
+    "cell_id": "FR.N06.L-LS-ETUDIANTS",
+    "pays": "FR",
+    "niche": "N06 sante_bien_etre",
+    "lifestyle": "L-LS-ETUDIANTS",
+    "T": 4,
+    "C": 4,
+    "R": 4,
+    "F": 2,
+    "score": 67.3,
+    "score_poids_egaux": 67.3,
+    "score_faisabilite_40": 60.6,
+    "niveau_preuve": "B",
+    "flux": "USA->FR",
+    "justification": "56 % des 12-28 ans FR declarent stress ou solitude (Ipsos 2024) ; IA confident US en acceleration ; risque sante et mineurs",
+    "rang": 29,
+    "rang_poids_egaux": 29,
+    "rang_faisabilite_40": 31
+   },
+   {
+    "cell_id": "MA.N13.L-LS-JEUNES_ACTIFS",
+    "pays": "MA",
+    "niche": "N13 carriere",
+    "lifestyle": "L-LS-JEUNES_ACTIFS",
+    "T": 3,
+    "C": 4,
+    "R": 3,
+    "F": 3,
+    "score": 63.6,
+    "score_poids_egaux": 64.5,
+    "score_faisabilite_40": 62.6,
+    "niveau_preuve": "B",
+    "flux": "interne",
+    "justification": "167 380 emplois d'offshoring ; LinkedIn 8,4 M (+21,7 %) ; rapatriement des devises 100 % sous 90 jours",
+    "rang": 30,
+    "rang_poids_egaux": 30,
+    "rang_faisabilite_40": 29
+   },
+   {
+    "cell_id": "MA.N02.L-VI-HALAL",
+    "pays": "MA",
+    "niche": "N02 mode_accessoires (modeste)",
+    "lifestyle": "L-VI-HALAL / femmes urbaines",
+    "T": 4,
+    "C": 4,
+    "R": 2,
+    "F": 3,
+    "score": 62.6,
+    "score_poids_egaux": 62.6,
+    "score_faisabilite_40": 62.1,
+    "niveau_preuve": "B",
+    "flux": "Golfe/Turquie->MA",
+    "justification": "77 % des acheteuses en ligne achetent des vetements ; mode modeste 347 Md$ (2024) ; pas de leadership US",
+    "rang": 31,
+    "rang_poids_egaux": 31,
+    "rang_faisabilite_40": 30
+   },
+   {
+    "cell_id": "CD.N22.L-CO-GENZ",
+    "pays": "CD",
+    "niche": "N22 musique",
+    "lifestyle": "L-CO-GENZ",
+    "T": 3,
+    "C": 5,
+    "R": 3,
+    "F": 2,
+    "score": 60.0,
+    "score_poids_egaux": 61.6,
+    "score_faisabilite_40": 55.1,
+    "niveau_preuve": "B",
+    "flux": "interne",
+    "justification": "Identites sociales +32,5 % ; TikTok 13,8 M d'adultes ; PIB PPA/hab 1 920 $",
+    "rang": 32,
+    "rang_poids_egaux": 32,
+    "rang_faisabilite_40": 32
+   },
+   {
+    "cell_id": "DZ.N16.L-CO-GENZ",
+    "pays": "DZ",
+    "niche": "N16 gaming_esport",
+    "lifestyle": "L-CO-GENZ",
+    "T": 4,
+    "C": 4,
+    "R": 3,
+    "F": 1,
+    "score": 52.6,
+    "score_poids_egaux": 52.6,
+    "score_faisabilite_40": 43.4,
+    "niveau_preuve": "B",
+    "flux": "USA->DZ",
+    "justification": "TikTok 29,4 M d'adultes (93,6 %) ; internautes +8,5 % ; 1 034 web-marchands : paiement bloquant",
+    "rang": 33,
+    "rang_poids_egaux": 33,
+    "rang_faisabilite_40": 33
+   }
+  ],
+  "top20": [
+   "FR.N05.L-LS-ADULTES",
+   "FR.N15.L-WM-SOLO",
+   "MA.N10.L-OM-EXPAT",
+   "FR.N03.L-LS-JEUNES_ACTIFS",
+   "FR.N25.L-LS-JEUNES_ACTIFS",
+   "FR.N01.L-LS-GENZ",
+   "QC.N15.L-WM-SOLO",
+   "FR.N14.L-VI-ECO",
+   "BE.N14.L-WM-SOLO",
+   "FR.N20.L-VI-HALAL",
+   "FR.N07.L-LS-JEUNES_PARENTS",
+   "DIA.N12.L-OM-DIASPORA",
+   "FR.N23.L-LS-SENIORS",
+   "FR.N09.L-LS-JEUNES_ACTIFS",
+   "FR.N21.L-LS-JEUNES_ACTIFS",
+   "MA.N24.EXPORT",
+   "FR.N13.L-LS-ETUDIANTS",
+   "MA.N14.L-WM-DEBROUILLE",
+   "DIA.N19.L-OM-DIASPORA",
+   "SN.N23.L-LS-ETUDIANTS"
+  ],
+  "stabilite": "19/20 restent dans le top 20 avec poids egaux et avec F=0,40"
+ }
+}

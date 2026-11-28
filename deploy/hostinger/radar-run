@@ -1,0 +1,14 @@
+#!/bin/sh
+# Lance le radar avec les réglages du serveur : radar-run collect | health | gaps | reactive …
+set -a
+[ -r /etc/radar-decalage.env ] && . /etc/radar-decalage.env
+set +a
+export RADAR_WORKSPACE="${RADAR_WORKSPACE:-/var/lib/radar-decalage}"
+cd /opt/radar-decalage/plugins/radar-decalage || exit 1
+for py in python3.13 python3.12 python3.11 python3; do
+  if command -v "$py" >/dev/null 2>&1 && "$py" -c 'import sys; sys.exit(sys.version_info < (3, 11))'; then
+    exec "$py" -m radar "$@"
+  fi
+done
+echo "radar-run : Python 3.11 ou plus est requis (relancez install.sh)" >&2
+exit 1

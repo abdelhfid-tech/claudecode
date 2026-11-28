@@ -1,0 +1,455 @@
+{
+  "name": "Radar : contenu réactif",
+  "nodes": [
+    {
+      "id": "ede40cf7-8640-5382-80dd-2eea698812f0",
+      "name": "Candidats du radar",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [
+        0,
+        0
+      ],
+      "webhookId": "647ef03b-d27a-5cd7-b247-5043d83cc52b",
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "radar-reactif",
+        "authentication": "headerAuth",
+        "responseMode": "onReceived",
+        "options": {}
+      }
+    },
+    {
+      "id": "326806d4-f119-5823-a971-7a2d0dbc9424",
+      "name": "Tendance repérée",
+      "type": "n8n-nodes-base.formTrigger",
+      "typeVersion": 2.2,
+      "position": [
+        0,
+        220
+      ],
+      "webhookId": "bb6cde6a-b4b4-5774-95dd-77fdd0c67526",
+      "parameters": {
+        "authentication": "basicAuth",
+        "formTitle": "Tendance repérée",
+        "formDescription": "Une tendance vue sur TikTok, Instagram ou ailleurs. Le radar en prépare un brouillon, que vous validerez avant toute publication.",
+        "formFields": {
+          "values": [
+            {
+              "fieldLabel": "Tendance (ce que vous avez vu)",
+              "fieldType": "textarea",
+              "requiredField": true
+            },
+            {
+              "fieldLabel": "Lien (TikTok, Instagram…)",
+              "fieldType": "text"
+            },
+            {
+              "fieldLabel": "Pourquoi ça peut marcher ici",
+              "fieldType": "textarea"
+            }
+          ]
+        },
+        "options": {}
+      }
+    },
+    {
+      "id": "aa614a43-7551-5d58-880e-9c5ba2c839ca",
+      "name": "Réglages",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        240,
+        100
+      ],
+      "parameters": {
+        "jsCode": "// Réglages du flux « Radar : contenu réactif ». Modifiez seulement cet objet.\nconst REGLAGES = {\n  // Votre identifiant de discussion Telegram (voir deploy/README.md, étape 2).\n  telegram_chat_id: \"\",\n\n  // Modèle Claude et niveau d'effort. Environ 0,05 à 0,10 $ par jour pour un appel quotidien (estimation).\n  model: \"claude-opus-5-5\",\n  effort: \"medium\",\n\n  // Public visé, pour adapter le ton.\n  audience_fr: \"entrepreneurs, indépendants et curieux du numérique en France et en Belgique\",\n  audience_ary: \"jeunes actifs et créateurs au Maroc et dans la diaspora\",\n\n  // Comptes Blotato où programmer un texte validé (laisser la liste vide pour publier vous-même).\n  // platform : linkedin, threads, twitter, bluesky, facebook (pageId requis) ; langue : fr, ary_latin, ary_arabe.\n  // Les vidéos (TikTok, Instagram, YouTube) ne sont jamais programmées : vous recevez le script et filmez.\n  blotato: [\n    // { accountId: \"12345\", platform: \"linkedin\", langue: \"fr\" },\n    // { accountId: \"67890\", platform: \"threads\", langue: \"ary_latin\" },\n  ],\n\n  // Alerte Telegram quand une source du radar répond moins de 90 % des jours (après 3 jours observés).\n  alerte_sante: true,\n};\n\nreturn $input.all().map((item) => ({ json: { ...item.json, settings: REGLAGES } }));\n"
+      }
+    },
+    {
+      "id": "d5037564-af49-5ec5-a0e3-3a3e1af9b85b",
+      "name": "Préparer la demande à Claude",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        480,
+        100
+      ],
+      "parameters": {
+        "jsCode": "// Normalise les deux entrées (radar ou formulaire) et prépare la requête à l'API Claude.\nconst item = $input.first().json;\nconst s = item.settings;\nlet source, candidates;\n\nif (item.body && Array.isArray(item.body.candidates)) {\n  source = \"radar\";\n  candidates = item.body.candidates.slice(0, 8);\n} else {\n  // Formulaire « Tendance repérée » : une tendance vue par vous (TikTok, Instagram…).\n  const label = (start) => Object.keys(item).find((k) => k.toLowerCase().startsWith(start));\n  const tendance = String(item[label(\"tendance\")] || \"\").trim();\n  if (!tendance) return [];\n  source = \"formulaire\";\n  candidates = [{\n    id: \"manuel:\" + Date.now(),\n    kind: \"tendance_reperee\",\n    title: tendance.slice(0, 300),\n    signal: { source: \"repérée par vous\" },\n    presence: { FR: \"à vérifier\", MA: \"à vérifier\" },\n    context: [item[label(\"lien\")], item[label(\"pourquoi\")]].filter(Boolean).map(String),\n  }];\n}\nif (!candidates.length) return [];\n\nconst SCHEMA = {\n  type: \"object\",\n  additionalProperties: false,\n  required: [\"choice\", \"reason\", \"rejected\", \"draft\"],\n  properties: {\n    choice: { type: \"string\", description: \"id du candidat retenu, ou chaîne vide si aucun ne convient\" },\n    reason: { type: \"string\" },\n    rejected: {\n      type: \"array\",\n      items: {\n        type: \"object\", additionalProperties: false, required: [\"id\", \"reason\"],\n        properties: { id: { type: \"string\" }, reason: { type: \"string\" } },\n      },\n    },\n    draft: {\n      type: \"object\",\n      additionalProperties: false,\n      required: [\"format\", \"angle\", \"post_fr\", \"post_ary_latin\", \"post_ary_arabe\", \"video_script\",\n                 \"hashtags\", \"check_before_posting\", \"ai_generated_visuals\"],\n      properties: {\n        format: { type: \"string\", enum: [\"post\", \"carrousel\", \"video_courte\", \"aucun\"] },\n        angle: { type: \"string\" },\n        post_fr: { type: \"string\" },\n        post_ary_latin: { type: \"string\" },\n        post_ary_arabe: { type: \"string\" },\n        video_script: { type: \"string\" },\n        hashtags: { type: \"array\", items: { type: \"string\" } },\n        check_before_posting: { type: \"array\", items: { type: \"string\" } },\n        ai_generated_visuals: { type: \"boolean\" },\n      },\n    },\n  },\n};\n\nconst system = [\n  \"Tu prépares un brouillon de publication pour un créateur francophone qui vit entre la France et le Maroc et écrit aussi en darija.\",\n  \"Il relira, corrigera et validera lui-même le texte avant toute publication : tu proposes, il décide.\",\n  \"\",\n  \"On te donne des candidats repérés aux États-Unis ou ailleurs et encore peu présents en France ou au Maroc.\",\n  \"Choisis-en AU PLUS UN qui se prête à un contenu utile ou divertissant pour ces publics :\",\n  \"un format, un produit, une app, un usage ou un concept transposable.\",\n  \"Écarte : l'actualité, le sport, les résultats, les célébrités, la politique, les décès et les drames,\",\n  \"tout ce qui vise des mineurs, les allégations de santé, les jeux d'argent et les paris, l'alcool et la nicotine,\",\n  \"le conseil financier. Si rien ne convient, renvoie choice vide et format « aucun » : c'est une bonne réponse.\",\n  \"\",\n  \"Règles de rédaction :\",\n  \"- Écris comme un humain qui partage une découverte, pas comme une marque. Phrases courtes, un seul message par texte.\",\n  \"- N'invente aucun chiffre, aucune date ni citation. Ce qui doit être vérifié va dans check_before_posting.\",\n  \"- Le texte français fait 1 200 caractères au plus ; les deux textes en darija disent la même chose, naturellement,\",\n  \"  l'un en graphie latine (arabizi, chiffres 3, 7, 9 si besoin), l'autre en graphie arabe.\",\n  \"- 5 hashtags au plus. Pas d'émoji en excès.\",\n  \"- Si le format est une vidéo courte, écris un script de 30 à 45 secondes à filmer par l'auteur lui-même.\",\n  \"- ai_generated_visuals vaut true seulement si tu proposes des visuels à générer par IA (ils devront alors être étiquetés).\",\n  \"\",\n  `Public en français : ${s.audience_fr}. Public en darija : ${s.audience_ary}.`,\n  `Date du jour : ${new Date().toISOString().slice(0, 10)}.`,\n].join(\"\\n\");\n\nconst request = {\n  model: s.model,\n  max_tokens: 16000,\n  fallbacks: \"default\",\n  output_config: { effort: s.effort, format: { type: \"json_schema\", schema: SCHEMA } },\n  system,\n  messages: [{\n    role: \"user\",\n    content: \"Candidats du jour (\" + source + \") :\\n\" + JSON.stringify(candidates, null, 1),\n  }],\n};\n\nreturn [{ json: { source, candidates, request } }];\n"
+      }
+    },
+    {
+      "id": "36d35e49-ec09-525f-b511-b4b1ef86f34c",
+      "name": "Claude : choisir et rédiger",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        720,
+        100
+      ],
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.anthropic.com/v1/messages",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "anthropic-version",
+              "value": "2026-10-21"
+            },
+            {
+              "name": "anthropic-beta",
+              "value": "server-side-fallback-2026-07-01"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ JSON.stringify($json.request) }}",
+        "options": {
+          "timeout": 180000
+        }
+      }
+    },
+    {
+      "id": "4933aa4b-e840-51b9-9c7a-4eedbd616c33",
+      "name": "Lire la réponse",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        960,
+        100
+      ],
+      "parameters": {
+        "jsCode": "// Lit la réponse de Claude ; ne continue que si un brouillon a été rédigé.\nconst res = $input.first().json;\nconst prep = $(\"Préparer la demande à Claude\").first().json;\nif (res.stop_reason === \"refusal\") return [];\nconst text = (res.content || []).filter((b) => b.type === \"text\").map((b) => b.text).join(\"\");\nlet out;\ntry {\n  out = JSON.parse(text);\n} catch (e) {\n  return [];\n}\nif (!out.choice || !out.draft || out.draft.format === \"aucun\") return [];\nconst c = prep.candidates.find((x) => x.id === out.choice) || { title: out.choice, kind: \"?\" };\nconst d = out.draft;\n\nconst parts = [\n  `Brouillon du radar (${prep.source}) : ${d.format}`,\n  `Tendance : ${c.title} [${c.kind}]`,\n  `Pourquoi : ${out.reason}`,\n  `Angle : ${d.angle}`,\n  \"\",\n  \"— Français —\", d.post_fr,\n  \"\", \"— Darija (latin) —\", d.post_ary_latin,\n  \"\", \"— Darija (arabe) —\", d.post_ary_arabe,\n];\nif (d.video_script) parts.push(\"\", \"— Script vidéo (à filmer vous-même) —\", d.video_script);\nif (d.hashtags && d.hashtags.length) parts.push(\"\", \"Hashtags : \" + d.hashtags.join(\" \"));\nif (d.check_before_posting && d.check_before_posting.length) {\n  parts.push(\"\", \"À vérifier avant publication :\", ...d.check_before_posting.map((x) => \"• \" + x));\n}\nif (d.ai_generated_visuals) parts.push(\"\", \"Visuels générés par IA proposés : étiquette « contenu généré par IA » obligatoire.\");\nconst model = res.model ? ` (rédigé par ${res.model})` : \"\";\nlet message = parts.join(\"\\n\") + model;\nif (message.length > 3500) message = message.slice(0, 3490) + \" […]\";\n\nreturn [{ json: { candidate: c, draft: d, reason: out.reason, message } }];\n"
+      }
+    },
+    {
+      "id": "f3cf13a4-0a9a-5930-85ea-d0fc01b971dc",
+      "name": "Telegram : brouillon à valider",
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        1200,
+        100
+      ],
+      "parameters": {
+        "chatId": "={{ $('Réglages').first().json.settings.telegram_chat_id }}",
+        "text": "={{ $json.message }}\n\nPour décider, ouvrez ce formulaire (valable 48 h) :\n{{ $execution.resumeFormUrl }}",
+        "additionalFields": {
+          "appendAttribution": false,
+          "disable_web_page_preview": true
+        }
+      }
+    },
+    {
+      "id": "9ba2ca00-c8ce-5d73-adb5-1f04aa494d23",
+      "name": "Attendre votre décision",
+      "type": "n8n-nodes-base.wait",
+      "typeVersion": 1.1,
+      "position": [
+        1440,
+        100
+      ],
+      "webhookId": "2d63d7e3-1584-57c4-a91f-2a120b79bb47",
+      "parameters": {
+        "resume": "form",
+        "formTitle": "Brouillon du radar",
+        "formDescription": "Relisez le brouillon reçu sur Telegram, puis choisissez.",
+        "formFields": {
+          "values": [
+            {
+              "fieldLabel": "Décision",
+              "fieldType": "dropdown",
+              "requiredField": true,
+              "fieldOptions": {
+                "values": [
+                  {
+                    "option": "Programmer"
+                  },
+                  {
+                    "option": "Rejeter"
+                  }
+                ]
+              }
+            }
+          ]
+        },
+        "limitWaitTime": true,
+        "limitType": "afterTimeInterval",
+        "resumeAmount": 48,
+        "resumeUnit": "hours",
+        "options": {}
+      }
+    },
+    {
+      "id": "2ac5aa24-8ecb-56fd-ac26-01cdd9a251d9",
+      "name": "Décision : Blotato",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1680,
+        0
+      ],
+      "parameters": {
+        "jsCode": "// Après votre décision : prépare une programmation Blotato par compte réglé.\n// Le formulaire de validation renvoie le champ « Décision » : « Programmer » ou « Rejeter ».\nconst decision = String(($input.first().json || {})[\"Décision\"] || \"\").toLowerCase();\nif (decision !== \"programmer\") return [];\nconst d = $(\"Lire la réponse\").first().json.draft;\nconst s = $(\"Réglages\").first().json.settings;\nconst texts = { fr: d.post_fr, ary_latin: d.post_ary_latin, ary_arabe: d.post_ary_arabe };\nconst VIDEO = [\"tiktok\", \"instagram\", \"youtube\", \"pinterest\"];\nconst out = [];\nfor (const t of s.blotato || []) {\n  const text = texts[t.langue];\n  if (!t.accountId || !t.platform || !text || VIDEO.includes(t.platform)) continue;\n  const target = { targetType: t.platform };\n  if (t.pageId) target.pageId = String(t.pageId);\n  out.push({\n    json: {\n      target_label: `${t.platform} (${t.langue})`,\n      blotato_request: {\n        post: { accountId: String(t.accountId), content: { text, mediaUrls: [], platform: t.platform }, target },\n        useNextFreeSlot: true,\n      },\n    },\n  });\n}\nreturn out;\n"
+      }
+    },
+    {
+      "id": "d242451d-d6c8-5d59-a008-8a1cf6df8738",
+      "name": "Blotato : programmer",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        1920,
+        0
+      ],
+      "parameters": {
+        "method": "POST",
+        "url": "https://backend.blotato.com/v2/posts",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ JSON.stringify($json.blotato_request) }}",
+        "options": {
+          "timeout": 60000
+        }
+      }
+    },
+    {
+      "id": "3da619d7-00e3-5510-bcb0-938d92144829",
+      "name": "Telegram : programmé",
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        2160,
+        0
+      ],
+      "parameters": {
+        "chatId": "={{ $('Réglages').first().json.settings.telegram_chat_id }}",
+        "text": "=Programmé sur {{ $('Décision : Blotato').item.json.target_label }} au prochain créneau libre de Blotato.\nSuivi : {{ $json.postSubmissionId }}",
+        "additionalFields": {
+          "appendAttribution": false,
+          "disable_web_page_preview": true
+        }
+      }
+    },
+    {
+      "id": "baf2f5c1-634a-5ad3-b52e-804c6167d2db",
+      "name": "Décision : vous publiez",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1680,
+        220
+      ],
+      "parameters": {
+        "jsCode": "// Après votre décision : si aucun compte Blotato n'est utilisable, vous publiez vous-même.\n// Le formulaire de validation renvoie le champ « Décision » : « Programmer » ou « Rejeter ».\nconst decision = String(($input.first().json || {})[\"Décision\"] || \"\").toLowerCase();\nconst s = $(\"Réglages\").first().json.settings;\nconst d = $(\"Lire la réponse\").first().json.draft;\nconst VIDEO = [\"tiktok\", \"instagram\", \"youtube\", \"pinterest\"];\nconst usable = (s.blotato || []).filter((t) => t.accountId && t.platform && !VIDEO.includes(t.platform));\nif (decision === \"rejeter\") return [{ json: { text: \"Brouillon rejeté. Rien n'est publié.\" } }];\nif (decision !== \"programmer\") return [];\nif (usable.length && d.format !== \"video_courte\") return [];\nconst why = d.format === \"video_courte\" ? \"c'est une vidéo à filmer\" : \"aucun compte Blotato n'est réglé\";\nreturn [{ json: { text: `Brouillon validé. À publier vous-même (${why}) : reprenez le texte du message précédent.` } }];\n"
+      }
+    },
+    {
+      "id": "3cc40639-262f-5b32-81a0-a61a8fe88992",
+      "name": "Telegram : à publier vous-même",
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        1920,
+        220
+      ],
+      "parameters": {
+        "chatId": "={{ $('Réglages').first().json.settings.telegram_chat_id }}",
+        "text": "={{ $json.text }}",
+        "additionalFields": {
+          "appendAttribution": false,
+          "disable_web_page_preview": true
+        }
+      }
+    },
+    {
+      "id": "7187e790-add6-5655-addf-6642ccec8f2b",
+      "name": "Alerte santé",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        480,
+        320
+      ],
+      "parameters": {
+        "jsCode": "// Alerte si une source du radar répond mal (pilote de 14 jours).\nconst item = $input.first().json;\nif (!item.settings.alerte_sante || !item.body || !Array.isArray(item.body.health)) return [];\nconst bad = item.body.health.filter((r) => r.days_observed >= 3 && r.day_rate < 0.9);\nif (!bad.length) return [];\nconst lines = bad.map((r) => `• ${r.source} : ${Math.round(r.day_rate * 100)} % de jours bons sur ${r.days_observed}`\n  + (r.last_error ? ` (dernière erreur : ${String(r.last_error).slice(0, 120)})` : \"\"));\nreturn [{ json: { text: \"Radar : sources à surveiller\\n\" + lines.join(\"\\n\") } }];\n"
+      }
+    },
+    {
+      "id": "c1899384-1a90-573e-9f7f-6bae77a635d8",
+      "name": "Telegram : alerte santé",
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        720,
+        320
+      ],
+      "parameters": {
+        "chatId": "={{ $('Réglages').first().json.settings.telegram_chat_id }}",
+        "text": "={{ $json.text }}",
+        "additionalFields": {
+          "appendAttribution": false,
+          "disable_web_page_preview": true
+        }
+      }
+    }
+  ],
+  "connections": {
+    "Candidats du radar": {
+      "main": [
+        [
+          {
+            "node": "Réglages",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Tendance repérée": {
+      "main": [
+        [
+          {
+            "node": "Réglages",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Réglages": {
+      "main": [
+        [
+          {
+            "node": "Préparer la demande à Claude",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Alerte santé",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Préparer la demande à Claude": {
+      "main": [
+        [
+          {
+            "node": "Claude : choisir et rédiger",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Claude : choisir et rédiger": {
+      "main": [
+        [
+          {
+            "node": "Lire la réponse",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Lire la réponse": {
+      "main": [
+        [
+          {
+            "node": "Telegram : brouillon à valider",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Telegram : brouillon à valider": {
+      "main": [
+        [
+          {
+            "node": "Attendre votre décision",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Attendre votre décision": {
+      "main": [
+        [
+          {
+            "node": "Décision : Blotato",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Décision : vous publiez",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Décision : Blotato": {
+      "main": [
+        [
+          {
+            "node": "Blotato : programmer",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Blotato : programmer": {
+      "main": [
+        [
+          {
+            "node": "Telegram : programmé",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Décision : vous publiez": {
+      "main": [
+        [
+          {
+            "node": "Telegram : à publier vous-même",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Alerte santé": {
+      "main": [
+        [
+          {
+            "node": "Telegram : alerte santé",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "pinData": {},
+  "meta": {
+    "templateCredsSetupCompleted": false
+  }
+}

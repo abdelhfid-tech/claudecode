@@ -1,0 +1,416 @@
+{
+ "dossier_path": "/tmp/claude-0/-home-user-claudecode/00e88930-c277-528f-99f2-9b7f935da647/scratchpad/research/diffusion-scoring.md",
+ "executive_summary": "Le budget de recherche web du tour était épuisé dès la première requête : cet axe repose sur des lectures d'URL connues, des résumés d'articles par DOI (OpenAlex) et des mesures faites dans la session sur données ouvertes (Wikimedia, Wikidata, Banque mondiale, Hofstede). La littérature (Takada-Jain 1991, Tellis-Stremersch-Yin 2003, Chandrasekaran-Tellis 2008, van Everdingen et al. 2009) établit que les pays tardifs adoptent plus vite, que les délais de décollage raccourcissent et convergent, et que ce sont les décollages étrangers, pas les lancements, qui accélèrent un pays ; la proximité géographique et économique compte plus que la culture. Mesure de la session sur 15 cas et 6 langues : les contenus et sorties mondiales traversent en -8 à +8 jours, les produits en 1 semaine à 2 mois, une fonctionnalité bloquée par le droit européen (Threads) en 157 à 161 jours, soit exactement le retard UE. Le jeu Wikimedia par pays (quotidien depuis 2023, identifiant Wikidata, seuil 90 vues) date les arrivées : Labubu USA 2024-12-06, France +159 j, Maroc +187 j ; chocolat de Dubaï Allemagne d'abord, France +29 j, USA +63 j. Le Maghreb et l'Afrique sont sous le seuil (Maroc 74 lignes par jour contre 10 684 pour la France) et exigent d'autres capteurs. Une part notable des tendances naît ou culmine hors USA (Hyrox 6,6 fois plus intense au Royaume-Uni qu'aux USA). À froid, 6 séries linguistiques sur 10 naissent pendant la vague : z-score et CUSUM n'ont pas de base ; il faut des seuils absolus, des percentiles entre entités, Kleinberg et Mann-Kendall à partir de 5 points (p minimal 0,0083). Les verrous d'infrastructure et d'administration priment : comptes financiers 99,2 % en France contre 44,4 % au Maroc (Findex 2024) ; Apple Pay France +638 j, Maroc +3 193 j. La distance culturelle doit partir du relais déjà touché : Kogut-Singh Maroc-USA 1,71 contre Maroc-France 0,51 ; les données Hofstede ne sont pas libres pour un usage commercial. Livrable : modèle en 4 modules (force US, écart par pays avec a priori log-normaux par classe de friction et mise à jour par sentinelles, transposabilité à portes multiplicatives et poids par niche, rendement d'initiative), incertitude par Monte-Carlo (P10-P50-P90), journal de prédictions scoré au Brier, et backtest sur 20 cas datés ; implémentation de référence testée sur séries réelles.",
+ "key_findings": [
+  {
+   "claim": "Les décollages étrangers, et non les simples lancements étrangers, accélèrent le décollage d'un pays ; les retombées sont plus fortes entre pays proches géographiquement et économiquement, pas nécessairement culturellement, et elles sont asymétriques.",
+   "evidence": "van Everdingen, Fok et Stremersch 2009, 8 produits high-tech, 55 pays (résumé lu).",
+   "sources": [
+    "https://doi.org/10.1509/jmkr.46.5.637"
+   ],
+   "confidence": "high",
+   "as_of": "2009",
+   "load_bearing": true
+  },
+  {
+   "claim": "Le délai avant décollage est en moyenne de 6 ans en Europe, 4 fois plus court pour le divertissement que pour l'électroménager et presque 2 fois plus court en Scandinavie qu'en Méditerranée ; il raccourcit dans le temps et converge entre pays.",
+   "evidence": "Tellis, Stremersch et Yin 2003 (137 produits, 16 pays) ; Chandrasekaran et Tellis 2008 (16 produits, 31 pays) ; résumés lus.",
+   "sources": [
+    "https://doi.org/10.1287/mksc.22.2.188.16041",
+    "https://doi.org/10.1287/mksc.1070.0329"
+   ],
+   "confidence": "high",
+   "as_of": "2003-2008",
+   "load_bearing": false
+  },
+  {
+   "claim": "Les pays en développement ont un potentiel de pénétration environ trois fois plus faible (0,17 contre 0,52) et atteignent le pic 17,9 % plus tard, malgré l'effet positif bien connu des retards d'introduction sur la vitesse de diffusion.",
+   "evidence": "Talukdar, Sudhir et Ainslie 2002, 6 produits, 31 pays.",
+   "sources": [
+    "https://doi.org/10.1287/mksc.21.1.97.161"
+   ],
+   "confidence": "high",
+   "as_of": "2002",
+   "load_bearing": false
+  },
+  {
+   "claim": "À l'ère des plateformes, l'attention traverse vite : écart de mi-hauteur entre l'anglais et le français ou l'allemand de -8 à +8 jours pour Squid Game, Wordle, Pokémon Go, Skibidi Toilet ; 1 semaine à 2 mois pour Labubu, chocolat de Dubaï, fidget spinner ; 157 à 161 jours pour Threads, égal au retard de lancement dans l'UE (2023-07-05 au 2023-12-14).",
+   "evidence": "Mesure de la session, API Wikimedia Pageviews, 15 cas, 6 éditions linguistiques, articles reliés par Wikidata.",
+   "sources": [
+    "https://wikimedia.org/api/rest_v1/",
+    "https://en.wikipedia.org/wiki/Threads_(social_network)"
+   ],
+   "confidence": "medium",
+   "as_of": "2026-11-28",
+   "load_bearing": true
+  },
+  {
+   "claim": "Le jeu Wikimedia par pays (confidentialité différentielle) permet de dater l'arrivée d'une tendance par pays : quotidien depuis le 2023-02-06, identifiant Wikidata depuis mars 2024, seuil de publication 90 vues par jour (pays à risque faible), bruit à plus ou moins 35,7 vues (IC 95 %), données US manquantes du 2023-02-06 au 2023-09-19.",
+   "evidence": "README officiel lu ; fichiers téléchargés et filtrés sur 425 jours.",
+   "sources": [
+    "https://analytics.wikimedia.org/published/datasets/country_project_page/00_README.html"
+   ],
+   "confidence": "high",
+   "as_of": "2026-11-28",
+   "load_bearing": true
+  },
+  {
+   "claim": "Arrivées datées par pays : Labubu USA 2024-12-06, Canada +17 j, Royaume-Uni +21, Allemagne +154, France +159, Belgique +169, Maroc +187 (28 j après la France) ; chocolat de Dubaï Allemagne et Suisse 2024-11-07, France +29 j, USA +63 j ; Italian brainrot simultané le 2025-05-08.",
+   "evidence": "Mesure de la session sur le jeu Wikimedia par pays, agrégé par QID toutes langues confondues.",
+   "sources": [
+    "https://analytics.wikimedia.org/published/datasets/country_project_page/"
+   ],
+   "confidence": "medium",
+   "as_of": "2026-11-28",
+   "load_bearing": true
+  },
+  {
+   "claim": "Le Maghreb et l'Afrique subsaharienne sont presque invisibles dans le jeu par pays : le 2026-11-26, 74 lignes pour le Maroc, 90 pour l'Algérie, 20 pour la Tunisie, 16 pour le Sénégal, 21 pour la Côte d'Ivoire, contre 10 684 pour la France et 95 640 pour les USA ; le chocolat de Dubaï n'y franchit jamais le seuil au Maroc.",
+   "evidence": "Comptage des lignes d'un fichier quotidien et des QID suivis.",
+   "sources": [
+    "https://analytics.wikimedia.org/published/datasets/country_project_page/2026-11-26.tsv"
+   ],
+   "confidence": "high",
+   "as_of": "2026-11-26",
+   "load_bearing": true
+  },
+  {
+   "claim": "Une part notable des tendances naît ou culmine hors des USA : chocolat de Dubaï plus intense en France (2 177 vues par million d'internautes) qu'aux USA (1 875) ; Hyrox 6,6 fois plus intense au Royaume-Uni qu'aux USA ; Clubhouse à mi-hauteur en allemand 9 jours avant l'anglais ; BeReal, Yuka, Vinted, padel, Labubu, Squid Game nés hors USA.",
+   "evidence": "Mesures de la session et dossier France voisin.",
+   "sources": [
+    "https://analytics.wikimedia.org/published/datasets/country_project_page/",
+    "https://en.wikipedia.org/wiki/Clubhouse_(app)"
+   ],
+   "confidence": "medium",
+   "as_of": "2026-11-28",
+   "load_bearing": true
+  },
+  {
+   "claim": "Au démarrage à froid, environ 6 séries linguistiques sur 10 commencent pendant la vague (article créé moins de 14 jours avant 10 % du pic : 47 sur 76) ; le z-score robuste n'a alerté que dans 45 séries ; seuls Kleinberg et CUSUM répondent sur un article nouveau. Mann-Kendall exige au moins 5 points pour p < 0,01 (p minimal unilatéral 1/n!, 0,0083 pour n = 5).",
+   "evidence": "Mesure de la session ; implémentation de référence des détecteurs sur séries réelles.",
+   "sources": [
+    "https://www.cs.cornell.edu/home/kleinber/bhs.pdf",
+    "https://doi.org/10.1016/S0022-1694(97)00125-X"
+   ],
+   "confidence": "medium",
+   "as_of": "2026-11-28",
+   "load_bearing": true
+  },
+  {
+   "claim": "La prévisibilité est bornée : même avec des données massives, les meilleurs modèles expliquent moins de la moitié de la variance de la taille des cascades sur Twitter ; mais la croissance future d'une cascade devient plus prévisible à mesure qu'on l'observe. Il faut prédire des événements binaires proches, pas des tailles finales.",
+   "evidence": "Martin et al. 2016 ; Cheng et al. 2014 ; Salganik et al. 2006 (influence sociale et imprévisibilité).",
+   "sources": [
+    "https://doi.org/10.1145/2872427.2883001",
+    "https://doi.org/10.1145/2566486.2567997",
+    "https://doi.org/10.1126/science.1121066"
+   ],
+   "confidence": "high",
+   "as_of": "2006-2016",
+   "load_bearing": true
+  },
+  {
+   "claim": "Les signaux à source unique sont piégeux (Google Flu Trends) et Google Trends a un bruit d'échantillonnage substantiel avec des séries quotidiennes incohérentes avec les tendances longues : la corroboration multi-familles doit peser le plus dans le score de force.",
+   "evidence": "Lazer et al. 2014 ; Eichenauer et al.",
+   "sources": [
+    "https://doi.org/10.1126/science.1248506",
+    "https://doi.org/10.1111/ecin.13049"
+   ],
+   "confidence": "high",
+   "as_of": "2014-2022",
+   "load_bearing": true
+  },
+  {
+   "claim": "Les verrous d'infrastructure priment sur la culture : comptes financiers chez les 15 ans et plus en 2024, France 99,2 %, Sénégal 76,5 %, Côte d'Ivoire 57,6 %, Maroc 44,4 %, Tunisie 37,8 %, Algérie 35,3 % ; Apple Pay USA 2014-10-20, Royaume-Uni +267 j, France +638 j, Maroc +3 193 j.",
+   "evidence": "API Banque mondiale (mise à jour 2026-11-11) ; Wikipedia Apple Pay.",
+   "sources": [
+    "https://api.worldbank.org/v2/country/FRA;MAR;SEN;CIV;DZA;TUN/indicator/FX.OWN.TOTL.ZS?format=json",
+    "https://en.wikipedia.org/wiki/Apple_Pay"
+   ],
+   "confidence": "high",
+   "as_of": "2026-11-11",
+   "load_bearing": true
+  },
+  {
+   "claim": "La distance culturelle doit être calculée depuis le pays relais le plus proche déjà touché : indice de Kogut-Singh (4 dimensions de Hofstede) Maroc-USA 1,71 contre Maroc-France 0,51 ; Afrique de l'Ouest-USA 3,23 contre 1,71 depuis la France ; Québec-USA 0,56 ; Espagne-France 0,25.",
+   "evidence": "Calcul de la session sur le fichier Hofstede 2015-12-08 (0-100).",
+   "sources": [
+    "https://geerthofstede.com/wp-content/uploads/2016/08/6-dimensions-for-website-2015-12-08-0-100.csv",
+    "https://doi.org/10.1057/palgrave.jibs.8490394"
+   ],
+   "confidence": "medium",
+   "as_of": "2026-11-28",
+   "load_bearing": true
+  },
+  {
+   "claim": "Les scores Hofstede sont libres pour la recherche mais un usage commercial impose de contacter les ayants droit ; Sénégal et Côte d'Ivoire n'ont pas de scores propres, Algérie et Tunisie seulement deux dimensions.",
+   "evidence": "Page officielle « Dimension data matrix » et fichier CSV lus.",
+   "sources": [
+    "https://geerthofstede.com/research-and-vsm/dimension-data-matrix/"
+   ],
+   "confidence": "high",
+   "as_of": "2026-11-28",
+   "load_bearing": true
+  },
+  {
+   "claim": "La qualité des prévisions se mesure par un journal de prédictions opérationnelles et le score de Brier (décomposition de Murphy, score de compétence contre le taux de base) ; la formation aux probabilités, le travail en équipe et le suivi des meilleurs améliorent calibration et résolution, et les probabilités agrégées doivent être extrémisées.",
+   "evidence": "Wikipedia Brier score ; Gneiting et Raftery 2007 ; Mellers et al. 2014 et 2015 ; Baron et al. 2014.",
+   "sources": [
+    "https://en.wikipedia.org/wiki/Brier_score",
+    "https://doi.org/10.1177/0956797614524255",
+    "https://doi.org/10.1287/deca.2014.0293",
+    "https://doi.org/10.1198/016214506000001437"
+   ],
+   "confidence": "high",
+   "as_of": "2014-2015",
+   "load_bearing": true
+  },
+  {
+   "claim": "Le battage des rapports de tendances est mesurable : selon The Economist (août 2024), environ un cinquième des technologies seulement suit le cycle de Gartner, et six sur dix de celles qui tombent dans le creux ne remontent pas.",
+   "evidence": "Citation reprise par Wikipedia, Gartner hype cycle.",
+   "sources": [
+    "https://en.wikipedia.org/wiki/Gartner_hype_cycle"
+   ],
+   "confidence": "medium",
+   "as_of": "2024-08-19",
+   "load_bearing": false
+  },
+  {
+   "claim": "Survivance et clones : près de la moitié des pionniers échouent et les leaders durables entrent en moyenne 13 ans après eux ; Rocket Internet est passée de 42,50 € à l'introduction (2014) à un rachat à 18,57 € lors du retrait (2020) ; Gorillas, licorne en 9 mois, a fermé en mai 2024. Aucun taux de base publié d'échec des clones n'a été trouvé.",
+   "evidence": "Golder et Tellis 1993 (environ 500 marques, 50 catégories) ; Wikipedia en et de.",
+   "sources": [
+    "https://doi.org/10.1177/002224379303000203",
+    "https://de.wikipedia.org/wiki/Rocket_Internet",
+    "https://en.wikipedia.org/wiki/Gorillas_(company)"
+   ],
+   "confidence": "medium",
+   "as_of": "2026-11-28",
+   "load_bearing": false
+  },
+  {
+   "claim": "L'attention précède la disponibilité : Pokémon Go atteint la mi-hauteur de son intérêt en français le 2016-07-17, sept jours avant le lancement français du 2016-07-24 ; le Maroc et la Côte d'Ivoire ouvrent le 2016-10-04 (+90 j). La fenêtre d'arbitrage est l'écart entre attention locale et offre locale.",
+   "evidence": "Wikipedia Pokémon Go (dates par pays) et mesure Pageviews.",
+   "sources": [
+    "https://en.wikipedia.org/wiki/Pok%C3%A9mon_Go"
+   ],
+   "confidence": "medium",
+   "as_of": "2026-11-28",
+   "load_bearing": true
+  },
+  {
+   "claim": "Environ 50 % des vidéos YouTube font plus de 70 % de leurs vues dans une seule région, et les hashtags sont surtout des phénomènes locaux contraints par la distance physique : le taux de base de traversée internationale est bas.",
+   "evidence": "Brodersen et al. 2012 (20 millions de vidéos) ; Kamath et al. 2013 (2 milliards de tweets géolocalisés).",
+   "sources": [
+    "https://doi.org/10.1145/2187836.2187870",
+    "https://doi.org/10.1145/2488388.2488447"
+   ],
+   "confidence": "high",
+   "as_of": "2012-2013",
+   "load_bearing": false
+  },
+  {
+   "claim": "Sur un cas illustratif (Labubu, niche produit), le module de transposabilité classe les pays dans le même ordre que l'intensité réalisée (Canada > Suisse > Belgique > France > Maroc) mais sépare mal les pays proches (P50 78 à 83 contre 31 au Maroc) ; l'a priori de délai de classe B contient l'arrivée française observée (P = 0,76 à 159 j).",
+   "evidence": "Implémentation de référence de la session ; cas non indépendant des a priori.",
+   "sources": [
+    "/tmp/claude-0/-home-user-claudecode/00e88930-c277-528f-99f2-9b7f935da647/scratchpad/research/scripts_diff/scoring_reference.py"
+   ],
+   "confidence": "low",
+   "as_of": "2026-11-28",
+   "load_bearing": false
+  }
+ ],
+ "implications_for_tool": [
+  "Utiliser l'identifiant Wikidata (QID) comme clé d'entité, avec table d'alias multilingue validée et contrôle des faux rattachements (exemples observés : Labubu relié à la page Kasing_Lung, Quiet quitting relié à Innere Kündigung).",
+  "Intégrer dès la v1 le jeu Wikimedia par pays (gratuit, quotidien, par pays, avec QID) pour dater les arrivées en Europe et au Canada ; règle d'arrivée : au moins 3 jours sur 7 au-dessus du seuil publié.",
+  "Pour le Maghreb et l'Afrique, ne jamais conclure à l'absence sous le seuil Wikimedia : ajouter Google Trends pays, YouTube Data API par regionCode, classements d'applications par pays et veille de créateurs locaux.",
+  "Remplacer le décalage moyen par une table a priori classe de friction (A à F) x groupe de pays (UE francophone, Québec, Maghreb, Afrique subsaharienne), en loi log-normale avec masse « jamais », et mettre à jour par décollage observé dans des pays sentinelles (Royaume-Uni, Allemagne, Espagne, France, Golfe).",
+  "Surveiller des origines hors USA dès le départ (Royaume-Uni, Allemagne, Espagne, Corée, Japon, Chine via TikTok, Golfe) : le modèle de diffusion doit être un graphe asymétrique entre pays, pas un flux USA vers le reste.",
+  "Détection en deux temps : alertes précoces (CUSUM, z-score robuste, rafales de Kleinberg) pour mettre en observation ; confirmation (Mann-Kendall à 5 points et plus, seuil de décollage, au moins 2 familles de sources) avant toute prédiction.",
+  "Calculer les percentiles transversaux entre entités suivies chaque semaine pour noter les entités sans historique ; rejouer l'historique Wikipedia (2015+) et Google Trends (5 ans) à l'installation.",
+  "Score de force US : F_US = 100 x [0,25 vitesse + 0,15 niveau + 0,15 persistance + 0,30 corroboration + 0,05 accélération + 0,10 rafale], pénalité x0,6 si une seule famille, plafond 40 si pic d'un jour ; stades signal_faible à declin par règles explicites.",
+  "Mesurer l'offre locale (vidéos en langue locale, vendeurs, articles) en plus de l'attention locale et calculer un indice d'opportunité d'écart : attention présente, offre absente.",
+  "Transposabilité = 100 x produit des portes (paiement, plateforme, loi) x somme pondérée par niche des proximités C, A, G, E, I, L, S ; distance culturelle calculée depuis le relais le plus proche déjà touché ; stocker les portes comme données datées par pays avec alertes d'ouverture.",
+  "Régler la licence Hofstede avant usage commercial ou basculer sur des données ouvertes (WVS) ; documenter la source de chaque distance.",
+  "Propager l'incertitude par Monte-Carlo (loi bêta, concentration 2 + 38 x confiance), publier P10-P50-P90, classer les initiatives sur le P10 du rendement et s'abstenir si la confiance moyenne est < 0,4.",
+  "Ouvrir un journal de prédictions immuable et résolu automatiquement (question opérationnelle, horizon, probabilité, intervalle, règle de résolution) ; tableau des scores par version : Brier, BSS contre taux de base, couverture des intervalles à 80 %, erreur sur log(délai).",
+  "Exécuter le backtest des 20 cas datés avec données à date t0, paramètres pré-enregistrés, validation croisée un cas exclu et comparaison à 3 références (taux de base, délai constant, table de classes sans sentinelle) avant toute publication de prédictions.",
+  "Dans le module de rendement, mesurer en priorité la valeur par utilisateur par pays (CPM, commission, marge) : elle domine le calcul au Maghreb ; viser la diaspora et les clients payant en euros quand la porte de paiement locale est fermée.",
+  "Respecter les limites de débit (environ 1 requête par seconde sur l'API Pageviews, erreurs 429 observées), User-Agent identifiable, cache local."
+ ],
+ "open_questions": [
+  "Chiffre précis de l'effet de décalage sur q dans Takada et Jain 1991 et délais moyens de décollage par groupe de pays dans Chandrasekaran et Tellis 2008 (texte intégral bloqué).",
+  "Existe-t-il un taux de base publié d'échec des clones ou copies transfrontalières de modèles d'affaires ?",
+  "Source primaire et date de l'expression « time machine management » de Masayoshi Son.",
+  "Threads était-il disponible au Maroc, au Sénégal et au Québec dès le 2023-07-05 ?",
+  "Quel seuil Google Trends par pays concorde le mieux avec les arrivées datées par le jeu Wikimedia ?",
+  "Part de chaque pays francophone dans l'audience des éditions française et arabe de Wikipedia pour les sujets de tendance.",
+  "Coordonnées récentes de la carte Inglehart-Welzel pour le Maghreb et l'Afrique de l'Ouest et licence des données WVS.",
+  "Conditions et prix d'un usage commercial des scores Hofstede.",
+  "Taux de base de réussite d'une petite initiative numérique par classe de friction et par pays (à constituer avec le journal).",
+  "Quelles variables de segment ou d'offre locale départagent la France, la Belgique et la Suisse, que le module de transposabilité sépare mal ?",
+  "Cas datés d'Afrique subsaharienne francophone pour le jeu de backtest (aucun à ce stade).",
+  "Choix de la sentinelle par niche : l'ordre des mises à jour (Royaume-Uni puis Allemagne) change fortement la médiane prédite pour la France."
+ ],
+ "data_sources": [
+  {
+   "name": "API Wikimedia Pageviews (par article, par langue)",
+   "category": "attention",
+   "access_method": "REST https://wikimedia.org/api/rest_v1/metrics/pageviews/per-article/{projet}/all-access/user/{titre}/daily/{début}/{fin}",
+   "auth": "aucune ; User-Agent identifiable",
+   "cost": "gratuit",
+   "geo_coverage": "par édition linguistique, pas par pays ; quotidien depuis 2015",
+   "signal_type": "vues quotidiennes humaines",
+   "limits_and_tos": "erreurs 429 observées au-delà d'environ 1 requête par seconde",
+   "tested_call": "per-article/fr.wikipedia/all-access/user/Labubu/daily/2025010100/2025103100",
+   "test_result": "OK ; 15 cas x 6 langues récupérés après relances sur 429",
+   "verdict": "core"
+  },
+  {
+   "name": "Wikimedia Pageviews par pays (confidentialité différentielle)",
+   "category": "attention par pays",
+   "access_method": "fichiers TSV quotidiens https://analytics.wikimedia.org/published/datasets/country_project_page/AAAA-MM-JJ.tsv (environ 15 Mo par jour)",
+   "auth": "aucune",
+   "cost": "gratuit",
+   "geo_coverage": "pays (sauf pays non publiés), depuis le 2023-02-06 ; US manquant du 2023-02-06 au 2023-09-19 ; Maroc 74 lignes par jour, Sénégal 16",
+   "signal_type": "vues quotidiennes par pays x projet x page, avec QID Wikidata",
+   "limits_and_tos": "seuil de publication 90 vues (risque faible), 550 et 1 000 (risque moyen et élevé) ; bruit ±35,7 vues IC95 %",
+   "tested_call": "curl 2024-09-01 à 2025-10-31 filtré par awk sur 4 QID",
+   "test_result": "OK ; 19 014 lignes ; environ 1,5 s par jour de fichier en flux",
+   "verdict": "core"
+  },
+  {
+   "name": "API Wikidata wbgetentities",
+   "category": "résolution d'entités",
+   "access_method": "https://www.wikidata.org/w/api.php?action=wbgetentities&sites=enwiki&titles=...&props=sitelinks&redirects=yes",
+   "auth": "aucune",
+   "cost": "gratuit",
+   "geo_coverage": "mondial, toutes langues",
+   "signal_type": "QID et titres par langue",
+   "limits_and_tos": "usage raisonnable",
+   "tested_call": "titles=Dubai chocolate&redirects=yes",
+   "test_result": "OK ; Q130571534 et 6 titres de langues",
+   "verdict": "core"
+  },
+  {
+   "name": "API Banque mondiale v2 (WDI, Findex)",
+   "category": "économie et infrastructure",
+   "access_method": "https://api.worldbank.org/v2/country/{ISO3;...}/indicator/{code}?format=json",
+   "auth": "aucune",
+   "cost": "gratuit",
+   "geo_coverage": "tous pays, dont MA, DZ, TN, SN, CI",
+   "signal_type": "PIB PPA (NY.GDP.PCAP.PP.CD), internautes (IT.NET.USER.ZS), comptes (FX.OWN.TOTL.ZS)",
+   "limits_and_tos": "licence ouverte de la Banque mondiale [NON VÉRIFIÉ ici]",
+   "tested_call": "3 indicateurs x 14 pays, 2017-2025",
+   "test_result": "OK ; mise à jour du 2026-11-11",
+   "verdict": "core"
+  },
+  {
+   "name": "Scores culturels de Hofstede (fichier 6 dimensions)",
+   "category": "distance culturelle",
+   "access_method": "CSV https://geerthofstede.com/wp-content/uploads/2016/08/6-dimensions-for-website-2015-12-08-0-100.csv",
+   "auth": "aucune",
+   "cost": "gratuit pour la recherche ; commercial sur accord",
+   "geo_coverage": "environ 110 pays et régions ; pas de Sénégal ni de Côte d'Ivoire ; Algérie et Tunisie partielles",
+   "signal_type": "6 dimensions 0-100",
+   "limits_and_tos": "« Ceux qui envisagent un usage commercial doivent nous contacter »",
+   "tested_call": "téléchargement et calcul de Kogut-Singh",
+   "test_result": "OK",
+   "verdict": "paid_addon"
+  },
+  {
+   "name": "OpenAlex (métadonnées par DOI)",
+   "category": "veille scientifique",
+   "access_method": "https://api.openalex.org/works/https://doi.org/{DOI}",
+   "auth": "aucune",
+   "cost": "gratuit",
+   "geo_coverage": "n.a.",
+   "signal_type": "résumés, citations",
+   "limits_and_tos": "usage poli",
+   "tested_call": "50 DOI",
+   "test_result": "OK ; résumés absents pour certains éditeurs",
+   "verdict": "optional"
+  },
+  {
+   "name": "World Values Survey (carte Inglehart-Welzel)",
+   "category": "valeurs",
+   "access_method": "site WVS, téléchargement de données après inscription [NON VÉRIFIÉ]",
+   "auth": "inscription probable",
+   "cost": "gratuit pour la recherche [NON VÉRIFIÉ]",
+   "geo_coverage": "près de 100 pays ; couverture Maghreb et Afrique de l'Ouest à vérifier",
+   "signal_type": "positions sur 2 axes de valeurs",
+   "limits_and_tos": "à vérifier",
+   "tested_call": "lecture de la page Findings",
+   "test_result": "axes confirmés ; coordonnées non récupérées",
+   "verdict": "optional"
+  }
+ ],
+ "trends": [
+  {
+   "name": "Labubu (figurines en boîtes surprises Pop Mart)",
+   "niche": "collection, jouets, mode",
+   "description": "Personnage né à Hong Kong, vague mondiale en 2025 ; arrivée par pays datée par le jeu Wikimedia.",
+   "us_stage": "declin",
+   "us_emergence": "présence quotidienne aux USA dès le 2024-12-06, pic le 2025-07-16",
+   "francophone_status": "France +159 j, Belgique +169 j, Suisse +153 j, Canada +17 j, Maroc +187 j avec une intensité 27 fois plus faible qu'aux USA ; Algérie et Tunisie un seul jour au-dessus du seuil",
+   "lifestyle_segments": [
+    "jeunes urbains",
+    "collectionneurs"
+   ],
+   "monetization": "revente, contenus d'unboxing, accessoires [HYPOTHÈSE]",
+   "evidence": "Mesure de la session sur le jeu Wikimedia par pays",
+   "sources": [
+    "https://analytics.wikimedia.org/published/datasets/country_project_page/"
+   ]
+  },
+  {
+   "name": "Chocolat de Dubaï",
+   "niche": "alimentation, confiserie",
+   "description": "Barre fourrée au kadayif et à la pistache née aux Émirats ; relais germanophone avant les USA.",
+   "us_stage": "declin",
+   "us_emergence": "présence US dès le 2025-01-09, 63 jours après l'Allemagne et la Suisse",
+   "francophone_status": "France +29 j après l'Allemagne, intensité supérieure aux USA ; Belgique +115 j ; Maroc jamais au-dessus du seuil",
+   "lifestyle_segments": [
+    "gourmands",
+    "créateurs food"
+   ],
+   "monetization": "pâtisserie et vente locale, contenus recettes [HYPOTHÈSE]",
+   "evidence": "Mesure de la session",
+   "sources": [
+    "https://analytics.wikimedia.org/published/datasets/country_project_page/"
+   ]
+  },
+  {
+   "name": "Italian brainrot",
+   "niche": "mèmes, culture jeunesse",
+   "description": "Personnages absurdes générés par IA, nés en Italie ; arrivée simultanée dans tous les pays suivis.",
+   "us_stage": "declin",
+   "us_emergence": "2025-05-08 (tous pays le même jour)",
+   "francophone_status": "France présente le même jour, intensité 5,6 fois plus faible qu'aux USA ; Belgique et Suisse présentes",
+   "lifestyle_segments": [
+    "enfants et adolescents"
+   ],
+   "monetization": "contenus et produits dérivés, fenêtre de quelques jours [ESTIMATION]",
+   "evidence": "Mesure de la session",
+   "sources": [
+    "https://analytics.wikimedia.org/published/datasets/country_project_page/"
+   ]
+  },
+  {
+   "name": "Hyrox",
+   "niche": "fitness, compétition",
+   "description": "Course de fitness née en Allemagne (2017), plus intense au Royaume-Uni qu'aux USA.",
+   "us_stage": "mainstream",
+   "us_emergence": "première course US en janvier 2020 ; pic d'attention en anglais en septembre 2026",
+   "francophone_status": "France présente dès 2024-09-04, mi-hauteur en avril 2026 ; Suisse et Belgique sporadiques",
+   "lifestyle_segments": [
+    "CSP+ urbains",
+    "salles de sport"
+   ],
+   "monetization": "coaching, préparation, contenus [HYPOTHÈSE]",
+   "evidence": "Mesures de la session et dossier France",
+   "sources": [
+    "https://analytics.wikimedia.org/published/datasets/country_project_page/",
+    "https://en.wikipedia.org/wiki/Hyrox"
+   ]
+  }
+ ]
+}

@@ -1,0 +1,14 @@
+{
+  "name": "radar-decalage-marketplace",
+  "description": "Marketplace du radar d'arbitrage de tendances (USA vers Europe, France, Maroc et francophonie)",
+  "owner": {
+    "name": "radar-decalage"
+  },
+  "plugins": [
+    {
+      "name": "radar-decalage",
+      "source": "./plugins/radar-decalage",
+      "description": "Radar d'arbitrage de tendances USA vers Europe, France, Maroc et francophonie"
+    }
+  ]
+}

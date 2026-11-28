@@ -1,0 +1,211 @@
+# Termes de départ, tirés de l'étude préalable (tendances US dont le statut en France
+# ou au Maroc reste à mesurer). Variantes par langue : en, fr, ar (arabe), ary (darija).
+#
+# Aucune variante en darija ou en arabe n'est inventée ici : seules figurent les marques
+# et emprunts écrits tels quels. Les vraies variantes (« ... f lmghrib », graphie arabe)
+# arrivent comme propositions et ne sont interrogées qu'une fois validées par vous,
+# dans workspace/config/terms.toml (même format, status = "validated").
+
+[[term]]
+id = "labubu"
+niche = "N21"
+en = ["labubu"]
+fr = ["labubu"]
+ary = ["labubu"]
+status = "seed"
+
+[[term]]
+id = "chocolat-dubai"
+niche = "N08"
+en = ["dubai chocolate"]
+fr = ["chocolat dubai"]
+status = "seed"
+
+[[term]]
+id = "matcha"
+niche = "N08"
+en = ["matcha"]
+fr = ["matcha"]
+ary = ["matcha"]
+status = "seed"
+
+[[term]]
+id = "padel"
+niche = "N03"
+en = ["padel"]
+fr = ["padel"]
+ary = ["padel"]
+status = "seed"
+
+[[term]]
+id = "pickleball"
+niche = "N03"
+en = ["pickleball"]
+fr = ["pickleball"]
+status = "seed"
+
+[[term]]
+id = "hyrox"
+niche = "N03"
+en = ["hyrox"]
+fr = ["hyrox"]
+ary = ["hyrox"]
+status = "seed"
+
+[[term]]
+id = "run-club"
+niche = "N03"
+en = ["run club"]
+fr = ["run club"]
+status = "seed"
+
+[[term]]
+id = "pilates-reformer"
+niche = "N03"
+en = ["pilates reformer"]
+fr = ["pilates reformer"]
+status = "seed"
+
+[[term]]
+id = "creatine"
+niche = "N05"
+en = ["creatine"]
+fr = ["créatine"]
+status = "seed"
+
+[[term]]
+id = "micro-drama"
+niche = "N21"
+en = ["short drama app"]
+fr = ["mini série drama"]
+status = "seed"
+
+[[term]]
+id = "whatnot"
+niche = "N14"
+en = ["whatnot"]
+fr = ["whatnot"]
+status = "seed"
+
+[[term]]
+id = "tiktok-shop"
+niche = "N14"
+en = ["tiktok shop"]
+fr = ["tiktok shop"]
+ary = ["tiktok shop"]
+status = "seed"
+
+[[term]]
+id = "vinted"
+niche = "N02"
+en = ["vinted"]
+fr = ["vinted"]
+status = "seed"
+
+[[term]]
+id = "temu"
+niche = "N14"
+en = ["temu"]
+fr = ["temu"]
+ary = ["temu"]
+status = "seed"
+
+[[term]]
+id = "chatgpt"
+niche = "N15"
+en = ["chatgpt"]
+fr = ["chatgpt"]
+ary = ["chatgpt"]
+status = "seed"
+
+[[term]]
+id = "claude-ai"
+niche = "N15"
+en = ["claude ai"]
+fr = ["claude ia"]
+status = "seed"
+
+[[term]]
+id = "agent-ia"
+niche = "N15"
+en = ["ai agent"]
+fr = ["agent ia"]
+status = "seed"
+
+[[term]]
+id = "vibe-coding"
+niche = "N15"
+en = ["vibe coding"]
+fr = ["vibe coding"]
+status = "seed"
+
+[[term]]
+id = "skool"
+niche = "N14"
+en = ["skool community"]
+fr = ["skool"]
+status = "seed"
+
+[[term]]
+id = "glp1"
+niche = "N05"
+en = ["glp-1"]
+fr = ["glp-1"]
+status = "seed"
+
+[[term]]
+id = "mocktail"
+niche = "N08"
+en = ["mocktail"]
+fr = ["mocktail"]
+status = "seed"
+
+[[term]]
+id = "sauna-social"
+niche = "N06"
+en = ["social sauna"]
+fr = ["sauna social"]
+status = "seed"
+
+[[term]]
+id = "stanley"
+niche = "N02"
+en = ["stanley cup tumbler"]
+fr = ["gourde stanley"]
+status = "seed"
+
+[[term]]
+id = "dupe"
+niche = "N01"
+en = ["dupe perfume"]
+fr = ["dupe parfum"]
+status = "seed"
+
+[[term]]
+id = "kbeauty"
+niche = "N01"
+en = ["korean skincare"]
+fr = ["skincare coréenne"]
+status = "seed"
+
+[[term]]
+id = "n8n"
+niche = "N15"
+en = ["n8n"]
+fr = ["n8n"]
+ary = ["n8n"]
+status = "seed"
+
+[[term]]
+id = "automatisation-ia"
+niche = "N15"
+en = ["ai automation agency"]
+fr = ["automatisation ia"]
+status = "seed"
+
+[[term]]
+id = "blotato"
+niche = "N15"
+en = ["blotato"]
+fr = ["blotato"]
+status = "seed"

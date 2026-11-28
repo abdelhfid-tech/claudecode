@@ -1,0 +1,233 @@
+# Rails d'encaissement, côté vendeur sauf mention contraire.
+# Statuts : oui | non | partiel | non_verifie | ferme
+# evidence : F (source primaire lue), F2 (source secondaire), E (estimation), H (hypothèse)
+# Ces lignes périment vite : la veille des pages officielles les relit, et chaque ligne
+# porte la date de sa dernière vérification.
+# Zones : FR, BE, CH, CA-QC, MA, SN, CI, CM, CD (RDC), ML (Mali)
+
+[[rail]]
+id = "stripe"
+label = "Stripe (compte local)"
+kind = "psp"
+as_of = 2026-11-28
+source = "https://stripe.com/global"
+evidence = "F"
+status = { FR = "oui", BE = "oui", CH = "oui", "CA-QC" = "oui", MA = "non", SN = "non", CI = "partiel", CM = "non", CD = "non" }
+notes = { CI = "réseau étendu, via Paystack", MA = "le pays listé est celui du vendeur, pas de l'acheteur : un acheteur marocain avec une carte internationale peut payer un vendeur européen" }
+
+[[rail]]
+id = "shopify_payments"
+label = "Shopify Payments"
+kind = "psp"
+as_of = 2026-11-28
+source = "https://help.shopify.com/en/manual/payments/shopify-payments/supported-countries"
+evidence = "F"
+status = { FR = "oui", BE = "oui", CH = "oui", "CA-QC" = "oui", MA = "non", SN = "non", CI = "non", CM = "non", CD = "non" }
+notes = { MA = "prestataire tiers obligatoire, surcommission de 0,6 à 2 % ; alternative locale : YouCan" }
+
+[[rail]]
+id = "paddle"
+label = "Paddle (marchand officiel, logiciels et produits numériques)"
+kind = "mor"
+as_of = 2026-11-28
+source = "https://www.paddle.com/help/start/intro-to-paddle/which-countries-are-supported-by-paddle"
+evidence = "F"
+status = { FR = "oui", BE = "oui", CH = "oui", "CA-QC" = "oui", MA = "non_verifie", SN = "non_verifie", CI = "non_verifie", CM = "non_verifie", CD = "non", ML = "non" }
+notes = { MA = "non exclu de la liste, mais versement vers une banque marocaine non vérifié ; IGOC 2026 : contrat, rapatriement sous 90 jours, 70 % au plus en compte en devises", SN = "non exclu de la liste, versement non vérifié", CI = "non exclu de la liste, versement non vérifié", CM = "non exclu de la liste, versement non vérifié", CD = "exclu explicitement (vendeurs et acheteurs)", ML = "exclu explicitement" }
+
+[[rail]]
+id = "polar"
+label = "Polar (marchand officiel, versements via Stripe Connect Express)"
+kind = "mor"
+as_of = 2026-11-28
+source = "https://polar.sh/docs/merchant-of-record/supported-countries"
+evidence = "F"
+status = { FR = "oui", BE = "oui", CH = "oui", "CA-QC" = "oui", MA = "non", SN = "oui", CI = "oui", CM = "non", CD = "non_verifie" }
+
+[[rail]]
+id = "lemon_squeezy"
+label = "Lemon Squeezy"
+kind = "mor"
+as_of = 2026-11-28
+source = "https://www.lemonsqueezy.com/"
+evidence = "F"
+status = { FR = "ferme", BE = "ferme", CH = "ferme", "CA-QC" = "ferme", MA = "ferme", SN = "ferme", CI = "ferme", CM = "ferme", CD = "ferme" }
+notes = { FR = "plus d'inscriptions ; outil de migration le 2 décembre 2026 ; arrêt du traitement le 31 mars 2027" }
+
+[[rail]]
+id = "gumroad"
+label = "Gumroad (marchand officiel, TVA gérée)"
+kind = "mor"
+as_of = 2026-11-28
+source = "https://gumroad.com/pricing"
+evidence = "F"
+status = { FR = "oui", BE = "oui", CH = "oui", "CA-QC" = "oui", MA = "non_verifie", SN = "non_verifie", CI = "non_verifie", CM = "non_verifie", CD = "non_verifie" }
+notes = { FR = "10 % + 0,50 $ en vente directe, 30 % via Discover" }
+
+[[rail]]
+id = "paypal_reception"
+label = "PayPal en réception"
+kind = "wallet"
+as_of = 2026-11-28
+source = "docs/etude/market-maroc-maghreb.md"
+evidence = "F2"
+status = { FR = "oui", BE = "oui", CH = "oui", "CA-QC" = "oui", MA = "oui", SN = "non_verifie", CI = "non_verifie", CM = "non_verifie", CD = "non_verifie" }
+notes = { MA = "retrait vers banque, carte ou Cash Plus ; compte assimilé à un compte à l'étranger selon une source citée" }
+
+[[rail]]
+id = "youcan_pay"
+label = "YouCan Pay (cartes marocaines)"
+kind = "psp"
+as_of = 2026-11-28
+source = "https://youcanpay.com/"
+evidence = "F"
+status = { MA = "oui" }
+notes = { MA = "3,9 % + 2 MAD par transaction réussie" }
+
+[[rail]]
+id = "paiement_livraison"
+label = "Paiement à la livraison"
+kind = "cod"
+as_of = 2026-11-28
+source = "docs/etude/market-maroc-maghreb.md"
+evidence = "F2"
+status = { FR = "partiel", MA = "oui", SN = "oui", CI = "oui", CM = "oui", CD = "oui" }
+notes = { MA = "84,1 % des acheteurs en ligne ; 20 à 40 % de refus à la livraison" }
+
+[[rail]]
+id = "wave_business"
+label = "Wave Business"
+kind = "mobile_money"
+as_of = 2026-11-28
+source = "https://www.wave.com/fr/business/"
+evidence = "F"
+status = { SN = "oui", CI = "oui", CM = "oui" }
+notes = { SN = "gratuit jusqu'à 20 000 FCFA par jour, puis 1 %" }
+
+[[rail]]
+id = "flutterwave"
+label = "Flutterwave"
+kind = "psp"
+as_of = 2026-11-28
+source = "https://flutterwave.com/sn/pricing"
+evidence = "F"
+status = { SN = "oui", CI = "non_verifie", CM = "non_verifie" }
+notes = { SN = "mobile money 2 %, cartes 4,8 %, hors TVA" }
+
+[[rail]]
+id = "chariow"
+label = "Chariow (produits numériques, mobile money)"
+kind = "marketplace"
+as_of = 2026-11-28
+source = "https://chariow.com/"
+evidence = "F"
+status = { SN = "oui", CI = "oui", CM = "oui", MA = "non_verifie" }
+notes = { SN = "commission non affichée ; « +200 000 créateurs », déclaratif" }
+
+# ---- Plateformes de création et d'affiliation (études complémentaires, contre-vérifiées le 28/11/2026)
+
+[[rail]]
+id = "kdp_payout"
+label = "Amazon KDP : versement des redevances"
+kind = "platform_payout"
+as_of = 2026-11-28
+source = "aide KDP (modes de paiement, seuils GK2MKZUL6U3SFBPZ) ; docs/etude/amazon-kdp-pod.md"
+evidence = "F"
+status = { FR = "oui", BE = "oui", CH = "oui", "CA-QC" = "oui", MA = "oui", SN = "partiel", CI = "partiel", CM = "partiel", CD = "partiel" }
+notes = { MA = "virement en dirhams, seuil de 100 par place de marché ; .com.br versé en dollars ; retenue fiscale US de 10 % (convention), fonds KDP Select compris dans l'assiette", SN = "chèque en dollars seulement, non garanti hors certaines places de marché ; KDP décide de l'accès à un prestataire comme Payoneer ; retenue US de 30 % sans convention" }
+
+[[rail]]
+id = "etsy_payments"
+label = "Etsy Payments"
+kind = "marketplace"
+as_of = 2026-11-28
+source = "aide Etsy (pays d'Etsy Payments) ; docs/etude/amazon-kdp-pod.md"
+evidence = "F"
+status = { FR = "oui", BE = "oui", CH = "oui", "CA-QC" = "oui", MA = "oui", SN = "non", CI = "non", CM = "non", CD = "non" }
+notes = { MA = "4,5 % + 5 MAD par transaction", FR = "règles IA du 22/10/2026 : recettes, patrons, instructions et « AI prompt bundles » générés par IA interdits ; maquettes autorisées pour l'impression à la demande" }
+
+[[rail]]
+id = "notion_marketplace"
+label = "Notion Marketplace (modèles)"
+kind = "marketplace"
+as_of = 2026-11-28
+source = "aide Notion (pays de versement) ; docs/etude/amazon-kdp-pod.md"
+evidence = "F"
+status = { FR = "oui", BE = "oui", CH = "oui", "CA-QC" = "oui", MA = "oui", SN = "oui", CI = "oui", CM = "non", CD = "non" }
+
+[[rail]]
+id = "udemy_payout"
+label = "Udemy : versement aux formateurs"
+kind = "marketplace"
+as_of = 2026-11-28
+source = "docs/etude/amazon-kdp-pod.md (pages Udemy en 403, extraits de recherche)"
+evidence = "F2"
+status = { FR = "oui", BE = "oui", CH = "oui", "CA-QC" = "oui", MA = "non_verifie", SN = "non_verifie", CI = "non_verifie" }
+
+[[rail]]
+id = "pod_payout"
+label = "Redbubble, TeePublic : versement aux artistes"
+kind = "marketplace"
+as_of = 2026-11-28
+source = "docs/etude/amazon-kdp-pod.md (rapport annuel d'Articore ; pages d'aide en 403)"
+evidence = "F2"
+status = { FR = "oui", BE = "oui", CH = "oui", "CA-QC" = "oui", MA = "non_verifie", SN = "non_verifie", CI = "non_verifie" }
+
+[[rail]]
+id = "adobe_stock_payout"
+label = "Adobe Stock : versement aux contributeurs"
+kind = "marketplace"
+as_of = 2026-11-28
+source = "docs/etude/amazon-kdp-pod.md (pages helpx en 403 : invérifiable)"
+evidence = "H"
+status = { FR = "non_verifie", BE = "non_verifie", CH = "non_verifie", "CA-QC" = "non_verifie", MA = "non_verifie", SN = "non_verifie", CI = "non_verifie" }
+notes = { FR = "Shutterstock refuse tout contenu généré par IA" }
+
+[[rail]]
+id = "amazon_associates_fr"
+label = "Partenaires Amazon (amazon.fr, amazon.com.be)"
+kind = "affiliate"
+as_of = 2026-11-28
+source = "barème et accord d'exploitation du programme Partenaires d'Amazon ; docs/etude/affiliation.md"
+evidence = "F"
+status = { FR = "oui", BE = "oui", CH = "non_verifie", "CA-QC" = "non_verifie", MA = "non_verifie", SN = "non_verifie", CI = "non_verifie" }
+notes = { FR = "0 à 6 % sur amazon.fr, 10 % (14 % mode) sur amazon.com.be ; session de 24 h (89 jours si mis au panier) ; versement environ 60 jours après la fin du mois, dès 25 € ; accord sous droit luxembourgeois ; usage du contenu pour entraîner une IA interdit ; au-delà de 1 000 € HT par an, avis juridique requis (contrat écrit de la loi influenceurs)" }
+
+[[rail]]
+id = "awin_payout"
+label = "Awin (réseau d'affiliation)"
+kind = "affiliate"
+as_of = 2026-11-28
+source = "docs/etude/affiliation.md (contre-vérifiée)"
+evidence = "F"
+status = { FR = "oui", BE = "oui", CH = "oui", "CA-QC" = "oui", MA = "non_verifie", SN = "non_verifie", CI = "non_verifie" }
+notes = { MA = "versement via Payoneer ; couverture Payoneer au Maroc non vérifiée ; IGOC 2026 : jusqu'à 70 % des revenus de source étrangère sur un compte en devises, sur déclaration" }
+
+[[rail]]
+id = "viator_direct"
+label = "Viator, programme direct"
+kind = "affiliate"
+as_of = 2026-11-28
+source = "partnerresources.viator.com ; docs/etude/affiliation.md (contre-vérification)"
+evidence = "F"
+status = { FR = "oui", BE = "oui", CH = "oui", "CA-QC" = "oui", MA = "partiel", SN = "non_verifie", CI = "non_verifie" }
+notes = { FR = "8 % sous 30 jours, versement hebdomadaire par PayPal (4 % via Awin)", MA = "dépend de PayPal en réception" }
+
+[[rail]]
+id = "saas_affiliate_payout"
+label = "Programmes d'affiliation de logiciels (PayPal ou virement)"
+kind = "affiliate"
+as_of = 2026-11-28
+source = "docs/etude/affiliation.md ; Systeme.io : 60 % à vie"
+evidence = "F2"
+status = { FR = "oui", BE = "oui", CH = "oui", "CA-QC" = "oui", MA = "partiel", SN = "non_verifie", CI = "non_verifie" }
+notes = { MA = "selon le programme ; PayPal en réception fonctionne au Maroc (source secondaire)" }
+
+[[rail]]
+id = "local_affiliate"
+label = "Programmes d'affiliation locaux (Jumia, AliExpress, Temu…)"
+kind = "affiliate"
+as_of = 2026-11-28
+source = "docs/etude/affiliation.md"
+evidence = "H"
+status = { FR = "oui", BE = "oui", MA = "non_verifie", SN = "non_verifie", CI = "non_verifie" }

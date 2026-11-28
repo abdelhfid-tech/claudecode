@@ -1,0 +1,171 @@
+# Relevé « assortiment » : pour un commerce de maison, cadeau et enfant à Fès, chaque concept est
+# cherché sur Google à Fès, à Casablanca et au Maroc (autocomplétion), en français et en arabe.
+# Il dit ce qui est déjà demandé à Fès, ce qui est en avance à Casablanca, ce qui se cherche
+# partout sans lieu (à vendre en ligne) et ce que presque personne ne cherche.
+#
+# Ce relevé ne voit pas les achats d'impulsion (confiserie, petits cadeaux) : on ne les cherche
+# pas sur Google, on les achète en les voyant. Pour ces familles, la caisse juge, pas le radar.
+#
+# La liste ci-dessous est un exemple. Un commerçant met la sienne dans <espace>/config/assortiment.toml
+# (elle reste sur le serveur, hors du dépôt public).
+
+city = "fes"
+leader = "casablanca"
+national = { fr = "maroc", ar = "المغرب", match = "\\b(maroc|morocco)\\b|المغرب" }
+city_ar = { fes = "فاس", casablanca = "الدار البيضاء" }
+city_ar_match = { fes = "فاس", casablanca = "الدار البيضاء|كازا" }
+
+# Comment on cherche à acheter : précisions repérées dans les suggestions.
+[intents]
+prix = "\\b(prix|pas cher|promo|promotion|solde)\\b|ثمن|بثمن|اثمنة"
+magasin = "\\b(magasin|boutique|adresse|ou acheter|showroom|marche)\\b|محل|محلات"
+en_ligne = "\\b(livraison|en ligne|jumia|site|instagram|facebook|whatsapp|commande)\\b|توصيل"
+gros = "\\b(gros|grossiste|derb omar|fournisseur|fabricant|usine)\\b|الجملة|بالجملة"
+personnalise = "\\b(personnalise|personnalisee|prenom|gravure|brode|broderie)\\b"
+cadeau = "\\b(cadeau|coffret|box|offrir)\\b|هدية|هدايا"
+
+[[famille]]
+id = "enfants"
+label = "Enfants et naissance"
+concepts = [
+  { fr = "pyjama enfant", ar = "بيجامة اطفال" },
+  { fr = "peluche" },
+  { fr = "puzzle enfant" },
+  { fr = "jeux educatifs", ar = "العاب تعليمية" },
+  { fr = "jouet montessori" },
+  { fr = "kit creatif enfant" },
+  { fr = "livre enfant" },
+  { fr = "fournitures scolaires", ar = "ادوات مدرسية" },
+  { fr = "trousse scolaire" },
+  { fr = "cartable" },
+  { fr = "cadeau naissance", ar = "هدية مولود" },
+  { fr = "coffret naissance" },
+]
+
+[[famille]]
+id = "nuit"
+label = "Nuit, détente et basiques"
+concepts = [
+  { fr = "pyjama femme", ar = "بيجامة نسائية" },
+  { fr = "pyjama homme" },
+  { fr = "pyjama satin" },
+  { fr = "pyjama polaire" },
+  { fr = "peignoir", ar = "روب حمام" },
+  { fr = "ensemble interieur femme" },
+  { fr = "pantoufle", ar = "شبشب" },
+  { fr = "crocs", ar = "كروكس" },
+  { fr = "chaussettes" },
+  { fr = "legging femme" },
+  { fr = "plaid" },
+]
+
+[[famille]]
+id = "cuisine"
+label = "Cuisine et art de la table"
+concepts = [
+  { fr = "theiere", ar = "براد" },
+  { fr = "verres a the", ar = "كيسان" },
+  { fr = "service a the" },
+  { fr = "plateau", ar = "صينية" },
+  { fr = "vaisselle", ar = "اواني" },
+  { fr = "service de table" },
+  { fr = "mug personnalise" },
+  { fr = "tasse cafe" },
+  { fr = "nappe de table" },
+  { fr = "bocaux en verre" },
+  { fr = "ustensiles de cuisine", ar = "اواني المطبخ" },
+  { fr = "boite de rangement" },
+]
+
+[[famille]]
+id = "artisanat"
+label = "Artisanat et décoration"
+concepts = [
+  { fr = "poterie" },
+  { fr = "zellige" },
+  { fr = "lanterne marocaine", ar = "فانوس" },
+  { fr = "plateau cuivre" },
+  { fr = "panier osier", ar = "سلة" },
+  { fr = "vase ceramique" },
+  { fr = "tapis berbere" },
+  { fr = "decoration maison", ar = "ديكور" },
+  { fr = "miroir decoratif" },
+  { fr = "fleurs artificielles", ar = "ورد اصطناعي" },
+  { fr = "bougie parfumee", ar = "شموع" },
+  { fr = "cadre photo" },
+]
+
+[[famille]]
+id = "hygiene"
+label = "Hygiène et beauté courante"
+concepts = [
+  { fr = "shampoing", ar = "شامبو" },
+  { fr = "deodorant" },
+  { fr = "gel douche" },
+  { fr = "brosse cheveux" },
+  { fr = "savon noir", ar = "الصابون البلدي" },
+]
+
+[[famille]]
+id = "soin"
+label = "Soin, bien-être et parfum"
+concepts = [
+  { fr = "coffret hammam" },
+  { fr = "huile d'argan", ar = "زيت أركان" },
+  { fr = "ghassoul", ar = "غاسول" },
+  { fr = "kessa", ar = "كيس الحمام" },
+  { fr = "serum visage" },
+  { fr = "creme hydratante" },
+  { fr = "eau micellaire" },
+  { fr = "brume parfumee" },
+  { fr = "parfum femme", ar = "عطر" },
+  { fr = "diffuseur parfum" },
+  { fr = "trousse de toilette" },
+  { fr = "organisateur maquillage" },
+]
+
+[[famille]]
+id = "caisse"
+label = "Caisse : cheveux, confiserie, petits cadeaux"
+impulsion = true
+concepts = [
+  { fr = "pince cheveux", ar = "مشبك الشعر" },
+  { fr = "chouchou cheveux" },
+  { fr = "bandeau cheveux" },
+  { fr = "bonbons" },
+  { fr = "porte cle" },
+]
+
+[[famille]]
+id = "cadeaux"
+label = "Coffrets, cadeaux et saisons"
+concepts = [
+  { fr = "coffret cadeau", ar = "هدايا" },
+  { fr = "box cadeau" },
+  { fr = "cadeau personnalise" },
+  { fr = "cadeau anniversaire" },
+  { fr = "cadeau mariage" },
+  { fr = "cadeau saint valentin" },
+  { fr = "emballage cadeau" },
+  { fr = "decoration ramadan", ar = "ديكور رمضان" },
+  { fr = "coffret ramadan" },
+  { fr = "tapis de priere", ar = "سجادة صلاة" },
+  { fr = "chapelet", ar = "سبحة" },
+  { fr = "encensoir", ar = "مبخرة" },
+  { fr = "bakhour", ar = "بخور" },
+]
+
+# Écosystème local : qui peut acheter en volume, fournir ou relayer, cherché à Fès.
+[[ecosysteme]]
+role = "Clients professionnels"
+termes = ["riad", "maison d'hote", "spa", "hammam", "clinique", "creche", "ecole privee", "salle des fetes",
+          "negafa", "traiteur", "wedding planner", "cadeau entreprise", "salle de sport"]
+
+[[ecosysteme]]
+role = "Fournisseurs et artisans"
+termes = ["grossiste", "cooperative", "poterie", "zellige", "dinanderie", "babouche", "broderie", "maroquinerie",
+          "tissage", "savon artisanal", "artisan"]
+
+[[ecosysteme]]
+role = "Relais digitaux et services"
+termes = ["livraison", "photographe", "influenceuse", "imprimerie", "emballage", "agence marketing"]

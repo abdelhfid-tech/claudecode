@@ -1,0 +1,18 @@
+# Grands groupes et grandes enseignes : leurs apps ne sont pas copiables par un indépendant. Une app d'un autre
+# éditeur est marquée « petit éditeur » dans `radar gaps` (option --independants pour ne garder qu'elles).
+# Expressions régulières, insensibles à la casse, sur le nom de l'éditeur (artistName de l'App Store).
+grands = [
+  "\\bmeta\\b", "facebook", "instagram", "whatsapp", "tiktok", "bytedance", "\\bgoogle\\b", "alphabet", "youtube",
+  "\\bapple\\b", "amazon", "microsoft", "openai", "anthropic", "netflix", "disney", "spotify", "\\buber\\b",
+  "airbnb", "snap\\b", "snapchat", "pinterest", "x corp", "twitter", "temu", "pdd", "shein", "roadget", "alibaba",
+  "aliexpress", "walmart", "target", "paypal", "block, inc", "cash app", "\\bebay\\b", "booking",
+  "department of", "government", "\\bu\\.s\\.", "ministère", "gouvernement", "état ",
+  "electronic arts", "activision", "supercell", "king\\.com", "playrix", "scopely", "zynga", "niantic",
+  # grands groupes chinois et du Golfe
+  "tencent", "douyin", "baidu", "meituan", "xiaomi", "huawei", "kuaishou", "netease", "trip\\.com", "ctrip", "didi",
+  "pinduoduo", "careem", "noon", "talabat", "emirates", "etisalat", "\\be&\\b", "\\bstc\\b",
+  # grandes enseignes (apps de magasin ou de marque)
+  "\\blidl\\b", "aldi", "carrefour", "ikea", "inditex", "\\bzara\\b", "h&m", "decathlon", "sephora", "\\bnike\\b",
+  "adidas", "costco", "best buy", "home depot", "debenhams", "dbz marketplace", "aritzia", "flying tiger",
+  "joybuy", "\\bjd\\b", "jd\\.com", "primark", "uniqlo", "starbucks", "mcdonald",
+]

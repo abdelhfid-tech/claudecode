@@ -1,0 +1,494 @@
+{
+ "dossier_path": "/tmp/claude-0/-home-user-claudecode/00e88930-c277-528f-99f2-9b7f935da647/scratchpad/research/initiatives-economie.md",
+ "executive_summary": "Le budget de recherche web étant épuisé, cet axe repose sur la lecture directe d'environ 60 pages primaires, un test de l'API TrustMRR (126 fiches à revenu vérifié par API de paiement) et les dossiers compagnons. Les taux de base sont bas : 17,3 % des apps atteignent 1 000 $ de revenu mensuel en deux ans et l'app médiane fait environ 72 $ par mois à un an (RevenueCat 2026). 68,6 % des startups de TrustMRR sont sous 1 000 $. 21,8 % des établissements américains ferment dès la première année (BLS). Même chez un fondateur solo célèbre (Marc Lou), 4 produits sur 20 font environ 87 % du revenu, et ShipFast est tombé à 548 $ sur 30 jours. Le MRR affiché peut valoir jusqu'à 6 fois l'encaissement sur 30 jours : il faut stocker le cash et sa date de synchronisation. La transposabilité dépend d'abord du rail de paiement et des règles. Stripe et Shopify Payments sont absents au Maroc. Polar verse au Sénégal et en Côte d'Ivoire, pas au Maroc. Lemon Squeezy ferme le 31/03/2027. Au Maroc : plafond auto-entrepreneur de 200 000 DH, retenue de 30 % au-delà de 80 000 DH par client, dotation carte de 20 000 DH par an. En France : 83 600 € de plafond micro, franchise de TVA à 37 500 € pour les services. WhatsApp (assistants généralistes interdits depuis le 15/01/2026, messages de service payants depuis le 01/10/2026), YouTube (contenu « inauthentic », 15/07/2025) et Google (abus à grande échelle) pénalisent l'automatisation de masse. L'inférence ne coûte presque rien (environ 0,0006 $ par conversation sur Haiku 5.5) ; le canal et l'acquisition dominent. Vendre les outils d'un archétype rapporte plus que le pratiquer, et un MCP sert de canal de distribution, pas de produit. La grille de scoring (formules et code fournis) met en tête les archétypes adossés à un service en France, en Belgique, en Suisse et au Québec : agence, IA verticale, données et API, communauté, GEO. Au Maroc et dans l'UEMOA, c'est l'arbitrage export qui gagne (ROI ajusté de 0,42 à 0,45 contre 0,12 en France). Les derniers rangs sont stables : chaîne sans visage, SEO programmatique, Shopify, app virale. Aucun cas solo marocain ou subsaharien à revenu vérifié n'a été trouvé.",
+ "key_findings": [
+  {
+   "claim": "Taux de base des apps : 17,3 % des apps lancées atteignent 1 000 $ de revenu mensuel dans les deux ans, 4,6 % atteignent 10 000 $ ; l'app médiane fait environ 72 $/mois à un an (quartile supérieur 429 $, top 10 % 2 574 $).",
+   "evidence": "RevenueCat State of Subscription Apps 2026, plus de 115 000 apps, données 2025.",
+   "sources": [
+    "https://www.revenuecat.com/state-of-subscription-apps/"
+   ],
+   "confidence": "high",
+   "as_of": "2026 (données 2025)",
+   "load_bearing": true
+  },
+  {
+   "claim": "Même dans un échantillon auto-sélectionné de startups à revenu vérifié par API de paiement, 68,6 % sont dans la tranche 0 à 1 000 $, et 1 % seulement dépassent 1 M$.",
+   "evidence": "TrustMRR /stats (plus de 15 000 startups listées selon llms.txt), mis à jour le 2026-11-28 ; base exacte (MRR ou cumul) non précisée.",
+   "sources": [
+    "https://trustmrr.com/stats",
+    "https://trustmrr.com/llms.txt"
+   ],
+   "confidence": "medium",
+   "as_of": "2026-11-28",
+   "load_bearing": true
+  },
+  {
+   "claim": "Survie des établissements privés américains : environ 78 à 80 % à 1 an, environ 51 % à 5 ans, environ 35 % à 10 ans.",
+   "evidence": "BLS BED table 7, cohortes 2013 à 2023, données à mars 2026.",
+   "sources": [
+    "https://www.bls.gov/bdm/us_age_naics_00_table7.txt"
+   ],
+   "confidence": "high",
+   "as_of": "2026-03",
+   "load_bearing": false
+  },
+  {
+   "claim": "Loi de puissance et décroissance chez un fondateur solo à succès : Marc Lou a 20 produits pour 3,34 M$ cumulés ; 4 produits font environ 87 % du total ; ShipFast (1,3 M$ cumulés) n'a encaissé que 548 $ sur 30 jours.",
+   "evidence": "Fiche fondateur TrustMRR, revenu relevé par API Stripe.",
+   "sources": [
+    "https://trustmrr.com/founder/marclou"
+   ],
+   "confidence": "high",
+   "as_of": "2026-11-28",
+   "load_bearing": false
+  },
+  {
+   "claim": "Le MRR affiché diverge fortement de l'encaissement réel : DM Champ 135 927 $ de MRR contre 24 004 $ sur 30 jours ; Speel.co 62 877 $ contre 10 500 $ ; la clé Stripe de PROSP a expiré (dernière synchronisation le 2026-02-05).",
+   "evidence": "Fiches Markdown TrustMRR ; écarts jusqu'à 6 fois.",
+   "sources": [
+    "https://trustmrr.com/startup/dm-champ",
+    "https://trustmrr.com/startup/speel-co.md",
+    "https://trustmrr.com/startup/prosp.md"
+   ],
+   "confidence": "high",
+   "as_of": "2026-11-28",
+   "load_bearing": true
+  },
+  {
+   "claim": "Rails : Stripe et Shopify Payments absents au Maroc, au Sénégal, au Cameroun et en Tunisie (Stripe couvre la Côte d'Ivoire via Paystack) ; Polar verse au Sénégal, en Côte d'Ivoire et en Tunisie mais pas au Maroc ; Paddle n'exclut pas le Maroc ; Lemon Squeezy fermé aux inscriptions, arrêt le 31/03/2027 ; Stripe Atlas (500 $) ouvert aux fondateurs du monde entier.",
+   "evidence": "Pages officielles lues le 2026-11-28.",
+   "sources": [
+    "https://stripe.com/global",
+    "https://help.shopify.com/en/manual/payments/shopify-payments/supported-countries",
+    "https://polar.sh/docs/merchant-of-record/supported-countries",
+    "https://www.paddle.com/help/start/intro-to-paddle/which-countries-are-supported-by-paddle",
+    "https://www.lemonsqueezy.com/",
+    "https://stripe.com/atlas"
+   ],
+   "confidence": "high",
+   "as_of": "2026-11-28",
+   "load_bearing": true
+  },
+  {
+   "claim": "Maroc : auto-entrepreneur plafonné à 200 000 DH (services, IR de 1 %) et à 500 000 DH (commerce, 0,5 %), retenue de 30 % au-delà de 80 000 DH par an et par client ; IGOC 2026 : dotation e-commerce de 20 000 DH par an pour un particulier, 50 000 DH pour une société nouvelle, 2 M DH pour une startup labellisée ; export de services rapatrié sous 90 jours, dont 70 % au plus en devises.",
+   "evidence": "Dossier compagnon market-maroc-maghreb.md (IGOC 2026 lue en texte intégral ; guide DGI via Le Matin).",
+   "sources": [
+    "https://www.oc.gov.ma/sites/default/files/reglementation/pdf/2026-01/IGOC%202026.pdf",
+    "https://lematin.ma/economie/auto-entrepreneur-ce-que-prevoit-le-regime-fiscal-en-2026/361537"
+   ],
+   "confidence": "high",
+   "as_of": "2026",
+   "load_bearing": true
+  },
+  {
+   "claim": "France 2026 : plafonds micro de 203 100 € (vente) et 83 600 € (services) ; franchise de TVA à 85 000 € (ventes) et 37 500 € (services), le seuil unique de 25 000 € étant abandonné ; cotisations de 12,3 % (vente), 21,2 % (prestations BIC) et 25,6 % (BNC non réglementé).",
+   "evidence": "Fiches service-public vérifiées les 01/01/2026 et 21/02/2026.",
+   "sources": [
+    "https://entreprendre.service-public.gouv.fr/vosdroits/F32353",
+    "https://entreprendre.service-public.gouv.fr/vosdroits/F21746",
+    "https://entreprendre.service-public.gouv.fr/vosdroits/F36232"
+   ],
+   "confidence": "high",
+   "as_of": "2026",
+   "load_bearing": true
+  },
+  {
+   "claim": "Afrique de l'Ouest : Wave Business prélève 1 % au-delà des 20 000 premiers FCFA quotidiens ; Flutterwave au Sénégal 2 % sur le mobile money et 4,8 % sur les cartes ; PawaPay couvre 9 pays francophones ; Chariow annonce plus de 200 000 créateurs et plus de 5 M$ reversés, soit environ 25 $ par créateur.",
+   "evidence": "Pages des opérateurs lues le 2026-11-28 ; chiffres Chariow déclaratifs.",
+   "sources": [
+    "https://www.wave.com/fr/business/",
+    "https://flutterwave.com/sn/pricing",
+    "https://www.pawapay.io/",
+    "https://chariow.com/"
+   ],
+   "confidence": "medium",
+   "as_of": "2026-11-28",
+   "load_bearing": true
+  },
+  {
+   "claim": "WhatsApp : tarification au message depuis le 01/07/2025 ; messages de service payants au-delà de 1 000 par mois et par numéro depuis le 01/10/2026 ; le Maroc est devenu un marché tarifaire autonome avec des hausses le 01/10/2026 ; depuis le 15/01/2026, les assistants IA généralistes ne sont permis que là où Meta y est légalement tenu (Italie, UE et EEE, Brésil, Turquie). Les agents propres à une entreprise restent permis.",
+   "evidence": "Documentation tarifaire Meta, politique AI Providers (mise à jour le 15/10/2026), conditions section 4.7.",
+   "sources": [
+    "https://developers.facebook.com/docs/whatsapp/pricing",
+    "https://developers.facebook.com/documentation/business-messaging/whatsapp/pricing/ai-providers",
+    "https://www.facebook.com/legal/Meta-Terms-for-WhatsApp-Business-Platform"
+   ],
+   "confidence": "high",
+   "as_of": "2026-11-28",
+   "load_bearing": true
+  },
+  {
+   "claim": "YouTube : la politique « inauthentic content » (15/07/2025) exclut de la monétisation les contenus de masse ou répétitifs ; le Programme Partenaire est disponible au Maroc, en Algérie, en Tunisie et au Sénégal, mais pas en Côte d'Ivoire, au Cameroun ni en RDC.",
+   "evidence": "Pages d'aide YouTube lues le 2026-11-28 ; contredit un dossier compagnon (source tierce) sur le Sénégal.",
+   "sources": [
+    "https://support.google.com/youtube/answer/1311392",
+    "https://support.google.com/youtube/answer/7101720",
+    "https://support.google.com/youtube/answer/14328491"
+   ],
+   "confidence": "high",
+   "as_of": "2026-11-28",
+   "load_bearing": true
+  },
+  {
+   "claim": "SEO programmatique et annuaires sont à haut risque : depuis le 05/03/2024, Google sanctionne l'abus de contenu à grande échelle, l'abus de réputation de site et l'abus de domaines expirés ; avec un résumé IA, les clics sur les résultats classiques passent de 15 % à 8 % des visites. Les outils (SEObot : 30 185 $ sur 30 j) gagnent plus que les annuaires (Directory Launch : 211 $).",
+   "evidence": "Google Search Central ; Pew (900 adultes, mars 2025) ; fiches TrustMRR.",
+   "sources": [
+    "https://developers.google.com/search/docs/essentials/spam-policies",
+    "https://developers.google.com/search/blog/2024/03/core-update-spam-policies",
+    "https://www.pewresearch.org/short-reads/2025/07/22/google-users-are-less-likely-to-click-on-links-when-an-ai-summary-appears-in-the-results/",
+    "https://trustmrr.com/startup/seobot"
+   ],
+   "confidence": "high",
+   "as_of": "2026-11-28",
+   "load_bearing": false
+  },
+  {
+   "claim": "Vendre les outils de l'archétype rapporte plus que le pratiquer : outils pour chaînes sans visage (faceless.so 51 811 $, VidAI 43 150 $ sur 30 j) ; outils et agences GEO (AEO Engine 182 247 $, ChatSEO France 63 301 $, Rank Prompt 45 456 $). Échantillon biaisé vers le haut (page d'accueil de TrustMRR).",
+   "evidence": "Fiches Markdown TrustMRR, revenu relevé par API de paiement.",
+   "sources": [
+    "https://trustmrr.com/startup/faceless-so.md",
+    "https://trustmrr.com/startup/aeo-engine.md",
+    "https://trustmrr.com/startup/chatseo.md",
+    "https://trustmrr.com/startup/rank-prompt.md"
+   ],
+   "confidence": "medium",
+   "as_of": "2026-11-28",
+   "load_bearing": true
+  },
+  {
+   "claim": "Serveurs MCP, plugins et skills : aucun rail de vente dans l'annuaire Claude ; Apify garde 20 % et déduit les coûts de plateforme ; le modèle viable est un SaaS ou une API avec un MCP comme canal (Postiz, open source : 533 727 $ sur 30 j), contre 186 $ pour un produit « MCP d'abord » (PosteAhora).",
+   "evidence": "Documentation Apify ; dossier claude-code-plugins.md ; fiches TrustMRR.",
+   "sources": [
+    "https://docs.apify.com/platform/actors/publishing/monetize",
+    "https://code.claude.com/docs/en/plugins/publish.md",
+    "https://trustmrr.com/startup/postiz.md",
+    "https://trustmrr.com/startup/posteahora.md"
+   ],
+   "confidence": "medium",
+   "as_of": "2026-11-28",
+   "load_bearing": true
+  },
+  {
+   "claim": "Commissions de distribution : App Store 15 % (jusqu'à 1 M$) et 10 % sous les conditions alternatives de l'UE ; Shopify App Store 0 % jusqu'à 1 M$ cumulé puis 15 % ; Gumroad 10 % + 0,50 $ (30 % via Discover) ; Skool 9 $ + 10 % ou 99 $ + 2,9 % ; beehiiv 0 % sur les abonnements ; ExtensionPay 5 % (Stripe) ; YouCan 0,5 % sur le paiement à la livraison ; YouCan Pay 3,9 % + 2 MAD.",
+   "evidence": "Pages officielles lues le 2026-11-28.",
+   "sources": [
+    "https://developer.apple.com/app-store/small-business-program/",
+    "https://shopify.dev/docs/apps/launch/distribution/revenue-share",
+    "https://gumroad.com/pricing",
+    "https://www.skool.com/pricing",
+    "https://www.beehiiv.com/pricing",
+    "https://extensionpay.com/",
+    "https://youcan.shop/fr/pricing",
+    "https://youcanpay.com/"
+   ],
+   "confidence": "high",
+   "as_of": "2026-11-28",
+   "load_bearing": true
+  },
+  {
+   "claim": "Coût de la pile et de l'inférence : Claude Pro 20 $, Max 100 $, Ultra 200 $ ; API Haiku 5.5 à 0,10 $ / 0,50 $ et Sonnet 5.5 à 2 $ / 10 $ par million de jetons, soit environ 0,0006 à 0,011 $ par conversation (3 000 / 500 jetons) ; Managed Agents à 0,08 $ par heure de session ; Vercel Pro 20 $, Supabase Pro 25 $ (gratuit en pause après une semaine), Postiz dès 29 $. Une pile d'environ 175 $/mois dépasse la dotation carte d'un particulier marocain.",
+   "evidence": "Pages de prix officielles ; calcul de l'auteur ; IGOC 2026.",
+   "sources": [
+    "https://claude.com/pricing",
+    "https://platform.claude.com/docs/en/about-claude/pricing",
+    "https://vercel.com/pricing",
+    "https://supabase.com/pricing",
+    "https://postiz.com/pricing"
+   ],
+   "confidence": "high",
+   "as_of": "2026-11-28",
+   "load_bearing": true
+  },
+  {
+   "claim": "L'IA a fait chuter le coût de construction et déplacé le goulot vers la distribution : soumissions App Store +84 % au T1 2026 et nouvelles apps doublées au S1, pour des téléchargements à +2 %. Le levier Claude Code doit peser moins que la défendabilité et le retour ajusté.",
+   "evidence": "9to5Mac via trends-us-business.md (estimation tierce).",
+   "sources": [
+    "https://9to5mac.com/2026/04/06/app-store-sees-84-surge-in-new-apps-as-ai-coding-tools-take-off/",
+    "https://9to5mac.com/2026/07/20/report-app-store-added-nearly-as-many-new-apps-in-h1-2026-as-in-all-of-2025"
+   ],
+   "confidence": "medium",
+   "as_of": "2026-07",
+   "load_bearing": true
+  },
+  {
+   "claim": "Grille de scoring : en espérance sur 24 mois, temps valorisé, la plupart des archétypes ont un ROI proche de 0. En tête en France, en Belgique, en Suisse et au Québec : agence d'automatisation, outil IA vertical, données et API, communauté, GEO. Au Maroc et dans l'UEMOA : agence export (ROI ajusté de 0,42 et 0,45, contre 0,12 en France) et agence locale. Derniers rangs stables : chaîne sans visage, SEO programmatique, Shopify, app virale. TikTok Shop bloqué hors France, Belgique et Québec (à vérifier).",
+   "evidence": "Modèle de l'auteur (scripts_eco/score.py), paramètres [H] ancrés sur les taux de base ; 1 000 tirages Monte-Carlo : agence export dans le top 3 dans 73 % des cas au Maroc et 83 % dans l'UEMOA.",
+   "sources": [
+    "/tmp/claude-0/-home-user-claudecode/00e88930-c277-528f-99f2-9b7f935da647/scratchpad/research/initiatives-economie.md"
+   ],
+   "confidence": "low",
+   "as_of": "2026-11-28",
+   "load_bearing": true
+  },
+  {
+   "claim": "Des cas français à revenu vérifié existent : ChatSEO (créé en novembre 2025, 342 774 $ cumulés), Podawaa (1,29 M$ cumulés), PROSP, Speel.co, StoreRadar (données Shopify à 149 $). Il existe aussi des contre-exemples (MAC+ 346 $ sur 30 j, Tack+ 73 $ cumulés). Aucun cas solo marocain ou subsaharien à revenu vérifié n'a été trouvé dans l'échantillon.",
+   "evidence": "126 fiches extraites de la page d'accueil de TrustMRR : 12 en France, 7 au Canada, 0 au Maroc ou en Afrique subsaharienne.",
+   "sources": [
+    "https://trustmrr.com/startup/chatseo.md",
+    "https://trustmrr.com/startup/podawaa.md",
+    "https://trustmrr.com/startup/storeradar.md",
+    "https://trustmrr.com/startup/mac.md"
+   ],
+   "confidence": "medium",
+   "as_of": "2026-11-28",
+   "load_bearing": false
+  }
+ ],
+ "implications_for_tool": [
+  "Modèle de donnée « revenu observé » avec type de métrique (encaissement sur 30 jours, MRR, cumul), fournisseur, date de synchronisation et URL ; rejet des données synchronisées il y a plus de 60 jours ; classement sur l'encaissement, jamais sur le MRR seul.",
+  "Brancher TrustMRR (point public /api/ai/discovery testé, fiches .md, MCP) comme source de signaux et de taux de base par catégorie, avec un plancher de base contre les croissances de +6 000 000 % et une correction du biais de sélection par /stats.",
+  "Fichiers de règles datés par pays et par rail (rules/payments.yaml, rules/tax.yaml) : Stripe, Shopify Payments, Polar, Paddle, YPP, TikTok Shop, plafonds micro et auto-entrepreneur, seuils de TVA, dotations IGOC. Chaque ligne porte son URL et sa date ; un rail à 0 bloque l'archétype.",
+  "Veille hebdomadaire des pages de politique et de prix (WhatsApp, YouTube, Google Search, Apple, Shopify, Lemon Squeezy, prix Claude) par diff, avec rescoring automatique des archétypes touchés.",
+  "Module de scoring implémentant les formules de la section 8 (E24, ROI ajusté, s_T1, s_L, s_D, s_C ; poids 0,35 / 0,15 / 0,15 / 0,20 / 0,15), avec poids et paramètres exposés et une analyse de sensibilité Monte-Carlo publiée (probabilité d'être dans le top 3).",
+  "Afficher toujours la médiane de la catégorie et la probabilité de succès à côté d'une vitrine ; recommander un portefeuille de 3 à 5 paris peu coûteux avec critères d'arrêt (par exemple : aucun revenu à 2 × T1, on arrête).",
+  "Générer pour chaque initiative une fiche : pile et coût mensuel, rail d'encaissement du pays, statut et seuils, coût d'acquisition supposé, plan jusqu'au premier euro, check-list de conformité (AI Act article 50, loi influenceurs, RGPD, CNDP, règles WhatsApp).",
+  "Proposer automatiquement les variantes « outils de l'archétype » (vendre aux praticiens) et « export » (Maroc et Afrique vers la France et l'UE, en euros, via Paddle ou Polar, ou par contrat SWIFT et compte en devises).",
+  "Simulateur marocain : au-delà de 20 000 DH par an de dépenses en devises, imposer une société ou un compte en devises alimenté par l'export ; au-delà de 200 000 DH de services, basculer de régime ; signaler la retenue de 30 % sur un client local au-delà de 80 000 DH.",
+  "Calcul d'économie unitaire à partir des prix publics : jetons de l'API Claude, frais de canal WhatsApp par pays (grilles CSV à intégrer), commissions des stores et plateformes ; montrer le poste dominant (généralement le canal ou l'acquisition, pas l'inférence).",
+  "Relier les recommandations aux connecteurs d'exécution (Shopify create_store et produits numériques, Vercel, Supabase, Postiz, Canva, ElevenLabs avec WhatsApp), après un contrôle de compatibilité pays (par exemple, pas de Shopify Payments au Maroc : proposer YouCan).",
+  "Segmenter les lifestyles par capacité de paiement et par rail (diaspora, commerçants en paiement à la livraison, PME francophones, créateurs en mobile money, candidats TCF/TEF) plutôt que par démographie seule."
+ ],
+ "open_questions": [
+  "La retenue de 30 % au-delà de 80 000 DH s'applique-t-elle à un client étranger ? Texte final du PLF 2027 (seuil de 100 000 DH ?).",
+  "Paddle verse-t-il sur un compte bancaire marocain et accepte-t-il un auto-entrepreneur ? Dodo Payments et Creem acceptent-ils des marchands marocains ?",
+  "Montants des grilles tarifaires WhatsApp (CSV) pour le Maroc, la France, le Sénégal et la Côte d'Ivoire.",
+  "Disponibilité de TikTok Shop au Canada et au Québec, et en Suisse.",
+  "Coûts d'acquisition mesurés en France (SaaS pour TPE, newsletters, communautés) et coût par prospect vérifiable en paiement à la livraison au Maroc.",
+  "Statut solo ou équipe des cas TrustMRR, et répartition de la base par pays (API authentifiée requise).",
+  "Cas de fondateurs solo marocains et d'Afrique subsaharienne à revenu vérifiable ; commissions de Chariow, Selar et Maketou.",
+  "Texte de la clause d'usage commercial du plan Hobby de Vercel.",
+  "Versements de l'App Store et de Google Play vers des banques marocaines, sénégalaises et ivoiriennes.",
+  "Écart sur le Sénégal et le YPP entre la page officielle et un dossier compagnon : date d'ajout du pays.",
+  "Calendrier de facturation électronique applicable aux micro-entrepreneurs (émission en 2027 ?).",
+  "Effets de la loi 96 et de la loi 25 du Québec sur un clone localisé ou un SaaS vendu au Québec.",
+  "Fiscalité des micro-entrepreneurs au Sénégal, en Côte d'Ivoire, au Cameroun, en Belgique et en Suisse, pour remplacer les hypothèses de la grille.",
+  "Calibrage de p12 par archétype sur des cohortes complètes plutôt que sur des vitrines."
+ ],
+ "data_sources": [
+  {
+   "name": "TrustMRR (API publique discovery, fiches Markdown, MCP)",
+   "category": "revenus vérifiés de startups",
+   "access_method": "GET https://trustmrr.com/api/ai/discovery ; https://trustmrr.com/startup/{slug}.md ; MCP https://trustmrr.com/api/mcp/discovery ; API v1 avec clé",
+   "auth": "aucune pour discovery et .md ; clé pour /api/v1 et le MCP complet",
+   "cost": "gratuit (public) ; compte gratuit pour l'API",
+   "geo_coverage": "mondiale (fiches majoritairement US, FR, CA)",
+   "signal_type": "encaissement sur 30 jours, MRR, croissance, catégorie, pays, à vendre",
+   "limits_and_tos": "discovery : 2 groupes fixes de 25, en cache, sans recherche ni pagination ; données saisies par le fondateur hors revenus",
+   "tested_call": "curl https://trustmrr.com/api/ai/discovery",
+   "test_result": "HTTP 200 JSON, clés recentlyAddedStartups (25) et fastestGrowingStartups (25), le 2026-11-28 ; 126 fiches .md téléchargées",
+   "verdict": "core"
+  },
+  {
+   "name": "RevenueCat State of Subscription Apps",
+   "category": "taux de base des apps",
+   "access_method": "page web et PDF annuels",
+   "auth": "aucune (PDF parfois derrière formulaire)",
+   "cost": "gratuit",
+   "geo_coverage": "mondiale, par grandes régions",
+   "signal_type": "jalons de revenu, conversion, rétention, revenu par installation",
+   "limits_and_tos": "annuel ; pas de données par pays francophone",
+   "tested_call": "WebFetch https://www.revenuecat.com/state-of-subscription-apps/",
+   "test_result": "contenu lu (202 597 caractères)",
+   "verdict": "core"
+  },
+  {
+   "name": "BLS Business Employment Dynamics (survie par cohorte)",
+   "category": "taux de base des entreprises",
+   "access_method": "fichier texte https://www.bls.gov/bdm/us_age_naics_00_table7.txt",
+   "auth": "aucune",
+   "cost": "gratuit",
+   "geo_coverage": "USA",
+   "signal_type": "taux de survie à 1, 5 et 10 ans",
+   "limits_and_tos": "domaine public",
+   "tested_call": "WebFetch de la table 7",
+   "test_result": "lu, données à mars 2026",
+   "verdict": "optional"
+  },
+  {
+   "name": "Meta WhatsApp pricing, rate cards et politique AI Providers",
+   "category": "règles et prix de plateforme",
+   "access_method": "pages de documentation et grilles CSV ou PDF",
+   "auth": "aucune",
+   "cost": "gratuit",
+   "geo_coverage": "mondiale, par marché",
+   "signal_type": "tarifs par message, changements datés, règles IA",
+   "limits_and_tos": "montants seulement dans les grilles CSV",
+   "tested_call": "WebFetch https://developers.facebook.com/docs/whatsapp/pricing",
+   "test_result": "lu ; montants par pays non extraits",
+   "verdict": "core"
+  },
+  {
+   "name": "Pages de disponibilité des rails (Stripe global, Shopify Payments, Polar, Paddle, YouTube YPP)",
+   "category": "gates de transposabilité",
+   "access_method": "pages web à relire et comparer (diff)",
+   "auth": "aucune",
+   "cost": "gratuit",
+   "geo_coverage": "mondiale",
+   "signal_type": "disponibilité par pays",
+   "limits_and_tos": "pages modifiées sans préavis",
+   "tested_call": "WebFetch de chaque page",
+   "test_result": "lues le 2026-11-28",
+   "verdict": "core"
+  },
+  {
+   "name": "Prix publics de la pile (Claude, API Claude, Vercel, Supabase, Postiz, ElevenLabs, Shopify, Skool, Gumroad, beehiiv)",
+   "category": "coûts unitaires",
+   "access_method": "pages de prix",
+   "auth": "aucune",
+   "cost": "gratuit",
+   "geo_coverage": "mondiale",
+   "signal_type": "prix et commissions",
+   "limits_and_tos": "prix promotionnels temporaires (ElevenLabs Black Friday)",
+   "tested_call": "WebFetch de chaque page de prix",
+   "test_result": "lues le 2026-11-28",
+   "verdict": "core"
+  },
+  {
+   "name": "Service-public.gouv.fr et impots.gouv.fr",
+   "category": "règles fiscales France",
+   "access_method": "fiches web",
+   "auth": "aucune",
+   "cost": "gratuit",
+   "geo_coverage": "France",
+   "signal_type": "plafonds, seuils de TVA, cotisations, facturation électronique",
+   "limits_and_tos": "economie.gouv et Legifrance bloquent parfois les clients automatisés",
+   "tested_call": "WebFetch F32353, F21746, F36232",
+   "test_result": "lues, vérifiées les 01/01/2026 et 21/02/2026",
+   "verdict": "core"
+  },
+  {
+   "name": "Office des Changes IGOC 2026 et guide DGI de l'auto-entrepreneur",
+   "category": "règles Maroc",
+   "access_method": "PDF officiel",
+   "auth": "aucune",
+   "cost": "gratuit",
+   "geo_coverage": "Maroc",
+   "signal_type": "dotations, export de services, plafonds",
+   "limits_and_tos": "ae.gov.ma inaccessible le 2026-11-28",
+   "tested_call": "lu par le dossier compagnon",
+   "test_result": "IGOC lue en texte intégral (dossier Maroc)",
+   "verdict": "core"
+  },
+  {
+   "name": "Flutterwave, Wave, PawaPay, YouCan Pay (pages de prix)",
+   "category": "rails Afrique et Maroc",
+   "access_method": "pages web",
+   "auth": "aucune",
+   "cost": "gratuit",
+   "geo_coverage": "Sénégal, Côte d'Ivoire, Cameroun, RDC, Maroc",
+   "signal_type": "frais d'encaissement",
+   "limits_and_tos": "CinetPay, PayDunya, FedaPay et Paystack CI renvoient 403 ou 404 aux clients automatisés",
+   "tested_call": "curl des pages",
+   "test_result": "Wave, Flutterwave SN, YouCan Pay lus ; CinetPay 403",
+   "verdict": "optional"
+  },
+  {
+   "name": "Apify Store (monétisation d'acteurs et de serveurs MCP)",
+   "category": "rail de vente pour données, API et MCP",
+   "access_method": "documentation et plateforme",
+   "auth": "compte Apify",
+   "cost": "20 % de commission + coûts de plateforme",
+   "geo_coverage": "mondiale",
+   "signal_type": "modèle de revenu pour MCP et données",
+   "limits_and_tos": "coûts déduits du versement",
+   "tested_call": "WebFetch de la documentation de monétisation",
+   "test_result": "lu",
+   "verdict": "optional"
+  }
+ ],
+ "trends": [
+  {
+   "name": "Agences et outils GEO / AEO (visibilité dans les réponses des IA)",
+   "niche": "marketing B2B, PME",
+   "description": "Audit et suivi de la présence d'une marque dans ChatGPT, AI Overviews et Perplexity ; agences « Reddit pour l'IA ».",
+   "us_stage": "acceleration",
+   "us_emergence": "2024-2025",
+   "evidence": "AEO Engine 182 247 $, reddit-agency 63 250 $, Rank Prompt 45 456 $ sur 30 j (TrustMRR) ; Profound 96 M$ levés en février 2026",
+   "francophone_status": "France : ChatSEO, 63 301 $ sur 30 j, créé en novembre 2025 ; agences actives ; Maroc et Afrique : non mesuré",
+   "monetization": "audit au forfait puis abonnement mensuel",
+   "lifestyle_segments": [
+    "dirigeants de TPE et PME",
+    "marketeurs B2B"
+   ],
+   "sources": [
+    "https://trustmrr.com/startup/aeo-engine.md",
+    "https://trustmrr.com/startup/chatseo.md",
+    "https://trustmrr.com/startup/rank-prompt.md"
+   ]
+  },
+  {
+   "name": "Outils pour chaînes vidéo sans visage",
+   "niche": "créateurs, vidéo IA",
+   "description": "SaaS qui génèrent scripts, voix et montage pour des chaînes de niche ; on vend la pelle plutôt que l'or.",
+   "us_stage": "acceleration",
+   "us_emergence": "2023-2024",
+   "evidence": "faceless.so 51 811 $ et VidAI 43 150 $ sur 30 j (TrustMRR) ; politique YouTube « inauthentic content » du 15/07/2025, qui pénalise les chaînes elles-mêmes",
+   "francophone_status": "Speel.co (France, UGC IA) 10 500 $ sur 30 j ; YPP indisponible en Côte d'Ivoire, au Cameroun et en RDC",
+   "monetization": "abonnement à crédits",
+   "lifestyle_segments": [
+    "créateurs débutants",
+    "side hustlers"
+   ],
+   "sources": [
+    "https://trustmrr.com/startup/faceless-so.md",
+    "https://support.google.com/youtube/answer/1311392"
+   ]
+  },
+  {
+   "name": "Agents IA de vente et de support sur messageries (marque blanche)",
+   "niche": "commerce conversationnel",
+   "description": "Agents propres à une entreprise sur WhatsApp et Instagram, revendus par des agences ; les assistants généralistes sont interdits sur WhatsApp hors UE, EEE, Brésil et Turquie depuis le 15/01/2026.",
+   "us_stage": "emergent",
+   "us_emergence": "2023-2025",
+   "evidence": "DM Champ : 24 004 $ sur 30 j, offre « Start an AI Agency » ; règles et tarifs Meta 2026",
+   "francophone_status": "Fort potentiel au Maroc (paiement à la livraison, WhatsApp à 83 %) ; hausses de tarifs Meta au Maroc le 01/10/2026",
+   "monetization": "abonnement mensuel au marchand + refacturation des messages",
+   "lifestyle_segments": [
+    "commerçants en paiement à la livraison",
+    "restaurants et cliniques"
+   ],
+   "sources": [
+    "https://trustmrr.com/startup/dm-champ",
+    "https://developers.facebook.com/docs/whatsapp/pricing"
+   ]
+  },
+  {
+   "name": "Produits « MCP d'abord » pour agents",
+   "niche": "outils développeurs et agents",
+   "description": "Services conçus pour être appelés par des agents IA via MCP ; la monétisation passe par un SaaS ou une API, pas par la vente du plugin.",
+   "us_stage": "signal_faible",
+   "us_emergence": "2025-2026",
+   "evidence": "Postiz (open source + agents) 533 727 $ sur 30 j contre PosteAhora 186 $ ; Apify à 20 % de commission ; aucun rail de vente dans l'annuaire Claude",
+   "francophone_status": "aucun cas francophone vérifié",
+   "monetization": "API à clé, paiement à l'événement (Apify), SaaS",
+   "lifestyle_segments": [
+    "développeurs",
+    "agences d'automatisation"
+   ],
+   "sources": [
+    "https://trustmrr.com/startup/postiz.md",
+    "https://docs.apify.com/platform/actors/publishing/monetize"
+   ]
+  },
+  {
+   "name": "API de données de niche pour revendeurs et analystes",
+   "niche": "données et API",
+   "description": "Jeux de données propres vendus à l'usage (ventes réalisées sur eBay, annuaires de boutiques Shopify, enrichissement).",
+   "us_stage": "emergent",
+   "us_emergence": "2022-2025",
+   "evidence": "1Lookup 540 150 $, SoldComps (Canada) 27 456 $ sur 30 j",
+   "francophone_status": "StoreRadar (France) 4 444 $ sur 30 j ; contraintes RGPD et CNDP",
+   "monetization": "crédits à l'usage, achat de fichier",
+   "lifestyle_segments": [
+    "revendeurs",
+    "growth marketeurs"
+   ],
+   "sources": [
+    "https://trustmrr.com/startup/1lookup.md",
+    "https://trustmrr.com/startup/soldcomps.md",
+    "https://trustmrr.com/startup/storeradar.md"
+   ]
+  }
+ ]
+}

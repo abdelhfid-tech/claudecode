@@ -1,0 +1,27 @@
+# Modèle de profil du fondateur. Copiez-le dans workspace/profile.toml (exclu de git)
+# et remplissez-le : il décide de ce qui est faisable. Sans profil, le radar utilise ces
+# valeurs par défaut et le signale dans chaque résultat.
+
+[profile]
+# Pays d'où vous pouvez vendre (résidence, structure existante ou envisagée).
+seller_zones = ["FR"]
+# Structure par pays vendeur : "micro_entreprise", "auto_entrepreneur", "societe", "aucune", "a_preciser"
+structures = { FR = "a_preciser" }
+# Langues que vous lisez et écrivez (codes : fr, en, ar, ary pour la darija).
+languages = ["fr"]
+# Canaux et audiences déjà possédés : [{ channel = "linkedin", audience = 0 }, ...]
+channels = []
+
+# Budget de temps et d'argent.
+hours_per_week = 10
+radar_hours_per_week = 1
+maintenance_hours_per_week = 1
+max_capital_eur = 1000
+test_max_hours = 20
+test_max_eur = 150
+run_max_hours_month = 25
+# Coût d'opportunité de votre heure, en euros. Laissé vide : valeur par défaut du pays vendeur.
+# hourly_cost_eur = 15
+
+# Projets en cours, à prendre en compte : [{ name = "...", niche = "N09", zones = ["MA"], stage = "idee" }]
+projects = []

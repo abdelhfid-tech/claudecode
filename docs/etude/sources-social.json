@@ -1,0 +1,674 @@
+{
+  "dossier_path": "/tmp/claude-0/-home-user-claudecode/00e88930-c277-528f-99f2-9b7f935da647/scratchpad/research/sources-social.md",
+  "executive_summary": "Etat au 2026-11-28, environ 110 sondes curl sans cle depuis une IP de datacenter plus lecture des documentations officielles. Limite : le budget de recherche web partage a ete epuise apres une dizaine de requetes ; quelques points restent marques non reverifies ou source tierce dans le dossier.\n1) TikTok gratuit a disparu : le Creative Center a migre vers TikTok One ; hors connexion les pages Tendances sont vides (No data available, Log in or sign up) et l'ancienne API repond code 40101 no permission. La Research API exclut les usages commerciaux. TikTok organique exige un fournisseur payant ou une saisie humaine.\n2) Les bibliotheques publicitaires DSA sont la meilleure source officielle gratuite pour FR/BE/CH mais ne couvrent ni les USA ni le Maroc : Meta Ad Library API (toutes publicites seulement si diffusees dans l'UE), TikTok Commercial Content API (27 UE + IS/LI/NO + GB/CH, candidature ouverte au public), Snapchat Ads Library (200 sans cle, nom d'annonceur obligatoire).\n3) YouTube : chart=mostPopular ne renvoie plus que Trending Music/Movies/Gaming depuis le 21 juillet 2025 ; search.list est plafonne a 100 appels/jour dans un compartiment separe ; les flux RSS par chaine et par liste Shorts UUSH fonctionnent sans cle avec les vues. Regles API contraignantes (30 jours de conservation, pas de metriques derivees non signalees).\n4) X : paiement a l'usage officiel depuis le 6 fevrier 2026, 0,010 $ par requete Trends et 0,005 $ par post lu ; une veille US/FR/BE/CH/CA coute environ 11 $/mois. Pas de lieu de tendance pour MA/SN/CI/TN (inference a confirmer).\n5) Reddit : .json, old, api et oauth en 403, RSS en 404, robots.txt Disallow: / ; usage commercial soumis a accord separe (conditions revisees le 20 juillet 2026).\n6) Pinterest est la meilleure source lifestyle gratuite : point d'acces JSON public de trends.pinterest.com en 200 sans cle pour US, FR, CA, GB, DE+AT+CH, NL+BE+LU ; l'API v5 officielle liste aussi un groupe contenant MA.\n7) Bluesky (getTrends global, searchPosts sur api.bsky.app, Jetstream a environ 41 posts/s avec langs) et Mastodon (tendances par instance) sont ouverts mais a faible volume francophone.\n8) Maroc et Afrique subsaharienne francophone sont le point aveugle de presque toutes les sources officielles : il faut des panels de chaines et de comptes par pays, des mots-cles localises et un fournisseur payant.\n9) Prix reels verifies : ScrapeCreators 47 $ pour 25 000 credits sans expiration (1,88 $/1 000) ; EnsembleData 100 $/mois pour 1 500 unites/jour ; Apify Instagram 2,70 a 1,50 $/1 000 ; Bright Data 1,50 $/1 000 avec 5 000 enregistrements gratuits/mois ; SerpApi 250 recherches gratuites puis 25 $/1 000.\n10) Risque : la jurisprudence US 2024 protege le scraping de donnees publiques hors connexion, mais les proces 2025-2026 visent les intermediaires (Reddit c. Perplexity/SerpApi, Google c. SerpApi). Le risque principal est la rupture de service, puis le RGPD si l'on stocke des profils.\nArchitecture : 0 EUR = Pinterest + YouTube RSS/API + Bluesky + Mastodon + bibliotheques publicitaires + saisie humaine TikTok ; environ 50 EUR = plus X a l'usage et ScrapeCreators ; environ 200 EUR = plus EnsembleData en collecteur quotidien et un second fournisseur en redondance.",
+  "key_findings": [
+    {
+      "claim": "TikTok Creative Center ne fournit plus aucune donnee de tendance sans connexion : les anciennes URL redirigent vers ads.tiktok.com/creative/creativeCenter/trends (TikTok One), le rendu serveur est vide et l'ancienne API interne repond no permission.",
+      "evidence": "Sonde curl : /creative/creativeCenter/trends/hashtag -> 200 avec texte 'No data available ... Log in or sign up' et dehydratedState.queries vide ; /creative_radar_api/v1/popular_trend/hashtag/list?country_code=FR -> {\"code\":40101,\"msg\":\"no permission\"}. Un releve tiers du 2026-10-27 indique 3 hashtags par pays hors connexion, 27 pays, onglet sons supprime, videos US seulement.",
+      "sources": [
+        "https://ads.tiktok.com/creative/creativeCenter/trends/hashtag",
+        "https://dev.to/meng_xipeng_139608bde0640/tiktok-creative-center-trends-changed-how-to-get-this-weeks-trending-tiktoks-with-transcripts-3ell"
+      ],
+      "confidence": "high",
+      "load_bearing": true,
+      "as_of": "2026-11-28"
+    },
+    {
+      "claim": "La TikTok Research API est inutilisable pour un outil commercial : reservee aux academiques et organismes sans but lucratif (USA, EEE, Royaume-Uni, Canada, Suisse), 1 000 requetes et 100 000 enregistrements par jour, createurs, annonceurs et utilisateurs commerciaux explicitement non eligibles.",
+      "evidence": "Page produit et FAQ officielles lues le 2026-11-28 ; sonde POST /v2/research/video/query/ -> 401 access_token_invalid.",
+      "sources": [
+        "https://developers.tiktok.com/products/research-api/",
+        "https://developers.tiktok.com/doc/research-api-faq"
+      ],
+      "confidence": "high",
+      "load_bearing": true,
+      "as_of": "2026-11-28"
+    },
+    {
+      "claim": "La TikTok Commercial Content API est ouverte au public sur candidature (reponse annoncee sous 2 jours ouvres) et couvre 33 pays : 27 UE + Islande, Liechtenstein, Norvege + Royaume-Uni et Suisse ; elle donne recherche par mot-cle ou annonceur, dates, ciblage et audience touchee, conservation un an. Rien pour US, MA, CA, SN, CI.",
+      "evidence": "Liste des pays mise a jour le 2026-09-01 ; la page produit dit encore 'seuls les pays de l'UE dans cette phase' (contradiction interne, liste detaillee plus recente).",
+      "sources": [
+        "https://developers.tiktok.com/products/commercial-content-api/",
+        "https://developers.tiktok.com/doc/commercial-content-api-supported-countries",
+        "https://developers.tiktok.com/doc/commercial-content-api-getting-started"
+      ],
+      "confidence": "high",
+      "load_bearing": true,
+      "as_of": "2026-11-28"
+    },
+    {
+      "claim": "La Meta Ad Library API ne renvoie toutes les publicites (ad_type=ALL) que si elles ont ete diffusees dans l'UE ; hors UE seules les publicites politiques ou societales sont renvoyees. Les champs eu_total_reach et beneficiary_payers sont reserves a l'UE, target_ages/target_gender/target_locations a l'UE et au Royaume-Uni, impressions et spend aux publicites politiques.",
+      "evidence": "Reference Graph API ads_archive et ArchivedAd lues le 2026-11-28 ; publicites UE archivees un an, politiques sept ans. Consequence : publicites commerciales Maroc et USA invisibles par API sauf diffusion aussi dans l'UE. L'interface web renvoie 403 (defi anti-robot) depuis un datacenter.",
+      "sources": [
+        "https://developers.facebook.com/docs/graph-api/reference/ads_archive/",
+        "https://developers.facebook.com/docs/graph-api/reference/archived-ad/",
+        "https://transparency.meta.com/researchtools/ad-library-tools"
+      ],
+      "confidence": "high",
+      "load_bearing": true,
+      "as_of": "2026-11-28"
+    },
+    {
+      "claim": "Meta Content Library (Facebook, Instagram, Threads et WhatsApp Channels publics) est reservee aux organismes de recherche sans but lucratif, dossiers instruits par le CASD ; inaccessible a un independant. Instagram hashtag search reste limite a 30 hashtags par 7 jours avec App Review, et top_media change le 16 fevrier 2027 (Reels inclus, 200 resultats max, nouvel algorithme). Threads keyword search : 2 200 requetes par 24 h, approbation requise pour les posts publics.",
+      "evidence": "Pages officielles lues le 2026-11-28 (Content Library mise a jour le 2026-04-30).",
+      "sources": [
+        "https://transparency.meta.com/researchtools/meta-content-library",
+        "https://developers.facebook.com/docs/instagram-platform/instagram-api-with-facebook-login/hashtag-search",
+        "https://developers.facebook.com/docs/threads/keyword-search"
+      ],
+      "confidence": "high",
+      "load_bearing": true,
+      "as_of": "2026-11-28"
+    },
+    {
+      "claim": "YouTube videos.list chart=mostPopular ne reflete plus les tendances generales : depuis le 21 juillet 2025 il renvoie les videos des classements Trending Music, Movies et Gaming. regionCode et videoCategoryId restent documentes, 1 unite par appel, 50 resultats max.",
+      "evidence": "Entree du 10 juillet 2025 de l'historique des revisions ; sonde /feed/trending -> redirigee vers l'accueil sans video. Effet de videoCategoryId hors de ces trois categories non teste (cle requise).",
+      "sources": [
+        "https://developers.google.com/youtube/v3/revision_history",
+        "https://developers.google.com/youtube/v3/docs/videos/list"
+      ],
+      "confidence": "high",
+      "load_bearing": true,
+      "as_of": "2026-11-28"
+    },
+    {
+      "claim": "Quotas YouTube Data API v3 fin 2026 : 10 000 unites/jour pour l'ensemble des methodes ; search.list et videos.insert ont chacun un compartiment separe de 100 appels/jour (1 unite par appel) depuis le 1er juin 2026 ; nouvelle methode videos.batchGetStats (1 unite, compartiment de 10 000/jour).",
+      "evidence": "Page determine_quota_cost et entrees des 1er et 3 juin 2026 de l'historique des revisions.",
+      "sources": [
+        "https://developers.google.com/youtube/v3/determine_quota_cost",
+        "https://developers.google.com/youtube/v3/revision_history"
+      ],
+      "confidence": "medium",
+      "load_bearing": true,
+      "as_of": "2026-11-28"
+    },
+    {
+      "claim": "Les regles YouTube API imposent : donnees non autorisees conservees 30 jours au plus puis supprimees ou rafraichies, pas d'agregation entre proprietaires de contenu differents, pas de metriques nouvelles ou derivees sans mention claire qu'elles ne viennent pas de YouTube, scraping interdit, un seul projet par client. Les compteurs de vues ont change de definition (Shorts le 31 mars 2025, toutes videos a l'ete 2026), ce qui casse les comparaisons historiques.",
+      "evidence": "Developer Policies sections III.D et III.E ; entrees mars 2025 et aout 2026 de l'historique des revisions.",
+      "sources": [
+        "https://developers.google.com/youtube/terms/developer-policies",
+        "https://developers.google.com/youtube/v3/revision_history"
+      ],
+      "confidence": "high",
+      "load_bearing": true,
+      "as_of": "2026-11-28"
+    },
+    {
+      "claim": "Les flux RSS YouTube fonctionnent sans cle ni quota et exposent les 15 dernieres videos avec leurs vues, y compris la liste Shorts d'une chaine (playlist_id=UUSH + identifiant). C'est la base gratuite pour des panels de createurs par pays et par niche.",
+      "evidence": "Sondes : feeds/videos.xml?channel_id=UCBR8-60-B28hp2BmDPdntcQ -> 200, 15 entrees, media:statistics views ; feeds/videos.xml?playlist_id=UUSHBR8-60-B28hp2BmDPdntcQ -> 200, 15 Shorts avec vues.",
+      "sources": [
+        "https://www.youtube.com/feeds/videos.xml?channel_id=UCBR8-60-B28hp2BmDPdntcQ"
+      ],
+      "confidence": "high",
+      "load_bearing": true,
+      "as_of": "2026-11-28"
+    },
+    {
+      "claim": "X API : paiement a l'usage officiel depuis le 6 fevrier 2026 ; post lu 0,005 $, utilisateur lu 0,010 $, Trends 0,010 $ par requete, Counts recents 0,005 $ par requete ; plafond de 3 millions de posts lus par mois ; deduplication sur 24 h. Une veille de 6 lieux relevee 6 fois par jour coute environ 10,80 $ par mois.",
+      "evidence": "Page de prix et changelog officiels lus le 2026-11-28 ; le cout mensuel est une estimation (1 080 requetes x 0,010 $). Statut de l'offre gratuite et des forfaits Basic/Pro fin 2026 non confirme.",
+      "sources": [
+        "https://docs.x.com/x-api/getting-started/pricing",
+        "https://docs.x.com/changelog",
+        "https://docs.x.com/x-api/trends/trends-by-woeid/introduction"
+      ],
+      "confidence": "high",
+      "load_bearing": true,
+      "as_of": "2026-11-28"
+    },
+    {
+      "claim": "Les tendances X par lieu existent pour US, France, Belgique, Suisse, Canada et Algerie mais pas pour le Maroc, le Senegal, la Cote d'Ivoire ni la Tunisie.",
+      "evidence": "Inference : l'agregateur trends24.in, qui reprend la liste des lieux X, renvoie 200 pour france, belgium, switzerland, canada, algeria et 404 pour morocco, senegal, ivory-coast, tunisia. A confirmer avec le point d'acces officiel Trend Locations (cle requise).",
+      "sources": [
+        "https://trends24.in/france/",
+        "https://docs.x.com/x-api/trends/trends-by-woeid/introduction"
+      ],
+      "confidence": "medium",
+      "load_bearing": true,
+      "as_of": "2026-11-28"
+    },
+    {
+      "claim": "Reddit est inaccessible sans authentification depuis une IP de datacenter (r/popular.json, old.reddit, api.reddit.com, oauth.reddit.com -> 403 ; flux .rss -> 404 ; search.rss -> 429) et son robots.txt interdit tout (Disallow: /). Les Data API Terms revisees le 20 juillet 2026 exigent un accord separe pour tout usage commercial et interdisent d'en tirer un revenu.",
+      "evidence": "Sondes du 2026-11-28 et lecture des conditions sur redditinc.com. Le chiffre de 100 requetes/minute en usage gratuit et la fermeture des nouvelles demandes au 2026-10-31 viennent de blogs tiers non confirmes.",
+      "sources": [
+        "https://redditinc.com/policies/data-api-terms",
+        "https://redditinc.com/policies/developer-terms",
+        "https://www.reddit.com/robots.txt"
+      ],
+      "confidence": "high",
+      "load_bearing": true,
+      "as_of": "2026-11-28"
+    },
+    {
+      "claim": "Pinterest Trends est la meilleure source lifestyle gratuite par pays : l'API v5 officielle (OAuth, user_accounts:read) accepte les regions US, CA, DE, FR, ES, IT, DE+AT+CH, GB+IE, NL+BE+LU et un groupe IL+NG+PK+ZA+TR+MA, avec trend_type growing/monthly/yearly/seasonal et filtres par centre d'interet (24), age et genre ; le point d'acces JSON de l'outil public repond sans cle.",
+      "evidence": "Specification OpenAPI officielle v5.32.0 ; sondes trends.pinterest.com/top_trends_filtered/?country=FR... -> 200 avec 50 termes (wow_change, mom_change, yoy_change, seasonality_score) ; 200 aussi pour US, CA, GB, DE+AT+CH, NL+BE+LU et le groupe MA ; 400 pour BE et MA seuls ; 429 apres quelques appels rapproches. Le point d'acces web est interne et non documente.",
+      "sources": [
+        "https://raw.githubusercontent.com/pinterest/api-description/main/v5/openapi.yaml",
+        "https://trends.pinterest.com/"
+      ],
+      "confidence": "high",
+      "load_bearing": true,
+      "as_of": "2026-11-28"
+    },
+    {
+      "claim": "Bluesky est ouvert sans cle mais sans granularite pays : getTrendingTopics et getTrends renvoient des tendances globales anglophones ; searchPosts est en 403 sur public.api.bsky.app mais en 200 sur api.bsky.app (lang=fr, sort=top) ; Jetstream delivre environ 41 posts par seconde avec le champ langs, ce qui permet un calcul maison des tendances francophones.",
+      "evidence": "Sondes du 2026-11-28 (WebSocket jetstream1.us-east.bsky.network -> 101, 247 messages en 6,1 s). Les endpoints unspecced peuvent changer sans preavis ; limites de debit dites genereuses mais non chiffrees.",
+      "sources": [
+        "https://public.api.bsky.app/xrpc/app.bsky.unspecced.getTrends?limit=5",
+        "https://docs.bsky.app/docs/rate-limits"
+      ],
+      "confidence": "high",
+      "load_bearing": true,
+      "as_of": "2026-11-28"
+    },
+    {
+      "claim": "Mastodon expose des tendances publiques par instance (tags 20 max, statuts 40 max, liens 20 max) sans authentification, 300 requetes par 5 minutes ; les instances francophones piaille.fr et mamot.fr repondent, mais les volumes sont de quelques dizaines de comptes et domines par des rituels hebdomadaires.",
+      "evidence": "Documentation officielle et sondes (mastodon.social, piaille.fr, mamot.fr -> 200 ; en-tete x-ratelimit-limit: 300).",
+      "sources": [
+        "https://docs.joinmastodon.org/methods/trends/",
+        "https://piaille.fr/api/v1/trends/tags?limit=5"
+      ],
+      "confidence": "high",
+      "load_bearing": false,
+      "as_of": "2026-11-28"
+    },
+    {
+      "claim": "Snapchat : l'Ads Library API repond sans authentification (impressions par pays de l'UE, ciblage) mais exige un nom d'annonceur, donc ne detecte pas de tendances ; l'outil Snapchat Trends n'existe plus. LinkedIn Ad Library (publicites depuis le 1er juin 2023, conservees un an) est bloquee depuis un datacenter. Twitch demande un jeton d'application gratuit et filtre par langue, pas par pays. Discord et WhatsApp Channels n'ont aucune API publique de tendances.",
+      "evidence": "Sondes : POST adsapi.snapchat.com/v1/ads_library/ads/search avec paying_advertiser_name=Nike -> 200, impressions_total 174831003 ; sans nom -> 400 ; trends.snapchat.com -> redirection forbusiness ; linkedin.com/ad-library -> 403 ; api.twitch.tv/helix/streams -> 401 ; discord discovery -> 401 ; page WhatsApp Channel sans contenu.",
+      "sources": [
+        "https://adsapi.snapchat.com/v1/ads_library/ads/search",
+        "https://www.linkedin.com/help/linkedin/answer/a1517918",
+        "https://dev.twitch.tv/docs/api/guide/"
+      ],
+      "confidence": "high",
+      "load_bearing": false,
+      "as_of": "2026-11-28"
+    },
+    {
+      "claim": "Prix reels des fournisseurs tiers : ScrapeCreators 47 $ = 25 000 credits sans expiration (1,88 $/1 000), 497 $ = 500 000 ; EnsembleData 100 $/mois = 1 500 unites/jour non reportables (recherche hashtag = 1 unite pour 20 posts) ; Apify Free 5 $ d'usage, Starter 19 $, Instagram Scraper 2,70/2,30/1,90/1,50 $ par 1 000 selon le forfait, TikTok Scraper a partir de 1,70 $/1 000 ; Bright Data 1,50 $/1 000 enregistrements avec 5 000 gratuits par mois ; SerpApi 250 recherches gratuites, 25 $/1 000, 75 $/5 000 ; DataForSEO depot minimal 50 $.",
+      "evidence": "Pages de prix officielles lues le 2026-11-28. Les tarifs par forfait du TikTok Scraper Apify (3,70 $ Free, 3,00 $ Starter) viennent d'un comparatif tiers non confirme.",
+      "sources": [
+        "https://scrapecreators.com/",
+        "https://ensembledata.com/pricing",
+        "https://apify.com/pricing",
+        "https://apify.com/apify/instagram-scraper",
+        "https://apify.com/clockworks/tiktok-scraper",
+        "https://brightdata.com/pricing/web-scraper",
+        "https://serpapi.com/pricing",
+        "https://dataforseo.com/pricing"
+      ],
+      "confidence": "high",
+      "load_bearing": true,
+      "as_of": "2026-11-28"
+    },
+    {
+      "claim": "Risque juridique : aux USA le scraping de donnees publiques hors connexion a ete valide en 2024 (Meta c. Bright Data en janvier, X c. Bright Data en mai), mais les actions 2025-2026 visent les intermediaires (Reddit c. Perplexity et SerpApi, demandes de rejet largement ecartees en juillet 2026 ; Google c. SerpApi le 19 decembre 2025). En France, la CNIL (fiche du 19 juin 2025) admet le moissonnage sous interet legitime avec minimisation et respect des oppositions robots.txt et CAPTCHA. Les CGU TikTok EEE (juillet 2026) interdisent l'extraction automatisee.",
+      "evidence": "Sources lues le 2026-11-28. Le risque le plus probable pour l'outil est la coupure d'un fournisseur ou d'une cle, pas un proces.",
+      "sources": [
+        "https://en.wikipedia.org/wiki/Bright_Data",
+        "https://en.wikipedia.org/wiki/Perplexity_AI",
+        "https://blog.google/technology/safety-security/serpapi-lawsuit/",
+        "https://www.cnil.fr/fr/focus-interet-legitime-collecte-par-moissonnage",
+        "https://www.tiktok.com/legal/page/eea/terms-of-service/en"
+      ],
+      "confidence": "medium",
+      "load_bearing": true,
+      "as_of": "2026-11-28"
+    },
+    {
+      "claim": "Le Maroc et l'Afrique subsaharienne francophone sont absents ou noyes dans presque toutes les sources officielles par pays : pas de bibliotheque publicitaire DSA, pas de tendances X, Pinterest uniquement dans un groupe domine par la Turquie, Bluesky et Mastodon quasi vides. Les seuls reperes par pays sont YouTube regionCode, les panels de chaines et de comptes, les mots-cles localises chez un fournisseur payant, et des classements annexes (Apple par pays, teste 200 pour ma, ci, dz, tn, cm).",
+      "evidence": "Synthese des sondes et documentations de cette etude ; matrice pays en section 4 du dossier.",
+      "sources": [
+        "https://developers.tiktok.com/doc/commercial-content-api-supported-countries",
+        "https://raw.githubusercontent.com/pinterest/api-description/main/v5/openapi.yaml",
+        "https://rss.marketingtools.apple.com/api/v2/ma/music/most-played/10/songs.json"
+      ],
+      "confidence": "medium",
+      "load_bearing": true,
+      "as_of": "2026-11-28"
+    }
+  ],
+  "data_sources": [
+    {
+      "name": "Pinterest Trends (point d'acces JSON de l'outil public)",
+      "category": "Pinterest",
+      "access_method": "GET https://trends.pinterest.com/top_trends_filtered/?endDate=YYYY-MM-DD&country=XX&lookbackWindow=1&numTerms=20&trendsPreset=3",
+      "auth": "aucune",
+      "cost": "0",
+      "geo_coverage": "US, FR, CA, GB, DE+AT+CH, NL+BE+LU, groupe IL+NG+PK+ZA+TR+MA ; BE et MA seuls refuses ; rien pour SN, CI",
+      "signal_type": "mots-cles de recherche montants avec variation hebdomadaire, mensuelle, annuelle et score de saisonnalite",
+      "limits_and_tos": "Point d'acces interne non documente ; 429 apres quelques appels rapproches ; 1 appel par zone et par jour avec cache ; basculer sur l'API v5 officielle des que possible",
+      "tested_call": "curl 'https://trends.pinterest.com/top_trends_filtered/?endDate=2026-11-21&country=FR&lookbackWindow=1&numTerms=20&trendsPreset=3'",
+      "test_result": "200, 50 termes (elise the body, recettes de fetes, motifs de noel pour ongles)",
+      "verdict": "core"
+    },
+    {
+      "name": "Pinterest API v5 Trends",
+      "category": "Pinterest",
+      "access_method": "GET https://api.pinterest.com/v5/trends/keywords/{region}/top/{trend_type}",
+      "auth": "OAuth2, portee user_accounts:read, application developpeur gratuite",
+      "cost": "0",
+      "geo_coverage": "US, CA, DE, FR, ES, IT, GB+IE, DE+AT+CH, NL+BE+LU, groupe contenant MA, groupe contenant DZ, et autres",
+      "signal_type": "mots-cles growing, monthly, yearly, seasonal ; filtres centres d'interet, age, genre ; demographie optionnelle",
+      "limits_and_tos": "50 mots-cles max par appel ; categorie de debit trends_read ; niveau d'acces requis (Trial ou Standard) non verifie",
+      "tested_call": "curl https://api.pinterest.com/v5/trends/keywords/FR/top/growing",
+      "test_result": "401 Authentication failed (attendu sans jeton)",
+      "verdict": "optional"
+    },
+    {
+      "name": "YouTube flux RSS (chaines et listes UUSH Shorts)",
+      "category": "YouTube",
+      "access_method": "GET https://www.youtube.com/feeds/videos.xml?channel_id=UC... ou ?playlist_id=UUSH...",
+      "auth": "aucune",
+      "cost": "0",
+      "geo_coverage": "tous pays via panels de chaines choisis a la main (MA, SN, CI compris)",
+      "signal_type": "15 dernieres videos ou Shorts d'une chaine avec vues et date",
+      "limits_and_tos": "Pas de quota publie ; pas de decouverte, seulement du suivi ; la liste UUSH est une convention non documentee",
+      "tested_call": "curl 'https://www.youtube.com/feeds/videos.xml?playlist_id=UUSHBR8-60-B28hp2BmDPdntcQ'",
+      "test_result": "200, 15 entrees avec media:statistics views",
+      "verdict": "core"
+    },
+    {
+      "name": "YouTube Data API v3",
+      "category": "YouTube",
+      "access_method": "videos.list chart=mostPopular regionCode videoCategoryId ; videos.list statistiques ; search.list ; videos.batchGetStats",
+      "auth": "cle API gratuite (projet Google Cloud)",
+      "cost": "0 ; 10 000 unites/jour ; search.list 100 appels/jour",
+      "geo_coverage": "regionCode ISO par pays (US, FR, MA, BE, CH, CA ; SN et CI a verifier) ; pas de decoupage Quebec",
+      "signal_type": "videos populaires Musique, Films, Jeux par pays ; statistiques de videos ; recherche limitee",
+      "limits_and_tos": "mostPopular reduit a Trending Music/Movies/Gaming depuis le 2025-07-21 ; conservation 30 jours ; pas de metriques derivees non signalees ; scraping interdit",
+      "tested_call": "curl 'https://www.googleapis.com/youtube/v3/videos?part=snippet&chart=mostPopular&regionCode=FR&maxResults=2'",
+      "test_result": "403 PERMISSION_DENIED sans cle",
+      "verdict": "optional"
+    },
+    {
+      "name": "YouTube autocompletion (suggestqueries)",
+      "category": "YouTube",
+      "access_method": "GET https://suggestqueries.google.com/complete/search?client=firefox&ds=yt&hl=fr&gl=MA&q=...",
+      "auth": "aucune",
+      "cost": "0",
+      "geo_coverage": "parametres hl (langue) et gl (pays), MA accepte",
+      "signal_type": "suggestions de recherche YouTube par langue et pays",
+      "limits_and_tos": "Non documente, peut etre bloque ; faible debit uniquement",
+      "tested_call": "curl 'https://suggestqueries.google.com/complete/search?client=firefox&ds=yt&hl=fr&gl=MA&q=recette'",
+      "test_result": "200, 10 suggestions (recette crepe, recette facile et rapide...)",
+      "verdict": "optional"
+    },
+    {
+      "name": "Bluesky getTrends / getTrendingTopics",
+      "category": "Bluesky",
+      "access_method": "GET https://public.api.bsky.app/xrpc/app.bsky.unspecced.getTrends et getTrendingTopics",
+      "auth": "aucune",
+      "cost": "0",
+      "geo_coverage": "global uniquement, domine par l'anglais ; aucun parametre pays ou langue effectif",
+      "signal_type": "sujets tendance avec postCount, statut, categorie, date de debut",
+      "limits_and_tos": "Espace de noms unspecced, peut changer ; limites de debit dites genereuses, non chiffrees",
+      "tested_call": "curl 'https://public.api.bsky.app/xrpc/app.bsky.unspecced.getTrends?limit=5'",
+      "test_result": "200, 5 tendances (Grand Theft Auto VI 4479 posts...)",
+      "verdict": "core"
+    },
+    {
+      "name": "Bluesky searchPosts (api.bsky.app)",
+      "category": "Bluesky",
+      "access_method": "GET https://api.bsky.app/xrpc/app.bsky.feed.searchPosts?q=...&lang=fr&sort=top",
+      "auth": "aucune",
+      "cost": "0",
+      "geo_coverage": "filtre par langue, pas par pays",
+      "signal_type": "posts par mot-cle ou hashtag avec compteurs de likes et reposts",
+      "limits_and_tos": "403 sur public.api.bsky.app, 200 sur api.bsky.app ; comportement non garanti",
+      "tested_call": "curl 'https://api.bsky.app/xrpc/app.bsky.feed.searchPosts?q=maroc&sort=top&lang=fr&limit=2'",
+      "test_result": "200, posts langs=[fr] avec likeCount",
+      "verdict": "core"
+    },
+    {
+      "name": "Bluesky Jetstream",
+      "category": "Bluesky",
+      "access_method": "WebSocket wss://jetstream1.us-east.bsky.network/subscribe?wantedCollections=app.bsky.feed.post",
+      "auth": "aucune",
+      "cost": "0 (hors calcul et stockage)",
+      "geo_coverage": "global ; champ langs par post",
+      "signal_type": "flux temps reel de tous les posts publics, pour calculer hashtags et liens montants par langue",
+      "limits_and_tos": "Environ 41 posts/s ; necessite un processus persistant ou un echantillonnage periodique",
+      "tested_call": "handshake WebSocket via proxy vers jetstream1.us-east.bsky.network/subscribe?wantedCollections=app.bsky.feed.post",
+      "test_result": "101 Switching Protocols, 247 messages en 6,1 s",
+      "verdict": "core"
+    },
+    {
+      "name": "Mastodon trends (mastodon.social, piaille.fr, mamot.fr)",
+      "category": "Mastodon",
+      "access_method": "GET https://{instance}/api/v1/trends/tags | /trends/statuses | /trends/links",
+      "auth": "aucune",
+      "cost": "0",
+      "geo_coverage": "par instance (piaille.fr et mamot.fr francophones) ; rien pour le Maghreb et l'Afrique",
+      "signal_type": "hashtags, statuts et liens tendance avec historique 7 jours (comptes, usages)",
+      "limits_and_tos": "300 requetes par 5 minutes ; volumes tres faibles ; rituels hebdomadaires a filtrer",
+      "tested_call": "curl 'https://piaille.fr/api/v1/trends/tags?limit=5'",
+      "test_result": "200 (vendredilecture, caturday...)",
+      "verdict": "core"
+    },
+    {
+      "name": "Snapchat Ads Library API",
+      "category": "Snapchat",
+      "access_method": "POST https://adsapi.snapchat.com/v1/ads_library/ads/search (JSON : paid_country_codes, paying_advertiser_name)",
+      "auth": "aucune",
+      "cost": "0",
+      "geo_coverage": "pays de l'UE (impressions par pays)",
+      "signal_type": "publicites d'un annonceur : impressions, ciblage, dates, creations",
+      "limits_and_tos": "Nom d'annonceur obligatoire, pas de recherche par mot-cle ; pas un capteur de tendances",
+      "tested_call": "curl -X POST https://adsapi.snapchat.com/v1/ads_library/ads/search -H 'Content-Type: application/json' -d '{\"paid_country_codes\":[\"fr\"],\"paying_advertiser_name\":\"Nike\"}'",
+      "test_result": "200, 10 publicites, impressions_total 174831003",
+      "verdict": "optional"
+    },
+    {
+      "name": "Meta Ad Library API (ads_archive)",
+      "category": "Meta",
+      "access_method": "GET https://graph.facebook.com/vXX/ads_archive?ad_type=ALL&ad_reached_countries=['FR']&search_terms=...",
+      "auth": "jeton Graph API ; confirmation d'identite requise selon des guides tiers",
+      "cost": "0",
+      "geo_coverage": "toutes publicites diffusees dans l'UE (FR, BE) ; ailleurs (US, MA, CH, CA, SN, CI) politique uniquement",
+      "signal_type": "publicites par mot-cle : textes, dates, plateformes, audience UE, ciblage",
+      "limits_and_tos": "Recherche non traduite, 100 caracteres ; conservation un an ; limite de debit non chiffree",
+      "tested_call": "curl 'https://graph.facebook.com/v21.0/ads_archive?ad_reached_countries=FR&search_terms=test'",
+      "test_result": "500 OAuthException sans jeton ; interface web 403",
+      "verdict": "optional"
+    },
+    {
+      "name": "TikTok Commercial Content API",
+      "category": "TikTok",
+      "access_method": "POST https://open.tiktokapis.com/v2/research/adlib/ad/query/",
+      "auth": "jeton client apres candidature (compte TikTok for Developers, reponse annoncee sous 2 jours ouvres)",
+      "cost": "0",
+      "geo_coverage": "27 UE + IS, LI, NO + GB, CH ; pas US, MA, CA, SN, CI",
+      "signal_type": "publicites TikTok par mot-cle ou annonceur : dates, ciblage, audience touchee",
+      "limits_and_tos": "Conservation un an apres derniere diffusion ; quotas non publies sur les pages lues",
+      "tested_call": "non testable sans jeton",
+      "test_result": "non teste",
+      "verdict": "optional"
+    },
+    {
+      "name": "TikTok Creative Center (TikTok One)",
+      "category": "TikTok",
+      "access_method": "interface web https://ads.tiktok.com/creative/creativeCenter/trends, compte requis",
+      "auth": "compte TikTok for Business (gratuit), connexion obligatoire pour les classements",
+      "cost": "0",
+      "geo_coverage": "27 pays pour les hashtags selon un releve tiers ; presence du Maroc non verifiee",
+      "signal_type": "hashtags et videos tendance ; onglet sons supprime selon un releve tiers",
+      "limits_and_tos": "CGU TikTok : extraction automatisee interdite ; a traiter en saisie humaine hebdomadaire uniquement",
+      "tested_call": "curl https://ads.tiktok.com/creative/creativeCenter/trends/hashtag ; curl 'https://ads.tiktok.com/creative_radar_api/v1/popular_trend/hashtag/list?page=1&limit=20&period=7&country_code=FR&sort_by=popular'",
+      "test_result": "200 coquille 'No data available, Log in or sign up' ; ancienne API {code:40101, msg:no permission}",
+      "verdict": "avoid"
+    },
+    {
+      "name": "TikTok Research API",
+      "category": "TikTok",
+      "access_method": "POST https://open.tiktokapis.com/v2/research/video/query/",
+      "auth": "projet de recherche approuve (academique ou sans but lucratif)",
+      "cost": "0",
+      "geo_coverage": "donnees publiques mondiales, mais eligibilite limitee",
+      "signal_type": "videos, commentaires, comptes, boutiques TikTok Shop UE",
+      "limits_and_tos": "Usage commercial non eligible ; 1 000 requetes/jour",
+      "tested_call": "curl -X POST https://open.tiktokapis.com/v2/research/video/query/",
+      "test_result": "401 access_token_invalid",
+      "verdict": "avoid"
+    },
+    {
+      "name": "X API v2 Trends (paiement a l'usage)",
+      "category": "X",
+      "access_method": "GET https://api.x.com/2/trends/by/woeid/{woeid}",
+      "auth": "jeton Bearer, credits prepayes",
+      "cost": "0,010 $ par requete ; environ 11 $/mois pour 6 lieux x 6 releves/jour ; posts lus 0,005 $",
+      "geo_coverage": "lieux WOEID : monde, US, FR, BE, CH, CA, DZ ; pas MA, SN, CI, TN (a confirmer)",
+      "signal_type": "tendances par lieu avec volume au-dela de 1 000 posts ; recherche et compteurs de posts",
+      "limits_and_tos": "Plafond 3 millions de posts lus par mois ; deduplication 24 h",
+      "tested_call": "curl https://api.x.com/2/trends/by/woeid/23424819",
+      "test_result": "401 Unauthorized sans jeton",
+      "verdict": "paid_addon"
+    },
+    {
+      "name": "trends24.in (agregateur tiers des tendances X)",
+      "category": "X",
+      "access_method": "GET https://trends24.in/{pays}/ (HTML)",
+      "auth": "aucune",
+      "cost": "0",
+      "geo_coverage": "France, Belgique, Suisse, Canada, Algerie ; 404 pour Maroc, Senegal, Cote d'Ivoire, Tunisie",
+      "signal_type": "tendances X horaires par pays",
+      "limits_and_tos": "Scraping d'un site tiers sans contrat, fragile ; preferer l'API officielle a 0,010 $ par requete",
+      "tested_call": "curl https://trends24.in/france/",
+      "test_result": "200, tendances lisibles (#PetitPapaTopAchat, Bardella...)",
+      "verdict": "avoid"
+    },
+    {
+      "name": "Reddit sans authentification (.json, RSS)",
+      "category": "Reddit",
+      "access_method": "GET https://www.reddit.com/r/{sub}/top.json ou .rss",
+      "auth": "aucune",
+      "cost": "0",
+      "geo_coverage": "aucune par pays ; substituts par subreddits",
+      "signal_type": "posts et scores par subreddit",
+      "limits_and_tos": "Bloque depuis IP de datacenter ; robots.txt Disallow: /",
+      "tested_call": "curl 'https://www.reddit.com/r/popular.json?limit=2' ; curl https://www.reddit.com/r/france/.rss",
+      "test_result": "403 page de blocage ; 404 flux Not Found ; 429 sur search.rss",
+      "verdict": "avoid"
+    },
+    {
+      "name": "Reddit Data API (OAuth officiel)",
+      "category": "Reddit",
+      "access_method": "GET https://oauth.reddit.com/r/{sub}/hot avec jeton OAuth",
+      "auth": "application OAuth approuvee (Responsible Builder Policy)",
+      "cost": "0 en usage non commercial ; accord separe pour usage commercial",
+      "geo_coverage": "subreddits par pays ou langue (r/france, r/Morocco, r/Quebec...)",
+      "signal_type": "posts, scores, commentaires de subreddits de niche",
+      "limits_and_tos": "100 requetes/minute selon des sources tierces ; pas de revenu tire des donnees ; suppression a la fin de l'acces ; acces depuis datacenter non verifie",
+      "tested_call": "curl https://oauth.reddit.com/r/france/hot",
+      "test_result": "403 sans jeton",
+      "verdict": "optional"
+    },
+    {
+      "name": "Twitch Helix API",
+      "category": "Twitch",
+      "access_method": "GET https://api.twitch.tv/helix/streams?language=fr ; /games/top",
+      "auth": "jeton d'application gratuit (client credentials) + Client-Id",
+      "cost": "0",
+      "geo_coverage": "filtre par langue, pas par pays",
+      "signal_type": "jeux et diffusions en direct les plus regardes par langue",
+      "limits_and_tos": "1 point par requete, seau par minute ; 100 resultats par page",
+      "tested_call": "curl 'https://api.twitch.tv/helix/streams?language=fr&first=5'",
+      "test_result": "401 OAuth token is missing",
+      "verdict": "optional"
+    },
+    {
+      "name": "Telegram apercu web des canaux publics",
+      "category": "Telegram",
+      "access_method": "GET https://t.me/s/{canal}",
+      "auth": "aucune",
+      "cost": "0",
+      "geo_coverage": "selon les canaux choisis",
+      "signal_type": "20 derniers messages, vues, nombre d'abonnes",
+      "limits_and_tos": "Conditions Telegram : agregation pour l'IA interdite ; limiter a une courte liste de canaux, sans stockage massif",
+      "tested_call": "curl https://t.me/s/durov",
+      "test_result": "200, 20 messages, vues 2.36M, abonnes 9.85M",
+      "verdict": "optional"
+    },
+    {
+      "name": "Instagram Graph API (hashtag search)",
+      "category": "Meta",
+      "access_method": "GET /ig_hashtag_search puis /{hashtag-id}/top_media ou recent_media",
+      "auth": "compte Business ou Creator + App Review (Instagram Public Content Access)",
+      "cost": "0",
+      "geo_coverage": "aucun filtre pays",
+      "signal_type": "medias populaires ou recents par hashtag",
+      "limits_and_tos": "30 hashtags uniques par 7 jours ; changement de top_media le 2027-02-16",
+      "tested_call": "curl https://www.instagram.com/explore/tags/maroc/",
+      "test_result": "200 coquille sans donnees ; api/v1/tags/web_info -> 404",
+      "verdict": "optional"
+    },
+    {
+      "name": "Threads API (keyword search)",
+      "category": "Meta",
+      "access_method": "GET https://graph.threads.net/v1.0/keyword_search?q=...&search_type=TOP",
+      "auth": "jeton utilisateur + permission threads_keyword_search approuvee",
+      "cost": "0",
+      "geo_coverage": "aucun filtre pays",
+      "signal_type": "posts publics par mot-cle ou tag",
+      "limits_and_tos": "2 200 requetes par 24 h ; sans approbation, recherche limitee a ses propres posts",
+      "tested_call": "curl 'https://graph.threads.net/v1.0/keyword_search?q=maroc'",
+      "test_result": "400 Invalid OAuth 2.0 Access Token",
+      "verdict": "optional"
+    },
+    {
+      "name": "Meta Content Library et API",
+      "category": "Meta",
+      "access_method": "interface et API en environnement securise",
+      "auth": "organisme de recherche sans but lucratif, dossier CASD",
+      "cost": "0",
+      "geo_coverage": "contenus publics de la plupart des pays",
+      "signal_type": "posts publics Facebook, Instagram, Threads, WhatsApp Channels",
+      "limits_and_tos": "Inaccessible a un acteur commercial",
+      "tested_call": "non applicable",
+      "test_result": "non teste",
+      "verdict": "avoid"
+    },
+    {
+      "name": "LinkedIn Ad Library",
+      "category": "LinkedIn",
+      "access_method": "interface web https://www.linkedin.com/ad-library/ ; API mentionnee mais non verifiee",
+      "auth": "aucune pour le web ; inconnue pour l'API",
+      "cost": "0",
+      "geo_coverage": "filtre pays ; details supplementaires pour l'UE",
+      "signal_type": "publicites B2B depuis le 2023-06-01",
+      "limits_and_tos": "Bloque depuis datacenter ; scraping LinkedIn a haut risque",
+      "tested_call": "curl 'https://www.linkedin.com/ad-library/search?keyword=formation&countries=FR'",
+      "test_result": "403",
+      "verdict": "avoid"
+    },
+    {
+      "name": "Discord",
+      "category": "Discord",
+      "access_method": "API bot uniquement sur les serveurs ou le bot est invite",
+      "auth": "jeton bot",
+      "cost": "0",
+      "geo_coverage": "aucune",
+      "signal_type": "aucun signal de tendance public",
+      "limits_and_tos": "Decouverte de serveurs en 401 ; collecte de donnees interdite par la politique developpeur (non reverifie)",
+      "tested_call": "curl https://discord.com/api/v10/discovery/categories",
+      "test_result": "401 Unauthorized",
+      "verdict": "avoid"
+    },
+    {
+      "name": "WhatsApp Channels",
+      "category": "Meta",
+      "access_method": "aucune API publique ; veille humaine",
+      "auth": "non applicable",
+      "cost": "0",
+      "geo_coverage": "aucune par API",
+      "signal_type": "aucun",
+      "limits_and_tos": "Seul acces structure : Meta Content Library (chercheurs)",
+      "tested_call": "curl https://www.whatsapp.com/channel/0029VaBaUOKHLHQhtQCw3E0q",
+      "test_result": "200, page generique sans contenu",
+      "verdict": "avoid"
+    },
+    {
+      "name": "ScrapeCreators",
+      "category": "Tiers payant",
+      "access_method": "API REST, 1 credit par requete en general",
+      "auth": "cle API",
+      "cost": "100 credits gratuits ; 47 $ = 25 000 credits sans expiration (1,88 $/1 000) ; 497 $ = 500 000 (0,99 $/1 000)",
+      "geo_coverage": "selon les requetes (mots-cles, hashtags, comptes) ; tous pays",
+      "signal_type": "TikTok, TikTok Shop, Instagram, YouTube, Threads, Reddit, X, Pinterest, Snapchat, bibliotheques publicitaires Meta, TikTok, Google, LinkedIn",
+      "limits_and_tos": "Scraping non officiel : risque de casse et de CGU ; tendances TikTok par pays a retester depuis la refonte du Creative Center",
+      "tested_call": "non teste (cle requise)",
+      "test_result": "prix lus sur scrapecreators.com le 2026-11-28",
+      "verdict": "paid_addon"
+    },
+    {
+      "name": "EnsembleData",
+      "category": "Tiers payant",
+      "access_method": "API REST, unites par jour",
+      "auth": "cle API",
+      "cost": "essai 50 unites/jour ; 100 $/mois = 1 500 unites/jour ; 200 $ = 5 000 ; 400 $ = 11 000",
+      "geo_coverage": "selon les requetes ; tous pays",
+      "signal_type": "TikTok, Instagram, YouTube, Threads, Reddit, Twitch, X, Snapchat ; recherche hashtag ou mot-cle = 1 unite pour 20 posts",
+      "limits_and_tos": "Unites non reportables d'un jour a l'autre ; scraping non officiel",
+      "tested_call": "non teste (cle requise)",
+      "test_result": "prix lus sur ensembledata.com/pricing le 2026-11-28",
+      "verdict": "paid_addon"
+    },
+    {
+      "name": "Apify (Instagram Scraper, TikTok Scraper)",
+      "category": "Tiers payant",
+      "access_method": "acteurs Apify via API",
+      "auth": "jeton Apify",
+      "cost": "Free 5 $ d'usage/mois ; Starter 19 $ ; Instagram 2,70 $ (Free) a 1,50 $ (Business) par 1 000 ; TikTok a partir de 1,70 $ par 1 000",
+      "geo_coverage": "selon les requetes ; proxyCountryCode pour TikTok",
+      "signal_type": "hashtags, profils, reels, recherche par mot-cle",
+      "limits_and_tos": "Credits non reportables ; acteurs de tiers de qualite variable ; scraping non officiel",
+      "tested_call": "non teste (jeton requis)",
+      "test_result": "prix lus sur apify.com le 2026-11-28",
+      "verdict": "paid_addon"
+    },
+    {
+      "name": "Bright Data Web Scraper API",
+      "category": "Tiers payant",
+      "access_method": "API REST, paiement au succes",
+      "auth": "cle API",
+      "cost": "5 000 enregistrements gratuits/mois sans carte ; 1,50 $ par 1 000 ensuite ; forfait 499 $/mois",
+      "geo_coverage": "selon les requetes",
+      "signal_type": "TikTok, Instagram, Facebook, X, LinkedIn, Reddit, YouTube (pas Pinterest)",
+      "limits_and_tos": "Fournisseur vise par des proces de plateformes, gagnes en 2024 ; scraping non officiel",
+      "tested_call": "non teste (cle requise)",
+      "test_result": "prix lus sur brightdata.com/pricing/web-scraper le 2026-11-28",
+      "verdict": "paid_addon"
+    },
+    {
+      "name": "SerpApi",
+      "category": "Tiers payant",
+      "access_method": "API REST par moteur",
+      "auth": "cle API",
+      "cost": "250 recherches gratuites/mois ; 25 $ = 1 000 ; 75 $ = 5 000 ; 150 $ = 15 000",
+      "geo_coverage": "parametres pays et langue des moteurs Google et YouTube",
+      "signal_type": "Google Trends, recherche YouTube, moteurs de recherche",
+      "limits_and_tos": "Poursuivi par Google (2025-12-19) et par Reddit (octobre 2025) : risque de continuite",
+      "tested_call": "non teste (cle requise)",
+      "test_result": "prix lus sur serpapi.com/pricing le 2026-11-28",
+      "verdict": "paid_addon"
+    },
+    {
+      "name": "DataForSEO",
+      "category": "Tiers payant",
+      "access_method": "API REST, solde prepaye",
+      "auth": "identifiants API",
+      "cost": "depot minimal 50 $ sans expiration ; SERP des 0,0006 $ ; Keywords Data (dont Google Trends) des 0,0012 $ par tache",
+      "geo_coverage": "par pays et langue",
+      "signal_type": "tendances et volumes de recherche ; peu de social",
+      "limits_and_tos": "Complement recherche plutot que social",
+      "tested_call": "non teste (cle requise)",
+      "test_result": "prix lus sur dataforseo.com/pricing le 2026-11-28",
+      "verdict": "paid_addon"
+    }
+  ],
+  "implications_for_tool": [
+    "Structurer la collecte en connecteurs a trois niveaux (core sans cle, optional avec cle gratuite, paid_addon) derriere un contrat commun ; chaque connecteur declare sa granularite geographique (pays, groupe de pays, langue, global), ses types de signal, son cout par appel et sa duree de conservation autorisee.",
+    "Normaliser tous les signaux dans un objet unique {source, type, cle, zone, langue, metrique, valeur, variation, horodatage, url_preuve, confiance} ; le champ zone doit accepter des groupes (NL+BE+LU, DE+AT+CH) et une langue a defaut de pays.",
+    "Mesurer la diffusion USA vers Europe vers Maroc par dates de premiere apparition d'un meme terme par zone ; sources qui le permettent aujourd'hui : Pinterest (US, FR, CA, groupes), X Trends (US, FR, BE, CH, CA), YouTube regionCode, bibliotheques publicitaires FR/BE, et un fournisseur TikTok payant interroge par mots-cles localises.",
+    "Ne pas dependre du Creative Center TikTok : prevoir une interface TikTok unique avec deux fournisseurs payants interchangeables (ScrapeCreators, EnsembleData ou Apify), un mode saisie humaine hebdomadaire (coller un export ou une capture du Creative Center connecte) et la Commercial Content API pour les publicites FR/BE/CH.",
+    "Pour le Maroc et l'Afrique francophone, construire des panels par pays et par niche (chaines YouTube suivies par RSS, canaux Telegram publics, comptes TikTok et Instagram via fournisseur payant) et des dictionnaires de mots-cles en francais, darija latinise et arabe ; le pays vient du panel, pas de l'API.",
+    "Integrer un compteur de budget : journaliser le cout de chaque appel payant (X 0,010 $ par requete Trends, 0,005 $ par post ; 1 credit ScrapeCreators), plafond mensuel configurable, cache de 24 h.",
+    "Conformite par conception : duree de vie de 30 jours sur les donnees brutes YouTube, mention explicite que les scores sont calcules par le radar et non fournis par YouTube, stockage d'agregats (hashtag, mot-cle, compteur, date, zone) plutot que de profils de personnes, aucune collecte derriere une connexion automatisee, respect des 403, robots.txt et CAPTCHA.",
+    "Resilience : test de sante quotidien par connecteur (statut HTTP et forme de la reponse), degradation gracieuse et alerte ; sources connues comme instables : endpoints Bluesky unspecced, point d'acces web Pinterest, top_media Instagram (changement le 2027-02-16), tout scraper tiers.",
+    "Ne pas batir de fonction essentielle sur Reddit, LinkedIn ou l'Ad Library web de Meta depuis un conteneur cloud : les IP de datacenter y sont bloquees sans jeton officiel.",
+    "Ponderer les sources : Pinterest et bibliotheques publicitaires pour le lifestyle et la monetisation, X pour l'actualite, YouTube pour musique, jeu et formats longs, Bluesky et Mastodon en signal precoce a faible poids.",
+    "Utiliser le signal publicitaire comme indicateur de rendement : une tendance US sans annonceur en FR/BE dans les bibliotheques Meta, TikTok et Snapchat est une fenetre d'arbitrage ; une tendance deja saturee d'annonceurs est en phase mature.",
+    "Paliers budgetaires : 0 EUR = Pinterest, YouTube RSS et API, Bluesky, Mastodon, bibliotheques publicitaires, offres gratuites des tiers, saisie humaine ; environ 50 EUR = plus X a l'usage (environ 11 a 20 $) et un pack ScrapeCreators de 47 $ amorti sur 2 a 3 mois ; environ 200 EUR = plus EnsembleData a 100 $/mois en collecteur quotidien, Apify Starter a 19 $, X a 25-30 $ et une reserve Bright Data ou DataForSEO."
+  ],
+  "open_questions": [
+    "Que montre exactement le Creative Center TikTok une fois connecte avec un compte TikTok for Business gratuit (pays dont Maroc, Belgique, Suisse ; profondeur du classement ; sons) ? Non testable sans compte.",
+    "videos.list chart=mostPopular avec videoCategoryId hors Musique, Films, Jeux renvoie-t-il encore des resultats par pays, et regionCode=MA, SN, CI sont-ils acceptes ? A tester avec une cle gratuite (i18nRegions.list).",
+    "L'API OAuth officielle de Reddit repond-elle depuis une IP de datacenter avec un jeton valide, et les nouvelles demandes d'acces sont-elles reellement fermees depuis le 2026-10-31 (source tierce unique) ?",
+    "Liste officielle des lieux de tendances X : confirmer l'absence du Maroc, du Senegal, de la Cote d'Ivoire et de la Tunisie ; l'offre gratuite X et les forfaits Basic et Pro existent-ils encore fin 2026 ?",
+    "Quels fournisseurs tiers servent encore des tendances TikTok par pays (hashtags, sons) depuis la refonte du Creative Center ? A tester avec les credits gratuits de ScrapeCreators et EnsembleData.",
+    "L'API Pinterest v5 Trends est-elle accessible en acces Trial avec une application gratuite, et avec quelles limites de debit ?",
+    "Conditions exactes d'acces a la Meta Ad Library API (confirmation d'identite, limites de debit) et a la LinkedIn Ad Library API (page inaccessible).",
+    "L'outil est-il un usage interne de veille ou une revente de donnees ? La revente change le niveau de risque (conditions Reddit et YouTube, RGPD, loi marocaine 09-08 non reverifiee).",
+    "Tarifs et couverture pays des outils TikTok Shop (Kalodata, FastMoss) et de TikAPI : pages inaccessibles pendant l'etude.",
+    "Quel volume reel de contenu francophone et marocain passe par Bluesky, Mastodon et Reddit ? Probablement negligeable ; a mesurer sur une semaine d'echantillonnage Jetstream."
+  ]
+}

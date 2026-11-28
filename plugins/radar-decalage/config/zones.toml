@@ -1,0 +1,205 @@
+# Zones suivies. Valeurs par défaut du plugin ; un fichier workspace/config/zones.toml
+# du même format remplace cette liste (la clé « zone » est une liste, elle n'est pas fusionnée).
+#
+# group : origine (USA), sentinelle (marché qui reçoit tôt), test (marché-test des plateformes),
+#         cible (France, Maroc, francophonie), relais (Golfe, Égypte : apps arabophones)
+# apple : code de vitrine App Store
+# play  : code pays Google Play ; hl : langue d'affichage
+
+[[zone]]
+code = "US"
+name = "États-Unis"
+group = "origine"
+apple = "us"
+play = "us"
+hl = "en"
+
+[[zone]]
+code = "CA"
+name = "Canada"
+group = "sentinelle"
+apple = "ca"
+play = "ca"
+hl = "fr"
+
+[[zone]]
+code = "GB"
+name = "Royaume-Uni"
+group = "sentinelle"
+apple = "gb"
+play = "gb"
+hl = "en"
+
+[[zone]]
+code = "IE"
+name = "Irlande"
+group = "sentinelle"
+apple = "ie"
+
+[[zone]]
+code = "AU"
+name = "Australie"
+group = "test"
+apple = "au"
+
+[[zone]]
+code = "NZ"
+name = "Nouvelle-Zélande"
+group = "test"
+apple = "nz"
+
+[[zone]]
+code = "DE"
+name = "Allemagne"
+group = "sentinelle"
+apple = "de"
+play = "de"
+hl = "de"
+
+[[zone]]
+code = "ES"
+name = "Espagne"
+group = "sentinelle"
+apple = "es"
+play = "es"
+hl = "es"
+
+[[zone]]
+code = "IT"
+name = "Italie"
+group = "test"
+apple = "it"
+
+[[zone]]
+code = "PT"
+name = "Portugal"
+group = "test"
+apple = "pt"
+
+[[zone]]
+code = "NL"
+name = "Pays-Bas"
+group = "sentinelle"
+apple = "nl"
+
+[[zone]]
+code = "FR"
+name = "France"
+group = "cible"
+apple = "fr"
+play = "fr"
+hl = "fr"
+
+[[zone]]
+code = "BE"
+name = "Belgique"
+group = "cible"
+apple = "be"
+play = "be"
+hl = "fr"
+
+[[zone]]
+code = "CH"
+name = "Suisse"
+group = "cible"
+apple = "ch"
+play = "ch"
+hl = "fr"
+
+[[zone]]
+code = "LU"
+name = "Luxembourg"
+group = "cible"
+apple = "lu"
+
+[[zone]]
+code = "JP"
+name = "Japon"
+group = "test"
+apple = "jp"
+
+[[zone]]
+code = "MX"
+name = "Mexique"
+group = "test"
+apple = "mx"
+
+[[zone]]
+code = "PH"
+name = "Philippines"
+group = "test"
+apple = "ph"
+
+[[zone]]
+code = "TH"
+name = "Thaïlande"
+group = "test"
+apple = "th"
+
+[[zone]]
+code = "CN"
+name = "Chine"
+group = "origine"
+apple = "cn"
+# Google, YouTube et Wikipedia sont bloqués en Chine : seul l'App Store chinois est observable
+# gratuitement. Douyin, Xiaohongshu et Taobao restent hors de portée (angle mort assumé).
+
+[[zone]]
+code = "AE"
+name = "Émirats arabes unis"
+group = "relais"
+apple = "ae"
+# Dubaï : origine de tendances qui gagnent le Maroc (chocolat de Dubaï) ; App Store, Google Trends,
+# autocomplétion et radar produits.
+
+[[zone]]
+code = "SA"
+name = "Arabie saoudite"
+group = "relais"
+apple = "sa"
+
+[[zone]]
+code = "EG"
+name = "Égypte"
+group = "relais"
+apple = "eg"
+
+[[zone]]
+code = "MA"
+name = "Maroc"
+group = "cible"
+apple = "ma"
+play = "ma"
+hl = "fr"
+
+[[zone]]
+code = "DZ"
+name = "Algérie"
+group = "cible"
+apple = "dz"
+play = "dz"
+hl = "fr"
+
+[[zone]]
+code = "TN"
+name = "Tunisie"
+group = "cible"
+apple = "tn"
+play = "tn"
+hl = "fr"
+
+[[zone]]
+code = "SN"
+name = "Sénégal"
+group = "cible"
+apple = "sn"
+play = "sn"
+hl = "fr"
+
+[[zone]]
+code = "CI"
+name = "Côte d'Ivoire"
+group = "cible"
+apple = "ci"
+play = "ci"
+hl = "fr"

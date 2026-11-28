@@ -1,0 +1,9 @@
+# Données et configuration personnelle du radar : jamais dans la branche de code.
+# La collecte planifiée écrit sur une branche de données dédiée.
+workspace/
+
+# Python
+__pycache__/
+*.pyc
+.pytest_cache/
+*.tmp

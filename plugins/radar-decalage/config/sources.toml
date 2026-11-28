@@ -1,0 +1,156 @@
+# Registre des sources et règles de débit par site.
+#
+# publishable : les données peuvent-elles être publiées telles quelles ? (non par défaut)
+# tos         : statut des conditions d'utilisation, à relire avant toute productisation
+# enabled     : interrupteur ; une source en panne se coupe ici sans toucher au code
+
+[source.apple_charts]
+family = "stores"
+cadence = "daily"
+enabled = true
+publishable = false
+tos = "flux v2 rss.marketingtools.apple.com (autorisé) ; le flux historique itunes.apple.com/*/rss/* est interdit par robots.txt"
+limit = 100
+watch_max_rank = 100
+
+[source.google_play]
+family = "stores"
+cadence = "daily"
+# Désactivé : le robots.txt de play.google.com interdit « /_ », donc le point d'accès batchexecute.
+# Ne pas réactiver sans une source autorisée (API payante d'un fournisseur de données, par exemple).
+enabled = false
+publishable = false
+tos = "robots.txt interdit le point d'accès (Disallow: /_) : source désactivée"
+collections = ["topselling_free"]
+num = 200
+watch_max_rank = 100
+
+[source.apple_lookup]
+family = "stores"
+cadence = "daily"
+enabled = true
+publishable = true
+tos = "iTunes Search API, publique ; environ 20 appels par minute"
+batch_size = 100
+max_apps = 600
+max_age_days = 60
+
+[source.gtrends_daily]
+family = "search"
+cadence = "hourly"
+enabled = true
+publishable = false
+tos = "flux RSS officiel de Google Trends ; usage interne"
+geos = ["US", "FR", "MA", "AE", "SA"]   # Golfe : tendances qui gagnent le Maroc ; pas de Google Trends en Chine
+
+[source.autocomplete]
+family = "search"
+cadence = "daily"
+enabled = true
+publishable = false
+tos = "autocomplétion Google et YouTube : points d'accès non officiels, sans robots.txt (zone grise) ; Amazon exclu (robots.txt : Disallow: /)"
+max_queries = 400
+# Couples (moteur, zone, langue). La langue renvoie aux variantes des termes (en, fr, ar, ary).
+pairs = [
+  { engine = "google", zone = "US", lang = "en", hl = "en", gl = "us" },
+  { engine = "google", zone = "AE", lang = "en", hl = "en", gl = "ae" },
+  { engine = "google", zone = "FR", lang = "fr", hl = "fr", gl = "fr" },
+  { engine = "google", zone = "BE", lang = "fr", hl = "fr", gl = "be" },
+  { engine = "google", zone = "CA-QC", lang = "fr", hl = "fr", gl = "ca" },
+  { engine = "google", zone = "MA", lang = "fr", hl = "fr", gl = "ma" },
+  { engine = "google", zone = "MA", lang = "ary", hl = "fr", gl = "ma" },
+  { engine = "google", zone = "MA", lang = "ar", hl = "ar", gl = "ma" },
+  { engine = "google", zone = "SN", lang = "fr", hl = "fr", gl = "sn" },
+  { engine = "google", zone = "CI", lang = "fr", hl = "fr", gl = "ci" },
+  { engine = "youtube", zone = "US", lang = "en", hl = "en", gl = "us" },
+  { engine = "youtube", zone = "FR", lang = "fr", hl = "fr", gl = "fr" },
+  { engine = "youtube", zone = "MA", lang = "fr", hl = "fr", gl = "ma" },
+  { engine = "youtube", zone = "MA", lang = "ary", hl = "fr", gl = "ma" },
+]
+
+[source.autocomplete_villes]
+family = "search"
+cadence = "weekly"
+enabled = true
+publishable = false
+tos = "autocomplétion Google « terme + ville » : même point d'accès que l'autocomplétion par pays (sans robots.txt, zone grise)"
+max_queries = 260
+# Ville cherchée (query) et motif qui la reconnaît dans une suggestion sans accents (match) :
+# « \\bfes\\b » écarte « festival » et « fessier ».
+cities = [
+  { id = "paris", label = "Paris", zone = "FR", gl = "fr", query = "paris", match = "\\bparis\\b" },
+  { id = "lyon", label = "Lyon", zone = "FR", gl = "fr", query = "lyon", match = "\\blyon\\b" },
+  { id = "casablanca", label = "Casablanca", zone = "MA", gl = "ma", query = "casablanca", match = "\\bcasa(blanca)?\\b", exclude = "\\b(t ?shirt|shirt|pull|chemise|sweat|hoodie|casablancas|paris casablanca)\\b" },
+  { id = "rabat", label = "Rabat", zone = "MA", gl = "ma", query = "rabat", match = "\\brabat\\b" },
+  { id = "marrakech", label = "Marrakech", zone = "MA", gl = "ma", query = "marrakech", match = "\\bmarrakec?h\\b" },
+  { id = "fes", label = "Fès", zone = "MA", gl = "ma", query = "fès", match = "\\bfes\\b" },
+  { id = "tanger", label = "Tanger", zone = "MA", gl = "ma", query = "tanger", match = "\\btanger\\b" },
+]
+# Métiers locaux suivis ville par ville (cibles possibles d'une offre spécialisée).
+trades = ["riad", "école privée", "clinique", "salle de sport", "agence immobilière", "coworking", "formation ia", "agence ia"]
+
+[source.autocomplete_produits]
+family = "search"
+cadence = "weekly"
+enabled = true
+publishable = false
+tos = "autocomplétion Google au Maroc (« prix … », « ثمن … », puis « produit + ville ») : même point d'accès que l'autocomplétion (sans robots.txt, zone grise)"
+# Paramètres (préfixes, filtres, risques, villes comparées) : config/produits.toml
+
+[source.autocomplete_assortiment]
+family = "search"
+cadence = "weekly"
+enabled = true
+publishable = false
+tos = "autocomplétion Google au Maroc (« concept + fès », « concept + casablanca », « concept + maroc ») : même point d'accès que l'autocomplétion (sans robots.txt, zone grise)"
+# Familles, concepts et écosystème local : config/assortiment.toml
+
+[source.wikimedia_country]
+family = "attention"
+cadence = "daily"
+enabled = true
+publishable = true
+tos = "jeu public de Wikimedia (pages vues par pays, confidentialité différentielle)"
+countries = ["US", "CA", "GB", "DE", "ES", "IT", "NL", "FR", "BE", "CH", "LU", "MA", "DZ", "TN", "SN", "CI", "CM", "CD"]
+projects = ["en.wikipedia", "fr.wikipedia", "ar.wikipedia", "ary.wikipedia", "de.wikipedia", "es.wikipedia", "it.wikipedia", "nl.wikipedia"]
+top_n = 50
+# Pays d'origine : les QID de leur top sont suivis dans tous les pays (présence ou absence sous le seuil).
+origins = ["US", "GB", "CA", "DE"]
+top_n_origin = 50
+# QID suivis en plus : ajoutés quand une entité est validée.
+qids = []
+
+# Règles de débit par site. min_interval en secondes entre deux appels au même site.
+[host."itunes.apple.com"]
+min_interval = 3.0
+max_retries = 2
+timeout = 30.0
+
+[host."rss.marketingtools.apple.com"]
+min_interval = 2.0
+max_retries = 3
+backoff = 3.0
+timeout = 20.0
+
+[host."play.google.com"]
+min_interval = 3.0
+max_retries = 2
+timeout = 45.0
+
+[host."trends.google.com"]
+min_interval = 2.0
+
+[host."suggestqueries.google.com"]
+min_interval = 1.0
+
+[host."completion.amazon.com"]
+min_interval = 1.5
+
+[host."completion.amazon.fr"]
+min_interval = 1.5
+
+[host."analytics.wikimedia.org"]
+min_interval = 2.0
+max_retries = 3
+timeout = 180.0
+max_retry_after = 60.0

@@ -1,0 +1,102 @@
+# Réglementation par catégorie et par pays : elle plafonne le score (porte), elle ne le pondère pas.
+# Statuts : autorise | restreint | interdit | en_cours | inconnu
+# « inconnu » est une valeur légitime : elle déclenche une vérification, jamais une supposition.
+
+[[rule]]
+id = "marches_prediction"
+category = "jeux d'argent et marchés de prédiction"
+as_of = 2026-11-28
+source = "docs/etude/trends-us-business.md (ANJ, 16/07/2026)"
+evidence = "F2"
+status = { FR = "interdit", BE = "restreint", CH = "restreint", MA = "inconnu" }
+exclude_initiatives = true
+
+[[rule]]
+id = "nicotine_orale"
+category = "nicotine (sachets)"
+as_of = 2026-11-28
+source = "docs/etude/market-france-europe.md (contre-vérification)"
+evidence = "F2"
+status = { FR = "interdit" }
+since = { FR = 2026-04-01 }
+exclude_initiatives = true
+
+[[rule]]
+id = "ultra_fast_fashion"
+category = "mode ultra-express"
+as_of = 2026-11-28
+source = "docs/etude/market-france-europe.md (contre-vérification)"
+evidence = "F2"
+status = { FR = "restreint" }
+notes = { FR = "malus depuis le 01/09/2026 ; publicité interdite au 01/01/2027, influenceurs compris ; périmètre des entreprises inconnu (décrets non repérés)" }
+exclude_initiatives = true
+
+[[rule]]
+id = "petits_colis_ue"
+category = "import de petits colis (e-commerce hors UE)"
+as_of = 2026-11-28
+source = "docs/etude/market-france-europe.md (contre-vérification)"
+evidence = "F2"
+status = { FR = "restreint", BE = "restreint", LU = "restreint" }
+notes = { FR = "3 € par catégorie tarifaire depuis le 01/07/2026 jusqu'à 150 €, plus 2 € sans seuil depuis le 01/11/2026, à la charge de la plateforme" }
+
+[[rule]]
+id = "influence_commerciale"
+category = "influence commerciale et liens affiliés"
+as_of = 2026-11-28
+source = "loi n° 2023-451 du 9 juin 2023 ; décret n° 2025-1137 (seuil de 1 000 € HT, à relire sur Légifrance)"
+evidence = "F2"
+status = { FR = "restreint" }
+notes = { FR = "mention « Publicité » ou « Collaboration commerciale » (article 5-2 en vigueur) ; contrat écrit au-delà de 1 000 € HT depuis le 01/01/2026 ; secteurs interdits à la promotion ; mention des images retouchées ou virtuelles ; application incertaine à un site anonyme sans notoriété" }
+gate = { FR = 0.95 }  # obligation de mention et de contrat : coût de conformité, pas un verrou [H]
+
+[[rule]]
+id = "contenu_genere_ia"
+category = "contenus générés par IA"
+as_of = 2026-11-28
+source = "règlement (UE) 2024/1689 (AI Act), article 50"
+evidence = "F2"
+status = { FR = "restreint", BE = "restreint", LU = "restreint" }
+notes = { FR = "obligations de transparence de l'article 50 depuis août 2026 ; annexe III au 02/12/2027" }
+gate = { FR = 0.95, BE = 0.95, LU = 0.95 }  # étiquetage : coût de conformité [H]
+
+[[rule]]
+id = "mineurs_reseaux_sociaux"
+category = "accès des mineurs aux réseaux sociaux"
+as_of = 2026-11-28
+source = "Conseil constitutionnel, décision n° 2026-911 DC du 14/08/2026"
+evidence = "F"
+status = { FR = "autorise", MA = "en_cours" }
+notes = { FR = "l'article 1er (interdiction aux moins de 15 ans) a été censuré : aucune interdiction en vigueur", MA = "engagement du programme gouvernemental d'octobre 2026, sans calendrier" }
+exclude_initiatives_targeting_minors = true
+
+[[rule]]
+id = "glp1"
+category = "médicaments de perte de poids (GLP-1)"
+as_of = 2026-11-28
+source = "Vidal, actualités 37850 et 38287"
+evidence = "F"
+status = { FR = "restreint" }
+notes = { FR = "remboursement à 65 % pour un IMC de 40 ou plus, ou de 35 ou plus avec comorbidité, après échec nutritionnel ; arrêtés du 10/06/2026 ; aucune promotion de médicament : seules des initiatives d'accompagnement (nutrition, activité) sont envisageables" }
+
+[[rule]]
+id = "donnees_personnelles"
+category = "données personnelles"
+as_of = 2026-11-28
+source = "RGPD ; loi marocaine 09-08 (CNDP)"
+evidence = "F2"
+status = { FR = "restreint", BE = "restreint", CH = "restreint", MA = "restreint" }
+notes = { MA = "déclaration ou autorisation CNDP selon le traitement" }
+gate = { FR = 0.95, BE = 0.95, CH = 0.95, MA = 0.95 }  # conformité, pas un verrou [H]
+
+[[rule]]
+id = "influence_vendeur_hors_ue"
+category = "influence commerciale vers un public français, vendeur établi hors UE, EEE et Suisse"
+applies_to = "vendeur"
+buyer_zones = ["FR"]  # la règle ne vise qu'un public français
+as_of = 2026-11-28
+source = "loi n° 2023-451, article 9, réécrit par l'ordonnance n° 2024-978 (JORF du 07/11/2024) ; décret d'application non vérifié"
+evidence = "F"
+status = { MA = "restreint", DZ = "restreint", TN = "restreint", SN = "restreint", CI = "restreint", CM = "restreint", CD = "restreint", "CA-QC" = "restreint", FR = "autorise", BE = "autorise", CH = "autorise" }
+notes = { MA = "désigner un représentant dans l'UE et souscrire une assurance de responsabilité civile professionnelle auprès d'un assureur européen ; coût à ajouter au capital et aux heures de l'initiative" }
+gate = { MA = 0.8, DZ = 0.8, TN = 0.8, SN = 0.8, CI = 0.8, CM = 0.8, CD = 0.8, "CA-QC" = 0.8 }  # coût fixe du représentant et de l'assurance [H]
