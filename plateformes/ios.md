@@ -21,7 +21,7 @@ Xcode prêt à ouvrir (le jeu déjà posé dedans, les trois greffons à leur pl
 
 ## 2. Récupérer le projet
 
-**Le plus simple** : copie `isnad-2.48-ios.zip` sur le Mac et décompresse-le (double-clic). Tu obtiens un dossier
+**Le plus simple** : copie `isnad-2.49-ios.zip` sur le Mac et décompresse-le (double-clic). Tu obtiens un dossier
 `isnad-ios/`.
 
 **Ou depuis le dépôt** (pour le refaire toi-même, Node 22 installé) :
@@ -41,7 +41,7 @@ node v2/tools/plateformes.js ios             # refait le projet et le zip (deman
    - coche **Automatically manage signing** ;
    - **Team** : choisis ton équipe ;
    - **Bundle Identifier** : `org.isnadgame.isnad` (Xcode l'enregistre chez Apple).
-4. Onglet **General** : *Version* 2.48, *Build* 248 (posés par l'outil). *Display Name* : ISNAD.
+4. Onglet **General** : *Version* 2.49, *Build* 249 (posés par l'outil). *Display Name* : ISNAD.
 5. **Essayer d'abord** : en haut, choisis un simulateur (« iPhone 17 ») ou ton iPhone branché, puis **▶ (Product → Run)**.
    **Ton iPhone, la première fois** : branche-le au Mac par un câble et touche **Faire confiance** sur l'iPhone. Une fois
    qu'il paraît dans Xcode, active sur l'iPhone **Réglages → Confidentialité et sécurité → Mode développeur** (l'option
@@ -62,7 +62,7 @@ node v2/tools/plateformes.js ios             # refait le projet et le zip (deman
    pas encore dans App Store Connect (étape 1), l'Organizer propose de la créer.
 5. Après quelques minutes de traitement, la version paraît dans App Store Connect → ton app → **TestFlight**. La question
    du chiffrement ne se pose pas : le projet déclare `ITSAppUsesNonExemptEncryption = NO` (aucun chiffrement propre).
-6. Chaque envoi demande un **numéro de build** plus grand : l'outil le tire du numéro du jeu (2.48 → 248). Pour renvoyer
+6. Chaque envoi demande un **numéro de build** plus grand : l'outil le tire du numéro du jeu (2.49 → 249). Pour renvoyer
    la même version du jeu, mets à la main un *Build* plus grand dans Xcode (par exemple 247.1).
 
 ## 5. Inviter des testeurs

@@ -22,7 +22,7 @@ l'application. **Rien n'est collecté, rien ne part sur Internet.**
 1. **Avant tout, si une version d'ISNAD est déjà installée** et qu'elle vient d'ailleurs (Google Play, ou un APK fait sur une
    autre machine) : ouvre le jeu, **la halte → Exporter la partie → Enregistrer le fichier**, et garde le fichier `isnad-partie.json`. Deux
    versions signées de clés différentes ne se remplacent pas : il faudra désinstaller l'ancienne, ce qui efface sa partie.
-2. Mets le fichier `isnad-2.48-test.apk` sur le téléphone : câble USB (dossier *Download*), ou envoie-le-toi (Drive,
+2. Mets le fichier `isnad-2.49-test.apk` sur le téléphone : câble USB (dossier *Download*), ou envoie-le-toi (Drive,
    courriel) et ouvre-le depuis le téléphone.
 3. Touche le fichier dans l'application **Fichiers** (ou dans les téléchargements du navigateur).
 4. Android demande d'**autoriser cette source** (« Installer des applis inconnues ») pour l'application qui ouvre le fichier
@@ -32,7 +32,7 @@ l'application. **Rien n'est collecté, rien ne part sur Internet.**
    pour un APK qui ne vient pas de Google Play.
 6. ISNAD paraît dans les applications, avec l'icône des trois maillons.
 
-Pour qui a un ordinateur avec les outils Android : `adb install -r isnad-2.48-test.apk`.
+Pour qui a un ordinateur avec les outils Android : `adb install -r isnad-2.49-test.apk`.
 
 **À vérifier au premier lancement** (rien de cela n'a pu l'être ici) : le jeu s'ouvre ; en hauteur et en largeur, ni la
 barre d'état ni la barre de navigation ne cachent un texte ou un bouton (elles sont masquées ; un glissement depuis le bord
@@ -64,8 +64,8 @@ l'agent, ni dans un message.** Sur ton ordinateur (Java installé ; `keytool` et
 # une fois pour toutes : la clé, dans un fichier à toi (hors du dépôt)
 keytool -genkeypair -v -keystore ~/cles/isnad-envoi.jks -alias isnad-envoi -keyalg RSA -keysize 4096 -validity 10000
 # à chaque version : signer l'AAB fait par l'outil
-jarsigner -keystore ~/cles/isnad-envoi.jks -signedjar isnad-2.48-signe.aab isnad-2.48.aab isnad-envoi
-jarsigner -verify isnad-2.48-signe.aab        # doit dire « jar verified »
+jarsigner -keystore ~/cles/isnad-envoi.jks -signedjar isnad-2.49-signe.aab isnad-2.49.aab isnad-envoi
+jarsigner -verify isnad-2.49-signe.aab        # doit dire « jar verified »
 ```
 
 - `keytool` demande un mot de passe et un nom (il peut être celui de la structure). Garde le fichier `.jks` **et** son mot
@@ -80,13 +80,13 @@ jarsigner -verify isnad-2.48-signe.aab        # doit dire « jar verified »
 
 1. Play Console → **Créer une application** : nom `ISNAD`, langue par défaut français, *Jeu*, *Gratuit*. Coche les
    déclarations.
-2. **Tester → Test interne → Créer une version** : dépose `isnad-2.48-signe.aab`. Le nom de version se remplit seul (2.48).
+2. **Tester → Test interne → Créer une version** : dépose `isnad-2.49-signe.aab`. Le nom de version se remplit seul (2.49).
    Notes de version : une ligne (proposée dans `plateformes/application/textes-a-valider.md`).
 3. **Testeurs** : une liste d'adresses (jusqu'à cent pour le test interne) ; la Console donne un **lien d'inscription**
    que tu envoies toi-même aux testeurs. Le test interne n'est pas relu par Google et ne paraît pas dans le magasin.
 4. Le **test fermé** (« Closed testing ») marche de même, passe par un examen de Google, et c'est celui que la Console exige
    avant la production pour un compte personnel récent.
-5. Chaque nouvel envoi demande un **versionCode** plus grand : l'outil le tire du numéro du jeu (2.47 → 247 ; 2.48 → 248).
+5. Chaque nouvel envoi demande un **versionCode** plus grand : l'outil le tire du numéro du jeu (2.48 → 248 ; 2.49 → 249).
    Pour renvoyer la même version du jeu, il faut d'abord faire avancer le numéro du jeu.
 
 ## 5. Les formulaires de la Console (« Contenu de l'application »)
@@ -103,7 +103,7 @@ jarsigner -verify isnad-2.48-signe.aab        # doit dire « jar verified »
 
 ## 6. Ce que l'agent a réglé, et ce qui reste à décider
 
-**Réglé (et contrôlé dans `controle.txt`)** : identifiant `org.isnadgame.isnad` (proposé) ; version 2.48 (248) ; minSdk 24,
+**Réglé (et contrôlé dans `controle.txt`)** : identifiant `org.isnadgame.isnad` (proposé) ; version 2.49 (249) ; minSdk 24,
 targetSdk 36, compileSdk 36 (ce que Google Play exige) ; les deux orientations ; plein écran ; aucun trafic en clair ; la
 version publiée n'est pas débogable et le débogage de sa WebView est coupé ; **aucune sauvegarde automatique** (ni dans
 le compte Google du joueur, ni d'un téléphone à l'autre : `allowBackup="false"`, `data_extraction_rules.xml`), pour que la
