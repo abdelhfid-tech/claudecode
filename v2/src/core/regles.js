@@ -127,7 +127,7 @@
       const txt = (v, w) => { if (typeof v !== 'string' || !v.trim()) { E.push(`cite.activites.${w}: texte manquant`); return; } if (/agr[ée]gor/i.test(v)) E.push(`cite.activites.${w}: les activités s'ouvrent avant que l'Agrégor soit nommé (2.25) : aucun de leurs textes ne le nomme`); if (/\d/.test(v)) E.push(`cite.activites.${w}: aucun nombre dans un récit (D.ACTIVITES, D.BORNE)`); if (NOM_INTERDIT.test(v)) E.push(`cite.activites.${w}: ni Iblîs, ni démon, ni djinn`); if (/[«»]|Coran|\d+:\d+/.test(v)) E.push(`cite.activites.${w}: ni verset ni parole citée (un texte de fiction)`); pari(v, `cite.activites.${w}`, E); };
       const liste = (v, w, a, b) => { if (!Array.isArray(v) || v.length < a || v.length > b) { E.push(`cite.activites.${w}: de ${a} à ${b} textes`); return; } v.forEach((t, i) => txt(t, `${w}[${i}]`)); };
       if (!A || typeof A !== 'object') { E.push('cite.activites: manquant (les activités des quartiers, D217)'); return; }
-      ['attend', 'manque', 'etal', 'record'].forEach(k => txt(A[k], k)); liste(A.ecran, 'ecran', 2, 6); liste(A.roue, 'roue', 1, 4);
+      ['manque', 'etal', 'record'].forEach(k => txt(A[k], k)); liste(A.ecran, 'ecran', 2, 6); liste(A.roue, 'roue', 1, 4);
       const M = A.maneges || {}; liste(M.chaises, 'maneges.chaises', 1, 4); liste(M.tasses, 'maneges.tasses', 1, 4);
       const AL = ['outil', 'lieu', 'prix', 'duree'], BL = ['arene', 'duree', 'vitesse', 'elan', 'elanDuree', 'elanRepos', 'prise', 'ombre', 'choc', 'cadence', 'cadenceOmbres', 'lentes', 'vives', 'palier'], GAIN = /gain|prime|lot|recompense|récompense|mise|enjeu|cote|bourse|dirham/i;
       const spots = (D.MAPS.quartiers || { spots: [] }).spots, num = (v, a, b) => typeof v === 'number' && isFinite(v) && v >= a && v <= b;
@@ -493,6 +493,9 @@
                 else if (o[2].length > 330) W.push(`${wo}: réplique longue (${o[2].length} car.) — couper en deux`); break;
               case 'nar': if (typeof o[1] !== 'string') E.push(`${wo}: nar(texte)`);
                 else if (o[1].length > 360) W.push(`${wo}: narration longue (${o[1].length} car.)`); break;
+              // 2.49 (D242) : une narration d'arrivée, lue en marchant dans le fil — courte : 240 signes au plus
+              case 'legende': if (typeof o[1] !== 'string') E.push(`${wo}: legende(texte)`);
+                else if (o[1].length > 240) E.push(`${wo}: légende longue (${o[1].length} car., 240 au plus : elle se lit en marchant)`); break;
               case 'quote': if (typeof o[1] !== 'string' || typeof o[2] !== 'string') E.push(`${wo}: quote(texte, source)`); break;
               case 'choice': case 'ask': {
                 if (typeof o[1] !== 'string' || !Array.isArray(o[2]) || o[2].length < 2 || o[2].length > 4) { E.push(`${wo}: ${o[0]}(prompt, [2–4 options])`); break; }
@@ -914,7 +917,7 @@
     if (/(skills|addSkills)\[\d+\]\.name$|\.limit\.name$|(^|\.)enemies\.[^.]+\.name$|noir\.name$/.test(ou)) return 'frappe';
     if (/heroes\.[^.]+\.name$|npcs\[\d+\]\.name$|<say>1$|<parley>1\.with$|allies\[\d+\]\.name$|<site>1\.name$|^D\.(LIEUX|MAPS|GABARITS)\./.test(ou)) return 'nom';
     if (/<say>2$/.test(ou)) return 'say';
-    if (/<nar>1$/.test(ou)) return 'nar';
+    if (/<(nar|legende)>1$/.test(ou)) return 'nar';
     return 'texte';
   }
   // cases : [{ ou, fr, t }] — t, le texte de la langue ; → { erreurs, avis }

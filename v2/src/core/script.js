@@ -282,6 +282,9 @@
   // le temps de lire une ligne du moteur : 1,2 s, plus 45 ms par signe pesé (le japonais dit plus en moins de signes)
   S.lecture = html => I.clamp(1200 + 45 * I.langue.poids(String(html).replace(/<[^>]*>/g, '')), 1800, 5000);
   S.lecture2 = html => I.clamp(1200 + 45 * I.langue.poids2(String(html).replace(/<[^>]*>/g, '')), 1800, 5000);   // la même, pour la langue secondaire
+  // 2.49 — une légende du récit (`legende`) se lit comme de la prose, en marchant : 1,5 s plus 65 ms par signe pesé, sans le
+  // plafond de 5 s des lignes du moteur (une phrase de 150 signes reste près de 11 s ; sa langue secondaire s'y ajoute)
+  S.lectureRecit = (html, html2) => I.clamp(1500 + 65 * I.langue.poids(String(html).replace(/<[^>]*>/g, '')) + (html2 ? 45 * I.langue.poids2(String(html2).replace(/<[^>]*>/g, '')) : 0), 4000, 22000);
   // le verdict de la Chaîne : dit par la Chaîne elle-même, en une ligne, seul, avant la suite du récit — jamais sur la
   // parole de quelqu'un, ni au-dessus d'une parole citée (exigence 3). Il passe de lui-même, ou d'un toucher.
   // (fr : la phrase française du moteur ; 2.x, la langue secondaire la dit aussi)
@@ -436,19 +439,20 @@
   const oter = x => { const k = FIL.file.indexOf(x); if (k >= 0) FIL.file.splice(k, 1); if (FIL.cours && FIL.cours.items.includes(x)) FIL.cours.items = FIL.cours.items.filter(y => y !== x); x.el.remove(); };
   S.toast = function (html, o) {
     o = o && typeof o === 'object' ? o : {};
-    const el = I.el('div', 'toast' + (o.outil || o.pas ? ' lecon' : ''), html); el.hidden = true; el.dir = I.langue.sens(el.textContent); if (o.outil) el.dataset.outil = o.outil;
+    const el = I.el('div', 'toast' + (o.outil || o.pas ? ' lecon' : '') + (o.recit ? ' recit' : ''), html); el.hidden = true; el.dir = I.langue.sens(el.textContent); if (o.outil) el.dataset.outil = o.outil;
     // 2.x : la langue secondaire, sur sa ligne, sous l'annonce — o.l2 (du balisage), ou ce que I.t vient de dire tel quel
     if (L2()) { const d = o.l2 === undefined ? I.langue.retrouver(html) : null, t2 = o.l2 !== undefined ? o.l2 : d ? I.langue.tDans(L2(), d.fr, d.p) : null;
       if (t2) { const s = marquer2(I.el('span', 'l2'), t2.replace(/<[^>]*>/g, '')); s.innerHTML = t2; el.appendChild(s); el.classList.add('avec2'); } }
     $('#toasts').appendChild(el); // à sa naissance, masquée
     S.fil.unshift({ html, t: Date.now() }); if (S.fil.length > 12) S.fil.length = 12;
-    const x = { el, html, ne: performance.now(), outil: o.outil || null, pas: !!o.pas, urgent: !!o.urgent, vu: 0 };
+    const x = { el, html, ne: performance.now(), outil: o.outil || null, pas: !!o.pas, urgent: !!o.urgent, recit: !!o.recit, l2: o.recit ? (o.l2 || null) : null, vu: 0 };
     if (enHalte() && !lecon(x)) { el.remove(); S.filHalte(html); return el; } // née dans la halte : sous son titre (un incident aussi)
     FIL.file.push(x);
     if (x.urgent) { FIL.cours = null; tic(); return el; }
     // au-delà de trois en attente, les plus anciennes ne se relisent qu'à la halte (ce qui naît dans la même demi-seconde
     // passe ensemble : un même événement ne perd aucune de ses lignes)
-    const attente = FIL.file.filter(y => !lecon(y) && !y.urgent && !(FIL.cours && FIL.cours.items.includes(y))), vieilles = attente.filter(y => x.ne - y.ne > 500);
+    // (2.49 : une légende du récit ne se retire jamais ainsi : elle passe à son tour)
+    const attente = FIL.file.filter(y => !lecon(y) && !y.urgent && !y.recit && !(FIL.cours && FIL.cours.items.includes(y))), vieilles = attente.filter(y => x.ne - y.ne > 500);
     while (attente.length > 3 && vieilles.length) { const y = vieilles.shift(); attente.splice(attente.indexOf(y), 1); oter(y); }
     return el; // la ligne elle-même : qui l'a dite peut savoir quand elle se lit (la porte interdite, rodeurs.js)
   };
@@ -476,7 +480,7 @@
   function montrer(g) {
     const box = $('#toasts'); [...box.children].forEach(e => { e.hidden = true; e.classList.remove('joint'); });
     g.items.forEach((x, i) => { x.el.hidden = false; x.el.classList.toggle('joint', i > 0); });
-    box.dir = g.items[0].el.dir; box.classList.toggle('lecon', !!g.lecon); box.classList.add('montre');
+    box.dir = g.items[0].el.dir; box.classList.toggle('lecon', !!g.lecon); box.classList.toggle('recit', !!g.items[0].recit); box.classList.add('montre');
     if (I.ui && I.ui.padEvite) I.ui.padEvite();   // 2.34 : en largeur, elle ne descend pas jusqu'à la manette (ui.js)
   }
   // le groupe suivant : la règle d'une descente d'abord (elle se retire au premier pas) ; puis la plus ancienne annonce qui
@@ -486,8 +490,8 @@
     if (pas) { const g = { items: [pas], lecon: true }; montrer(g); return g; }
     if (ord.length) {
       const a = ord[0], g = { items: [a] }; montrer(g); const h1 = box.offsetHeight;
-      for (const b of ord.slice(1)) { if (b.ne - a.ne > 500 || a.el.classList.contains('avec2') || b.el.classList.contains('avec2')) break; g.items.push(b); montrer(g); if (box.offsetHeight > h1 + 2) { g.items.pop(); montrer(g); break; } } // (une annonce qui porte sa langue secondaire passe seule)
-      g.reste = S.lecture(g.items.map(x => x.el.textContent).join(' · ')); return g;
+      for (const b of ord.slice(1)) { if (b.ne - a.ne > 500 || a.el.classList.contains('avec2') || b.el.classList.contains('avec2') || a.recit || b.recit) break; g.items.push(b); montrer(g); if (box.offsetHeight > h1 + 2) { g.items.pop(); montrer(g); break; } } // (une annonce qui porte sa langue secondaire passe seule)
+      g.reste = a.recit ? S.lectureRecit(a.html, a.l2) : S.lecture(g.items.map(x => x.el.textContent).join(' · ')); return g;   // (2.49 : une légende, le temps de la lire)
     }
     const l = FIL.file.find(lecon); if (!l) return null;
     const g = { items: [l], lecon: true }; montrer(g); return g;
@@ -506,7 +510,7 @@
     let g = FIL.cours;
     if (g && g.lecon && !g.items[0].pas && FIL.file.some(x => x.pas || (!lecon(x) && !x.urgent))) g = FIL.cours = null; // une annonce passe avant la leçon, qui reviendra
     if (!g) { g = FIL.cours = suivant(); if (!g) { box.classList.remove('montre'); return; } }
-    else if (FIL.pause || !box.classList.contains('montre')) { montrer(g); if (!g.lecon) g.reste = Math.max(g.reste, 1200); }
+    else if (FIL.pause || !box.classList.contains('montre')) { montrer(g); if (!g.lecon) g.reste = Math.max(g.reste, g.items[0].recit ? 3000 : 1200); }
     FIL.pause = false;
     if (g.lecon) { const x = g.items[0]; x.vu += dt;
       const parti = x.pas && x.vu > 1200 && I.world.player && I.world.player.moving; // la règle d'une descente : jusqu'au premier pas (lue au moins un instant)
@@ -533,6 +537,10 @@
     switch (op[0]) {
       case 'say': W.focus = (W.npcs && W.map && W.npcs.find(n => n.id === a && !n.hidden && n.map === W.map.id && n.placed)) || null; await showLine('say', speaker(a), b, { src: [op, 2] }); break;
       case 'nar': W.focus = null; await showLine('nar', null, a, { src: [op, 1] }); break;
+      /* 2.49 (D242 ; le décideur, 28 novembre : « je veux pouvoir me déplacer même pendant l'affichage des textes (je reste bloqué
+         à l'entrée du quartier jusqu'à la fin du texte) ») — une narration d'arrivée dans un lieu : posée dans le fil, le temps de la
+         lire (S.lectureRecit), avec sa langue secondaire ; le script n'attend pas, le joueur marche pendant qu'elle se lit */
+      case 'legende': S.toast(I.fmt(a), { recit: true, l2: L2() ? I.langue.second(a, op, 1) : null }); break;
       // 2.x : un carton du récit porte, sous son texte, la langue secondaire (la parole et sa source ; le titre et sa date)
       case 'quote': { S.hideDialog(); I.audio.sfx('light'); await card('quote', S.carton(op)); break; }
       case 'title': { S.hideDialog(); I.audio.sfx('roll'); await card('title', S.carton(op), 3000); break; }

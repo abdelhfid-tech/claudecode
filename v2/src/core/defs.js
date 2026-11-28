@@ -65,11 +65,13 @@
     // 2.23 (D212) : les quartiers de la Cité, où l'on remonte à tout moment — un simple geste, dit par Maître Yûnus à la première arrivée
     cite: { nom: 'Revenir dans la Cité', geste: true },
     // 2.27 (D216) : derrière Sâlim, sur sa moto, au premier passage au circuit ; il resert à la première course (circuit.js)
-    virages: { nom: 'Prendre les virages' },
+    // 2.49 (D242 ; le décideur, 28 novembre : « Toujours jouables ») — `libre` : un outil des quartiers, hors de la règle « un
+    // outil à la fois » : sa leçon se dit toujours au premier essai, et elle ne retarde aucune leçon des récits (lecons.js)
+    virages: { nom: 'Prendre les virages', libre: true },
     // 2.28 (D217) : les activités des quartiers (activites.js), chacune dite au premier essai ; l'écran géant et les manèges
     // sont de simples gestes. Payer ne s'apprend pas : le prix se dit dans le menu.
-    borne: { nom: 'Jouer à la borne' }, etal: { nom: 'L’étal de la galerie' },
-    ecran: { nom: 'S’asseoir devant l’écran', geste: true }, manege: { nom: 'Monter dans un manège', geste: true },
+    borne: { nom: 'Jouer à la borne', libre: true }, etal: { nom: 'L’étal de la galerie', libre: true },
+    ecran: { nom: 'S’asseoir devant l’écran', geste: true, libre: true }, manege: { nom: 'Monter dans un manège', geste: true, libre: true },
     // 2.29 (D220) : par la porte d'une ville, la route et les autres villes (monde.js) — un simple geste, dit à la première sortie
     route: { nom: 'La route', geste: true },
     // 2.34 (D226 ; le décideur, 24 novembre : « vérifie que toutes les missions de construction soient simples et bien expliquées
@@ -695,7 +697,8 @@
 
   // Opérations de script autorisées : nom -> [min args, max args]
   D.OPS = {
-    say: [2, 2], nar: [1, 1], quote: [2, 2], title: [1, 2], choice: [2, 2], ask: [2, 2],
+    // 2.49 (D242) : `legende`, une narration d'arrivée dans un lieu, posée dans le fil : le joueur marche pendant qu'elle se lit
+    say: [2, 2], nar: [1, 1], legende: [1, 1], quote: [2, 2], title: [1, 2], choice: [2, 2], ask: [2, 2],
     battle: [1, 1], map: [2, 3], tp: [2, 2], walk: [2, 2], face: [2, 2], show: [1, 1], hide: [1, 1],
     fade: [1, 2], wait: [1, 1], shake: [0, 1], flash: [0, 1], sfx: [1, 1],
     give: [1, 2], join: [1, 1], leave: [1, 1], codex: [1, 1], heal: [0, 0],

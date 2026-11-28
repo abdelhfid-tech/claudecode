@@ -51,6 +51,8 @@ body.batir #zoombtn { right: calc(2% + 10.05em); } body.descente.batir #zoombtn 
 #toasts { position: absolute; right: 2%; top: var(--mini, 14%); max-width: min(25em, 46%); padding: .32em .8em; background: var(--panel); border-right: 2px solid var(--acc); font-size: .82em; line-height: 1.32; text-align: start; pointer-events: none; z-index: 30; visibility: hidden; opacity: 0; transition: opacity .25s; }
 #toasts.montre { visibility: visible; opacity: 1; }
 #toasts.lecon { border-right-color: #c49bff; } /* une leçon : un outil, un geste */
+/* 2.49 (D242) — une légende du récit (une narration d'arrivée, `legende`) : de la prose, lue en marchant ; un peu plus large */
+#toasts.recit { max-width: min(30em, 52%); font-size: .9em; line-height: 1.38; }
 /* 2.34 — en largeur, une annonce qui toucherait la manette (sous la petite carte de la route, sur un écran que la barre du
    navigateur raccourcit) se pose entre ses deux zones, au lieu de la faire s'effacer (ui.js, U.padEvite) */
 body.immersif #toasts.evite { right: calc(var(--pad-d, 0px) + 8px); max-width: min(25em, 46%, calc(100% - var(--pad-g, 0px) - var(--pad-d, 0px) - 16px)); }
@@ -451,6 +453,7 @@ body.portrait #zoombtn { font-size: .95em; }
 /* le fil, en hauteur : sous l'en-tête (ou la barre de « Bâtir »), dans la bande noire — script.js pose --fil-haut */
 body.portrait #toasts { top: calc(100% + var(--fil-haut, 0px) + 10px); left: 8px; right: 8px; max-width: none; padding: .42em .8em; border-right: 0; border-inline-start: 3px solid var(--acc); font-size: calc(14px * var(--tz, 1)); line-height: 1.38; }
 body.portrait #toasts.lecon { border-inline-start-color: #c49bff; }
+body.portrait #toasts.recit { max-width: none; font-size: calc(15px * var(--tz, 1)); line-height: 1.42; }
 body.portrait.zoom .plate { transform: translate(-50%, -100%) scale(.92); }
 @media (prefers-reduced-motion: reduce) { #toasts, .fl, #card, .link { animation-duration: .01s; transition: none; } }
 

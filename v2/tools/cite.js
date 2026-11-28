@@ -36,7 +36,7 @@
      flèches et Entrée) : un score, le meilleur gardé et relu après un rechargement, la pause (B, « Reprendre » par B), « Quitter
      la partie » qui ne compte rien ; la manette ne recouvre ni le tableau ni le bilan. La course reste gratuite. Aucune mise
      offerte nulle part. La partie garde les activités, à l'identique. Dans une partie neuve : chaque leçon dite une seule fois, au
-     premier essai ; une activité attend quand la progression ne peut pas encore la donner.
+     premier essai ; 2.49 (D242) : aucune activité n'attend la progression, ni Sâlim.
    - 2.28 (D218), 2.47 (D238), la rue, la ruelle et la vieille mosquée (partie 17), au doigt (en hauteur) et au clavier (en largeur) :
      le prologue mène Idris lui-même par la rue, les quartiers (où rien ne rôde encore) et la ruelle abandonnée jusqu'à la vieille
      mosquée, sans passage ni récit rangé ; la porte de la mosquée ne s'y ouvre pas ; le refuge commence dans la mosquée, à côté de
@@ -865,10 +865,12 @@ async function avancer(p, n = 120) {
     }
     toutesErreurs = toutesErreurs.concat(T.errors.map(e => 'activités ' + nom + ' · ' + e)); await T.ctx.close();
   }
-  // ---------- 16 bis. dans une partie neuve : chaque leçon dite une seule fois, au premier essai ; une activité attend son tour ----------
+  // ---------- 16 bis. dans une partie neuve : chaque leçon dite une seule fois, au premier essai ; 2.49 (D242, « Toujours
+  // jouables ») : aucune activité n'attend la progression, ni Sâlim — même après une autre activité, même avec un outil d'un
+  // récit en suspens ; et les outils des quartiers (`libre`) ne deviennent jamais « le dernier reçu » des récits ----------
   if (!SEUL || ACTI) {
     const T = await telephone(browser, 390, 844), P = T.p, E = (fn, a) => P.evaluate(fn, a), nom = '390×844';
-    await E(() => { const I = window.ISNAD; I.save.reset(); const sv = I.save.data; sv.started = true; sv.prologue = true; sv.rebonds = { x_descendu: true, x_enfant: true, x_avis: true }; sv.cite.course.salim = 2; sv.cite.course.primes = 30; I.trade.dirhams(0); I.trade.dirhams(30);
+    await E(() => { const I = window.ISNAD; I.save.reset(); const sv = I.save.data; sv.started = true; sv.prologue = true; sv.rebonds = { x_descendu: true, x_enfant: true, x_avis: true }; sv.cite.course.salim = 0; sv.cite.course.primes = 30; I.trade.dirhams(0); I.trade.dirhams(30);
       I.lecons.ouvrir(); ['marcher', 'parler', 'aide', 'halte'].forEach(id => { I.lecons.recevoir(id); I.lecons.sequence(); }); I.save.auto('essai'); });
     await P.reload(); await P.waitForTimeout(1600); await preparer(P); await aides(P);
     await E(() => { const b = [...document.querySelectorAll('#title .vmenu button')].find(b => /^Continuer/.test(b.textContent)); if (b) b.click(); });
@@ -877,21 +879,29 @@ async function avancer(p, n = 120) {
     await refugeAuxQuartiers(P); await E(() => window.__t.endormir());
     const A = () => E(() => window.__t.bouton('.a')), B = () => E(() => window.__t.bouton('.b'));
     const essai = async id => { await E(id => window.__t.zone(id), id); await P.waitForTimeout(250); await A(); await P.waitForTimeout(700); };
-    const lecons = () => E(() => ({ j: window.ISNAD.lecons.journal.map(x => x.id), a: window.ISNAD.activites.journal.filter(x => x.quoi === 'lecon' || x.quoi === 'attend').map(x => x.quoi + ':' + x.outil) }));
-    await essai('borne'); const c1 = await E(() => window.__t.choix()); await B(); await avancer(P, 10);
+    const lecons = () => E(() => ({ j: window.ISNAD.lecons.journal.map(x => x.id), a: window.ISNAD.activites.journal.filter(x => x.quoi === 'lecon' || x.quoi === 'attend').map(x => x.quoi + ':' + x.outil), d: window.ISNAD.save.data.lecons.dernier }));
+    const menu = async () => { await E(() => window.__t.attendre(() => window.__t.visible('#choice'), 4000)); return E(() => window.__t.choix()); };
+    await essai('borne'); const c1 = await menu(); await P.waitForTimeout(430); await B(); await avancer(P, 10);
     const l1 = await lecons();
-    await essai('etal'); const l2 = await lecons(); const attend = await E(() => window.__t.toasts.some(t => /la tête ailleurs/.test(t))); await avancer(P, 10);
-    // la borne de nouveau : une partie, menée par le joueur d'essai ; l'outil a resservi
-    await essai('borne'); await E(() => window.__t.attendre(() => window.__t.visible('#choice'), 4000)); await P.waitForTimeout(430); await A();
-    await E(() => window.__t.attendre(() => window.ISNAD.activites.K && window.ISNAD.activites.K.mode === 'jeu', 8000)); await E(() => { window.ISNAD.debug.piloteBorne = {}; window.ISNAD.debug.accelBorne = 8; });
-    await E(() => window.__t.attendre(() => !document.querySelector('#course .bilan').hidden, 60000)); await E(() => { window.ISNAD.debug.piloteBorne = null; window.ISNAD.debug.accelBorne = 0; }); await P.waitForTimeout(600); await A(); await avancer(P, 30);
-    const re = await E(() => window.ISNAD.save.data.lecons.re.borne | 0);
-    await essai('etal'); await avancer(P, 10); await E(() => window.__t.attendre(() => window.__t.visible('#choice'), 4000)); await P.waitForTimeout(430); await B(); await avancer(P, 10);
+    await essai('etal'); const c2 = await menu(); await P.waitForTimeout(430); await B(); await avancer(P, 10);
+    const l2 = await lecons();
+    // un outil d'un récit, reçu et pas encore resservi : avant la 2.49, toute activité attendait, et Sâlim ne venait pas
+    await E(() => { const d = window.ISNAD.save.data.lecons; d.recus.source = d.seq; d.dernier = 'source'; d.donne = d.seq; });
+    await essai('roue'); const c3 = await menu(); await P.waitForTimeout(430); await B(); await avancer(P, 10);
     const l3 = await lecons();
-    await essai('etal'); await E(() => window.__t.attendre(() => window.__t.visible('#choice'), 4000)); await P.waitForTimeout(430); await B(); await avancer(P, 10);
+    await essai('etal'); await menu(); await P.waitForTimeout(430); await B(); await avancer(P, 10);
     const l4 = await lecons();
-    si(c1 && /borne/.test(c1.prompt) && l1.a.join() === 'lecon:borne' && l1.j.slice(-1)[0] === 'borne' && l2.a.join() === 'lecon:borne,attend:etal' && attend && re >= 1 && l3.a.filter(x => x === 'lecon:etal').length === 1 && l3.j.slice(-1)[0] === 'etal' && l4.a.filter(x => /^lecon/.test(x)).length === 2 && l4.j.join() === l3.j.join(),
-      `${nom} · partie neuve : la leçon de la borne au premier essai ; l’étal attend (« ${(await E(() => window.ISNAD.sagas.idris.cite.activites.attend))} ») tant que la borne n’a pas resservi ; une partie jouée, l’étal donne sa leçon ; à l’essai suivant, rien ne se redit (outils : ${l4.j.join(', ')})`, `${nom} · la progression des activités : ${JSON.stringify({ c1, l1, l2, attend, re, l3, l4 })}`);
+    const attendu = l1.a.join() === 'lecon:borne' && l2.a.join() === 'lecon:borne,lecon:etal' && l3.a.join() === 'lecon:borne,lecon:etal,lecon:manege' && l4.a.join() === l3.a.join();
+    si(c1 && /borne/.test(c1.prompt) && c2 && c3 && /roue/.test(c3.prompt) && attendu && l2.d === 'halte' && l4.d === 'source',
+      `${nom} · partie neuve : la borne, l’étal puis la grande roue, l’une après l’autre, chacune avec sa leçon au premier essai et son menu (« ${c3 && c3.prompt} ») ; un outil d’un récit en suspens n’y change rien ; à l’essai suivant, rien ne se redit ; le dernier outil des récits reste « ${l4.d} »`,
+      `${nom} · les activités dans une partie neuve : ${JSON.stringify({ c1, c2, c3, l1, l2, l3, l4 })}`);
+    // Sâlim, avec ce même outil en suspens : il arrive au premier passage au circuit
+    await E(() => { const W = window.ISNAD.world, s = W.spotPx('circuit'); window.__t.poser(s[0] + 70, s[1] - 26); });
+    await E(() => { const W = window.ISNAD.world, s = W.spotPx('circuit'); return window.__t.marcher(s[0], s[1] - 18, 15000); });
+    const vient = await E(() => window.__t.attendre(() => window.ISNAD.circuit.journal.some(j => j.quoi === 'arrivee'), 8000));
+    const r = await avancer(P); const c = await E(() => window.__t.choix());
+    si(vient && r === 'choix' && c && /Monter derrière Sâlim/.test(c.opts[0]), `${nom} · un outil d’un récit en suspens, Sâlim arrive tout de même au premier passage au circuit : « ${c && c.prompt} »`, `${nom} · Sâlim, un outil en suspens : ${JSON.stringify({ vient, r, c })}`);
+    await P.waitForTimeout(430); await B(); await avancer(P, 10);
     toutesErreurs = toutesErreurs.concat(T.errors.map(e => 'activités (partie neuve) · ' + e)); await T.ctx.close();
   }
   // ---------- 17. 2.28 (D218), 2.47 (D238) : la rue, la ruelle, la vieille mosquée — au doigt (en hauteur) et au clavier (en largeur) ----------

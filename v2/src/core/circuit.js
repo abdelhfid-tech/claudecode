@@ -256,8 +256,10 @@
   }
   const tourner = (n, vers) => { if (!n) return; const p = vers || W.player, dx = p.x - n.x, dy = p.y - n.y; n.dir = Math.abs(dx) > Math.abs(dy) ? (dx < 0 ? 1 : 2) : (dy < 0 ? 3 : 0); };
   const dire = (qui, t) => (t ? S.run([['say', qui, t]]) : Promise.resolve());
-  // peut-on recevoir l'outil « virages » maintenant (ou l'a-t-on déjà) ? Sinon Sâlim ne vient pas encore : le besoin se représentera
-  const peutApprendre = () => !I.lecons || !I.lecons.actif() || I.lecons.recu('virages') || I.lecons.pret(1);
+  // peut-on recevoir l'outil « virages » maintenant (ou l'a-t-on déjà) ? Depuis la 2.49 (D242 ; le décideur, 28 novembre :
+  // « Toujours jouables »), toujours : l'outil est `libre` (defs.js, lecons.js), Sâlim vient au premier passage au circuit,
+  // quelle que soit la progression (avant, un outil d'un récit pas encore resservi le retenait, sans un mot)
+  const peutApprendre = () => !I.lecons || !I.lecons.actif() || I.lecons.recu('virages') || I.lecons.libre('virages') || I.lecons.pret(1);
   CI.occupe = false;
   // le joueur s'approche du circuit pour la première fois (world.js, à chaque pas où il a la main)
   CI.tic = function () {

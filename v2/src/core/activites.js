@@ -124,11 +124,15 @@
     return Z;
   }
   AC.zones = zones;
-  AC.ici = function () { if (!I.cite || !I.cite.ici()) return null; const p = W.player; return zones().find(z => p.x >= z.x0 && p.x <= z.x1 && p.y >= z.y0 && p.y <= z.y1) || null; };
+  /* où les activités s'ouvrent : le refuge (les quartiers de la Cité) et, depuis la 2.49 (D242 ; le décideur, 28 novembre :
+     « Ouvertes dès le prologue »), la traversée des quartiers du prologue (2.47, D238) — rien d'autre n'y change */
+  const ouvertes = () => !!(I.cite && (I.cite.ici() || (W.saga && W.saga.id === 'idris' && W.ch && W.ch.id === 'p1' && I.scene === W && W.map && W.map.id === 'quartiers')));
+  AC.ouvertes = ouvertes;
+  AC.ici = function () { if (!ouvertes()) return null; const p = W.player; return zones().find(z => p.x >= z.x0 && p.x <= z.x1 && p.y >= z.y0 && p.y <= z.y1) || null; };
   const libre = () => !AC.occupe && !AC.assis && !I.debug.auto && !I.debug.walk;
   AC.aPortee = () => libre() && !!AC.ici();
   // toucher une activité du doigt : où se rendre, et vers où se tourner
-  AC.touche = function (wx, wy) { if (!libre() || !I.cite || !I.cite.ici()) return null; const z = zones().find(z => wx >= z.rect[0] && wx <= z.rect[0] + z.rect[2] && wy >= z.rect[1] && wy <= z.rect[1] + z.rect[3]); return z ? { x: z.px, y: z.py, dir: z.dir } : null; };
+  AC.touche = function (wx, wy) { if (!libre() || !ouvertes()) return null; const z = zones().find(z => wx >= z.rect[0] && wx <= z.rect[0] + z.rect[2] && wy >= z.rect[1] && wy <= z.rect[1] + z.rect[3]); return z ? { x: z.px, y: z.py, dir: z.dir } : null; };
   // A, dans une zone (world.js, W.interact) ; le joueur de test du moteur les ignore
   AC.agir = function () {
     if (!libre()) return false; const z = AC.ici(); if (!z) return false;
@@ -136,13 +140,15 @@
     return true;
   };
 
-  /* ----- la progression : la leçon au premier essai ; l'activité attend si elle ne peut pas encore être donnée ----- */
+  /* ----- la progression : la leçon au premier essai, toujours ----- 2.49 (D242 ; le décideur, 28 novembre : « Toujours
+     jouables ») : les outils des activités sont `libre` (defs.js, lecons.js) ; l'activité n'attend plus jamais la progression
+     (avant, après une première activité, ou un outil d'un récit pas encore resservi, elle disait « Idris a encore la tête
+     ailleurs », et presque rien dans les quartiers ne faisait avancer la progression) */
   const dire = outil => { if (I.lecons) I.lecons.dit(outil); };
-  AC.dispo = outil => !I.lecons || !I.lecons.actif() || I.lecons.recu(outil) || I.lecons.pret(1);
+  AC.dispo = () => true;
   function essayer(outil) {
     const a = AC.etat(), L = I.lecons, actif = L && L.actif();
     if (actif && !L.recu(outil)) {
-      if (!L.pret(1)) { const t = textes().attend; if (t) S.toast(I.fmt(I.esc(t)), 4000); AC.journal.push({ quoi: 'attend', outil }); return false; }
       L.sequence(); L.proposer(outil, () => dire(outil)); a.essais[outil] = (a.essais[outil] | 0) + 1; I.save.store(); AC.journal.push({ quoi: 'lecon', outil }); return true;
     }
     if (actif) L.sequence(); else if (!a.essais[outil]) { dire(outil); AC.journal.push({ quoi: 'lecon', outil }); }
@@ -352,7 +358,7 @@
   // à chaque image (world.js) : un pas, un combat ou un récit qui l'emmène ailleurs le relèvent
   AC.tic = function (dt, can) {
     const z = AC.assis; if (!z) return; const p = W.player;
-    if (!I.cite || !I.cite.ici() || I.battle.active || p.moving || Math.hypot(p.x - z.x, p.y - z.y) > 1.5) AC.relever();
+    if (!ouvertes() || I.battle.active || p.moving || Math.hypot(p.x - z.x, p.y - z.y) > 1.5) AC.relever();
   };
   // la vue (world.js, W.regard) : assis, elle montre l'écran au-dessus de lui ; sur la grande roue, elle monte sur toute la Cité
   // (AC.vue : le milieu voulu de la vue, en points de la carte, pendant un tour de grande roue)

@@ -115,7 +115,7 @@
   const ID = /^[a-z0-9_]+$/;
   const OPTS = [{ t: 1, r: 1 }];
   const OPS = {
-    say: { 1: 'qui', 2: 1 }, nar: { 1: 1 }, quote: { 1: 1, 2: 1 }, title: { 1: 1, 2: 1 },
+    say: { 1: 'qui', 2: 1 }, nar: { 1: 1 }, legende: { 1: 1 }, quote: { 1: 1, 2: 1 }, title: { 1: 1, 2: 1 },
     choice: { 1: 1, 2: OPTS }, ask: { 1: 1, 2: OPTS },
     parley: { 1: { with: 'qui', title: 1, intro: 1, rounds: [{ say: 1, opts: OPTS, noir: { name: 1, intro: 1, after: 1, say: 1 } }] } },
     battle: { 1: { intro: 1, allies: [{ name: 1 }] } },
@@ -124,7 +124,7 @@
   // une opération de script se reconnaît à sa tête et à sa tournure (une liste de clés n'en est pas une)
   const EST_OP = {
     say: v => v.length >= 3 && typeof v[1] === 'string' && typeof v[2] === 'string',
-    nar: v => typeof v[1] === 'string', quote: v => typeof v[1] === 'string' && typeof v[2] === 'string', title: v => typeof v[1] === 'string',
+    nar: v => typeof v[1] === 'string', legende: v => v.length === 2 && typeof v[1] === 'string', quote: v => typeof v[1] === 'string' && typeof v[2] === 'string', title: v => typeof v[1] === 'string',
     choice: v => typeof v[1] === 'string' && Array.isArray(v[2]), ask: v => typeof v[1] === 'string' && Array.isArray(v[2]),
     parley: v => !!v[1] && typeof v[1] === 'object', battle: v => !!v[1] && typeof v[1] === 'object' && !Array.isArray(v[1]), site: v => !!v[1] && typeof v[1] === 'object' && !Array.isArray(v[1])
   };

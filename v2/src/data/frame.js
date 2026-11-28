@@ -361,13 +361,11 @@ ISNAD.registerSaga({
         plafond: 'Ce soir, l’organisateur a versé tout ce qu’il verse en une soirée : la prime reviendra à ta prochaine visite.'
       }
     },
-    /* 2.28 (D217) — les activités des quartiers (src/core/activites.js) : quand la progression fait attendre une activité ; le
-       premier refus, tant qu'aucune prime n'a été versée ; l'étal, la première fois ; un record à la borne ; la pensée d'Idris
+    /* 2.28 (D217) — les activités des quartiers (src/core/activites.js) : le premier refus, tant qu'aucune prime n'a été versée ; l'étal, la première fois ; un record à la borne ; la pensée d'Idris
        assis devant l'écran, en haut de la grande roue, après un tour de manège (l'une après l'autre). Tout le monde y est seul ;
        rien ne s'y gagne. Aucun nombre, aucun verset, aucune parole citée, aucun nom de l'Agrégor (les activités s'ouvrent dès le
        prologue). Textes de l'agent, à valider. */
     activites: {
-      attend: 'Idris a encore la tête ailleurs. Il y reviendra.',
       manque: 'Il manque des dirhams à Idris. Il en gagne dans les récits, et l’organisateur en verse à qui gagne une course.',   // (2.31, D223 : une seule bourse partout ; à valider)
       etal: 'Personne derrière l’étal : on choisit, on paie à l’écran, et la vitrine s’ouvre.',
       record: 'Un record, et personne pour le voir. Idris repense au joueur d’à côté.',
@@ -414,16 +412,16 @@ ISNAD.registerSaga({
         // 2.47 (D238) : le chemin de 2084 — la rue, les quartiers du centre, la ruelle abandonnée, la vieille mosquée
         { text: 'Traverser la rue jusqu’aux quartiers', goto: 'traverse', then: [
           ['map', 'quartiers', 'traverse'],
-          ['nar', 'Les quartiers du centre ne dorment jamais : des vitrines, des jeux, des voitures qui brillent. Tout le monde y est ensemble, et chacun y est seul.']
+          ['legende', 'Les quartiers du centre ne dorment jamais : des vitrines, des jeux, des voitures qui brillent. Tout le monde y est ensemble, et chacun y est seul.']
         ] },
         { text: 'Traverser les quartiers jusqu’à la ruelle de l’est', goto: 'ruelle', then: [
           ['map', 'impasse', 'quartiers'],
-          ['nar', 'Derrière les quartiers, une ruelle que les écrans n’éclairent plus. Les fenêtres sont murées, les enseignes éteintes. Au bout, une lumière chaude.']
+          ['legende', 'Derrière les quartiers, une ruelle que les écrans n’éclairent plus. Les fenêtres sont murées, les enseignes éteintes. Au bout, une lumière chaude.']
         ] },
         { text: 'Suivre la ruelle jusqu’à la vieille mosquée', goto: 'porte', then: [
           ['sfx', 'door'], ['map', 'archives', 'entree'],
-          ['nar', 'La vieille mosquée, au bout de la ruelle abandonnée : là où le Flux n’entre pas.'],
-          ['nar', 'Devant la niche, un tapis tourné vers La Mecque. Ici comme dans chaque mosquée de la Chaîne, on peut prier : le groupe s’y *repose*. La partie, elle, se garde toute seule.']
+          ['legende', 'La vieille mosquée, au bout de la ruelle abandonnée : là où le Flux n’entre pas.'],
+          ['legende', 'Devant la niche, un tapis tourné vers La Mecque. Ici comme dans chaque mosquée de la Chaîne, on peut prier : le groupe s’y *repose*. La partie, elle, se garde toute seule.']
         ] },
         { text: 'Parler à Maître Yûnus', talk: 'yunus_n', then: [
           ['say', 'yunus_n', 'Te voilà, Idris. Assieds-toi. Ce soir, je te remets ce qu’on m’a remis.'],
@@ -1077,9 +1075,9 @@ ISNAD.registerSaga({
       intro: [
         ['title', 'La Citadelle', 'An 1507 de l’Hégire · au bord du désert'],
         ['mus', 'citadelle'],
-        ['nar', 'Idris est né ici. Il n’y était pas revenu depuis qu’on l’avait envoyé apprendre auprès de Maître Yûnus.'],
-        ['nar', 'Les murs de pisé ont été refaits bien des fois. Ce sont les mêmes murs : ceux du Caïd dont il entend les veillées.'],
-        ['nar', 'Aucun écran dans la cour. Le ciel, ici, est encore le ciel.']
+        ['legende', 'Idris est né ici. Il n’y était pas revenu depuis qu’on l’avait envoyé apprendre auprès de Maître Yûnus.'],
+        ['legende', 'Les murs de pisé ont été refaits bien des fois. Ce sont les mêmes murs : ceux du Caïd dont il entend les veillées.'],
+        ['legende', 'Aucun écran dans la cour. Le ciel, ici, est encore le ciel.']
       ],
       objectives: [
         { text: 'Aller jusqu’au puits, dans la cour', goto: 'puits', then: [
@@ -1120,12 +1118,12 @@ ISNAD.registerSaga({
       // 2.47 (D238) : sorti de la mosquée pendant un retour (`_2084_porte`), il est dans la ruelle ; sinon, il est dans la mosquée,
       // à côté de Maître Yûnus
       intro: [
-        ['if', '_2084_rue', [['nar', 'Idris traverse la rue. De l’autre côté de l’avenue s’ouvrent les quartiers de la Cité-Miroir : des vitrines, des jeux, des manèges, et chacun seul.'], ['codex', 'quartiers']],
-          [['if', '_2084_porte', [['nar', 'Idris sort dans la ruelle. Derrière lui, la porte de la vieille mosquée reste entrouverte.']],
+        ['if', '_2084_rue', [['legende', 'Idris traverse la rue. De l’autre côté de l’avenue s’ouvrent les quartiers de la Cité-Miroir : des vitrines, des jeux, des manèges, et chacun seul.'], ['codex', 'quartiers']],
+          [['if', '_2084_porte', [['legende', 'Idris sort dans la ruelle. Derrière lui, la porte de la vieille mosquée reste entrouverte.']],
             [['title', 'La vieille mosquée', 'An 1507 de l’Hégire · Cité-Miroir'],
-              ['if', '_2084_cite', [['nar', 'Maître Yûnus est à sa place, près de ses livres. Dehors, la ruelle mène aux quartiers.']],
-                [['nar', 'La vieille mosquée, au bout de la ruelle abandonnée. Maître Yûnus est là, près de ses livres.'],
-                  ['nar', 'Dehors, la ruelle mène aux quartiers de la Cité-Miroir : des voitures qui brillent, des jeux partout, des vitrines, un écran grand comme une façade. Et, au milieu de tout cela, chacun seul.'],
+              ['if', '_2084_cite', [['legende', 'Maître Yûnus est à sa place, près de ses livres. Dehors, la ruelle mène aux quartiers.']],
+                [['legende', 'La vieille mosquée, au bout de la ruelle abandonnée. Maître Yûnus est là, près de ses livres.'],
+                  ['legende', 'Dehors, la ruelle mène aux quartiers de la Cité-Miroir : des voitures qui brillent, des jeux partout, des vitrines, un écran grand comme une façade. Et, au milieu de tout cela, chacun seul.'],
                   ['codex', 'quartiers']]]]]]]
       ],
       objectives: [

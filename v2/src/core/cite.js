@@ -63,7 +63,11 @@
   };
   // l'objectif du refuge, quand Maître Yûnus n'y est pas (world.js, W.hud)
   C.objectif = o => (C.ici() && o && o.talk && !yunus() && W.npcs.some(n => n.id === o.talk && n.hero === 'yunus') && W.map
-    ? (W.map.id === 'impasse' ? I.t('La vieille mosquée est au bout de la ruelle · la ruelle ramène aux quartiers') : I.t('Te promener dans les quartiers · la ruelle de l’est mène à la vieille mosquée')) : null);   // (2.47, D238)
+    ? (W.map.id === 'impasse' ? I.t('La vieille mosquée est au bout de la ruelle · la ruelle ramène aux quartiers')
+      // (2.49, D242 : tant que Sâlim n'est pas venu, l'objectif dit où il attend — texte de l'agent, à valider)
+      : salimAttend() ? I.t('Te promener dans les quartiers · Sâlim t’attend au circuit, au sud · la ruelle de l’est mène à la vieille mosquée')
+      : I.t('Te promener dans les quartiers · la ruelle de l’est mène à la vieille mosquée')) : null);   // (2.47, D238)
+  const salimAttend = () => { const c = I.save.data.cite, e = c && c.course; return !!(I.circuit && W.map && W.map.id === 'quartiers' && !(e && (e.salim | 0) > 0)); };
   // au début d'une visite (world.js, startChapter) : ce qui rôde se tire de nouveau ; rien de la visite d'avant
   C.neuf = function (F) { Object.keys(F).forEach(k => { if (k === '_rues' || k.indexOf('_rue_') === 0 || k === '_primes') delete F[k]; }); };   // (2.27 : et les primes de la visite d'avant — circuit.js)
   // l'ouverture faite : la première fois, Maître Yûnus dit qu'on peut revenir ici (la leçon de l'outil « cite »)

@@ -82,7 +82,8 @@
   // un bouton qui répond au doigt même si le navigateur n'envoie pas le clic attendu : un toucher relâché sur place agit après
   // un court délai, sauf si le clic est arrivé entre-temps (il agit alors lui-même). Jamais deux fois.
   function tapable(b, fn) {
-    let t0 = 0, x0 = 0, y0 = 0, fait = 0, tm = 0;
+    // (2.49 : `fait` part de −∞ — à 0, comme l'horloge de la page, un toucher dans ses 600 premières ms était ignoré)
+    let t0 = 0, x0 = 0, y0 = 0, fait = -Infinity, tm = 0;
     const go = () => { clearTimeout(tm); tm = 0; const n = performance.now(); if (n - fait < 600 || b.disabled) return; fait = n; fn(b); };
     b.addEventListener('pointerdown', e => { t0 = performance.now(); x0 = e.clientX; y0 = e.clientY; });
     b.addEventListener('pointerup', e => { if (e.pointerType === 'mouse') return; if (performance.now() - t0 < 800 && Math.hypot(e.clientX - x0, e.clientY - y0) < 12) { clearTimeout(tm); tm = setTimeout(go, 160); } });
@@ -428,13 +429,18 @@
     let ci = sp.done ? 0 : sp.ch;
     if (sp.done) { sp.ch = 0; sp.flags = {}; if (sv.cps) delete sv.cps[s.id]; }
     else W.reprise(s.id); // 2.x : ce récit, quitté en chemin, reprend là où on l'a laissé — même si l'on en a joué un autre depuis
-    if (ci === 0 && !(sv.cp && sv.cp.saga === s.id && sv.cp.obj > 0)) { sp.cOk = 0; sp.cTot = 0; }
-    const resume0 = sv.cp && sv.cp.saga === s.id && sv.cp.ci === 0 && sv.cp.obj > 0 && !sp.done;
-    if (ci === 0 && !resume0) {
+    /* 2.49 — le point de reprise de ce récit, à ce chapitre, vaut reprise même à l'objectif 0 : il ne s'écrit qu'une fois
+       l'ouverture jouée (world.js, W.startChapter) ; avant, un récit quitté avant son premier objectif rejouait ses cartes et
+       son introduction, et Idris repartait du début du lieu (le décideur, 28 novembre : « les pages des saga s'affichent 2 fois ») */
+    const cp = sv.cp && sv.cp.saga === s.id && sv.cp.ci === ci && !sp.done ? sv.cp : null;
+    if (ci === 0 && !cp) { sp.cOk = 0; sp.cTot = 0; }
+    if (ci === 0 && !cp) {
       I.setScene(U.blank); document.body.dataset.theme = 'orient';
-      S.depth++; try { await S.run([['title', s.name, s.epithet + ' · ' + s.years]].concat(s.intro || [])); } finally { S.depth--; S.hideDialog(); }
+      // (2.49 : la carte du moteur seulement si l'introduction du récit n'a pas la sienne — les cinq sagas ouvrent sur leur
+      // carte de maillon, qui suivait la carte du moteur, au même nom : deux pages pour une)
+      const intro = s.intro || [], ops = intro.some(o => Array.isArray(o) && o[0] === 'title') ? intro : [['title', s.name, s.epithet + ' · ' + s.years]].concat(intro);
+      S.depth++; try { await S.run(ops); } finally { S.depth--; S.hideDialog(); }
     }
-    const cp = sv.cp && sv.cp.saga === s.id && sv.cp.ci === ci && ci > 0 ? sv.cp : (sv.cp && sv.cp.saga === s.id && sv.cp.ci === 0 && ci === 0 && sv.cp.obj > 0 ? sv.cp : null);
     await W.startChapter(s.id, ci, cp || undefined);
   };
   /* 2.x — revenir en 2084. Le récit que l'on quitte est rangé (W.ranger) : il se reprendra là. En remontant d'un récit
@@ -758,6 +764,8 @@
     [I.T('Compagnons de lumière'), I.T('<p>Des figures du ciel : le Renard des sables, l’Aigle, le Phénix, le Lion, la Gazelle. Elles rejoignent celui qui a résolu une énigme, forgé une lame, tranché un mal, tenu trois grandes épreuves le cœur prêt, gagné cinq pourparlers. Une seule t’accompagne au combat ; on la choisit dans la halte. Fiction : aucune n’appartient au récit historique.</p>')],
     [I.T('Si le jeu s’arrête'), I.T('<p>Si l’écran reste noir ou si plus rien ne répond pendant un quart de minute, un bouton <b>Reprendre</b> apparaît en bas de l’écran : il ramène au dernier objectif atteint, sans rien perdre de ce qui a été sauvegardé.</p><p>La partie se garde toute seule : en dernier recours, <b>recharge la page</b> puis choisis « Continuer ».</p><p>Dans la halte, <b>Diagnostic</b> donne la version du jeu, l’appareil, l’état du son et les incidents relevés : c’est ce qu’il faut transmettre pour qu’une panne soit comprise. Couper le son ou la musique (Réglages) suffit parfois à la contourner.</p>')],
     [I.T('Mener plusieurs récits'), I.T('<p>On n’est pas tenu de finir un récit pour en ouvrir un autre. Dans la halte, <b>Revenir en 2084</b> te ramène à la vieille mosquée, près de Maître Yûnus et de la Chaîne : le récit que tu quittes reste où tu le laisses, et tu le reprends là — même après en avoir suivi un autre. La Chaîne dit lesquels sont <b>en route</b>, et son grand bouton reprend le dernier quitté.</p><p>Pendant que tu suis un récit, la Cité-Miroir ne t’attend pas : en revenant, il arrive qu’il s’y soit passé quelque chose. Et dès la première veillée entendue, la Chaîne ouvre le chemin de <b>la Citadelle</b>, où Idris est né.</p>')],
+    // 2.49 (D242 ; le décideur, 28 novembre : « je ne sais pas comment rencontrer Salim » — « Aide + objectif ») : texte de l'agent, à valider
+    [I.T('Les quartiers de la Cité'), I.T('<p>Les quartiers du centre de la Cité-Miroir : on les traverse au début du jeu, puis on y revient à tout moment, par <b>Revenir en 2084</b> (dans la halte) ou <b>La Cité-Miroir</b> (au pied de la Chaîne) : la vieille mosquée, puis la ruelle de l’est.</p><p><b>Les activités.</b> La borne du milieu de la salle de jeux, l’étal de la galerie, la grande roue, les chaises volantes et les tasses : touche-les, ou <b>A</b> devant elles. Elles se paient avec la bourse d’Idris, et rien ne s’y gagne. Devant le grand écran, un banc libre : on s’y assied, sans payer.</p><p><b>Sâlim et la course.</b> Une fois la Chaîne ouverte, Sâlim attend Idris au <b>circuit</b>, tout au sud des quartiers, avec sa moto. Après un premier tour derrière lui, l’organisateur ouvre les courses.</p>')],
     [I.T('Frapper ce qui rôde'), I.T('<p>Dans un labyrinthe de la noosphère, de petites chimères vont et viennent sur les ponts. <kbd>Entrée</kbd> — ou un toucher sur ce qui rôde — le <b>frappe</b>, avec l’arme que porte celui qui mène : un voile de moins, et il reste sonné un instant, le temps de passer. Sans voile, il se dissipe. S’il vous rejoint avant, c’est un combat ordinaire.</p><p>L’allonge, la cadence et le recul viennent de l’arme : une lance porte loin, une masse sonne longtemps, une dague frappe vite. Dans la descente du râwî, seul, un coup ne fait que sonner ; accompagné, une lame forgée en main, les coups dissipent une idée noire.</p>')],
     [I.T('Les figures'), I.T('<p>Devant l’épreuve, on peut se tenir de trois manières. <b>Le héros</b> s’expose : plus de Force, un point de Niyya d’emblée, et les coups viennent à lui. <b>Le sage</b> discerne : plus d’Esprit, et une faille de chaque chimère connue d’emblée. <b>Le saint</b> s’efface : il soigne mieux et garde le calme.</p><p>Chacun a d’abord la sienne, selon son tempérament ; les deux autres s’ouvrent aux niveaux 4 et 7. On en change à la halte (<b>Figures</b>) ou en préparant une bataille. Aucune n’est au-dessus d’une autre : on prend une figure, on ne la possède pas.</p>')],
     [I.T('Agrandir l’image et le texte'), I.T('<p>Pendant l’exploration, l’image s’agrandit autour de celui qui mène : on voit moins loin, mais en plus grand. Sur un écran tactile, pose <b>deux doigts</b> sur l’image et écarte-les ; rapproche-les pour revoir plus large. Le bouton <b>×</b>, en haut de la scène, fait le tour des grandeurs (× 1, × 1,5, × 2, × 3) ; à la souris, la molette. Le combat garde son cadrage.</p><p>La taille des caractères se règle à part : <b>Texte</b>, dans les réglages de la halte ou de l’écran-titre — normal, grand, très grand, géant. Sur un téléphone, le jeu commence en « grand », l’image agrandie une fois et demie.</p>')],

@@ -35,9 +35,14 @@
   // le besoin se présente : l'outil est-il donné ? (hors de ce mode : la leçon se dit, comme avant)
   L.proposer = function (id, dire) {
     const d = etat(); if (!d) { if (dire) dire(); return true; }
-    if (d.recus[id] !== undefined || !L.pret()) return false;
+    if (d.recus[id] !== undefined) return false;
+    // 2.49 (D242) — un outil `libre` (les quartiers : les activités, les virages derrière Sâlim) est toujours donné ; il ne
+    // devient pas « le dernier reçu » et n'occupe pas la séquence : la règle reste entière pour les leçons des récits
+    if ((D.OUTILS[id] || {}).libre) { d.recus[id] = d.seq; L.journal.push({ id, seq: d.seq, libre: true }); if (dire) dire(); return true; }
+    if (!L.pret()) return false;
     L.recevoir(id); if (dire) dire(); return true;
   };
+  L.libre = id => !!(D.OUTILS[id] || {}).libre;
   // l'outil a resservi sans aide (dans une séquence d'après, sauf `meme` : un autre tour du même combat). Sa leçon quitte
   // le fil dès que le geste est fait, même dans la séquence où elle a été dite (2.x, D189 : « elle reste jusqu'au geste »).
   L.reemploi = function (id, meme) { if (S.filRetire) S.filRetire(id); const d = etat(); if (!d || d.recus[id] === undefined) return; if (!meme && d.recus[id] === d.seq) return; d.re[id] = (d.re[id] | 0) + 1; };
