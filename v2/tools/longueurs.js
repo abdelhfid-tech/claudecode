@@ -220,19 +220,32 @@ const CONTROLE = ({ LIGNES, liste, temoin }) => {
   /* 4. les légendes (2.49, D242) : une narration d'arrivée posée dans le fil des annonces, pendant qu'on marche — entière dans
      l'écran, hors de la manette (en hauteur, au-dessus de sa bande ; en largeur, entre ses zones), sa seconde langue comprise,
      jamais coupée, jamais sous dix points au doigt */
-  res.legendes = 0; res.legendesMin = 99; res.legendesHaut = 0;
+  res.legendes = 0; res.legendesMin = 99; res.legendesHaut = 0; res.legendesPages = 1; res.legendesEnPages = 0;
   const fil = $('#toasts');
   for (const y of Lg) {
-    S.filVide(); const t2 = L.l2() ? L.second(y.t, y.src[0], y.src[1]) : null, el = S.toast(I.fmt(y.t), { recit: true, l2: t2 });
-    [...fil.children].forEach(e => { e.hidden = e !== el; }); fil.dir = el.dir; fil.classList.add('recit', 'montre'); fil.classList.remove('lecon', 'evite'); if (I.ui.padEvite) I.ui.padEvite();
-    const r = fil.getBoundingClientRect(), polices = [el, ...el.querySelectorAll('*')].filter(e => [...e.childNodes].some(c => c.nodeType === 3 && c.textContent.trim())).map(e => parseFloat(getComputedStyle(e).fontSize)), mini = Math.min(...polices);
-    res.legendes++; res.legendesMin = Math.min(res.legendesMin, mini); res.legendesHaut = Math.max(res.legendesHaut, Math.round(r.height));
+    // (2.49 : une légende qui ne tient pas se partage en pages, qui passent l'une après l'autre — S.legende, comme le jeu)
+    S.filVide(); const t2 = L.l2() ? L.second(y.t, y.src[0], y.src[1]) : null, P = S.pagesLegende(y.t, t2), els = S.legende(y.t, t2);
     const ici = q => faute({ fic: y.fic, lieu: y.lieu, t: 'légende : ' + y.t }, q);
-    if (r.top < -0.5 || r.bottom > vh + 0.5 || r.left < -0.5 || r.right > vw + 0.5) ici(`la légende sort de l’écran (${Math.round(r.left)}, ${Math.round(r.top)} → ${Math.round(r.right)}, ${Math.round(r.bottom)})`);
-    if (portrait && r.bottom > padHaut + 0.5) ici(`la légende descend sous la manette (bas ${Math.round(r.bottom)}, manette ${Math.round(padHaut)})`);
-    if (!portrait && PADS.some(p => croise(r, p))) ici('la légende est sous la manette');
-    if (fil.scrollHeight > fil.clientHeight + 2 || el.scrollHeight > el.clientHeight + 2) ici('la légende est coupée');
-    if (tactile && mini < 9.95) ici(`une police de ${mini.toFixed(1)} points`);
+    res.legendes++; res.legendesPages = Math.max(res.legendesPages, els.length); if (els.length > 1) res.legendesEnPages++;
+    if (els.length !== P.length) ici(`${els.length} ligne(s) posée(s) pour ${P.length} page(s)`);
+    els.forEach((el, i) => {
+      const pg = els.length > 1 ? `page ${i + 1}/${els.length} : ` : '';
+      [...fil.children].forEach(e => { e.hidden = e !== el; }); fil.dir = el.dir; fil.classList.add('recit', 'montre'); fil.classList.remove('lecon', 'evite'); if (I.ui.padEvite) I.ui.padEvite();
+      const r = fil.getBoundingClientRect(), polices = [el, ...el.querySelectorAll('*')].filter(e => [...e.childNodes].some(c => c.nodeType === 3 && c.textContent.trim())).map(e => parseFloat(getComputedStyle(e).fontSize)), mini = Math.min(...polices);
+      res.legendesMin = Math.min(res.legendesMin, mini); res.legendesHaut = Math.max(res.legendesHaut, Math.round(r.height));
+      if (r.top < -0.5 || r.bottom > vh + 0.5 || r.left < -0.5 || r.right > vw + 0.5) ici(`${pg}la légende sort de l’écran (${Math.round(r.left)}, ${Math.round(r.top)} → ${Math.round(r.right)}, ${Math.round(r.bottom)})`);
+      if (portrait && r.bottom > padHaut + 0.5) ici(`${pg}la légende descend sous la manette (bas ${Math.round(r.bottom)}, manette ${Math.round(padHaut)})`);
+      if (!portrait && PADS.some(p => croise(r, p))) ici(`${pg}la légende est sous la manette`);
+      if (fil.scrollHeight > fil.clientHeight + 2 || el.scrollHeight > el.clientHeight + 2) ici(`${pg}la légende est coupée`);
+      if (tactile && mini < 9.95) ici(`${pg}une police de ${mini.toFixed(1)} points`);
+      if (el.textContent.includes('*')) ici(`${pg}un astérisque se lit`);
+    });
+    // les pages bout à bout redonnent le texte, et sa langue secondaire (une espace entre deux pages : aucun mot n'y est coupé)
+    if (P.length > 1) {
+      const t1 = P.filter(p => p.t).map(p => p.t), l2s = P.filter(p => p.l2).map(p => p.l2);
+      if (trace(I.fmt(y.t)).join('\u0002') !== t1.map(p => trace(I.fmt(p)).join('\u0002')).join('\u0002 \u0002')) ici('les pages ne redonnent pas le texte');
+      if (t2 && trace(I.fmt(t2)).join('\u0002') !== l2s.map(p => trace(p).join('\u0002')).join('\u0002 \u0002')) ici('les pages ne redonnent pas la langue secondaire');
+    }
   }
   S.filVide();
   S.pages = vrai; if (!liste) res.liste = res.liste.length;
@@ -252,7 +265,7 @@ async function controle(args) {
     const p = await ouvrirJeu(browser, P.l, { width: w, height: h }, P.l2); await chapitre(p);
     const r = await p.evaluate(CONTROLE, { LIGNES, liste: true }); rapport[nom] = r;
     const libre = r.l2.bulles ? ` ; ${r.l2.bulles} secondes bulles (${r.l2.defile} défilent, ${r.l2.sousManette} gagnent la bande de la manette, qui s'efface le temps de les lire ; police ${r.l2.minPolice2.toFixed(1)} points au moins)` : '';
-    console.log(`${nom} · ${r.textes} textes : ${r.plusieurs} en plusieurs pages (au plus ${r.maxPages}), ${r.resserres} resserrés ; police ${r.minPolice.toFixed(1)} points au moins${libre} · ${r.cartons} cartons, ${r.cartonsResserres} resserrés (police ${r.cartonsMin.toFixed(1)} points au moins) · ${r.legendes} légendes dans le fil (${r.legendesHaut} px de haut au plus, police ${r.legendesMin.toFixed(1)} points au moins) · ${((Date.now() - t0) / 1000).toFixed(0)} s`);
+    console.log(`${nom} · ${r.textes} textes : ${r.plusieurs} en plusieurs pages (au plus ${r.maxPages}), ${r.resserres} resserrés ; police ${r.minPolice.toFixed(1)} points au moins${libre} · ${r.cartons} cartons, ${r.cartonsResserres} resserrés (police ${r.cartonsMin.toFixed(1)} points au moins) · ${r.legendes} légendes dans le fil (${r.legendesEnPages} en pages, au plus ${r.legendesPages} ; ${r.legendesHaut} px de haut au plus, police ${r.legendesMin.toFixed(1)} points au moins) · ${((Date.now() - t0) / 1000).toFixed(0)} s`);
     r.fautes.slice(0, 12).forEach(f => console.log(`  DÉBORDE ${nom} · ${f.fic} ${f.lieu} — ${f.quoi} — « ${f.debut}… »`)); if (r.fautes.length > 12) console.log(`  DÉBORDE ${nom} · … et ${r.fautes.length - 12} autres (pages.json)`);
     deborde += r.fautes.length;
     if (!r.legendes) { deborde++; console.log(`  DÉBORDE ${nom} · aucune légende mesurée dans le fil : le contrôle ne les trouve plus`); }

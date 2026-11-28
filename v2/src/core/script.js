@@ -212,6 +212,44 @@
     }
     return R;
   }
+  // les pages d'un texte, d'après ce qui tient (tient(page) → vrai ou faux) : de chaque début de page, la coupe la plus
+  // lointaine qui tient, du meilleur rang possible — entre deux phrases, sinon deux membres, sinon deux mots
+  function decouper(text, html, tient) {
+    const C = coupes(text, html), { it } = lecture0(text, html), n = text.length, P = [];
+    const loin = (r, s) => { const L = C.filter(c => c.r <= r && c.i > s); let lo = 0, hi = L.length - 1, best = -1;
+      while (lo <= hi) { const m = (lo + hi) >> 1; if (tient(morceau(text, s, L[m].i, html, it))) { best = m; lo = m + 1; } else hi = m - 1; }
+      return best >= 0 ? L[best].i : -1; };
+    let s = 0; while (s < n && ESP.test(text[s])) s++;
+    for (let garde = 0; garde < 400 && s < n; garde++) {
+      const reste = morceau(text, s, n, html, it); if (tient(reste) || !C.some(c => c.i > s)) { P.push(reste); break; }
+      let cut = loin(1, s); if (cut < 0) cut = loin(2, s); if (cut < 0) cut = loin(3, s); if (cut < 0) cut = C.find(c => c.i > s).i;
+      P.push(morceau(text, s, cut, html, it)); s = cut;
+    }
+    return P;
+  }
+  /* 2.49 (D242) — une légende du récit, dans le fil des annonces : elle tient entre le haut du fil et, en hauteur, la bande de
+     la manette (le bas de l'écran si elle est masquée), ailleurs le bas de l'écran. Sinon, elle se partage en pages, coupées
+     comme celles d'une réplique, qui passent l'une après l'autre, chacune le temps de la lire ; le texte ne change pas d'un
+     signe. Sa langue secondaire vient avec la dernière page si elles tiennent ensemble, sinon en pages à part, après elle.
+     (Mesuré dans le fil lui-même, le temps d'un calcul : rien ne s'y montre.) */
+  S.pagesLegende = function (text, t2) {
+    t2 = t2 ? I.fmt(t2) : null;   // (sa langue secondaire, mise en forme comme le texte : l'italique *…*)
+    const box = $('#toasts'), B = document.body; if (!box) return [{ t: text, l2: t2 }];
+    if (S.filPlace) S.filPlace();
+    const vh = window.innerHeight || document.documentElement.clientHeight, lim = B.classList.contains('portrait') && B.classList.contains('manette') && I.ui && I.ui.padBas ? vh - I.ui.padBas : vh - 6;
+    const kids = [...box.children], caches = kids.map(e => e.hidden), cls = box.className, dir = box.dir, el = I.el('div', 'toast recit');
+    kids.forEach(e => { e.hidden = true; }); box.appendChild(el); box.classList.add('recit'); box.classList.remove('lecon');
+    const tient = (h, l2) => { el.innerHTML = h; el.classList.toggle('avec2', !!l2); if (l2) { const s = marquer2(I.el('span', 'l2'), l2.replace(/<[^>]*>/g, '')); s.innerHTML = l2; el.appendChild(s); }
+      el.dir = I.langue.sens(el.textContent); box.dir = el.dir; const r = box.getBoundingClientRect(); return !r.height || r.bottom <= lim + 0.5; };
+    try {
+      if (tient(I.fmt(text), t2)) return [{ t: text, l2: t2 }];
+      const P = decouper(text, false, p => tient(I.fmt(p), null)).map(t => ({ t, l2: null }));
+      if (t2) { const d = P[P.length - 1]; if (tient(I.fmt(d.t), t2)) d.l2 = t2; else decouper(t2, true, p => tient('', p)).forEach(p => P.push({ t: '', l2: p })); }
+      return P;
+    } finally { el.remove(); kids.forEach((e, i) => { e.hidden = caches[i]; }); box.className = cls; box.dir = dir; }
+  };
+  // la légende posée dans le fil, page par page (ses lignes, dans l'ordre)
+  S.legende = function (text, t2) { const P = S.pagesLegende(text, t2); return P.map((p, i) => S.toast(p.t ? I.fmt(p.t) : '', { recit: true, l2: p.l2, fil: i ? false : I.fmt(text) })); };
   // la boîte de dialogue posée pour une ligne : sa sorte, son sceau, la silhouette et le nom de qui parle, la marque
   function poser(kind, sp, o) {
     const box = $('#dialog'); box.hidden = false; box.className = kind;
@@ -444,7 +482,7 @@
     if (L2()) { const d = o.l2 === undefined ? I.langue.retrouver(html) : null, t2 = o.l2 !== undefined ? o.l2 : d ? I.langue.tDans(L2(), d.fr, d.p) : null;
       if (t2) { const s = marquer2(I.el('span', 'l2'), t2.replace(/<[^>]*>/g, '')); s.innerHTML = t2; el.appendChild(s); el.classList.add('avec2'); } }
     $('#toasts').appendChild(el); // à sa naissance, masquée
-    S.fil.unshift({ html, t: Date.now() }); if (S.fil.length > 12) S.fil.length = 12;
+    if (o.fil !== false) { S.fil.unshift({ html: o.fil || html, t: Date.now() }); if (S.fil.length > 12) S.fil.length = 12; }   // (2.49 : une légende en pages s'y garde entière, une fois)
     const x = { el, html, ne: performance.now(), outil: o.outil || null, pas: !!o.pas, urgent: !!o.urgent, recit: !!o.recit, l2: o.recit ? (o.l2 || null) : null, vu: 0 };
     if (enHalte() && !lecon(x)) { el.remove(); S.filHalte(html); return el; } // née dans la halte : sous son titre (un incident aussi)
     FIL.file.push(x);
@@ -540,7 +578,7 @@
       /* 2.49 (D242 ; le décideur, 28 novembre : « je veux pouvoir me déplacer même pendant l'affichage des textes (je reste bloqué
          à l'entrée du quartier jusqu'à la fin du texte) ») — une narration d'arrivée dans un lieu : posée dans le fil, le temps de la
          lire (S.lectureRecit), avec sa langue secondaire ; le script n'attend pas, le joueur marche pendant qu'elle se lit */
-      case 'legende': S.toast(I.fmt(a), { recit: true, l2: L2() ? I.langue.second(a, op, 1) : null }); break;
+      case 'legende': S.legende(a, L2() ? I.langue.second(a, op, 1) : null); break;   // (en pages, si elle ne tient pas : S.pagesLegende)
       // 2.x : un carton du récit porte, sous son texte, la langue secondaire (la parole et sa source ; le titre et sa date)
       case 'quote': { S.hideDialog(); I.audio.sfx('light'); await card('quote', S.carton(op)); break; }
       case 'title': { S.hideDialog(); I.audio.sfx('roll'); await card('title', S.carton(op), 3000); break; }
