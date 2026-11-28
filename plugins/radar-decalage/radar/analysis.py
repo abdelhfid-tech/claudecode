@@ -59,7 +59,8 @@ def chart_ranks(records: Iterable[dict[str, Any]], chart: str = "top-free",
         prev = ranks[app].get(r["zone"])
         if prev is None or r["value"] < prev:
             ranks[app][r["zone"]] = r["value"]
-        info.setdefault(app, {"name": r["meta"].get("name", ""), "genres": r["meta"].get("genres", [])})
+        info.setdefault(app, {"name": r["meta"].get("name", ""), "genres": r["meta"].get("genres", []),
+                              "artist": r["meta"].get("artist", "")})
     return dict(ranks), info
 
 
@@ -92,8 +93,22 @@ def classify(zones_available: dict[str, int], n_storefronts: int, age: int | Non
     return "intermédiaire"
 
 
+def big_publisher_patterns() -> list[re.Pattern[str]]:
+    from . import settings
+
+    return [re.compile(p, re.I) for p in settings.load("editeurs").get("grands", [])]
+
+
+def is_independent(publisher: str, patterns: list[re.Pattern[str]]) -> bool | None:
+    """Petit éditeur (copiable par un indépendant) ; None si l'éditeur est inconnu."""
+    if not publisher:
+        return None
+    return not any(p.search(publisher) for p in patterns)
+
+
 def gaps(store: RawStore, day: date | None = None, max_origin_rank: int = 50,
-         targets: tuple[str, ...] = ("FR", "MA"), include_established: bool = False) -> list[dict[str, Any]]:
+         targets: tuple[str, ...] = ("FR", "MA"), include_established: bool = False,
+         independent_only: bool = False) -> list[dict[str, Any]]:
     """Apps fortes dans un marché d'origine, indisponibles dans au moins une cible.
 
     Par défaut, seules les apps de moins de trois ans (ou d'âge inconnu) sont des
@@ -111,6 +126,7 @@ def gaps(store: RawStore, day: date | None = None, max_origin_rank: int = 50,
     ranks, info = chart_ranks(store.read("apple_charts", d_charts))
     n_store = max((len(z) for z in avail.values()), default=0)
     today = day or d_lookup
+    patterns = big_publisher_patterns()
     rows = []
     for app, zone_avail in avail.items():
         app_ranks = ranks.get(app, {})
@@ -134,8 +150,12 @@ def gaps(store: RawStore, day: date | None = None, max_origin_rank: int = 50,
             flags.append("une seule vitrine : service national ou lancement en cours ?")
         if REWARD_APP.search(name):
             flags.append("app à récompenses : rang faussé")
+        publisher = info.get(app, {}).get("artist", "")
+        independent = is_independent(publisher, patterns)
+        if independent_only and not independent:
+            continue
         rows.append({
-            "app": app, "name": name, "flags": flags,
+            "app": app, "name": name, "flags": flags, "publisher": publisher, "independent": independent,
             "genres": info.get(app, {}).get("genres", []),
             "best_origin": f"{best_zone} n°{best_rank}", "best_rank": best_rank,
             "available_in": sorted(z for z, v in zone_avail.items() if v),
@@ -179,12 +199,13 @@ def arrivals(store: RawStore, source: str = "apple_lookup", confirm: int = 2) ->
 def render_gaps(rows: list[dict[str, Any]], limit: int = 30) -> str:
     if not rows:
         return "Aucun écart : il faut au moins un relevé des classements et de la disponibilité."
-    lines = ["| App | Meilleur rang d'origine | Disponible | FR | MA | BE | SN | Âge | Classe | Signalement |",
-             "|---|---|---|---|---|---|---|---|---|---|"]
+    lines = ["| App | Éditeur | Petit éditeur | Meilleur rang d'origine | Disponible | FR | MA | BE | SN | Âge | Classe | Signalement |",
+             "|---|---|---|---|---|---|---|---|---|---|---|---|"]
     for r in rows[:limit]:
         st = r["target_status"]
         age = f"{r['age_days'] // 30} mois" if r["age_days"] is not None else "?"
-        lines.append(f"| {r['name'][:38]} | {r['best_origin']} | "
+        small = {True: "oui", False: "non"}.get(r.get("independent"), "?")
+        lines.append(f"| {r['name'][:38]} | {r.get('publisher', '')[:28]} | {small} | {r['best_origin']} | "
                      f"{r['available_count']} | {st.get('FR', '?')} | {st.get('MA', '?')} | {st.get('BE', '?')} | "
                      f"{st.get('SN', '?')} | {age} | {r['class']} | {'; '.join(r.get('flags', []))} |")
     if len(rows) > limit:

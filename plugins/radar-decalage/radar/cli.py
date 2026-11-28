@@ -1,9 +1,11 @@
 """Interface en ligne de commande : python -m radar <commande>.
 
-  collect   relève les sources (toutes, ou --only, ou --cadence hourly)
+  collect   relève les sources (toutes, ou --only, ou --cadence hourly/weekly)
   health    taux de succès par source sur les N derniers jours (pilote)
   sources   registre des sources et leur statut
   watchlist état de la liste de suivi
+  villes    tendances et métiers locaux, ville par ville
+  initiatives classement des modèles d'activité (--scenario solo, petit_ia, agence)
 """
 
 from __future__ import annotations
@@ -49,7 +51,12 @@ def select_sources(sources_cfg: dict[str, Any], only: list[str] | None, cadence:
             continue
         if not cfg.get("enabled", True):
             continue
-        if cadence == "hourly" and cfg.get("cadence", cls.cadence) != "hourly":
+        src = cfg.get("cadence", cls.cadence)
+        if cadence == "hourly" and src != "hourly":
+            continue
+        if cadence == "weekly" and src != "weekly":
+            continue
+        if cadence == "daily" and src == "weekly":
             continue
         chosen.append(cls)
     return chosen
@@ -176,7 +183,7 @@ def cmd_gaps(args: argparse.Namespace) -> int:
 
     targets = tuple(t.strip() for t in args.targets.split(","))
     rows = analysis.gaps(RawStore(paths.data_dir()), max_origin_rank=args.max_rank, targets=targets,
-                         include_established=args.established)
+                         include_established=args.established, independent_only=args.independants)
     if args.json:
         print(json.dumps(rows, ensure_ascii=False, indent=1))
     else:
@@ -188,6 +195,12 @@ def cmd_initiatives(args: argparse.Namespace) -> int:
     from . import initiatives
 
     profile = initiatives.load_profile()
+    if args.scenarios:
+        for name, sc in initiatives.load_scenarios().items():
+            print(f"{name:16} {sc.get('label', '')}")
+        return 0
+    if args.scenario:
+        profile = initiatives.apply_scenario(profile, args.scenario)
     trend = None
     if args.strength is not None:
         trend = initiatives.TrendInput(strength=args.strength, window_days=args.window,
@@ -198,19 +211,40 @@ def cmd_initiatives(args: argparse.Namespace) -> int:
         return 0
     if profile.is_default:
         print("Profil par défaut : remplissez workspace/profile.toml (modèle : config/profile.example.toml).\n")
-    print(f"Acheteur {args.buyer}, vendeur {args.seller}" + (f", tendance F={args.strength}" if trend else ""))
-    print(f"{'archétype':24} {'P10':>5} {'P50':>5} {'€/h P10':>8} {'€/h P50':>8} {'porte':>5}  remarques")
+    print(f"Acheteur {args.buyer}, vendeur {args.seller}" + (f", tendance F={args.strength}" if trend else "")
+          + (f", scénario {args.scenario}" if args.scenario else ""))
+    print("Chance : décoller en 12 mois. Si ça marche : marge par mois au bout d'un an. Moyenne : 24 mois, échecs compris.")
+    print(f"{'archétype':32} {'P10':>5} {'chance':>7} {'si ça marche':>13} {'moyenne 24 m':>13} {'heures':>7}  remarques")
     for e in ranked:
         if e.excluded:
             continue
-        note = "; ".join(e.flags + e.reasons)[:90]
-        print(f"{e.archetype:24} {e.score_p10:>5} {e.score_p50:>5} {e.rate_eur_h['p10']:>8} {e.rate_eur_h['p50']:>8} "
-              f"{e.gate:>5}  {note}")
+        note = "; ".join(e.flags + e.reasons)[:80]
+        print(f"{e.archetype:32} {e.score_p10:>5} {e.chance_12m:>7.0%} {e.net_month_success:>10,.0f} €/m "
+              f"{e.e24_eur_p50:>11,.0f} € {e.hours_24_months:>6,.0f}  {note}".replace(",", " "))
     excluded = [e for e in ranked if e.excluded]
     if excluded:
         print(f"\nÉcartés ({len(excluded)}) :")
         for e in excluded:
             print(f"  {e.archetype:24} {'; '.join(e.reasons)[:110]}")
+    return 0
+
+
+def cmd_villes(args: argparse.Namespace) -> int:
+    from . import villes
+
+    rows = villes.table(RawStore(paths.data_dir()))
+    if args.decalage:
+        leader, follower = args.decalage.split(":", 1)
+        out = villes.lags(rows, leader, follower)
+        if args.json:
+            print(json.dumps(out, ensure_ascii=False, indent=1))
+        else:
+            for r in out:
+                print(f"{r['sujet']:28} installé à {r['avance']}, {r['statut_retard']} à {r['retard']}  ({r['precisions_avance'][:70]})")
+            if not out:
+                print("Aucun décalage net entre ces deux villes au dernier relevé.")
+        return 0
+    print(json.dumps(rows, ensure_ascii=False, indent=1) if args.json else villes.render(rows))
     return 0
 
 
@@ -274,7 +308,7 @@ def build_parser() -> argparse.ArgumentParser:
     sub = p.add_subparsers(dest="command", required=True)
     c = sub.add_parser("collect", help="relever les sources")
     c.add_argument("--only", help="sources à relever, séparées par des virgules")
-    c.add_argument("--cadence", choices=["hourly", "daily"], default="daily")
+    c.add_argument("--cadence", choices=["hourly", "daily", "weekly"], default="daily")
     c.add_argument("--zones", help="restreindre toutes les sources aux zones données (codes séparés par des virgules)")
     c.add_argument("--dry-run", action="store_true", help="interroger sans rien écrire")
     c.set_defaults(func=cmd_collect)
@@ -289,6 +323,7 @@ def build_parser() -> argparse.ArgumentParser:
     g.add_argument("--max-rank", type=int, default=50)
     g.add_argument("--limit", type=int, default=30)
     g.add_argument("--established", action="store_true", help="ajouter les absences structurelles (apps de plus de 3 ans)")
+    g.add_argument("--independants", action="store_true", help="seulement les apps de petits éditeurs (copiables)")
     g.add_argument("--json", action="store_true")
     g.set_defaults(func=cmd_gaps)
     i = sub.add_parser("initiatives", help="classer les archétypes pour une cellule acheteur × vendeur")
@@ -297,12 +332,18 @@ def build_parser() -> argparse.ArgumentParser:
     i.add_argument("--strength", type=float, help="force de la tendance (0-100)")
     i.add_argument("--window", type=float, help="fenêtre restante en jours")
     i.add_argument("--regulatory", help="catégories réglementées touchées (identifiants de regulatory.toml)")
+    i.add_argument("--scenario", help="scénario de profil (voir --scenarios) : solo, petit_ia, petit_ia_fort, agence")
+    i.add_argument("--scenarios", action="store_true", help="lister les scénarios")
     i.add_argument("--json", action="store_true")
     i.set_defaults(func=cmd_initiatives)
     lg = sub.add_parser("ledger", help="vérifier le journal de prédictions (chaîne et ancres) et afficher les scores")
     lg.add_argument("--anchor", action="store_true", help="noter l'empreinte de tête, à publier hors du dépôt")
     lg.set_defaults(func=cmd_ledger)
     sub.add_parser("rules", help="contrôler les règles par pays (validité, péremption)").set_defaults(func=cmd_rules)
+    v = sub.add_parser("villes", help="tendances et métiers locaux, ville par ville (relevé hebdomadaire)")
+    v.add_argument("--decalage", help="ville_en_avance:ville_en_retard, par exemple casablanca:fes")
+    v.add_argument("--json", action="store_true")
+    v.set_defaults(func=cmd_villes)
     rc = sub.add_parser("reactive", help="candidats du jour pour le contenu réactif (et envoi au flux n8n)")
     rc.add_argument("--post", action="store_true", help="envoyer au webhook n8n (RADAR_N8N_WEBHOOK, RADAR_N8N_TOKEN)")
     rc.add_argument("--post-if-set", action="store_true",

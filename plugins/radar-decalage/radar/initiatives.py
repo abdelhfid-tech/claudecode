@@ -14,6 +14,14 @@ Ordre du calcul :
      initiative perdante. Ici, le score décroît toujours quand le coût horaire augmente ;
   6. incertitude par Monte-Carlo (p12, revenu, coût horaire, fiscalité et porte de
      paiement varient) ; classement sur le P10.
+
+Lisibilité : le revenu « moyen » sur 24 mois mélange les cas d'échec et de réussite. Chaque
+évaluation donne donc aussi la chance de décoller en 12 mois, le chiffre d'affaires et la
+marge mensuels si l'activité décolle, et le total sur 24 mois dans ce cas.
+
+Scénarios (config/scenarios.toml) : seul, petit et amplifié par l'IA, agence. L'effet de l'IA
+est une hypothèse : `ai_hours_cut` réduit d'autant les heures de construction et de suivi,
+à mesurer sur les premiers clients.
 """
 
 from __future__ import annotations
@@ -49,6 +57,7 @@ class Profile:
     test_max_eur: float = 150
     run_max_hours_month: float = 25
     hourly_cost_eur: float | None = None
+    ai_hours_cut: float = 0.0       # part des heures de construction et de suivi faite par l'IA (hypothèse)
     is_default: bool = True
 
     @property
@@ -89,6 +98,10 @@ class Evaluation:
     e24_eur_p50: float = 0.0
     hours_24_months: float = 0.0
     flags: list[str] = field(default_factory=list)
+    chance_12m: float = 0.0               # probabilité de décoller (seuil de la grille) en 12 mois
+    revenue_month_success: float = 0.0    # chiffre d'affaires mensuel à 12 mois si l'activité décolle
+    net_month_success: float = 0.0        # après marge et impôt, si l'activité décolle
+    total_24m_success: float = 0.0        # net cumulé sur 24 mois si l'activité décolle
 
 
 def load_archetypes() -> dict[str, Any]:
@@ -113,7 +126,8 @@ def _e24(a: dict[str, Any], p: float, gate: float, arpu: float, tax: float, rete
 
 
 def evaluate(name: str, buyer_zone: str, seller_zone: str, profile: Profile, trend: TrendInput | None = None,
-             cfg: dict[str, Any] | None = None, rules: dict[str, Any] | None = None, draws: int = 400) -> Evaluation:
+             cfg: dict[str, Any] | None = None, rules: dict[str, Any] | None = None, draws: int = 400,
+             fiscal: dict[str, Any] | None = None) -> Evaluation:
     cfg = cfg if cfg is not None else load_archetypes()
     a = cfg["archetype"][name]
     countries = cfg["country"]
@@ -121,16 +135,21 @@ def evaluate(name: str, buyer_zone: str, seller_zone: str, profile: Profile, tre
     if profile.is_default:
         ev.flags.append("profil par défaut : remplissez workspace/profile.toml")
 
+    cut = min(0.9, max(0.0, float(profile.ai_hours_cut or 0.0)))
+    if cut:
+        a = {**a, "h": a["h"] * (1 - cut), "hrun": a["hrun"] * (1 - cut)}
+        ev.flags.append(f"heures réduites de {cut:.0%} par l'IA : hypothèse à mesurer sur les premiers clients")
+
     # 1. Portes dures du profil.
     if a["hrun"] > profile.run_max_hours_month:
         ev.excluded = True
-        ev.reasons.append(f"exploitation de {a['hrun']} h par mois, au-delà de {profile.run_max_hours_month} h")
+        ev.reasons.append(f"exploitation de {a['hrun']:.0f} h par mois, au-delà de {profile.run_max_hours_month:.0f} h")
     # Un solo à temps partiel construit plus lentement : la construction s'étale jusqu'à
     # 12 mois (premier revenu repoussé d'autant) ; au-delà, l'archétype est écarté.
     stretch = a["h"] / profile.build_hours_6_months if profile.build_hours_6_months else float("inf")
     if stretch > MAX_BUILD_STRETCH:
         ev.excluded = True
-        ev.reasons.append(f"construction de {a['h']} h, plus de 12 mois à "
+        ev.reasons.append(f"construction de {a['h']:.0f} h, plus de 12 mois à "
                           f"{profile.build_hours_6_months / BUILD_WEEKS:.0f} h par semaine")
     elif stretch > 1:
         ev.flags.append(f"construction étalée sur {6 * stretch:.0f} mois au lieu de 6 : premier revenu repoussé")
@@ -173,7 +192,16 @@ def evaluate(name: str, buyer_zone: str, seller_zone: str, profile: Profile, tre
             ev.flags.append(f"fenêtre de {trend.window_days:.0f} j pour un lancement d'environ {launch_days:.0f} j")
     hours = a["h"] + RUN_MONTHS * a["hrun"]
     cash = 2 * a["C"]
-    ev.hours_24_months = hours
+    ev.hours_24_months = round(hours)
+
+    ev.chance_12m = round(min(0.95, a["p12"] * fit * trend_mult), 3)
+    ev.revenue_month_success = round(a["Rs"] * arpu)
+    ev.net_month_success = round(a["Rs"] * arpu * a["m"] * (1 - tax))
+    ev.total_24m_success = round(_e24(a, 1.0, 1.0, arpu, tax, retention, window))
+    cap = status_cap(seller_zone, a["regime"], fiscal)
+    if cap and ev.revenue_month_success * 12 > cap[0]:
+        ev.flags.append(f"au-delà du plafond {cap[1]} (≈ {cap[0]:,.0f} € par an) si l'activité décolle : "
+                        f"statut société, impôt plus élevé que celui compté ici".replace(",", " "))
 
     seed = int(hashlib.sha256(f"{name}|{buyer_zone}|{seller_zone}".encode()).hexdigest()[:8], 16)
     rng = random.Random(seed)
@@ -203,6 +231,45 @@ def evaluate(name: str, buyer_zone: str, seller_zone: str, profile: Profile, tre
     return ev
 
 
+SERVICE_REGIMES = {"bnc", "bic_presta", "auteur"}
+
+
+def status_cap(seller_zone: str, regime: str, fiscal: dict[str, Any] | None = None) -> tuple[float, str] | None:
+    """Plafond annuel (€) du statut simple du pays vendeur, d'après rules/fiscal.toml."""
+    if fiscal is None:
+        from .rules import load_fiscal
+        fiscal = load_fiscal()
+    kind = "services" if regime in SERVICE_REGIMES else "vente"
+    for r in fiscal.get("regime", []):
+        if r.get("country") != seller_zone:
+            continue
+        if "revenue_cap_eur" in r:
+            return float(r["revenue_cap_eur"].get(kind, 0)) or None, r["label"]
+        if "revenue_cap_mad" in r:
+            fx = next((float(x["fx_eur_mad"]) for x in fiscal.get("exchange", [])
+                       if x.get("country") == seller_zone and x.get("fx_eur_mad")), None)
+            mad = r["revenue_cap_mad"].get(kind) or r["revenue_cap_mad"].get("commerce")
+            if fx and mad:
+                return float(mad) / fx, r["label"]
+    return None
+
+
+def load_scenarios() -> dict[str, Any]:
+    return settings.load("scenarios").get("scenario", {})
+
+
+def apply_scenario(profile: Profile, name: str, scenarios: dict[str, Any] | None = None) -> Profile:
+    """Profil modifié par un scénario (seul, petit et amplifié par l'IA, agence)."""
+    import dataclasses
+
+    scenarios = scenarios if scenarios is not None else load_scenarios()
+    if name not in scenarios:
+        raise KeyError(f"scénario inconnu : {name} (connus : {', '.join(scenarios)})")
+    known = {f.name for f in dataclasses.fields(Profile)} - {"is_default"}
+    overrides = {k: v for k, v in scenarios[name].items() if k in known}
+    return dataclasses.replace(profile, **overrides)
+
+
 def _q(values: list[float], q: float) -> float:
     s = sorted(values)
     if not s:
@@ -213,8 +280,12 @@ def _q(values: list[float], q: float) -> float:
 
 
 def rank(buyer_zone: str, seller_zone: str, profile: Profile, trend: TrendInput | None = None,
-         cfg: dict[str, Any] | None = None, rules: dict[str, Any] | None = None) -> list[Evaluation]:
+         cfg: dict[str, Any] | None = None, rules: dict[str, Any] | None = None,
+         fiscal: dict[str, Any] | None = None) -> list[Evaluation]:
     """Tous les archétypes pour une cellule ; les retenus d'abord, triés sur le P10 du score."""
+    from .rules import load_fiscal
+
     cfg = cfg if cfg is not None else load_archetypes()
-    evals = [evaluate(n, buyer_zone, seller_zone, profile, trend, cfg, rules) for n in cfg["archetype"]]
+    fiscal = fiscal if fiscal is not None else load_fiscal()
+    evals = [evaluate(n, buyer_zone, seller_zone, profile, trend, cfg, rules, fiscal=fiscal) for n in cfg["archetype"]]
     return sorted(evals, key=lambda e: (e.excluded, -e.score_p10, e.archetype))

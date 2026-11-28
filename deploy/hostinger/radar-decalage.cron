@@ -7,3 +7,5 @@ PATH=/usr/local/bin:/usr/bin:/bin
 41 */2 * * * radar radar-run collect --cadence hourly >> /var/log/radar-decalage/hourly.log 2>&1
 # Candidats du contenu réactif, envoyés au flux n8n si RADAR_N8N_WEBHOOK est réglé
 47 6 * * * radar radar-run reactive --post-if-set >> /var/log/radar-decalage/reactive.log 2>&1
+# Relevé ville par ville (Paris, Lyon, Casablanca, Rabat, Marrakech, Fès, Tanger), chaque lundi
+23 4 * * 1 radar radar-run collect --cadence weekly >> /var/log/radar-decalage/weekly.log 2>&1

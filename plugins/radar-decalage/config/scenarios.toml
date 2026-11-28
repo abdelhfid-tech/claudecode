@@ -1,0 +1,33 @@
+# Scénarios de profil pour comparer les initiatives : python -m radar initiatives --scenario <nom>
+# Chaque clé remplace celle du profil (workspace/profile.toml). L'effet de l'IA (ai_hours_cut) est une
+# hypothèse : part des heures de construction et de suivi que l'IA fait à votre place, à mesurer.
+
+[scenario.solo]
+label = "Vous seul, 10 h par semaine, 1 000 €"
+
+[scenario.petit_ia]
+label = "Vous et l'IA : 15 h par semaine, 2 000 €, 40 % de travail en moins"
+hours_per_week = 15
+max_capital_eur = 2000
+test_max_hours = 30
+test_max_eur = 300
+ai_hours_cut = 0.4
+
+[scenario.petit_ia_fort]
+label = "Vous et l'IA : 15 h par semaine, 2 000 €, 60 % de travail en moins"
+hours_per_week = 15
+max_capital_eur = 2000
+test_max_hours = 30
+test_max_eur = 300
+ai_hours_cut = 0.6
+
+[scenario.agence]
+label = "Agence de 3 personnes : 100 h par semaine, 15 000 €"
+hours_per_week = 100
+radar_hours_per_week = 2
+maintenance_hours_per_week = 3
+run_max_hours_month = 200
+max_capital_eur = 15000
+test_max_hours = 80
+test_max_eur = 2000
+hourly_cost_eur = 20

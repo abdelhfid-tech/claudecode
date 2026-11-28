@@ -15,6 +15,12 @@ Version 2, validée sur le principe le 28 novembre 2026.
   - Autres corrections : disjoncteur après un refus, Retry-After respecté, écriture atomique par exécution et verrou, jours Wikimedia repris après un échec, journal de prédictions protégé contre l'antidatage et la troncature (ancres), portes qui multiplient le score entier, calage des délais quand le P10 vaut 0.
 - Études complémentaires sur l'affiliation et sur Amazon KDP, l'impression à la demande et les places de marché : rédigées, contre-vérification en cours.
 - Module de contenu réactif, niveau A (section 3) : commande `radar reactive` (candidats du jour, envoi au webhook n8n avec un jeton), flux n8n prêt à importer (Claude choisit et rédige, validation par formulaire depuis Telegram, programmation Blotato facultative). 128 tests Python et 10 tests des nœuds n8n, sans réseau.
+- Suite à vos questions du 28 novembre :
+  - revenus présentés en trois chiffres : chance de décoller en 12 mois, marge par mois si ça marche, moyenne sur 24 mois (échecs compris) ;
+  - scénarios de profil (`--scenario`) : seul, « petit et amplifié par l'IA » (40 % ou 60 % des heures faites par l'IA, hypothèse à mesurer), agence de 3 personnes ;
+  - alerte quand la réussite dépasserait le plafond du statut simple (auto-entrepreneur marocain : environ 18 000 € par an pour les services ; micro-entreprise française : 83 600 €) ;
+  - relevé hebdomadaire ville par ville (Paris, Lyon, Casablanca, Rabat, Marrakech, Fès, Tanger) et commande `villes --decalage casablanca:fes` ;
+  - repérage des apps de petits éditeurs (`gaps --independants`), seules copiables par un indépendant.
 - Kit de mise en service sur votre serveur Hostinger (`deploy/README.md`) : installation en une commande, collecte par cron, données hors de GitHub. Le contrôle GitHub ne fait plus que les tests.
 
 **Premiers signaux réels**
@@ -458,6 +464,11 @@ La collecte passe en premier, parce qu'une arrivée non capturée ne se date plu
 4. **Contenu réactif** : niveau A, brouillons validés par vous avant toute publication (section 3).
 5. **Structure juridique** : à définir. À vérifier avec un expert-comptable avant le premier encaissement : micro-entreprise en France, auto-entrepreneur au Maroc, ou facturation par une société existante si son objet le permet. Les portes acheteur et vendeur du radar (module C) en dépendent.
 6. **Identifiant envoyé aux sites** : générique. Wikimedia demande un moyen de joindre l'opérateur d'un robot ; un identifiant générique est accepté. Un contact peut être ajouté plus tard par le réglage `RADAR_CONTACT`, sur votre seul accord.
+
+**Orientation issue de vos questions (28 novembre, à confirmer par les premiers clients)**
+- Seul, l'agence d'automatisation généraliste reste hors de portée, même si l'IA fait 60 % du travail (36 h de suivi par mois, au-delà de 25 h). Ce qui devient accessible avec l'IA : une offre unique pour un métier précis (chance de 1 sur 5, environ 3 000 € de marge par mois si ça marche).
+- Chemin conseillé : automatisations à prix fixe pour trouver le métier qui achète (mois 1 et 2), offre spécialisée avec abonnement (mois 3 à 6, piste privilégiée : riads de Fès puis Marrakech et gîtes en France), puis visibilité dans les IA et publicités ChatGPT pour les mêmes clients.
+- Apps mobiles (vidéo « 1,5M de téléchargements ») : écartées pour l'instant (environ 940 h sur 2 ans même avec plus de temps) ; le radar repère désormais les apps de petits éditeurs absentes en France et au Maroc.
 
 **Restent ouvertes**
 1. **Comptes de publication** : lesquels créer en premier (un ou deux au plus, par exemple LinkedIn en français et Threads ou Instagram en darija).

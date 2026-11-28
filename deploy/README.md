@@ -37,7 +37,7 @@ Le script :
 - vérifie Python 3.11 ou plus, git et cron, et les installe s'il le faut (Ubuntu 22.04 ou 24.04, Debian 12) ;
 - installe le code dans `/opt/radar-decalage` et crée l'utilisateur système `radar`, sans droits d'administration ;
 - met les données dans `/var/lib/radar-decalage` et les journaux dans `/var/log/radar-decalage` ;
-- programme la collecte (fichier `/etc/cron.d/radar-decalage`).
+- programme la collecte (fichier `/etc/cron.d/radar-decalage`) : chaque jour, toutes les 2 heures pour les tendances, et le lundi pour le relevé ville par ville (Paris, Lyon, Casablanca, Rabat, Marrakech, Fès, Tanger).
 
 Premier relevé, tout de suite (environ 15 minutes) :
 
@@ -45,6 +45,9 @@ Premier relevé, tout de suite (environ 15 minutes) :
 sudo -u radar radar-run collect
 sudo -u radar radar-run health      # état des sources : c'est le pilote de 14 jours
 sudo -u radar radar-run gaps        # premiers écarts de disponibilité des apps
+sudo -u radar radar-run collect --cadence weekly   # relevé ville par ville (environ 5 minutes)
+sudo -u radar radar-run villes --decalage casablanca:fes   # ce qui est installé à Casablanca et pas encore à Fès
+sudo -u radar radar-run initiatives --buyer FR --seller MA --scenario petit_ia   # vous et l'IA
 ```
 
 **Mise à jour** : relancez `sudo bash install-radar.sh`. Vos données, votre profil et vos réglages ne sont pas touchés.

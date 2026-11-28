@@ -34,4 +34,5 @@ evidence = "F"
 ecommerce_allowance_mad = { particulier = 20_000, societe_nouvelle_min = 50_000, startup_labellisee_add = 2_000_000 }
 services_export = { repatriation_days = 90, max_share_in_fx_account = 0.70 }
 fx_rate_source = "cours du jour de Bank Al-Maghrib (1 $ = 10,031 DH et 1 € = 10,995 DH le 27/11/2026)"
+fx_eur_mad = 10.995
 notes = "la dotation du particulier couvre tous ses achats en ligne ; une pile d'outils avec Claude Pro y tient, avec Claude Max elle la dépasse d'environ 5 %"
