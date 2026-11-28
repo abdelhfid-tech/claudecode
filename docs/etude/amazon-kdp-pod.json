@@ -1,0 +1,1570 @@
+{
+ "dossier_path": "/home/user/claudecode/docs/etude/amazon-kdp-pod.md",
+ "as_of": "2026-11-28",
+ "executive_summary": "Les archétypes d'auto-édition Amazon, d'impression à la demande et de places de marché de contenus numériques sont rapides et bon marché à tester (moins de 20 h et 150 €, exploitation de 10 à 25 h par mois), mais leur espérance de revenu est faible : de 18 à 600 € nets sur 24 mois dans la grille selon le pays (58 à 557 € en France), avec un ROI ajusté proche de zéro. Les plateformes ne publient pas de médiane ; les moyennes calculées sur les rapports annuels sont de 44,7 A$ par artiste Redbubble et par an, 107 A$ chez TeePublic et 1 868 $ de ventes brutes par vendeur Etsy ; 44 % des auteurs indépendants interrogés gagnent 100 $ par mois ou moins. KDP a resserré ses règles en 2026 (2 titres par format et par semaine, fin des prestataires de paiement non agréés, renommage de Kindle Unlimited en Kindle+) sans interdire l'IA, qui doit être déclarée ; la bande à 70 % a été élargie à 12,99 $. Le pays du vendeur trie les candidats : KDP paie en euros ou en dollars canadiens en France, en Belgique, en Suisse et au Québec, en dirhams au Maroc (retenue US de 10 %), par chèque seulement en Afrique subsaharienne francophone (retenue de 30 %) ; Etsy est ouvert au Maroc mais pas au Sénégal, en Côte d'Ivoire, au Cameroun ni en RDC ; Notion verse au Maroc, au Sénégal et en Côte d'Ivoire. L'audio par IA (Virtual Voice) ne se vend qu'aux États-Unis et ACX n'est ouvert qu'au Québec parmi les pays cibles. Le meilleur archétype de l'axe est la vente de modèles Notion et Canva en français (score 52,1 en France, 6e sur 28 ; 4e au Maroc ; 3e dans l'UEMOA ; meilleur de l'axe dans 81 à 94 % des tirages), devant les imprimables Etsy et les guides pratiques KDP ; fiction, coloriage, impression à la demande et banques d'images restent dans le dernier tiers, avec ou sans coût horaire uniforme de 25 €/h. Le radar dispose de sondes gratuites : autocomplétion Amazon par marché et par rayon, classements Kindle (Amazon.fr limité à un appel par jour), API de découverte de Gumroad pour mesurer l'offre en langue locale, pages d'aide KDP, Etsy et Notion pour la veille des verrous.",
+ "key_findings": [
+  {
+   "claim": "KDP : ebooks à 35 % ou 70 % du prix hors TVA (moins livraison, moyenne 0,06 $) ; bande à 70 % élargie à 2,99-12,99 $ (2,69-12,99 €) le 7 juillet 2026 ; brochés à 50 % jusqu'à 9,98 € et 60 % dès 9,99 €, moins l'impression (2,05 ou 2,48 € jusqu'à 110 pages ; 0,75 € + 0,012 €/page au-delà).",
+   "evidence": "Pages d'aide KDP lues en texte brut.",
+   "sources": [
+    "https://kdp.amazon.com/en_US/help/topic/G200644210",
+    "https://kdp.amazon.com/en_US/help/topic/G200634560",
+    "https://kdp.amazon.com/en_US/help/topic/G201834330",
+    "https://kdp.amazon.com/en_US/help/topic/G201834340"
+   ],
+   "as_of": "2026-11-28",
+   "confidence": "high",
+   "load_bearing": true
+  },
+  {
+   "claim": "En France, les livres de coloriage, carnets, agendas et cahiers d'activités sont soumis à la TVA de 20 % (5,5 % pour les autres livres) ; la redevance KDP se calcule sur le prix hors TVA. Un coloriage grand format de 100 pages rapporte 1,27 € à 8,99 € TTC et 3,51 € à 11,99 € TTC.",
+   "evidence": "Page KDP sur la TVA des livres imprimés ; calcul de l'auteur.",
+   "sources": [
+    "https://kdp.amazon.com/en_US/help/topic/GPQL5W3J6WNRCZTV",
+    "https://kdp.amazon.com/en_US/help/topic/G201834340"
+   ],
+   "as_of": "2026-11-28",
+   "confidence": "high",
+   "load_bearing": true
+  },
+  {
+   "claim": "KDP exige la déclaration (privée) de tout texte, image ou traduction générés par IA, pas des contenus assistés ; refuse les guides compagnons et les contenus non significativement différents ou excessivement réutilisés.",
+   "evidence": "Règles de contenu et guide de qualité KDP.",
+   "sources": [
+    "https://kdp.amazon.com/en_US/help/topic/G200672390",
+    "https://kdp.amazon.com/en_US/help/topic/G200952510"
+   ],
+   "as_of": "2026-11-28",
+   "confidence": "high",
+   "load_bearing": true
+  },
+  {
+   "claim": "KDP limite les nouveaux titres à 2 par format et par semaine depuis le 21 septembre 2026 (10 l'année précédente, 3 par jour en 2023).",
+   "evidence": "Article ALLi citant l'annonce d'Amazon ; Authors Guild pour 2023.",
+   "sources": [
+    "https://selfpublishingadvice.org/amazon-cuts-kdp-weekly-upload-limit/",
+    "https://authorsguild.org/news/amazon-adds-to-kdp-generative-ai-policy-caps-daily-self-publishing-uploads/"
+   ],
+   "as_of": "2026-09-24",
+   "confidence": "medium",
+   "load_bearing": true
+  },
+  {
+   "claim": "Kindle Unlimited a été renommé Kindle+ (22/10/2026) ; le fonds KDP Select a versé 71,1 M$ en octobre 2026 ; les auteurs établis en France fixent un prix par page sans effet sur leur rémunération.",
+   "evidence": "Pages KDP Kindle+ et pied de page ; presse pour la date.",
+   "sources": [
+    "https://kdp.amazon.com/en_US/help/topic/G201541130",
+    "https://9to5mac.com/2026/10/22/amazon-unveils-kindle-subscription-a-rebrand-with-more-audiobooks/"
+   ],
+   "as_of": "2026-11-28",
+   "confidence": "high",
+   "load_bearing": false
+  },
+  {
+   "claim": "Versement KDP : EFT en euros en France, Belgique et Suisse, EFT en CAD au Canada, virement en dirhams au Maroc (seuil de 100 par place de marché), chèque en dollars seulement pour les pays non listés (Sénégal, Côte d'Ivoire, Cameroun, RDC). Depuis le 1er août 2026, plus de versement vers un prestataire de paiement non agréé (Payoneer, Wise, etc. agréés).",
+   "evidence": "Pages KDP sur les modes de paiement, pays EFT, seuils et prestataires.",
+   "sources": [
+    "https://kdp.amazon.com/en_US/help/topic/GJD7DFFX6X88AK46",
+    "https://kdp.amazon.com/en_US/help/topic/G201208420",
+    "https://kdp.amazon.com/en_US/help/topic/GK2MKZUL6U3SFBPZ",
+    "https://kdp.amazon.com/en_US/help/topic/G6GLVRHVQZY4V4FX"
+   ],
+   "as_of": "2026-11-28",
+   "confidence": "high",
+   "load_bearing": true
+  },
+  {
+   "claim": "Retenue américaine de 30 % sur les ventes de source US (ebooks sur .com ; imprimés sur .com, .co.jp, .com.au, .ca), réduite par convention : droits d'auteur à 0 % pour la France, la Belgique, la Suisse et le Canada, 10 % pour le Maroc ; aucune convention pour le Sénégal, la Côte d'Ivoire, le Cameroun et la RDC (30 %).",
+   "evidence": "Page KDP sur la retenue ; IRS Tax Treaty Table 1 (rév. mai 2023).",
+   "sources": [
+    "https://kdp.amazon.com/en_US/help/topic/G201274690",
+    "https://www.irs.gov/pub/irs-lbi/tax-treaty-table-1.pdf"
+   ],
+   "as_of": "2026-11-28",
+   "confidence": "high",
+   "load_bearing": true
+  },
+  {
+   "claim": "Virtual Voice : bêta sur invitation, langue principale anglais, espagnol, italien ou français, distribution sur la seule place de marché américaine. ACX : résidents des États-Unis, du Royaume-Uni, du Canada et d'Irlande seulement. Kindle Translate : bêta, anglais vers français et français vers anglais.",
+   "evidence": "Pages KDP.",
+   "sources": [
+    "https://kdp.amazon.com/en_US/help/topic/GMPQGZAZJH6FF456",
+    "https://kdp.amazon.com/en_US/help/topic/GJSXT4GZLP4PL62B",
+    "https://kdp.amazon.com/en_US/help/topic/G201014330",
+    "https://kdp.amazon.com/en_US/help/topic/G9LWBTHMUDT8EQPK"
+   ],
+   "as_of": "2026-11-28",
+   "confidence": "high",
+   "load_bearing": false
+  },
+  {
+   "claim": "Etsy Payments est ouvert en France, Belgique, Suisse, au Canada et au Maroc (traitement 4,5 % + 5 MAD), pas au Sénégal, en Côte d'Ivoire, au Cameroun ni en RDC ; frais : 0,20 $ par fiche, 6,5 % de transaction, 4 % + 0,30 € de traitement en zone euro, 2,5 % de conversion, Offsite Ads 15 %.",
+   "evidence": "Aide Etsy lue directement.",
+   "sources": [
+    "https://help.etsy.com/hc/en-us/articles/115015710408",
+    "https://help.etsy.com/hc/en-us/articles/115014483627",
+    "https://help.etsy.com/hc/en-us/articles/115015628847"
+   ],
+   "as_of": "2026-11-28",
+   "confidence": "high",
+   "load_bearing": true
+  },
+  {
+   "claim": "Etsy (22/10/2026) interdit les guides fonctionnels générés par IA (patrons, recettes, instructions), exige une photo réelle non retouchée par fiche, impose la déclaration de l'IA et retire les fiches créées sans intervention humaine.",
+   "evidence": "Digital Commerce 360, 26/10/2026.",
+   "sources": [
+    "https://www.digitalcommerce360.com/2026/10/26/etsy-ai-policy/"
+   ],
+   "as_of": "2026-10-26",
+   "confidence": "medium",
+   "load_bearing": true
+  },
+  {
+   "claim": "Notion Marketplace : 8 % + 0,40 $ par vente, 1 % de change hors US, versement bimensuel (minimum 20 $, 14 jours de blocage) via Stripe ; éligibles notamment FR, BE, CH, Canada, Maroc, Sénégal, Côte d'Ivoire ; pas Cameroun ni RDC.",
+   "evidence": "Aide Notion lue directement.",
+   "sources": [
+    "https://www.notion.com/help/selling-on-marketplace"
+   ],
+   "as_of": "2026-11-28",
+   "confidence": "high",
+   "load_bearing": true
+  },
+  {
+   "claim": "Gumroad : 10 % + 0,50 $ en direct, 30 % via Discover, marchand officiel depuis le 1er janvier 2025.",
+   "evidence": "Page de prix.",
+   "sources": [
+    "https://gumroad.com/pricing"
+   ],
+   "as_of": "2026-11-28",
+   "confidence": "high",
+   "load_bearing": false
+  },
+  {
+   "claim": "Shutterstock refuse tout contenu généré par IA de ses contributeurs ; Adobe Stock l'accepte avec étiquette obligatoire et paie 33 % (photos, vecteurs, illustrations).",
+   "evidence": "Aide Shutterstock lue ; Adobe via extraits (403).",
+   "sources": [
+    "https://submit.shutterstock.com/help/en/articles/10594622-content-policy-updates-ai-generated-content",
+    "https://helpx.adobe.com/stock/contributor/submit-your-content/submit-generative-ai-content/generative-ai-content-guidelines.html"
+   ],
+   "as_of": "2026-11-28",
+   "confidence": "high",
+   "load_bearing": false
+  },
+  {
+   "claim": "Udemy : 37 % hors coupon de l'instructeur, 97 % avec ; part de l'abonnement réduite jusqu'à 15 % en janvier 2026 ; fusion avec Coursera close en mai 2026.",
+   "evidence": "Extraits de l'aide Udemy (403) et communiqué.",
+   "sources": [
+    "https://support.udemy.com/hc/en-us/articles/229605008",
+    "https://teach.udemy.com/enabling-investment-subscription-terms-update/",
+    "https://www.businesswire.com/news/home/20260511605128/en/"
+   ],
+   "as_of": "2026-11-28",
+   "confidence": "medium",
+   "load_bearing": false
+  },
+  {
+   "claim": "Distribution des revenus de l'impression à la demande : Redbubble 468 000 artistes vendeurs pour 20,9 M A$ versés (44,7 A$ par artiste et par an en moyenne), TeePublic 165 000 pour 17,7 M A$ (107 A$), exercice 2026 ; Articore cite ses nouveaux frais de compte artistes parmi les causes de sa marge record.",
+   "evidence": "Rapport annuel FY26 d'Articore (ASX).",
+   "sources": [
+    "https://announcements.asx.com.au/asxpdf/20260828/pdf/073d18n6j8zx42.pdf"
+   ],
+   "as_of": "2026-08-28",
+   "confidence": "high",
+   "load_bearing": true
+  },
+  {
+   "claim": "Etsy 2025 : 5,6 M de vendeurs actifs, 10,46 Md$ de ventes brutes, soit 1 868 $ par vendeur en moyenne ; vendeurs -1,5 %, acheteurs -3,4 %.",
+   "evidence": "10-K et communiqué, via extraits de recherche.",
+   "sources": [
+    "https://www.sec.gov/Archives/edgar/data/1370637/000137063726000019/etsy-20251231.htm"
+   ],
+   "as_of": "2026-02",
+   "confidence": "medium",
+   "load_bearing": false
+  },
+  {
+   "claim": "Auteurs indépendants (Written Word Media 2025, 1 346 réponses) : 44 % gagnent 100 $ par mois ou moins ; 1 à 3 livres, environ 80 % sous 100 $ ; 5 à 9 livres, médiane d'environ 50 $ ; 25 livres et plus, médiane d'environ 3 000 $ ; Amazon première source pour 83 %.",
+   "evidence": "Enquête auto-sélectionnée.",
+   "sources": [
+    "https://www.writtenwordmedia.com/2025-indie-author-survey-results-insights-into-self-publishing-for-authors/"
+   ],
+   "as_of": "2025-12-02",
+   "confidence": "medium",
+   "load_bearing": true
+  },
+  {
+   "claim": "Marché francophone : numérique des éditeurs français 278,6 M€ en 2024 dont 40,9 M€ de littérature (6,2 % des ventes de littérature), autoédition exclue ; autoédition 20 % des imprimés déposés en 2019, 25,4 % en 2021 ; 24 % des livres déposés 2007-2016 sans aucune vente GfK.",
+   "evidence": "SNE ; DEPS.",
+   "sources": [
+    "https://www.livreshebdo.fr/sites/default/files/2025-06/SNE-Synthese-Statistique-2025-Web.pdf",
+    "https://fill-livrelecture.org/wp-content/uploads/2024/03/CE-2024-1-Autoedition-DEPS.pdf"
+   ],
+   "as_of": "2025-06",
+   "confidence": "high",
+   "load_bearing": false
+  },
+  {
+   "claim": "Écart d'offre en langue locale mesurable gratuitement : sur l'API de découverte de Gumroad, 19 744 produits pour « notion template » contre 1 pour « modele notion », 2 671 pour « coloring book » contre 37 pour « coloriage ».",
+   "evidence": "Sondes curl, JSON, HTTP 200.",
+   "sources": [
+    "https://discover.gumroad.com/products/search?query=notion%20template"
+   ],
+   "as_of": "2026-11-28",
+   "confidence": "high",
+   "load_bearing": true
+  },
+  {
+   "claim": "Sondes : autocomplétion Amazon .com, .fr, .de en 200 (Amazon.ca inutilisable en français) ; classements Kindle .com, .de, .ca en 200 (avec --compressed), .fr en 200 puis captcha au troisième appel ; Etsy, Redbubble, TeePublic, Payhip, Creative Market, Canva, Udemy en 403 ; Google Trends explore en 429, RSS quotidien en 200.",
+   "evidence": "Sondes curl du 2026-11-28.",
+   "sources": [
+    "https://completion.amazon.fr/api/2017/suggestions?mid=A13V1IB3VIYZZH&alias=stripbooks&prefix=livre%20de%20coloriage",
+    "https://www.amazon.fr/gp/bestsellers/digital-text/",
+    "https://www.etsy.com/search?q=coloriage+imprimable",
+    "https://trends.google.com/trending/rss?geo=FR"
+   ],
+   "as_of": "2026-11-28",
+   "confidence": "high",
+   "load_bearing": true
+  },
+  {
+   "claim": "Merch on Demand a remplacé sa redevance fixe par trois paliers le 1er juin 2026 (palier par défaut environ 2,44 $ sur un t-shirt à 19,99 $, la moitié de l'ancien taux).",
+   "evidence": "Blog d'un éditeur d'outils ; annonce officielle non lue.",
+   "sources": [
+    "https://merchtitans.com/blog/amazon-merch-royalty-changes-june-2026"
+   ],
+   "as_of": "2026-11-06",
+   "confidence": "low",
+   "load_bearing": false
+  },
+  {
+   "claim": "Droit d'auteur : la Cour suprême des États-Unis a refusé le 2 mars 2026 d'examiner Thaler v. Perlmutter ; l'exigence d'un auteur humain reste en place, donc les motifs et pages entièrement générés sont copiables sans recours.",
+   "evidence": "Analyses de cabinets.",
+   "sources": [
+    "https://www.mayerbrown.com/en/insights/publications/2026/03/supreme-court-denies-review-in-ai-authorship-case"
+   ],
+   "as_of": "2026-03-11",
+   "confidence": "medium",
+   "load_bearing": false
+  },
+  {
+   "claim": "AI Act, article 50 : marquage des sorties par les fournisseurs (§2) ; signalement des hypertrucages, allégé pour les œuvres manifestement artistiques ou fictionnelles, et des textes d'information d'intérêt général sauf relecture humaine sous responsabilité éditoriale (§4). Romans, coloriages et modèles sont rarement concernés ; les obligations contraignantes en pratique sont celles des plateformes.",
+   "evidence": "Texte reproduit ; interprétation de l'auteur.",
+   "sources": [
+    "https://artificialintelligenceact.eu/article/50/"
+   ],
+   "as_of": "2026-11-28",
+   "confidence": "medium",
+   "load_bearing": false
+  },
+  {
+   "claim": "Dans la grille, les neuf archétypes de l'axe ont un ROI ajusté entre -0,34 et +0,03 selon le pays (-0,05 à +0,02 en France) et une espérance nette sur 24 mois de 18 à 600 € (58 à 557 € en France) ; leur score (36 à 53) vient du capital faible et du délai court. Les modèles Notion et Canva arrivent en tête de l'axe partout (6e sur 28 en France, 4e au Maroc, 3e dans l'UEMOA) et sont le meilleur de l'axe dans 81 à 94 % des tirages Monte-Carlo.",
+   "evidence": "Exécution de la copie de score_initiatives.py et de mc_kdp.py.",
+   "sources": [
+    "/tmp/claude-0/-home-user-claudecode/00e88930-c277-528f-99f2-9b7f935da647/scratchpad/kdp/score_kdp.py"
+   ],
+   "as_of": "2026-11-28",
+   "confidence": "medium",
+   "load_bearing": true
+  },
+  {
+   "claim": "Artefact de la grille : quand E24 est inférieur aux dépenses, augmenter le coût horaire améliore le ROI (négatif) en le rapprochant de zéro ; la fiction KDP gagne 4,7 points en Afrique centrale quand w passe de 3 à 25 €/h.",
+   "evidence": "Comparaison des deux variantes.",
+   "sources": [
+    "/tmp/claude-0/-home-user-claudecode/00e88930-c277-528f-99f2-9b7f935da647/scratchpad/kdp/scores_w25.json"
+   ],
+   "as_of": "2026-11-28",
+   "confidence": "high",
+   "load_bearing": false
+  }
+ ],
+ "archetype_params": [
+  {
+   "archetype": "kdp_fiction_fr",
+   "description": "Romans de genre en français (romance, thriller, feel good) en ebook KDP Select (Kindle+) et broché sur Amazon.fr, écriture assistée par IA déclarée.",
+   "params": {
+    "hrun": 25,
+    "p12": 0.04,
+    "Rs": 1500,
+    "m": 0.7,
+    "T1": 10,
+    "C": 600,
+    "h": 250,
+    "L": 0.5,
+    "D": 1.5,
+    "Rp": 0.3,
+    "orient": "export",
+    "rail": "kdp",
+    "regime": "auteur"
+   },
+   "justification": {
+    "p12": {
+     "text": "0,04 : 1 à 3 livres, environ 80 % sous 100 $/mois ; 5 à 9 livres, médiane 50 $/mois (Written Word Media 2025)",
+     "evidence": "E/H"
+    },
+    "Rs": {
+     "text": "1 500 € : série de 5 à 8 titres réussie",
+     "evidence": "H"
+    },
+    "m": {
+     "text": "0,70 : publicité et couvertures estimées à 30 % des redevances",
+     "evidence": "H"
+    },
+    "T1": {
+     "text": "10 semaines : paiement 60 jours après la fin du mois",
+     "evidence": "F/H"
+    },
+    "C": {
+     "text": "600 € : 6 couvertures et 300 € de publicité",
+     "evidence": "H"
+    },
+    "h": {
+     "text": "250 h sur 6 mois, plafond de 10 h/semaine",
+     "evidence": "H"
+    },
+    "hrun": {
+     "text": "25 h/mois : cadence d'une série",
+     "evidence": "H"
+    },
+    "L": {
+     "text": "0,50 : mise en forme, métadonnées, analyse automatisables ; texte généré à déclarer",
+     "evidence": "F/H"
+    },
+    "D": {
+     "text": "1,5 : nom de plume et série",
+     "evidence": "H"
+    },
+    "Rp": {
+     "text": "0,30 : 2 titres par format et par semaine, déclaration IA, fermetures de comptes, KENP variable",
+     "evidence": "F/F2"
+    }
+   },
+   "scores_base": {
+    "France": 41.3,
+    "Belgique": 41.3,
+    "Suisse": 41.7,
+    "Quebec": 41.3,
+    "Maroc": 39.2,
+    "UEMOA (SN, CI)": 37.5,
+    "Afrique centrale (CM, RDC)": 36.4
+   },
+   "scores_w25": {
+    "France": 41.3,
+    "Belgique": 41.3,
+    "Suisse": 41.3,
+    "Quebec": 41.3,
+    "Maroc": 41.3,
+    "UEMOA (SN, CI)": 41.1,
+    "Afrique centrale (CM, RDC)": 41.1
+   },
+   "E24_base_eur": {
+    "France": 367,
+    "Belgique": 376,
+    "Suisse": 376,
+    "Quebec": 354,
+    "Maroc": 299,
+    "UEMOA (SN, CI)": 113,
+    "Afrique centrale (CM, RDC)": 94
+   },
+   "roi_base": {
+    "France": -0.04,
+    "Belgique": -0.04,
+    "Suisse": -0.03,
+    "Quebec": -0.05,
+    "Maroc": -0.17,
+    "UEMOA (SN, CI)": -0.27,
+    "Afrique centrale (CM, RDC)": -0.34
+   },
+   "rank_base": {
+    "France": 23,
+    "Belgique": 23,
+    "Suisse": 24,
+    "Quebec": 23,
+    "Maroc": 23,
+    "UEMOA (SN, CI)": 21,
+    "Afrique centrale (CM, RDC)": 21
+   },
+   "rank_w25": {
+    "France": 23,
+    "Belgique": 23,
+    "Suisse": 23,
+    "Quebec": 23,
+    "Maroc": 23,
+    "UEMOA (SN, CI)": 21,
+    "Afrique centrale (CM, RDC)": 21
+   }
+  },
+  {
+   "archetype": "kdp_low_content",
+   "description": "Livres de coloriage, cahiers d'activités et d'écriture en broché (Amazon.fr et .com), intérieurs générés par script.",
+   "params": {
+    "hrun": 15,
+    "p12": 0.03,
+    "Rs": 800,
+    "m": 0.75,
+    "T1": 9,
+    "C": 300,
+    "h": 150,
+    "L": 0.75,
+    "D": 0.5,
+    "Rp": 0.4,
+    "orient": "export",
+    "rail": "kdp",
+    "regime": "auteur"
+   },
+   "justification": {
+    "p12": {
+     "text": "0,03 : saturation, redevance de 1,27 à 3,51 € par livre",
+     "evidence": "F/H"
+    },
+    "Rs": {
+     "text": "800 €",
+     "evidence": "H"
+    },
+    "m": {
+     "text": "0,75 : publicité",
+     "evidence": "H"
+    },
+    "T1": {
+     "text": "9 semaines : revue de 3 à 4 semaines puis 60 jours",
+     "evidence": "F"
+    },
+    "C": {
+     "text": "300 €",
+     "evidence": "H"
+    },
+    "h": {
+     "text": "150 h",
+     "evidence": "H"
+    },
+    "hrun": {
+     "text": "15 h/mois",
+     "evidence": "H"
+    },
+    "L": {
+     "text": "0,75 : intérieurs SVG et PDF générables",
+     "evidence": "H"
+    },
+    "D": {
+     "text": "0,5 : images IA non protégeables (Thaler, cert. refusé le 02/03/2026)",
+     "evidence": "F2/H"
+    },
+    "Rp": {
+     "text": "0,40 : règle « not significantly different », limite de titres, images IA à déclarer",
+     "evidence": "F/F2"
+    }
+   },
+   "scores_base": {
+    "France": 42.8,
+    "Belgique": 42.8,
+    "Suisse": 43.1,
+    "Quebec": 42.8,
+    "Maroc": 40.8,
+    "UEMOA (SN, CI)": 39.3,
+    "Afrique centrale (CM, RDC)": 38.4
+   },
+   "scores_w25": {
+    "France": 42.8,
+    "Belgique": 42.8,
+    "Suisse": 42.8,
+    "Quebec": 42.8,
+    "Maroc": 42.8,
+    "UEMOA (SN, CI)": 42.7,
+    "Afrique centrale (CM, RDC)": 42.7
+   },
+   "E24_base_eur": {
+    "France": 136,
+    "Belgique": 139,
+    "Suisse": 139,
+    "Quebec": 131,
+    "Maroc": 111,
+    "UEMOA (SN, CI)": 42,
+    "Afrique centrale (CM, RDC)": 35
+   },
+   "roi_base": {
+    "France": -0.04,
+    "Belgique": -0.04,
+    "Suisse": -0.02,
+    "Quebec": -0.04,
+    "Maroc": -0.16,
+    "UEMOA (SN, CI)": -0.24,
+    "Afrique centrale (CM, RDC)": -0.3
+   },
+   "rank_base": {
+    "France": 20,
+    "Belgique": 20,
+    "Suisse": 20,
+    "Quebec": 20,
+    "Maroc": 20,
+    "UEMOA (SN, CI)": 18,
+    "Afrique centrale (CM, RDC)": 18
+   },
+   "rank_w25": {
+    "France": 20,
+    "Belgique": 20,
+    "Suisse": 20,
+    "Quebec": 20,
+    "Maroc": 20,
+    "UEMOA (SN, CI)": 18,
+    "Afrique centrale (CM, RDC)": 18
+   }
+  },
+  {
+   "archetype": "kdp_guides_pratiques",
+   "description": "Guides pratiques de niche en français (démarches, outils IA pour TPE, cuisine), ebook et broché.",
+   "params": {
+    "hrun": 15,
+    "p12": 0.05,
+    "Rs": 1000,
+    "m": 0.75,
+    "T1": 10,
+    "C": 400,
+    "h": 200,
+    "L": 0.6,
+    "D": 2.0,
+    "Rp": 0.25,
+    "orient": "export",
+    "rail": "kdp",
+    "regime": "auteur"
+   },
+   "justification": {
+    "p12": {
+     "text": "0,05",
+     "evidence": "H"
+    },
+    "Rs": {
+     "text": "1 000 €",
+     "evidence": "H"
+    },
+    "m": {
+     "text": "0,75",
+     "evidence": "H"
+    },
+    "T1": {
+     "text": "10 semaines",
+     "evidence": "F/H"
+    },
+    "C": {
+     "text": "400 €",
+     "evidence": "H"
+    },
+    "h": {
+     "text": "200 h",
+     "evidence": "H"
+    },
+    "hrun": {
+     "text": "15 h/mois",
+     "evidence": "H"
+    },
+    "L": {
+     "text": "0,60",
+     "evidence": "H"
+    },
+    "D": {
+     "text": "2,0 : expertise, mises à jour",
+     "evidence": "H"
+    },
+    "Rp": {
+     "text": "0,25 : guides compagnons interdits, AI Act 50(4) possible",
+     "evidence": "F/F2"
+    }
+   },
+   "scores_base": {
+    "France": 45.6,
+    "Belgique": 45.6,
+    "Suisse": 45.9,
+    "Quebec": 45.6,
+    "Maroc": 43.8,
+    "UEMOA (SN, CI)": 41.8,
+    "Afrique centrale (CM, RDC)": 40.8
+   },
+   "scores_w25": {
+    "France": 45.6,
+    "Belgique": 45.6,
+    "Suisse": 45.6,
+    "Quebec": 45.6,
+    "Maroc": 45.5,
+    "UEMOA (SN, CI)": 45.3,
+    "Afrique centrale (CM, RDC)": 45.3
+   },
+   "E24_base_eur": {
+    "France": 351,
+    "Belgique": 360,
+    "Suisse": 360,
+    "Quebec": 339,
+    "Maroc": 286,
+    "UEMOA (SN, CI)": 108,
+    "Afrique centrale (CM, RDC)": 90
+   },
+   "roi_base": {
+    "France": -0.04,
+    "Belgique": -0.04,
+    "Suisse": -0.02,
+    "Quebec": -0.04,
+    "Maroc": -0.14,
+    "UEMOA (SN, CI)": -0.26,
+    "Afrique centrale (CM, RDC)": -0.32
+   },
+   "rank_base": {
+    "France": 16,
+    "Belgique": 16,
+    "Suisse": 16,
+    "Quebec": 16,
+    "Maroc": 16,
+    "UEMOA (SN, CI)": 15,
+    "Afrique centrale (CM, RDC)": 15
+   },
+   "rank_w25": {
+    "France": 16,
+    "Belgique": 16,
+    "Suisse": 16,
+    "Quebec": 16,
+    "Maroc": 15,
+    "UEMOA (SN, CI)": 14,
+    "Afrique centrale (CM, RDC)": 14
+   }
+  },
+  {
+   "archetype": "pod_marketplaces",
+   "description": "Motifs sur Redbubble, TeePublic, Spreadshirt et Merch on Demand (si invitation).",
+   "params": {
+    "hrun": 10,
+    "p12": 0.01,
+    "Rs": 800,
+    "m": 0.95,
+    "T1": 8,
+    "C": 150,
+    "h": 120,
+    "L": 0.6,
+    "D": 0.5,
+    "Rp": 0.4,
+    "orient": "export",
+    "rail": "pod",
+    "regime": "auteur"
+   },
+   "justification": {
+    "p12": {
+     "text": "0,01 : moyenne Redbubble 44,7 A$/artiste/an, TeePublic 107 A$ (Articore FY26)",
+     "evidence": "F calcul"
+    },
+    "Rs": {
+     "text": "800 €",
+     "evidence": "H"
+    },
+    "m": {
+     "text": "0,95 : aucun coût direct",
+     "evidence": "E"
+    },
+    "T1": {
+     "text": "8 semaines",
+     "evidence": "H"
+    },
+    "C": {
+     "text": "150 € : frais de compte Redbubble",
+     "evidence": "F2/H"
+    },
+    "h": {
+     "text": "120 h",
+     "evidence": "H"
+    },
+    "hrun": {
+     "text": "10 h/mois",
+     "evidence": "H"
+    },
+    "L": {
+     "text": "0,60",
+     "evidence": "H"
+    },
+    "D": {
+     "text": "0,5",
+     "evidence": "H"
+    },
+    "Rp": {
+     "text": "0,40 : frais de compte, palier Merch divisé par deux le 01/06/2026, retraits IP",
+     "evidence": "F/E"
+    }
+   },
+   "scores_base": {
+    "France": 42.5,
+    "Belgique": 42.5,
+    "Suisse": 42.7,
+    "Quebec": 42.5,
+    "Maroc": 40.9,
+    "UEMOA (SN, CI)": 39.8,
+    "Afrique centrale (CM, RDC)": 39.0
+   },
+   "scores_w25": {
+    "France": 42.5,
+    "Belgique": 42.5,
+    "Suisse": 42.5,
+    "Quebec": 42.5,
+    "Maroc": 42.4,
+    "UEMOA (SN, CI)": 42.4,
+    "Afrique centrale (CM, RDC)": 42.4
+   },
+   "E24_base_eur": {
+    "France": 58,
+    "Belgique": 59,
+    "Suisse": 59,
+    "Quebec": 56,
+    "Maroc": 38,
+    "UEMOA (SN, CI)": 24,
+    "Afrique centrale (CM, RDC)": 18
+   },
+   "roi_base": {
+    "France": -0.03,
+    "Belgique": -0.03,
+    "Suisse": -0.02,
+    "Quebec": -0.03,
+    "Maroc": -0.12,
+    "UEMOA (SN, CI)": -0.18,
+    "Afrique centrale (CM, RDC)": -0.24
+   },
+   "rank_base": {
+    "France": 21,
+    "Belgique": 21,
+    "Suisse": 22,
+    "Quebec": 21,
+    "Maroc": 19,
+    "UEMOA (SN, CI)": 17,
+    "Afrique centrale (CM, RDC)": 17
+   },
+   "rank_w25": {
+    "France": 21,
+    "Belgique": 21,
+    "Suisse": 21,
+    "Quebec": 21,
+    "Maroc": 22,
+    "UEMOA (SN, CI)": 20,
+    "Afrique centrale (CM, RDC)": 19
+   }
+  },
+  {
+   "archetype": "pod_etsy_printify",
+   "description": "Boutique Etsy de produits imprimés à la demande (Printify ou Printful) pour acheteurs US et UE.",
+   "params": {
+    "hrun": 25,
+    "p12": 0.05,
+    "Rs": 1500,
+    "m": 0.3,
+    "T1": 6,
+    "C": 600,
+    "h": 250,
+    "L": 0.5,
+    "D": 1.5,
+    "Rp": 0.25,
+    "orient": "export",
+    "rail": "etsy",
+    "regime": "bic_vente"
+   },
+   "justification": {
+    "p12": {
+     "text": "0,05 : moyenne Etsy 1 868 $ de ventes brutes par vendeur actif",
+     "evidence": "F2 calcul/H"
+    },
+    "Rs": {
+     "text": "1 500 €",
+     "evidence": "H"
+    },
+    "m": {
+     "text": "0,30 : 6 à 8 € de marge sur 25 € avant publicité",
+     "evidence": "H"
+    },
+    "T1": {
+     "text": "6 semaines",
+     "evidence": "H"
+    },
+    "C": {
+     "text": "600 € : échantillons, publicité",
+     "evidence": "H"
+    },
+    "h": {
+     "text": "250 h",
+     "evidence": "H"
+    },
+    "hrun": {
+     "text": "25 h/mois",
+     "evidence": "H"
+    },
+    "L": {
+     "text": "0,50",
+     "evidence": "H"
+    },
+    "D": {
+     "text": "1,5 : marque de niche",
+     "evidence": "H"
+    },
+    "Rp": {
+     "text": "0,25 : photo réelle obligatoire depuis le 22/10/2026",
+     "evidence": "F2"
+    }
+   },
+   "scores_base": {
+    "France": 43.8,
+    "Belgique": 43.7,
+    "Suisse": 44.2,
+    "Quebec": 43.8,
+    "Maroc": 41.5,
+    "UEMOA (SN, CI)": null,
+    "Afrique centrale (CM, RDC)": null
+   },
+   "scores_w25": {
+    "France": 43.8,
+    "Belgique": 43.7,
+    "Suisse": 43.8,
+    "Quebec": 43.8,
+    "Maroc": 43.8,
+    "UEMOA (SN, CI)": null,
+    "Afrique centrale (CM, RDC)": null
+   },
+   "E24_base_eur": {
+    "France": 229,
+    "Belgique": 196,
+    "Suisse": 222,
+    "Quebec": 209,
+    "Maroc": 221,
+    "UEMOA (SN, CI)": 0,
+    "Afrique centrale (CM, RDC)": 0
+   },
+   "roi_base": {
+    "France": -0.05,
+    "Belgique": -0.05,
+    "Suisse": -0.03,
+    "Quebec": -0.05,
+    "Maroc": -0.18,
+    "UEMOA (SN, CI)": null,
+    "Afrique centrale (CM, RDC)": null
+   },
+   "rank_base": {
+    "France": 19,
+    "Belgique": 19,
+    "Suisse": 19,
+    "Quebec": 19,
+    "Maroc": 18,
+    "UEMOA (SN, CI)": null,
+    "Afrique centrale (CM, RDC)": null
+   },
+   "rank_w25": {
+    "France": 19,
+    "Belgique": 19,
+    "Suisse": 19,
+    "Quebec": 19,
+    "Maroc": 19,
+    "UEMOA (SN, CI)": null,
+    "Afrique centrale (CM, RDC)": null
+   }
+  },
+  {
+   "archetype": "etsy_imprimables",
+   "description": "Imprimables PDF sur Etsy (agendas, planificateurs, activités enfants), hors recettes et patrons.",
+   "params": {
+    "hrun": 15,
+    "p12": 0.05,
+    "Rs": 1200,
+    "m": 0.75,
+    "T1": 4,
+    "C": 150,
+    "h": 150,
+    "L": 0.6,
+    "D": 1.0,
+    "Rp": 0.35,
+    "orient": "export",
+    "rail": "etsy",
+    "regime": "bic_presta"
+   },
+   "justification": {
+    "p12": {
+     "text": "0,05",
+     "evidence": "H"
+    },
+    "Rs": {
+     "text": "1 200 €",
+     "evidence": "H"
+    },
+    "m": {
+     "text": "0,75 : 79 % net en France, 73 % au Maroc, moins publicité",
+     "evidence": "F calcul"
+    },
+    "T1": {
+     "text": "4 semaines",
+     "evidence": "F/H"
+    },
+    "C": {
+     "text": "150 € : 0,20 $ par fiche, frais d'ouverture, publicité",
+     "evidence": "F/H"
+    },
+    "h": {
+     "text": "150 h",
+     "evidence": "H"
+    },
+    "hrun": {
+     "text": "15 h/mois",
+     "evidence": "H"
+    },
+    "L": {
+     "text": "0,60",
+     "evidence": "H"
+    },
+    "D": {
+     "text": "1,0",
+     "evidence": "H"
+    },
+    "Rp": {
+     "text": "0,35 : guides fonctionnels IA interdits, détection des images IA",
+     "evidence": "F2"
+    }
+   },
+   "scores_base": {
+    "France": 48.2,
+    "Belgique": 48.2,
+    "Suisse": 48.2,
+    "Quebec": 48.2,
+    "Maroc": 48.6,
+    "UEMOA (SN, CI)": null,
+    "Afrique centrale (CM, RDC)": null
+   },
+   "scores_w25": {
+    "France": 48.2,
+    "Belgique": 48.2,
+    "Suisse": 48.2,
+    "Quebec": 48.2,
+    "Maroc": 48.2,
+    "UEMOA (SN, CI)": null,
+    "Afrique centrale (CM, RDC)": null
+   },
+   "E24_base_eur": {
+    "France": 363,
+    "Belgique": 345,
+    "Suisse": 391,
+    "Quebec": 368,
+    "Maroc": 387,
+    "UEMOA (SN, CI)": 0,
+    "Afrique centrale (CM, RDC)": 0
+   },
+   "roi_base": {
+    "France": 0.01,
+    "Belgique": 0.0,
+    "Suisse": 0.0,
+    "Quebec": 0.01,
+    "Maroc": 0.03,
+    "UEMOA (SN, CI)": null,
+    "Afrique centrale (CM, RDC)": null
+   },
+   "rank_base": {
+    "France": 11,
+    "Belgique": 11,
+    "Suisse": 11,
+    "Quebec": 11,
+    "Maroc": 9,
+    "UEMOA (SN, CI)": null,
+    "Afrique centrale (CM, RDC)": null
+   },
+   "rank_w25": {
+    "France": 11,
+    "Belgique": 11,
+    "Suisse": 12,
+    "Quebec": 11,
+    "Maroc": 9,
+    "UEMOA (SN, CI)": null,
+    "Afrique centrale (CM, RDC)": null
+   }
+  },
+  {
+   "archetype": "modeles_notion_canva",
+   "description": "Modèles Notion et Canva en français vendus sur Notion Marketplace, Gumroad ou Payhip.",
+   "params": {
+    "hrun": 12,
+    "p12": 0.06,
+    "Rs": 1000,
+    "m": 0.88,
+    "T1": 4,
+    "C": 200,
+    "h": 150,
+    "L": 0.75,
+    "D": 1.5,
+    "Rp": 0.15,
+    "orient": "export",
+    "rail": "gabarits",
+    "regime": "bic_presta"
+   },
+   "justification": {
+    "p12": {
+     "text": "0,06 : offre française quasi nulle (1 résultat « modele notion » contre 19 744 « notion template » sur Gumroad) ; demande non mesurée",
+     "evidence": "F/H"
+    },
+    "Rs": {
+     "text": "1 000 €",
+     "evidence": "H"
+    },
+    "m": {
+     "text": "0,88 : Notion 8 % + 0,40 $ + 1 % ; Gumroad 10 % + 0,50 $",
+     "evidence": "F"
+    },
+    "T1": {
+     "text": "4 semaines",
+     "evidence": "H"
+    },
+    "C": {
+     "text": "200 €",
+     "evidence": "H"
+    },
+    "h": {
+     "text": "150 h",
+     "evidence": "H"
+    },
+    "hrun": {
+     "text": "12 h/mois",
+     "evidence": "H"
+    },
+    "L": {
+     "text": "0,75 : API Notion et connecteur Canva",
+     "evidence": "F/H"
+    },
+    "D": {
+     "text": "1,5",
+     "evidence": "H"
+    },
+    "Rp": {
+     "text": "0,15 : validation Notion, programme Canva en bêta",
+     "evidence": "F/F2"
+    }
+   },
+   "scores_base": {
+    "France": 52.1,
+    "Belgique": 52.1,
+    "Suisse": 52.1,
+    "Quebec": 52.2,
+    "Maroc": 52.5,
+    "UEMOA (SN, CI)": 52.3,
+    "Afrique centrale (CM, RDC)": 49.4
+   },
+   "scores_w25": {
+    "France": 52.1,
+    "Belgique": 52.1,
+    "Suisse": 52.2,
+    "Quebec": 52.2,
+    "Maroc": 52.0,
+    "UEMOA (SN, CI)": 51.9,
+    "Afrique centrale (CM, RDC)": 51.5
+   },
+   "E24_base_eur": {
+    "France": 557,
+    "Belgique": 530,
+    "Suisse": 600,
+    "Quebec": 565,
+    "Maroc": 489,
+    "UEMOA (SN, CI)": 445,
+    "Afrique centrale (CM, RDC)": 191
+   },
+   "roi_base": {
+    "France": 0.02,
+    "Belgique": 0.01,
+    "Suisse": 0.01,
+    "Quebec": 0.02,
+    "Maroc": 0.03,
+    "UEMOA (SN, CI)": 0.02,
+    "Afrique centrale (CM, RDC)": -0.14
+   },
+   "rank_base": {
+    "France": 6,
+    "Belgique": 6,
+    "Suisse": 6,
+    "Quebec": 6,
+    "Maroc": 4,
+    "UEMOA (SN, CI)": 3,
+    "Afrique centrale (CM, RDC)": 3
+   },
+   "rank_w25": {
+    "France": 6,
+    "Belgique": 6,
+    "Suisse": 6,
+    "Quebec": 6,
+    "Maroc": 4,
+    "UEMOA (SN, CI)": 3,
+    "Afrique centrale (CM, RDC)": 4
+   }
+  },
+  {
+   "archetype": "cours_udemy",
+   "description": "Cours vidéo en français sur Udemy (IA, no-code, bureautique).",
+   "params": {
+    "hrun": 15,
+    "p12": 0.04,
+    "Rs": 1000,
+    "m": 0.9,
+    "T1": 8,
+    "C": 200,
+    "h": 200,
+    "L": 0.5,
+    "D": 1.5,
+    "Rp": 0.3,
+    "orient": "export",
+    "rail": "udemy",
+    "regime": "bnc"
+   },
+   "justification": {
+    "p12": {
+     "text": "0,04",
+     "evidence": "H"
+    },
+    "Rs": {
+     "text": "1 000 € nets de la part Udemy (37 % organique, 97 % coupon)",
+     "evidence": "F2/H"
+    },
+    "m": {
+     "text": "0,90",
+     "evidence": "H"
+    },
+    "T1": {
+     "text": "8 semaines",
+     "evidence": "H"
+    },
+    "C": {
+     "text": "200 €",
+     "evidence": "H"
+    },
+    "h": {
+     "text": "200 h",
+     "evidence": "H"
+    },
+    "hrun": {
+     "text": "15 h/mois",
+     "evidence": "H"
+    },
+    "L": {
+     "text": "0,50",
+     "evidence": "H"
+    },
+    "D": {
+     "text": "1,5",
+     "evidence": "H"
+    },
+    "Rp": {
+     "text": "0,30 : baisses de part 2023-2026, fusion Coursera (mai 2026)",
+     "evidence": "F2"
+    }
+   },
+   "scores_base": {
+    "France": 44.9,
+    "Belgique": 44.9,
+    "Suisse": 45.0,
+    "Quebec": 44.9,
+    "Maroc": 44.5,
+    "UEMOA (SN, CI)": 43.6,
+    "Afrique centrale (CM, RDC)": 42.9
+   },
+   "scores_w25": {
+    "France": 44.9,
+    "Belgique": 44.9,
+    "Suisse": 45.0,
+    "Quebec": 44.9,
+    "Maroc": 44.9,
+    "UEMOA (SN, CI)": 44.8,
+    "Afrique centrale (CM, RDC)": 44.7
+   },
+   "E24_base_eur": {
+    "France": 286,
+    "Belgique": 289,
+    "Suisse": 327,
+    "Quebec": 308,
+    "Maroc": 305,
+    "UEMOA (SN, CI)": 208,
+    "Afrique centrale (CM, RDC)": 173
+   },
+   "roi_base": {
+    "France": -0.01,
+    "Belgique": -0.01,
+    "Suisse": -0.0,
+    "Quebec": -0.01,
+    "Maroc": -0.03,
+    "UEMOA (SN, CI)": -0.08,
+    "Afrique centrale (CM, RDC)": -0.13
+   },
+   "rank_base": {
+    "France": 17,
+    "Belgique": 17,
+    "Suisse": 18,
+    "Quebec": 17,
+    "Maroc": 15,
+    "UEMOA (SN, CI)": 13,
+    "Afrique centrale (CM, RDC)": 12
+   },
+   "rank_w25": {
+    "France": 17,
+    "Belgique": 17,
+    "Suisse": 17,
+    "Quebec": 17,
+    "Maroc": 17,
+    "UEMOA (SN, CI)": 16,
+    "Afrique centrale (CM, RDC)": 16
+   }
+  },
+  {
+   "archetype": "banque_images_ia",
+   "description": "Images générées par IA sur Adobe Stock (Shutterstock refuse l'IA).",
+   "params": {
+    "hrun": 15,
+    "p12": 0.02,
+    "Rs": 800,
+    "m": 0.95,
+    "T1": 6,
+    "C": 300,
+    "h": 150,
+    "L": 0.6,
+    "D": 0.5,
+    "Rp": 0.45,
+    "orient": "export",
+    "rail": "stock",
+    "regime": "bnc"
+   },
+   "justification": {
+    "p12": {
+     "text": "0,02",
+     "evidence": "H"
+    },
+    "Rs": {
+     "text": "800 €",
+     "evidence": "H"
+    },
+    "m": {
+     "text": "0,95",
+     "evidence": "H"
+    },
+    "T1": {
+     "text": "6 semaines",
+     "evidence": "H"
+    },
+    "C": {
+     "text": "300 € : outils de génération",
+     "evidence": "H"
+    },
+    "h": {
+     "text": "150 h",
+     "evidence": "H"
+    },
+    "hrun": {
+     "text": "15 h/mois",
+     "evidence": "H"
+    },
+    "L": {
+     "text": "0,60",
+     "evidence": "H"
+    },
+    "D": {
+     "text": "0,5",
+     "evidence": "H"
+    },
+    "Rp": {
+     "text": "0,45 : étiquetage, fermeture de compte avec perte des redevances, offre massive",
+     "evidence": "F2"
+    }
+   },
+   "scores_base": {
+    "France": 42.5,
+    "Belgique": 42.5,
+    "Suisse": 42.9,
+    "Quebec": 42.5,
+    "Maroc": 40.5,
+    "UEMOA (SN, CI)": 39.2,
+    "Afrique centrale (CM, RDC)": 38.2
+   },
+   "scores_w25": {
+    "France": 42.5,
+    "Belgique": 42.5,
+    "Suisse": 42.5,
+    "Quebec": 42.5,
+    "Maroc": 42.5,
+    "UEMOA (SN, CI)": 42.5,
+    "Afrique centrale (CM, RDC)": 42.4
+   },
+   "E24_base_eur": {
+    "France": 96,
+    "Belgique": 97,
+    "Suisse": 110,
+    "Quebec": 104,
+    "Maroc": 90,
+    "UEMOA (SN, CI)": 58,
+    "Afrique centrale (CM, RDC)": 47
+   },
+   "roi_base": {
+    "France": -0.05,
+    "Belgique": -0.05,
+    "Suisse": -0.03,
+    "Quebec": -0.04,
+    "Maroc": -0.16,
+    "UEMOA (SN, CI)": -0.24,
+    "Afrique centrale (CM, RDC)": -0.3
+   },
+   "rank_base": {
+    "France": 22,
+    "Belgique": 22,
+    "Suisse": 21,
+    "Quebec": 22,
+    "Maroc": 21,
+    "UEMOA (SN, CI)": 19,
+    "Afrique centrale (CM, RDC)": 19
+   },
+   "rank_w25": {
+    "France": 22,
+    "Belgique": 22,
+    "Suisse": 22,
+    "Quebec": 22,
+    "Maroc": 21,
+    "UEMOA (SN, CI)": 19,
+    "Afrique centrale (CM, RDC)": 20
+   }
+  }
+ ],
+ "new_rails_pay": {
+  "coefficients": {
+   "kdp": {
+    "France": 1,
+    "Belgique": 1,
+    "Suisse": 1,
+    "Quebec": 1,
+    "Maroc": 0.75,
+    "UEMOA (SN, CI)": 0.3,
+    "Afrique centrale (CM, RDC)": 0.25
+   },
+   "etsy": {
+    "France": 1,
+    "Belgique": 1,
+    "Suisse": 1,
+    "Quebec": 1,
+    "Maroc": 0.85,
+    "UEMOA (SN, CI)": 0,
+    "Afrique centrale (CM, RDC)": 0
+   },
+   "pod": {
+    "France": 1,
+    "Belgique": 1,
+    "Suisse": 1,
+    "Quebec": 1,
+    "Maroc": 0.6,
+    "UEMOA (SN, CI)": 0.4,
+    "Afrique centrale (CM, RDC)": 0.3
+   },
+   "gabarits": {
+    "France": 1,
+    "Belgique": 1,
+    "Suisse": 1,
+    "Quebec": 1,
+    "Maroc": 0.7,
+    "UEMOA (SN, CI)": 0.7,
+    "Afrique centrale (CM, RDC)": 0.3
+   },
+   "udemy": {
+    "France": 1,
+    "Belgique": 1,
+    "Suisse": 1,
+    "Quebec": 1,
+    "Maroc": 0.8,
+    "UEMOA (SN, CI)": 0.6,
+    "Afrique centrale (CM, RDC)": 0.5
+   },
+   "stock": {
+    "France": 1,
+    "Belgique": 1,
+    "Suisse": 1,
+    "Quebec": 1,
+    "Maroc": 0.7,
+    "UEMOA (SN, CI)": 0.5,
+    "Afrique centrale (CM, RDC)": 0.4
+   }
+  },
+  "justification": {
+   "kdp": "EFT euros (FR, BE, CH) ou CAD (QC) [F] ; Maroc virement en MAD, seuil 100 par marché [F] ; UEMOA et Afrique centrale : chèque USD seulement [F] ; coefficients [H]",
+   "etsy": "Liste officielle Etsy Payments : MA oui, SN, CI, CM, RDC non [F] ; Maroc 4,5 % + 5 MAD, conversion 2,5 % [F]",
+   "pod": "PayPal ou Payoneer [F2] ; couverture par pays non vérifiée [H]",
+   "gabarits": "Notion : MA, SN, CI éligibles, CM et RDC non [F] ; Gumroad : banque ou PayPal selon le pays [F]",
+   "udemy": "PayPal, Payoneer, Tipalti [F2] ; [H]",
+   "stock": "PayPal ou Skrill [CI] ; [H]"
+  }
+ },
+ "new_tax_regimes": {
+  "values": {
+   "auteur": {
+    "France": 0.17,
+    "Belgique": 0.15,
+    "Suisse": 0.15,
+    "Quebec": 0.2,
+    "Maroc": 0.1,
+    "UEMOA (SN, CI)": 0.15,
+    "Afrique centrale (CM, RDC)": 0.15
+   },
+   "bic_presta": {
+    "France": 0.212,
+    "Belgique": 0.25,
+    "Suisse": 0.15,
+    "Quebec": 0.2,
+    "Maroc": 0.01,
+    "UEMOA (SN, CI)": 0.1,
+    "Afrique centrale (CM, RDC)": 0.1
+   }
+  },
+  "justification": {
+   "auteur": "France 0,17 [E, artistes-auteurs, BNC] ; Belgique 0,15 [CI] ; Suisse 0,15 et Québec 0,20 [H] ; Maroc 0,10 [F retenue US, H impôt local] ; UEMOA et Afrique centrale 0,15 [H]",
+   "bic_presta": "France 0,212 [F] ; Maroc 0,01 [F2] ; autres [H]"
+  }
+ },
+ "grid_run": {
+  "script_copy": "/tmp/claude-0/-home-user-claudecode/00e88930-c277-528f-99f2-9b7f935da647/scratchpad/kdp/score_kdp.py",
+  "scores_base": "/tmp/claude-0/-home-user-claudecode/00e88930-c277-528f-99f2-9b7f935da647/scratchpad/kdp/scores.json",
+  "scores_w25": "/tmp/claude-0/-home-user-claudecode/00e88930-c277-528f-99f2-9b7f935da647/scratchpad/kdp/scores_w25.json",
+  "monte_carlo": "/tmp/claude-0/-home-user-claudecode/00e88930-c277-528f-99f2-9b7f935da647/scratchpad/kdp/mc_kdp.py",
+  "note": "Les 19 archétypes d'origine donnent les mêmes scores que initiatives-economie.md ; aucun FIT ajouté."
+ },
+ "implications_for_tool": [
+  "Capteur « offre en langue locale » : compter le total de l'API de découverte Gumroad pour chaque requête anglaise et ses traductions, et les compteurs du catalogue Notion ; le rapport offre US / offre FR alimente l'indice d'opportunité.",
+  "Autocomplétion Amazon historisée par place de marché (.com, .fr, .de) et par rayon (stripbooks, digital-text, aps) ; l'arrivée d'un modificateur US (cosy, monochrome, romantasy) dans .fr date l'arrivée d'un format. Amazon.ca est inutilisable en français.",
+  "Classements Kindle quotidiens : .com, .de, .ca ; .fr une fois par jour au plus, arrêt au premier captcha, sans contournement.",
+  "Série mensuelle du fonds Kindle+ lue en pied des pages d'aide KDP.",
+  "Veille des verrous hebdomadaire : pages KDP (paiements par pays, prestataires agréés, bandes de prix, Virtual Voice, Kindle Translate, ACX, règles IA), Etsy (pays, frais, IA), Notion (pays), Printful (pays exclus).",
+  "Règles datées : kdp en chèque seul pour SN, CI, CM, RDC ; etsy à 0 pour SN, CI, CM, RDC ; notion à 0 pour CM, RDC ; ACX vrai pour le Canada seul ; retenue US 0/10/30 % selon le pays.",
+  "Calculateur d'économie unitaire KDP dans le kit : TVA 5,5 % ou 20 %, formule d'impression, seuil de 9,99 € HT, bande 2,99-12,99, retenue par pays, délai de 60 jours.",
+  "Garde-fous de kit : au plus 2 titres par format et par semaine, pas de dépôt automatisé, déclaration IA cochée, pas de résumé d'autrui, pas de recette ni patron générés sur Etsy, pas d'IA sur Shutterstock.",
+  "Afficher E24 et la moyenne de la plateforme (45 A$ par artiste Redbubble, 1 868 $ par vendeur Etsy) à côté de chaque score ; borner le sous-score ROI quand E24 < 2C pour corriger l'artefact du coût horaire.",
+  "Proposer la variante « outil de l'archétype » (outil francophone de mots-clés KDP ou Etsy fondé sur les sondes), classée micro_saas ou extension_chrome."
+ ],
+ "open_questions": [
+  "Taux KENP officiel par mois et par marché (Amazon.fr).",
+  "Pays éligibles à Merch on Demand et texte officiel des paliers.",
+  "Versement KDP sur Payoneer ou Wise pour un résident sénégalais ou ivoirien.",
+  "Maroc : régime fiscal des redevances étrangères d'un auteur, imputation des 10 %, compte Payoneer et Office des changes.",
+  "France : classement URSSAF des ventes d'imprimables et modèles (BIC services ou vente) ; redevances d'impression à la demande et régime artiste-auteur.",
+  "Etsy : photo réelle obligatoire pour l'impression à la demande ?",
+  "Frais de livraison des ebooks sur Amazon.fr et coût publicitaire par vente.",
+  "Pays de versement de Gumroad, Redbubble, Canva Creators, Adobe Stock en MA, SN, CI, CM, RDC.",
+  "Barèmes primaires de Spreadshirt, TeePublic, Creative Market.",
+  "Demande française réelle pour les modèles Notion (Google Trends en 429).",
+  "Extension de Virtual Voice et de l'audio Kindle+ hors États-Unis.",
+  "Fiscalité des droits d'auteur d'un autoédité en Belgique, Suisse, Québec."
+ ],
+ "data_sources": [
+  {
+   "name": "Autocomplétion Amazon par marché et rayon",
+   "url": "https://completion.amazon.fr/api/2017/suggestions?mid=A13V1IB3VIYZZH&alias=stripbooks&prefix=livre%20de%20coloriage",
+   "status": 200,
+   "excerpt": "adulte, enfant, monochrome, par numéro pour adultes, cosy, pour les seniors",
+   "verdict": "core"
+  },
+  {
+   "name": "Autocomplétion Amazon.com Kindle",
+   "url": "https://completion.amazon.com/api/2017/suggestions?mid=ATVPDKIKX0DER&alias=digital-text&prefix=romantasy",
+   "status": 200,
+   "excerpt": "romantasy kindle unlimited, dark romantasy, reverse harem",
+   "verdict": "core"
+  },
+  {
+   "name": "Autocomplétion Amazon.ca en français",
+   "url": "https://completion.amazon.ca/api/2017/suggestions?mid=A2EUQ1WTGCTBG2&alias=stripbooks&prefix=livre%20de%20col",
+   "status": 200,
+   "excerpt": "une suggestion hors sujet",
+   "verdict": "avoid"
+  },
+  {
+   "name": "Classement Kindle US",
+   "url": "https://www.amazon.com/gp/bestsellers/digital-text/",
+   "status": 200,
+   "excerpt": "30 ASIN (exige --compressed)",
+   "verdict": "core"
+  },
+  {
+   "name": "Movers & Shakers Kindle US",
+   "url": "https://www.amazon.com/gp/movers-and-shakers/digital-text/",
+   "status": 200,
+   "excerpt": "0 ASIN, rendu JavaScript",
+   "verdict": "avoid"
+  },
+  {
+   "name": "Classement Kindle FR",
+   "url": "https://www.amazon.fr/gp/bestsellers/digital-text/",
+   "status": 200,
+   "excerpt": "30 ASIN au premier appel ; captcha au troisième appel en deux minutes",
+   "verdict": "core, 1 appel/jour"
+  },
+  {
+   "name": "Classement Kindle DE",
+   "url": "https://www.amazon.de/gp/bestsellers/digital-text/",
+   "status": 200,
+   "excerpt": "30 ASIN",
+   "verdict": "sentinelle"
+  },
+  {
+   "name": "Classement t-shirts fantaisie US",
+   "url": "https://www.amazon.com/gp/bestsellers/fashion/9056987011",
+   "status": 200,
+   "excerpt": "30 ASIN, dont Merch on Demand",
+   "verdict": "optionnel"
+  },
+  {
+   "name": "Etsy recherche et API",
+   "url": "https://www.etsy.com/search?q=coloriage+imprimable",
+   "status": 403,
+   "excerpt": "anti-bot ; openapi-ping 403 « Invalid API key »",
+   "verdict": "avoid (V2 avec clé)"
+  },
+  {
+   "name": "Aide Etsy",
+   "url": "https://help.etsy.com/hc/en-us/articles/115015710408",
+   "status": 200,
+   "excerpt": "pays Etsy Payments",
+   "verdict": "veille des verrous"
+  },
+  {
+   "name": "Google Trends explore",
+   "url": "https://trends.google.com/trends/api/explore",
+   "status": 429,
+   "excerpt": "Too Many Requests",
+   "verdict": "repli payant"
+  },
+  {
+   "name": "Google Trends RSS",
+   "url": "https://trends.google.com/trending/rss?geo=MA",
+   "status": 200,
+   "excerpt": "10 éléments, sport",
+   "verdict": "poids faible"
+  },
+  {
+   "name": "Google suggest Maroc",
+   "url": "https://suggestqueries.google.com/complete/search?client=firefox&hl=fr&gl=ma&q=livre%20de%20coloriage",
+   "status": 200,
+   "excerpt": "pdf, adulte maroc, à imprimer pdf, pdf gratuit",
+   "verdict": "core"
+  },
+  {
+   "name": "Gumroad discover API",
+   "url": "https://discover.gumroad.com/products/search?query=notion%20template",
+   "status": 200,
+   "excerpt": "total 19 744 ; modele notion 1 ; coloring book 2 671 ; coloriage 37",
+   "verdict": "core"
+  },
+  {
+   "name": "Catalogue Notion",
+   "url": "https://www.notion.com/templates/category/personal",
+   "status": 200,
+   "excerpt": "26,506 templates",
+   "verdict": "compteur"
+  },
+  {
+   "name": "Redbubble, TeePublic, Payhip, Creative Market, Canva, Udemy API",
+   "url": "https://www.redbubble.com/shop/?query=cat%20lover",
+   "status": 403,
+   "excerpt": "anti-bot",
+   "verdict": "avoid"
+  },
+  {
+   "name": "Merch on Demand",
+   "url": "https://merch.amazon.com/landing",
+   "status": 200,
+   "excerpt": "coquille JavaScript vide",
+   "verdict": "avoid"
+  },
+  {
+   "name": "Pages d aide KDP",
+   "url": "https://kdp.amazon.com/en_US/help/topic/GJD7DFFX6X88AK46",
+   "status": 200,
+   "excerpt": "texte complet ; pied de page fonds Kindle+ 71,1 M$",
+   "verdict": "veille des verrous"
+  }
+ ]
+}

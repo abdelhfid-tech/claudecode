@@ -1,0 +1,1686 @@
+{
+ "dossier_path": "/home/user/claudecode/docs/etude/affiliation.md",
+ "as_of": "2026-11-28",
+ "executive_summary": "L'affiliation est évaluée comme archétype et comme couche de monétisation, à partir d'environ 35 pages primaires, 30 recherches, de tests d'autocomplétion Amazon (9 places de marché) et Google (6 pays) et d'une copie de la grille de scoring. Amazon paie de 0 à 6 % sur amazon.fr, deux fois plus sur amazon.com.be, avec une session de 24 heures et un versement à 60 jours. En espérance, aucun des huit archétypes d'affiliation ne paie l'heure du fondateur (de -2,5 à +0,5 €/h sur 24 mois) ; en cas de succès, 15 à 35 €/h. Classement stable dans les sept pays : outil interactif gratuit, logiciels à commission récurrente (en tête au Maroc et dans l'UEMOA), newsletter affiliée, puis voyage Maroc, bons plans locaux, comparatifs à données propres ; la vidéo humaine est écartée par la porte des 25 h par mois et le site d'avis générique produit par IA est dernier. Les résumés IA de Google sont arrivés en France le 22 juillet 2026 : les données américaines 2024-2026 servent d'indicateur avancé. Google vise nommément l'affiliation pauvre et le contenu IA en masse. La loi influenceurs couvre les liens affiliés (mention en français, contrat écrit au-delà de 1 000 € HT avec clause de droit français, en tension avec l'accord Amazon régi par le droit luxembourgeois). Un résident marocain encaisse par Payoneer, PayPal ou virement, avec compte en devises à 70 % (IGOC 2026), mais une initiative réussie dépasse le plafond auto-entrepreneur. L'affiliation se modélise mieux comme rail secondaire d'un actif que comme pari autonome.",
+ "key_findings": [
+  {
+   "claim": "Barème standard Amazon : amazon.fr de 0 à 6 % (maison, cuisine, bricolage 5 % ; beauté, sport 4 % ; électronique mobile 2,5 % ; épicerie, jeux vidéo 1 %) ; amazon.com.be 10 % sur les mêmes familles et 14 % sur la mode ; amazon.ca de 0 à 10 %.",
+   "evidence": "Pages d'aide publiques « Standard Commission Income Statement » FR, BE, CA lues le 2026-11-28 (pas de date de version affichée).",
+   "sources": [
+    "https://partenaires.amazon.fr/help/node/topic/GRXPHT8U84RAYDXZ",
+    "https://affiliate-program.amazon.com.be/help/node/topic/GRXPHT8U84RAYDXZ?language=fr_BE",
+    "https://associates.amazon.ca/help/node/topic/GRXPHT8U84RAYDXZ"
+   ],
+   "as_of": "2026-11-28",
+   "confidence": "high",
+   "level": "F",
+   "load_bearing": true
+  },
+  {
+   "claim": "Amazon Partenaires : session de 24 heures (89 jours si mis au panier), versement environ 60 jours après la fin du mois, seuil de 25 € par virement (carte cadeau 25 €, indisponible en Belgique ; chèque 50 €), mention obligatoire, droit luxembourgeois, interdiction d'utiliser le contenu du programme pour développer ou améliorer des modèles d'IA.",
+   "evidence": "Politiques du programme et conditions générales d'adhésion amazon.fr.",
+   "sources": [
+    "https://partenaires.amazon.fr/help/operating/policies",
+    "https://partenaires.amazon.fr/help/operating/agreement"
+   ],
+   "as_of": "2026-11-28",
+   "confidence": "high",
+   "level": "F",
+   "load_bearing": true
+  },
+  {
+   "claim": "En espérance sur 24 mois, aucun archétype d'affiliation ne paie l'heure du fondateur (de -2,5 à +0,5 €/h) ; en cas de succès, 15 à 35 €/h en France, en Belgique et au Québec. Classement interne stable : outil interactif, SaaS récurrent, newsletter ; avis générique IA dernier.",
+   "evidence": "Copie de score_initiatives.py avec 8 archétypes et 5 rails ; taux horaire implicite ; 1 000 tirages Monte-Carlo (top 3 dans 68 à 88 % des tirages pour les trois premiers).",
+   "sources": [
+    "/tmp/claude-0/-home-user-claudecode/00e88930-c277-528f-99f2-9b7f935da647/scratchpad/affil/scores_affil_out.md"
+   ],
+   "as_of": "2026-11-28",
+   "confidence": "low",
+   "level": "H",
+   "load_bearing": true
+  },
+  {
+   "claim": "Les Aperçus IA et le Mode IA de Google ont été lancés en France le 22 juillet 2026 (déploiement achevé au plus tard le 23 septembre), environ 26 mois après les USA ; une expérience de terrain préenregistrée (USA, mars 2026, 1 100 participants actifs) mesure -18,8 points de taux de clic externe avec le seul Mode IA et +8,8 points sans résumés IA (effet local moyen).",
+   "evidence": "Billet Google France (extrait), The Media Leader, Ahrefs ; prépublication arXiv lue en HTML.",
+   "sources": [
+    "https://blog.google/intl/fr-fr/nouveautes-produits/explorez-obtenez-des-r%C3%A9ponses/recherche-ia-apercus-mode/",
+    "https://arxiv.org/abs/2608.18352"
+   ],
+   "as_of": "2026-11-28",
+   "confidence": "medium",
+   "level": "F2 pour la France, F pour l'expérience",
+   "load_bearing": true
+  },
+  {
+   "claim": "Google vise nommément l'affiliation pauvre (« thin affiliation ») et le contenu généré en masse par IA (« scaled content abuse ») ; la politique de réputation de site a un régime propre à l'EEE (classement séparé, pas d'action manuelle) ; page mise à jour le 2026-11-23.",
+   "evidence": "Page Spam policies for Google web search, lue le 2026-11-28.",
+   "sources": [
+    "https://developers.google.com/search/docs/essentials/spam-policies"
+   ],
+   "as_of": "2026-11-23",
+   "confidence": "high",
+   "level": "F",
+   "load_bearing": true
+  },
+  {
+   "claim": "La loi influenceurs couvre l'affiliation : le guide officiel cite le « pourcentage sur les ventes » comme contrepartie, exige une mention en français visible sans clic (« #Ad » non valable) ; contrat écrit obligatoire depuis le 1er janvier 2026 au-delà de 1 000 € HT par an avec clause de droit français, alors que l'accord Amazon est régi par le droit luxembourgeois.",
+   "evidence": "Guide DGE de mars 2023 (copie DREETS), actualité Service Public A18674 du 3 décembre 2025, conditions Amazon.",
+   "sources": [
+    "https://grand-est.dreets.gouv.fr/sites/grand-est.dreets.gouv.fr/IMG/pdf/guide_bonne_conduite_influenceurs.pdf",
+    "https://entreprendre.service-public.gouv.fr/actualites/A18674",
+    "https://partenaires.amazon.fr/help/operating/agreement"
+   ],
+   "as_of": "2026-11-28",
+   "confidence": "high",
+   "level": "F (tension avec Amazon : H)",
+   "load_bearing": true
+  },
+  {
+   "claim": "Résident marocain : pas d'Amazon au Maroc ; Awin paie hors SEPA via Payoneer ; l'IGOC 2026 autorise une personne physique non inscrite au registre du commerce à loger jusqu'à 70 % de ses revenus de source étrangère sur un compte en devises, sur déclaration écrite ; un affilié Amazon réussi dépasse le plafond auto-entrepreneur de 200 000 DH et la règle du client unique (80 000 DH).",
+   "evidence": "FAQ paiements internationaux Awin ; texte de l'IGOC 2026 ; guide DGI via Le Matin (dossier compagnon).",
+   "sources": [
+    "https://success.awin.com/articles/en_US/Knowledge/International-Payment-Method-FAQs",
+    "https://www.oc.gov.ma/sites/default/files/reglementation/pdf/2026-01/IGOC%202026.pdf"
+   ],
+   "as_of": "2026-11-28",
+   "confidence": "medium",
+   "level": "F (IGOC, Awin), F2 (auto-entrepreneur), H (application)",
+   "load_bearing": true
+  },
+  {
+   "claim": "Voyage : GetYourGuide 7 % de base, Viator 4 % par défaut, cookie de 30 jours (fiches Awin US) ; commission Viator versée après le voyage ; Booking.com recrute ses affiliés via CJ. Le Maroc a accueilli 19,8 millions de touristes en 2025 (+14 %).",
+   "evidence": "Fiches annonceurs Awin, page affiliés Booking.com, presse marocaine citant le ministère du Tourisme.",
+   "sources": [
+    "https://ui.awin.com/merchant-profile/18925",
+    "https://ui.awin.com/merchant-profile/11018",
+    "https://www.booking.com/affiliate-program/v2/index.html",
+    "https://lematin.ma/economie/le-maroc-a-accueilli-pres-de-20-millions-de-visiteurs-en-2025/322797"
+   ],
+   "as_of": "2026-11-28",
+   "confidence": "medium",
+   "level": "F (programmes), F2 (arrivées)",
+   "load_bearing": true
+  },
+  {
+   "claim": "Logiciels : Systeme.io (éditeur français) verse 60 % des abonnements à vie, sans condition d'entrée ; Hostinger à partir de 40 % ; 130 à 160 clients actifs référés suffisent pour 1 000 € nets par mois chez Systeme.io.",
+   "evidence": "Pages affiliation Systeme.io et Hostinger ; calcul de l'auteur.",
+   "sources": [
+    "https://systeme.io/fr/affiliate-program",
+    "https://www.hostinger.com/affiliates"
+   ],
+   "as_of": "2026-11-28",
+   "confidence": "medium",
+   "level": "F (taux), H (calcul)",
+   "load_bearing": true
+  },
+  {
+   "claim": "YouTube Shopping : Google annonce le lancement du programme d'affiliation en France le 13 octobre 2026, mais la page d'aide officielle liste 18 pays sans la France, la Belgique, la Suisse, le Canada ni aucun pays africain.",
+   "evidence": "Billet Google France et page d'aide 13376398 (FR et EN) lus le 2026-11-28.",
+   "sources": [
+    "https://blog.google/intl/fr-fr/nouveautes-produits/lunivers-youtube/youtube-shopping-france/",
+    "https://support.google.com/youtube/answer/13376398"
+   ],
+   "as_of": "2026-11-28",
+   "confidence": "high",
+   "level": "F",
+   "load_bearing": false
+  },
+  {
+   "claim": "Au Sénégal et en Côte d'Ivoire, l'autocomplétion Google de « code promo » ne propose que des opérateurs de paris (1xbet, linebet, melbet, betclic, bet360) ; au Maroc Jumia, Glovo, 1xbet, Zalando, Temu ; en France et en Belgique des enseignes.",
+   "evidence": "Test suggestqueries.google.com du 2026-11-28 (HTTP 200).",
+   "sources": [
+    "https://suggestqueries.google.com/complete/search?client=firefox&hl=fr&gl=sn&q=code%20promo"
+   ],
+   "as_of": "2026-11-28",
+   "confidence": "medium",
+   "level": "F (instantané)",
+   "load_bearing": false
+  },
+  {
+   "claim": "L'autocomplétion Amazon répond en HTTP 200 sans authentification sur amazon.fr, .com, .ca, .com.be, .co.uk, .de, .ae, .eg et .sa ; elle montre que la plupart des tendances bien-être US (créatine pour femmes, walking pad, mouth tape, red light therapy, sea moss) sont déjà au stade de l'achat sur amazon.fr.",
+   "evidence": "Tests du 2026-11-28 ; instantanés conservés.",
+   "sources": [
+    "https://completion.amazon.fr/api/2017/suggestions?mid=A13V1IB3VIYZZH&alias=aps&prefix=creatine&limit=11&lop=fr_FR"
+   ],
+   "as_of": "2026-11-28",
+   "confidence": "medium",
+   "level": "F (test), H (interprétation)",
+   "load_bearing": false
+  },
+  {
+   "claim": "Aucun réseau ne publie la distribution des revenus de ses affiliés ; la seule enquête 2026 trouvée (Affiliate Booster, 500+ affiliés actifs, auto-déclaratif) donne 41 % sous 1 000 $ par mois et 8 % en perte ; en France, l'affiliation via créateurs a reversé environ 15 M€ de commissions sur un an (environ 2 000 annonceurs, avril 2024 à mai 2025).",
+   "evidence": "Enquête Affiliate Booster du 24 mars 2026 ; baromètre UMICC et CPA via Les Gens d'Internet.",
+   "sources": [
+    "https://affiliatebooster.com/affiliate-marketer-income-real-data-2026-3/",
+    "https://gensdinternet.fr/2025/11/04/lumicc-et-le-cpa-devoilent-les-resultats-du-premier-barometre-de-linfluence-commerciale/"
+   ],
+   "as_of": "2026-03-24 / 2025-11-04",
+   "confidence": "low",
+   "level": "E (enquête), F2 (baromètre)",
+   "load_bearing": false
+  },
+  {
+   "claim": "Temu : programme dans plus de 80 pays, commissions « pouvant atteindre jusqu'à 45 % » selon le pays, code valable seulement s'il est saisi dans l'heure qui suit le téléchargement ; en France, la publicité pour la mode ultra-express est interdite au 1er janvier 2027, influenceurs compris.",
+   "evidence": "FAQ Temu ; loi n° 2026-602 via market-france-europe.md.",
+   "sources": [
+    "https://www.temu.com/affiliate_question.html"
+   ],
+   "as_of": "2026-11-28",
+   "confidence": "medium",
+   "level": "F (Temu), F2 (loi)",
+   "load_bearing": false
+  },
+  {
+   "claim": "Correction d'un dossier compagnon : le décret n° 2026-233 du 30 mars 2026 et l'arrêté du 26 mai 2026 précisent les mentions pour la promotion des formations professionnelles financées par des fonds publics, et non les mentions générales de l'influence commerciale.",
+   "evidence": "Page DGE du guide de bonne conduite, mise à jour le 9 juin 2026.",
+   "sources": [
+    "https://www.entreprises.gouv.fr/la-dge/publications/guide-de-bonne-conduite-de-linfluence-commerciale"
+   ],
+   "as_of": "2026-06-09",
+   "confidence": "high",
+   "level": "F",
+   "load_bearing": false
+  },
+  {
+   "claim": "Artefact de la grille : le ROI (E24 - 2C) / (2C + coût du temps) devient moins négatif quand le coût horaire augmente si E24 < 2C, ce qui est le cas de tous les archétypes d'affiliation ; un taux horaire implicite indépendant de w corrige la lecture.",
+   "evidence": "Exécution de la copie du script, variante w = 25 €/h.",
+   "sources": [
+    "/tmp/claude-0/-home-user-claudecode/00e88930-c277-528f-99f2-9b7f935da647/scratchpad/affil/score_initiatives_affil.py"
+   ],
+   "as_of": "2026-11-28",
+   "confidence": "high",
+   "level": "F (calcul)",
+   "load_bearing": false
+  }
+ ],
+ "archetype_params": {
+  "format": "dictionnaire A de score_initiatives.py (hrun, p12, Rs, m, T1, C, h, L, D, Rp, orient, rail, regime)",
+  "archetypes": {
+   "affil_comparatif_donnees": {
+    "params": {
+     "hrun": 20,
+     "p12": 0.06,
+     "Rs": 2200,
+     "m": 0.85,
+     "T1": 18,
+     "C": 700,
+     "h": 200,
+     "L": 0.65,
+     "D": 2.5,
+     "Rp": 0.35,
+     "orient": "export",
+     "rail": "amazon_affil",
+     "regime": "bnc"
+    },
+    "description": "Site de comparatifs de niche à données propres (tests, mesures, prix historisés), public FR et BE, liens Amazon et réseaux",
+    "key_evidence": "Barème amazon.fr bas [F], résumés IA en France [F2], politiques Google [F] ; trafic nécessaire d'environ 25 000 visites par mois [H]",
+    "evidence_level": "H pour les valeurs, ancrées sur les faits cités (détail par valeur dans affiliation.md, section 9.1)",
+    "gate_25h": "ok",
+    "scores_base": {
+     "France": 44.2,
+     "Belgique": 44.4,
+     "Suisse": 44.5,
+     "Quebec": 44.3,
+     "Maroc": 42.1,
+     "UEMOA (SN, CI)": 40.5,
+     "Afrique centrale (CM, RDC)": 39.3
+    },
+    "E24_base": {
+     "France": 766,
+     "Belgique": 927,
+     "Suisse": 788,
+     "Quebec": 824,
+     "Maroc": 612,
+     "UEMOA (SN, CI)": 463,
+     "Afrique centrale (CM, RDC)": 371
+    },
+    "roi_base": {
+     "France": -0.04,
+     "Belgique": -0.03,
+     "Suisse": -0.02,
+     "Quebec": -0.04,
+     "Maroc": -0.17,
+     "UEMOA (SN, CI)": -0.26,
+     "Afrique centrale (CM, RDC)": -0.33
+    },
+    "scores_w25": {
+     "France": 44.2,
+     "Belgique": 44.4,
+     "Suisse": 44.2,
+     "Quebec": 44.3,
+     "Maroc": 44.0,
+     "UEMOA (SN, CI)": 43.9,
+     "Afrique centrale (CM, RDC)": 43.8
+    },
+    "rank_among_27_base": {
+     "France": 20,
+     "Belgique": 20,
+     "Suisse": 20,
+     "Quebec": 20,
+     "Maroc": 19,
+     "UEMOA (SN, CI)": 19,
+     "Afrique centrale (CM, RDC)": 19
+    },
+    "rank_among_27_w25": {
+     "France": 20,
+     "Belgique": 20,
+     "Suisse": 20,
+     "Quebec": 20,
+     "Maroc": 20,
+     "UEMOA (SN, CI)": 20,
+     "Afrique centrale (CM, RDC)": 20
+    },
+    "score_maroc_tax20": 41.6,
+    "monte_carlo_top3_affil": {
+     "France": {
+      "top3_pct": 10,
+      "first_pct": 1
+     },
+     "Belgique": {
+      "top3_pct": 11,
+      "first_pct": 1
+     },
+     "Suisse": {
+      "top3_pct": 10,
+      "first_pct": 1
+     },
+     "Quebec": {
+      "top3_pct": 10,
+      "first_pct": 1
+     },
+     "Maroc": {
+      "top3_pct": 6,
+      "first_pct": 1
+     },
+     "UEMOA (SN, CI)": {
+      "top3_pct": 8,
+      "first_pct": 1
+     },
+     "Afrique centrale (CM, RDC)": {
+      "top3_pct": 8,
+      "first_pct": 1
+     }
+    },
+    "hourly_rate": {
+     "heures_24_mois": 560,
+     "France": {
+      "esperance_eur_h": -1.13,
+      "succes_eur_h": 20.3
+     },
+     "Belgique": {
+      "esperance_eur_h": -0.84,
+      "succes_eur_h": 20.5
+     },
+     "Quebec": {
+      "esperance_eur_h": -1.03,
+      "succes_eur_h": 22.0
+     },
+     "Maroc": {
+      "esperance_eur_h": -1.41,
+      "succes_eur_h": 15.7
+     },
+     "UEMOA (SN, CI)": {
+      "esperance_eur_h": -1.67,
+      "succes_eur_h": 11.3
+     }
+    }
+   },
+   "affil_newsletter": {
+    "params": {
+     "hrun": 16,
+     "p12": 0.05,
+     "Rs": 2000,
+     "m": 0.85,
+     "T1": 10,
+     "C": 500,
+     "h": 180,
+     "L": 0.45,
+     "D": 3.5,
+     "Rp": 0.15,
+     "orient": "export",
+     "rail": "reseaux_affil",
+     "regime": "bnc"
+    },
+    "description": "Newsletter de niche monétisée par liens affiliés avant le sponsoring",
+    "key_evidence": "Audience détenue [F2] ; revenu moyen e-mail le plus élevé de l'enquête [E] ; croissance lente [H]",
+    "evidence_level": "H pour les valeurs, ancrées sur les faits cités (détail par valeur dans affiliation.md, section 9.1)",
+    "gate_25h": "ok",
+    "scores_base": {
+     "France": 49.4,
+     "Belgique": 49.4,
+     "Suisse": 49.6,
+     "Quebec": 49.5,
+     "Maroc": 48.8,
+     "UEMOA (SN, CI)": 47.1,
+     "Afrique centrale (CM, RDC)": 46.0
+    },
+    "E24_base": {
+     "France": 809,
+     "Belgique": 815,
+     "Suisse": 924,
+     "Quebec": 870,
+     "Maroc": 807,
+     "UEMOA (SN, CI)": 587,
+     "Afrique centrale (CM, RDC)": 489
+    },
+    "roi_base": {
+     "France": -0.02,
+     "Belgique": -0.01,
+     "Suisse": -0.0,
+     "Quebec": -0.01,
+     "Maroc": -0.05,
+     "UEMOA (SN, CI)": -0.14,
+     "Afrique centrale (CM, RDC)": -0.21
+    },
+    "scores_w25": {
+     "France": 49.4,
+     "Belgique": 49.4,
+     "Suisse": 49.5,
+     "Quebec": 49.5,
+     "Maroc": 49.4,
+     "UEMOA (SN, CI)": 49.1,
+     "Afrique centrale (CM, RDC)": 48.9
+    },
+    "rank_among_27_base": {
+     "France": 11,
+     "Belgique": 11,
+     "Suisse": 11,
+     "Quebec": 11,
+     "Maroc": 10,
+     "UEMOA (SN, CI)": 11,
+     "Afrique centrale (CM, RDC)": 11
+    },
+    "rank_among_27_w25": {
+     "France": 11,
+     "Belgique": 11,
+     "Suisse": 12,
+     "Quebec": 11,
+     "Maroc": 10,
+     "UEMOA (SN, CI)": 10,
+     "Afrique centrale (CM, RDC)": 9
+    },
+    "score_maroc_tax20": 48.1,
+    "monte_carlo_top3_affil": {
+     "France": {
+      "top3_pct": 71,
+      "first_pct": 21
+     },
+     "Belgique": {
+      "top3_pct": 71,
+      "first_pct": 20
+     },
+     "Suisse": {
+      "top3_pct": 73,
+      "first_pct": 21
+     },
+     "Quebec": {
+      "top3_pct": 71,
+      "first_pct": 21
+     },
+     "Maroc": {
+      "top3_pct": 68,
+      "first_pct": 19
+     },
+     "UEMOA (SN, CI)": {
+      "top3_pct": 69,
+      "first_pct": 22
+     },
+     "Afrique centrale (CM, RDC)": {
+      "top3_pct": 70,
+      "first_pct": 24
+     }
+    },
+    "hourly_rate": {
+     "heures_24_mois": 468,
+     "France": {
+      "esperance_eur_h": -0.41,
+      "succes_eur_h": 32.4
+     },
+     "Belgique": {
+      "esperance_eur_h": -0.39,
+      "succes_eur_h": 32.7
+     },
+     "Quebec": {
+      "esperance_eur_h": -0.28,
+      "succes_eur_h": 35.0
+     },
+     "Maroc": {
+      "esperance_eur_h": -0.41,
+      "succes_eur_h": 32.4
+     },
+     "UEMOA (SN, CI)": {
+      "esperance_eur_h": -0.88,
+      "succes_eur_h": 22.9
+     }
+    }
+   },
+   "affil_voyage_maroc": {
+    "params": {
+     "hrun": 18,
+     "p12": 0.08,
+     "Rs": 1800,
+     "m": 0.9,
+     "T1": 18,
+     "C": 500,
+     "h": 200,
+     "L": 0.6,
+     "D": 3.0,
+     "Rp": 0.35,
+     "orient": "export",
+     "rail": "voyage_affil",
+     "regime": "bnc"
+    },
+    "description": "Guide et outils de voyage au Maroc pour touristes FR, BE, QC (activités, riads, eSIM)",
+    "key_evidence": "19,8 M d'arrivées [F2] ; GetYourGuide 7 %, Viator 4 %, cookie 30 jours [F] ; commission après le voyage [F]",
+    "evidence_level": "H pour les valeurs, ancrées sur les faits cités (détail par valeur dans affiliation.md, section 9.1)",
+    "gate_25h": "ok",
+    "scores_base": {
+     "France": 46.6,
+     "Belgique": 46.6,
+     "Suisse": 46.7,
+     "Quebec": 46.7,
+     "Maroc": 47.2,
+     "UEMOA (SN, CI)": 44.4,
+     "Afrique centrale (CM, RDC)": 42.9
+    },
+    "E24_base": {
+     "France": 885,
+     "Belgique": 892,
+     "Suisse": 1011,
+     "Quebec": 952,
+     "Maroc": 1104,
+     "UEMOA (SN, CI)": 578,
+     "Afrique centrale (CM, RDC)": 428
+    },
+    "roi_base": {
+     "France": -0.01,
+     "Belgique": -0.01,
+     "Suisse": 0.0,
+     "Quebec": -0.0,
+     "Maroc": 0.03,
+     "UEMOA (SN, CI)": -0.14,
+     "Afrique centrale (CM, RDC)": -0.22
+    },
+    "scores_w25": {
+     "France": 46.6,
+     "Belgique": 46.6,
+     "Suisse": 46.7,
+     "Quebec": 46.7,
+     "Maroc": 46.9,
+     "UEMOA (SN, CI)": 46.2,
+     "Afrique centrale (CM, RDC)": 46.0
+    },
+    "rank_among_27_base": {
+     "France": 16,
+     "Belgique": 16,
+     "Suisse": 16,
+     "Quebec": 16,
+     "Maroc": 12,
+     "UEMOA (SN, CI)": 13,
+     "Afrique centrale (CM, RDC)": 15
+    },
+    "rank_among_27_w25": {
+     "France": 16,
+     "Belgique": 16,
+     "Suisse": 17,
+     "Quebec": 16,
+     "Maroc": 16,
+     "UEMOA (SN, CI)": 16,
+     "Afrique centrale (CM, RDC)": 16
+    },
+    "score_maroc_tax20": 46.3,
+    "monte_carlo_top3_affil": {
+     "France": {
+      "top3_pct": 32,
+      "first_pct": 6
+     },
+     "Belgique": {
+      "top3_pct": 32,
+      "first_pct": 6
+     },
+     "Suisse": {
+      "top3_pct": 31,
+      "first_pct": 5
+     },
+     "Quebec": {
+      "top3_pct": 32,
+      "first_pct": 6
+     },
+     "Maroc": {
+      "top3_pct": 47,
+      "first_pct": 11
+     },
+     "UEMOA (SN, CI)": {
+      "top3_pct": 35,
+      "first_pct": 7
+     },
+     "Afrique centrale (CM, RDC)": {
+      "top3_pct": 33,
+      "first_pct": 7
+     }
+    },
+    "hourly_rate": {
+     "heures_24_mois": 524,
+     "France": {
+      "esperance_eur_h": -0.22,
+      "succes_eur_h": 19.2
+     },
+     "Belgique": {
+      "esperance_eur_h": -0.21,
+      "succes_eur_h": 19.4
+     },
+     "Quebec": {
+      "esperance_eur_h": -0.09,
+      "succes_eur_h": 20.8
+     },
+     "Maroc": {
+      "esperance_eur_h": 0.2,
+      "succes_eur_h": 19.2
+     },
+     "UEMOA (SN, CI)": {
+      "esperance_eur_h": -0.81,
+      "succes_eur_h": 13.4
+     }
+    }
+   },
+   "affil_saas_recurrent": {
+    "params": {
+     "hrun": 15,
+     "p12": 0.07,
+     "Rs": 1800,
+     "m": 0.9,
+     "T1": 10,
+     "C": 400,
+     "h": 180,
+     "L": 0.7,
+     "D": 2.5,
+     "Rp": 0.25,
+     "orient": "export",
+     "rail": "saas_affil",
+     "regime": "bnc"
+    },
+    "description": "Comparatifs, tutoriels et modèles autour de logiciels à commission récurrente pour TPE et créateurs francophones",
+    "key_evidence": "Systeme.io 60 % à vie [F], Hostinger dès 40 % [F], PartnerStack via PayPal [F2]",
+    "evidence_level": "H pour les valeurs, ancrées sur les faits cités (détail par valeur dans affiliation.md, section 9.1)",
+    "gate_25h": "ok",
+    "scores_base": {
+     "France": 50.0,
+     "Belgique": 50.0,
+     "Suisse": 50.0,
+     "Quebec": 50.1,
+     "Maroc": 50.8,
+     "UEMOA (SN, CI)": 49.0,
+     "Afrique centrale (CM, RDC)": 47.0
+    },
+    "E24_base": {
+     "France": 952,
+     "Belgique": 960,
+     "Suisse": 1088,
+     "Quebec": 1024,
+     "Maroc": 1013,
+     "UEMOA (SN, CI)": 691,
+     "Afrique centrale (CM, RDC)": 461
+    },
+    "roi_base": {
+     "France": 0.01,
+     "Belgique": 0.01,
+     "Suisse": 0.01,
+     "Quebec": 0.02,
+     "Maroc": 0.06,
+     "UEMOA (SN, CI)": -0.04,
+     "Afrique centrale (CM, RDC)": -0.16
+    },
+    "scores_w25": {
+     "France": 50.0,
+     "Belgique": 50.0,
+     "Suisse": 50.2,
+     "Quebec": 50.1,
+     "Maroc": 50.1,
+     "UEMOA (SN, CI)": 49.6,
+     "Afrique centrale (CM, RDC)": 49.3
+    },
+    "rank_among_27_base": {
+     "France": 9,
+     "Belgique": 9,
+     "Suisse": 9,
+     "Quebec": 8,
+     "Maroc": 5,
+     "UEMOA (SN, CI)": 5,
+     "Afrique centrale (CM, RDC)": 7
+    },
+    "rank_among_27_w25": {
+     "France": 9,
+     "Belgique": 9,
+     "Suisse": 9,
+     "Quebec": 8,
+     "Maroc": 8,
+     "UEMOA (SN, CI)": 8,
+     "Afrique centrale (CM, RDC)": 8
+    },
+    "score_maroc_tax20": 49.9,
+    "monte_carlo_top3_affil": {
+     "France": {
+      "top3_pct": 75,
+      "first_pct": 26
+     },
+     "Belgique": {
+      "top3_pct": 74,
+      "first_pct": 26
+     },
+     "Suisse": {
+      "top3_pct": 74,
+      "first_pct": 23
+     },
+     "Quebec": {
+      "top3_pct": 75,
+      "first_pct": 26
+     },
+     "Maroc": {
+      "top3_pct": 82,
+      "first_pct": 36
+     },
+     "UEMOA (SN, CI)": {
+      "top3_pct": 80,
+      "first_pct": 36
+     },
+     "Afrique centrale (CM, RDC)": {
+      "top3_pct": 75,
+      "first_pct": 29
+     }
+    },
+    "hourly_rate": {
+     "heures_24_mois": 450,
+     "France": {
+      "esperance_eur_h": 0.34,
+      "succes_eur_h": 28.4
+     },
+     "Belgique": {
+      "esperance_eur_h": 0.35,
+      "succes_eur_h": 28.7
+     },
+     "Quebec": {
+      "esperance_eur_h": 0.5,
+      "succes_eur_h": 30.7
+     },
+     "Maroc": {
+      "esperance_eur_h": 0.47,
+      "succes_eur_h": 30.4
+     },
+     "UEMOA (SN, CI)": {
+      "esperance_eur_h": -0.24,
+      "succes_eur_h": 20.2
+     }
+    }
+   },
+   "affil_video_humaine": {
+    "params": {
+     "hrun": 30,
+     "p12": 0.06,
+     "Rs": 2000,
+     "m": 0.85,
+     "T1": 16,
+     "C": 800,
+     "h": 220,
+     "L": 0.35,
+     "D": 3.0,
+     "Rp": 0.3,
+     "orient": "export",
+     "rail": "amazon_affil",
+     "regime": "bnc"
+    },
+    "description": "Chaîne vidéo face caméra (tests, démonstrations), liens affiliés en description",
+    "key_evidence": "YouTube Shopping non ouvert officiellement en France [F] ; politique « generic or repetitive » [F2] ; dépasse la porte de 25 h par mois",
+    "evidence_level": "H pour les valeurs, ancrées sur les faits cités (détail par valeur dans affiliation.md, section 9.1)",
+    "gate_25h": "ecarte",
+    "scores_base": {
+     "France": 42.1,
+     "Belgique": 42.2,
+     "Suisse": 42.4,
+     "Quebec": 42.2,
+     "Maroc": 40.0,
+     "UEMOA (SN, CI)": 38.6,
+     "Afrique centrale (CM, RDC)": 37.4
+    },
+    "E24_base": {
+     "France": 762,
+     "Belgique": 845,
+     "Suisse": 784,
+     "Quebec": 820,
+     "Maroc": 609,
+     "UEMOA (SN, CI)": 461,
+     "Afrique centrale (CM, RDC)": 369
+    },
+    "roi_base": {
+     "France": -0.04,
+     "Belgique": -0.04,
+     "Suisse": -0.02,
+     "Quebec": -0.04,
+     "Maroc": -0.16,
+     "UEMOA (SN, CI)": -0.25,
+     "Afrique centrale (CM, RDC)": -0.32
+    },
+    "scores_w25": {
+     "France": 42.1,
+     "Belgique": 42.2,
+     "Suisse": 42.1,
+     "Quebec": 42.2,
+     "Maroc": 42.0,
+     "UEMOA (SN, CI)": 41.8,
+     "Afrique centrale (CM, RDC)": 41.8
+    },
+    "rank_among_27_base": {
+     "France": 21,
+     "Belgique": 21,
+     "Suisse": 21,
+     "Quebec": 21,
+     "Maroc": 21,
+     "UEMOA (SN, CI)": 21,
+     "Afrique centrale (CM, RDC)": 21
+    },
+    "rank_among_27_w25": {
+     "France": 21,
+     "Belgique": 21,
+     "Suisse": 21,
+     "Quebec": 21,
+     "Maroc": 21,
+     "UEMOA (SN, CI)": 21,
+     "Afrique centrale (CM, RDC)": 21
+    },
+    "score_maroc_tax20": 39.7,
+    "monte_carlo_top3_affil": null,
+    "hourly_rate": {
+     "heures_24_mois": 760,
+     "France": {
+      "esperance_eur_h": -1.1,
+      "succes_eur_h": 14.6
+     },
+     "Belgique": {
+      "esperance_eur_h": -0.99,
+      "succes_eur_h": 14.7
+     },
+     "Quebec": {
+      "esperance_eur_h": -1.03,
+      "succes_eur_h": 15.9
+     },
+     "Maroc": {
+      "esperance_eur_h": -1.3,
+      "succes_eur_h": 11.2
+     },
+     "UEMOA (SN, CI)": {
+      "esperance_eur_h": -1.5,
+      "succes_eur_h": 8.0
+     }
+    }
+   },
+   "affil_outil_interactif": {
+    "params": {
+     "hrun": 12,
+     "p12": 0.06,
+     "Rs": 1800,
+     "m": 0.85,
+     "T1": 14,
+     "C": 500,
+     "h": 160,
+     "L": 0.85,
+     "D": 3.0,
+     "Rp": 0.25,
+     "orient": "export",
+     "rail": "reseaux_affil",
+     "regime": "bnc"
+    },
+    "description": "Outil web gratuit (calculateur, simulateur, comparateur filtrable) monétisé par liens affiliés contextuels",
+    "key_evidence": "Levier maximal de Claude Code [H] ; moins exposé à « thin affiliation » et aux résumés IA [H, F pour la politique]",
+    "evidence_level": "H pour les valeurs, ancrées sur les faits cités (détail par valeur dans affiliation.md, section 9.1)",
+    "gate_25h": "ok",
+    "scores_base": {
+     "France": 51.4,
+     "Belgique": 51.4,
+     "Suisse": 51.7,
+     "Quebec": 51.5,
+     "Maroc": 50.4,
+     "UEMOA (SN, CI)": 48.6,
+     "Afrique centrale (CM, RDC)": 47.4
+    },
+    "E24_base": {
+     "France": 747,
+     "Belgique": 753,
+     "Suisse": 853,
+     "Quebec": 803,
+     "Maroc": 746,
+     "UEMOA (SN, CI)": 542,
+     "Afrique centrale (CM, RDC)": 452
+    },
+    "roi_base": {
+     "France": -0.02,
+     "Belgique": -0.02,
+     "Suisse": -0.01,
+     "Quebec": -0.02,
+     "Maroc": -0.08,
+     "UEMOA (SN, CI)": -0.18,
+     "Afrique centrale (CM, RDC)": -0.26
+    },
+    "scores_w25": {
+     "France": 51.4,
+     "Belgique": 51.4,
+     "Suisse": 51.6,
+     "Quebec": 51.5,
+     "Maroc": 51.4,
+     "UEMOA (SN, CI)": 51.0,
+     "Afrique centrale (CM, RDC)": 50.9
+    },
+    "rank_among_27_base": {
+     "France": 6,
+     "Belgique": 6,
+     "Suisse": 6,
+     "Quebec": 6,
+     "Maroc": 8,
+     "UEMOA (SN, CI)": 7,
+     "Afrique centrale (CM, RDC)": 5
+    },
+    "rank_among_27_w25": {
+     "France": 6,
+     "Belgique": 6,
+     "Suisse": 6,
+     "Quebec": 6,
+     "Maroc": 4,
+     "UEMOA (SN, CI)": 4,
+     "Afrique centrale (CM, RDC)": 4
+    },
+    "score_maroc_tax20": 49.7,
+    "monte_carlo_top3_affil": {
+     "France": {
+      "top3_pct": 87,
+      "first_pct": 46
+     },
+     "Belgique": {
+      "top3_pct": 87,
+      "first_pct": 46
+     },
+     "Suisse": {
+      "top3_pct": 88,
+      "first_pct": 48
+     },
+     "Quebec": {
+      "top3_pct": 87,
+      "first_pct": 46
+     },
+     "Maroc": {
+      "top3_pct": 81,
+      "first_pct": 33
+     },
+     "UEMOA (SN, CI)": {
+      "top3_pct": 81,
+      "first_pct": 34
+     },
+     "Afrique centrale (CM, RDC)": {
+      "top3_pct": 81,
+      "first_pct": 36
+     }
+    },
+    "hourly_rate": {
+     "heures_24_mois": 376,
+     "France": {
+      "esperance_eur_h": -0.67,
+      "succes_eur_h": 30.5
+     },
+     "Belgique": {
+      "esperance_eur_h": -0.66,
+      "succes_eur_h": 30.7
+     },
+     "Quebec": {
+      "esperance_eur_h": -0.52,
+      "succes_eur_h": 32.9
+     },
+     "Maroc": {
+      "esperance_eur_h": -0.68,
+      "succes_eur_h": 30.4
+     },
+     "UEMOA (SN, CI)": {
+      "esperance_eur_h": -1.22,
+      "succes_eur_h": 21.4
+     }
+    }
+   },
+   "affil_bons_plans_local": {
+    "params": {
+     "hrun": 25,
+     "p12": 0.05,
+     "Rs": 1500,
+     "m": 0.9,
+     "T1": 6,
+     "C": 200,
+     "h": 180,
+     "L": 0.5,
+     "D": 1.5,
+     "Rp": 0.45,
+     "orient": "local",
+     "rail": "local_affil",
+     "regime": "bnc"
+    },
+    "description": "Chaîne de bons plans en monnaie locale (WhatsApp, Telegram) : Jumia, Temu, AliExpress, Glovo",
+    "key_evidence": "Temu 80+ pays, jusqu'à 45 % [F] ; Jumia KOL non vérifié [E] ; « code promo » dominé par les paris en SN et CI [F]",
+    "evidence_level": "H pour les valeurs, ancrées sur les faits cités (détail par valeur dans affiliation.md, section 9.1)",
+    "gate_25h": "ok",
+    "scores_base": {
+     "France": 46.3,
+     "Belgique": 46.4,
+     "Suisse": 46.4,
+     "Quebec": 46.4,
+     "Maroc": 45.1,
+     "UEMOA (SN, CI)": 44.3,
+     "Afrique centrale (CM, RDC)": 43.5
+    },
+    "E24_base": {
+     "France": 270,
+     "Belgique": 326,
+     "Suisse": 329,
+     "Quebec": 350,
+     "Maroc": 71,
+     "UEMOA (SN, CI)": 31,
+     "Afrique centrale (CM, RDC)": 13
+    },
+    "roi_base": {
+     "France": -0.01,
+     "Belgique": -0.0,
+     "Suisse": -0.0,
+     "Quebec": -0.0,
+     "Maroc": -0.08,
+     "UEMOA (SN, CI)": -0.13,
+     "Afrique centrale (CM, RDC)": -0.17
+    },
+    "scores_w25": {
+     "France": 46.3,
+     "Belgique": 46.4,
+     "Suisse": 46.4,
+     "Quebec": 46.4,
+     "Maroc": 46.1,
+     "UEMOA (SN, CI)": 46.1,
+     "Afrique centrale (CM, RDC)": 46.0
+    },
+    "rank_among_27_base": {
+     "France": 17,
+     "Belgique": 17,
+     "Suisse": 18,
+     "Quebec": 17,
+     "Maroc": 16,
+     "UEMOA (SN, CI)": 15,
+     "Afrique centrale (CM, RDC)": 13
+    },
+    "rank_among_27_w25": {
+     "France": 17,
+     "Belgique": 17,
+     "Suisse": 18,
+     "Quebec": 17,
+     "Maroc": 17,
+     "UEMOA (SN, CI)": 17,
+     "Afrique centrale (CM, RDC)": 17
+    },
+    "score_maroc_tax20": 45.0,
+    "monte_carlo_top3_affil": {
+     "France": {
+      "top3_pct": 23,
+      "first_pct": 1
+     },
+     "Belgique": {
+      "top3_pct": 24,
+      "first_pct": 1
+     },
+     "Suisse": {
+      "top3_pct": 22,
+      "first_pct": 1
+     },
+     "Quebec": {
+      "top3_pct": 23,
+      "first_pct": 1
+     },
+     "Maroc": {
+      "top3_pct": 16,
+      "first_pct": 1
+     },
+     "UEMOA (SN, CI)": {
+      "top3_pct": 27,
+      "first_pct": 2
+     },
+     "Afrique centrale (CM, RDC)": {
+      "top3_pct": 33,
+      "first_pct": 3
+     }
+    },
+    "hourly_rate": {
+     "heures_24_mois": 630,
+     "France": {
+      "esperance_eur_h": -0.21,
+      "succes_eur_h": 11.6
+     },
+     "Belgique": {
+      "esperance_eur_h": -0.12,
+      "succes_eur_h": 12.3
+     },
+     "Quebec": {
+      "esperance_eur_h": -0.08,
+      "succes_eur_h": 10.5
+     },
+     "Maroc": {
+      "esperance_eur_h": -0.52,
+      "succes_eur_h": 1.6
+     },
+     "UEMOA (SN, CI)": {
+      "esperance_eur_h": -0.59,
+      "succes_eur_h": 0.6
+     }
+    }
+   },
+   "affil_avis_generique_ia": {
+    "params": {
+     "hrun": 10,
+     "p12": 0.02,
+     "Rs": 1500,
+     "m": 0.9,
+     "T1": 16,
+     "C": 400,
+     "h": 120,
+     "L": 0.9,
+     "D": 0.5,
+     "Rp": 0.7,
+     "orient": "export",
+     "rail": "amazon_affil",
+     "regime": "bnc"
+    },
+    "description": "Contre-exemple : site d'avis produits générés en masse par IA, sans test",
+    "key_evidence": "Visé par « thin affiliation » et « scaled content abuse » [F] ; Directory Launch 211 $ sur 30 jours [F2]",
+    "evidence_level": "H pour les valeurs, ancrées sur les faits cités (détail par valeur dans affiliation.md, section 9.1)",
+    "gate_25h": "ok",
+    "scores_base": {
+     "France": 40.7,
+     "Belgique": 40.7,
+     "Suisse": 41.3,
+     "Quebec": 40.7,
+     "Maroc": 37.4,
+     "UEMOA (SN, CI)": 35.9,
+     "Afrique centrale (CM, RDC)": 34.9
+    },
+    "E24_base": {
+     "France": 86,
+     "Belgique": 87,
+     "Suisse": 89,
+     "Quebec": 93,
+     "Maroc": 69,
+     "UEMOA (SN, CI)": 52,
+     "Afrique centrale (CM, RDC)": 42
+    },
+    "roi_base": {
+     "France": -0.09,
+     "Belgique": -0.09,
+     "Suisse": -0.05,
+     "Quebec": -0.09,
+     "Maroc": -0.28,
+     "UEMOA (SN, CI)": -0.37,
+     "Afrique centrale (CM, RDC)": -0.45
+    },
+    "scores_w25": {
+     "France": 40.7,
+     "Belgique": 40.7,
+     "Suisse": 40.7,
+     "Quebec": 40.7,
+     "Maroc": 40.7,
+     "UEMOA (SN, CI)": 40.6,
+     "Afrique centrale (CM, RDC)": 40.6
+    },
+    "rank_among_27_base": {
+     "France": 23,
+     "Belgique": 23,
+     "Suisse": 23,
+     "Quebec": 23,
+     "Maroc": 22,
+     "UEMOA (SN, CI)": 22,
+     "Afrique centrale (CM, RDC)": 22
+    },
+    "rank_among_27_w25": {
+     "France": 23,
+     "Belgique": 23,
+     "Suisse": 24,
+     "Quebec": 23,
+     "Maroc": 22,
+     "UEMOA (SN, CI)": 22,
+     "Afrique centrale (CM, RDC)": 22
+    },
+    "score_maroc_tax20": 37.3,
+    "monte_carlo_top3_affil": {
+     "France": {
+      "top3_pct": 1,
+      "first_pct": 0
+     },
+     "Belgique": {
+      "top3_pct": 1,
+      "first_pct": 0
+     },
+     "Suisse": {
+      "top3_pct": 2,
+      "first_pct": 0
+     },
+     "Quebec": {
+      "top3_pct": 1,
+      "first_pct": 0
+     },
+     "Maroc": {
+      "top3_pct": 0,
+      "first_pct": 0
+     },
+     "UEMOA (SN, CI)": {
+      "top3_pct": 0,
+      "first_pct": 0
+     },
+     "Afrique centrale (CM, RDC)": {
+      "top3_pct": 0,
+      "first_pct": 0
+     }
+    },
+    "hourly_rate": {
+     "heures_24_mois": 300,
+     "France": {
+      "esperance_eur_h": -2.38,
+      "succes_eur_h": 11.7
+     },
+     "Belgique": {
+      "esperance_eur_h": -2.38,
+      "succes_eur_h": 11.9
+     },
+     "Quebec": {
+      "esperance_eur_h": -2.36,
+      "succes_eur_h": 12.8
+     },
+     "Maroc": {
+      "esperance_eur_h": -2.44,
+      "succes_eur_h": 8.8
+     },
+     "UEMOA (SN, CI)": {
+      "esperance_eur_h": -2.49,
+      "succes_eur_h": 6.1
+     }
+    }
+   }
+  },
+  "new_rails": {
+   "amazon_affil": {
+    "pay": {
+     "France": 1.0,
+     "Belgique": 1.0,
+     "Suisse": 0.9,
+     "Quebec": 1.0,
+     "Maroc": 0.6,
+     "UEMOA (SN, CI)": 0.5,
+     "Afrique centrale (CM, RDC)": 0.4
+    },
+    "justification": "Virement SEPA dès 25 € FR et BE [F] ; pas d'amazon.ch [H] ; amazon.ca [F] ; Maroc et Afrique : participation non exclue [F], virement non confirmé, carte cadeau inutile, rapatriement et 70 % en devises [F]",
+    "level": "F/H"
+   },
+   "reseaux_affil": {
+    "pay": {
+     "France": 1.0,
+     "Belgique": 1.0,
+     "Suisse": 1.0,
+     "Quebec": 1.0,
+     "Maroc": 0.75,
+     "UEMOA (SN, CI)": 0.6,
+     "Afrique centrale (CM, RDC)": 0.5
+    },
+    "justification": "Awin : CHF et CAD [F2], Payoneer hors SEPA [F] ; Impact : virement ou PayPal [F2] ; réseaux français pensés pour des éditeurs établis en France [H]",
+    "level": "F/F2/H"
+   },
+   "voyage_affil": {
+    "pay": {
+     "France": 1.0,
+     "Belgique": 1.0,
+     "Suisse": 1.0,
+     "Quebec": 1.0,
+     "Maroc": 0.75,
+     "UEMOA (SN, CI)": 0.6,
+     "Afrique centrale (CM, RDC)": 0.5
+    },
+    "justification": "GetYourGuide et Viator via Awin, Booking via CJ [F] : mêmes rails que reseaux_affil ; rail séparé pour la veille",
+    "level": "F/H"
+   },
+   "saas_affil": {
+    "pay": {
+     "France": 1.0,
+     "Belgique": 1.0,
+     "Suisse": 1.0,
+     "Quebec": 1.0,
+     "Maroc": 0.8,
+     "UEMOA (SN, CI)": 0.6,
+     "Afrique centrale (CM, RDC)": 0.4
+    },
+    "justification": "PartnerStack : PayPal, Stripe, Airwallex [F2] ; PayPal en réception au Maroc [F2] ; Stripe absent au Maroc [F2]",
+    "level": "F2/H"
+   },
+   "local_affil": {
+    "pay": {
+     "France": 0.9,
+     "Belgique": 0.9,
+     "Suisse": 0.7,
+     "Quebec": 0.8,
+     "Maroc": 0.5,
+     "UEMOA (SN, CI)": 0.5,
+     "Afrique centrale (CM, RDC)": 0.3
+    },
+    "justification": "Temu 80+ pays, règles locales [F] ; Jumia KOL non vérifié [E] ; pas de Jumia en Afrique centrale [F2]",
+    "level": "F/E/H"
+   }
+  },
+  "fit_adjustments_p12": {
+   "affil_comparatif_donnees|Belgique": 1.2,
+   "affil_video_humaine|Belgique": 1.1,
+   "affil_voyage_maroc|Maroc": 1.25,
+   "affil_voyage_maroc|UEMOA (SN, CI)": 0.9,
+   "affil_voyage_maroc|Afrique centrale (CM, RDC)": 0.8,
+   "affil_bons_plans_local|France": 0.7,
+   "affil_bons_plans_local|Belgique": 0.8,
+   "affil_bons_plans_local|Suisse": 0.6,
+   "affil_bons_plans_local|UEMOA (SN, CI)": 0.8,
+   "affil_bons_plans_local|Afrique centrale (CM, RDC)": 0.7
+  },
+  "script_copy": "/tmp/claude-0/-home-user-claudecode/00e88930-c277-528f-99f2-9b7f935da647/scratchpad/affil/score_initiatives_affil.py",
+  "original_unchanged_md5": "1883dfa0ae432e6d0f7ba5ae3700fc9e",
+  "ranking_affil_base_under_gate": {
+   "France": [
+    "affil_outil_interactif",
+    "affil_saas_recurrent",
+    "affil_newsletter",
+    "affil_voyage_maroc",
+    "affil_bons_plans_local",
+    "affil_comparatif_donnees",
+    "affil_avis_generique_ia"
+   ],
+   "Belgique": [
+    "affil_outil_interactif",
+    "affil_saas_recurrent",
+    "affil_newsletter",
+    "affil_voyage_maroc",
+    "affil_bons_plans_local",
+    "affil_comparatif_donnees",
+    "affil_avis_generique_ia"
+   ],
+   "Suisse": [
+    "affil_outil_interactif",
+    "affil_saas_recurrent",
+    "affil_newsletter",
+    "affil_voyage_maroc",
+    "affil_bons_plans_local",
+    "affil_comparatif_donnees",
+    "affil_avis_generique_ia"
+   ],
+   "Quebec": [
+    "affil_outil_interactif",
+    "affil_saas_recurrent",
+    "affil_newsletter",
+    "affil_voyage_maroc",
+    "affil_bons_plans_local",
+    "affil_comparatif_donnees",
+    "affil_avis_generique_ia"
+   ],
+   "Maroc": [
+    "affil_saas_recurrent",
+    "affil_outil_interactif",
+    "affil_newsletter",
+    "affil_voyage_maroc",
+    "affil_bons_plans_local",
+    "affil_comparatif_donnees",
+    "affil_avis_generique_ia"
+   ],
+   "UEMOA (SN, CI)": [
+    "affil_saas_recurrent",
+    "affil_outil_interactif",
+    "affil_newsletter",
+    "affil_voyage_maroc",
+    "affil_bons_plans_local",
+    "affil_comparatif_donnees",
+    "affil_avis_generique_ia"
+   ],
+   "Afrique centrale (CM, RDC)": [
+    "affil_outil_interactif",
+    "affil_saas_recurrent",
+    "affil_newsletter",
+    "affil_bons_plans_local",
+    "affil_voyage_maroc",
+    "affil_comparatif_donnees",
+    "affil_avis_generique_ia"
+   ]
+  },
+  "top6_all_base": {
+   "France": [
+    "agence_automatisation",
+    "donnees_api",
+    "ia_verticale_tpe",
+    "communaute_payante",
+    "geo_visibilite",
+    "affil_outil_interactif"
+   ],
+   "Belgique": [
+    "agence_automatisation",
+    "ia_verticale_tpe",
+    "donnees_api",
+    "communaute_payante",
+    "geo_visibilite",
+    "affil_outil_interactif"
+   ],
+   "Suisse": [
+    "agence_automatisation",
+    "ia_verticale_tpe",
+    "donnees_api",
+    "geo_visibilite",
+    "communaute_payante",
+    "affil_outil_interactif"
+   ],
+   "Quebec": [
+    "agence_automatisation",
+    "donnees_api",
+    "ia_verticale_tpe",
+    "communaute_payante",
+    "geo_visibilite",
+    "affil_outil_interactif"
+   ],
+   "Maroc": [
+    "agence_automatisation",
+    "agence_export",
+    "donnees_api",
+    "ia_verticale_tpe",
+    "affil_saas_recurrent",
+    "geo_visibilite"
+   ],
+   "UEMOA (SN, CI)": [
+    "agence_export",
+    "agence_automatisation",
+    "donnees_api",
+    "communaute_payante",
+    "affil_saas_recurrent",
+    "micro_saas"
+   ],
+   "Afrique centrale (CM, RDC)": [
+    "agence_export",
+    "agence_automatisation",
+    "donnees_api",
+    "communaute_payante",
+    "affil_outil_interactif",
+    "ia_verticale_tpe"
+   ]
+  },
+  "top6_all_w25": {
+   "France": [
+    "agence_automatisation",
+    "donnees_api",
+    "ia_verticale_tpe",
+    "communaute_payante",
+    "geo_visibilite",
+    "affil_outil_interactif"
+   ],
+   "Belgique": [
+    "agence_automatisation",
+    "ia_verticale_tpe",
+    "donnees_api",
+    "communaute_payante",
+    "geo_visibilite",
+    "affil_outil_interactif"
+   ],
+   "Suisse": [
+    "agence_automatisation",
+    "ia_verticale_tpe",
+    "geo_visibilite",
+    "communaute_payante",
+    "donnees_api",
+    "affil_outil_interactif"
+   ],
+   "Quebec": [
+    "agence_automatisation",
+    "donnees_api",
+    "ia_verticale_tpe",
+    "communaute_payante",
+    "geo_visibilite",
+    "affil_outil_interactif"
+   ],
+   "Maroc": [
+    "donnees_api",
+    "agence_automatisation",
+    "ia_verticale_tpe",
+    "affil_outil_interactif",
+    "agence_export",
+    "communaute_payante"
+   ],
+   "UEMOA (SN, CI)": [
+    "donnees_api",
+    "agence_automatisation",
+    "ia_verticale_tpe",
+    "affil_outil_interactif",
+    "agence_export",
+    "communaute_payante"
+   ],
+   "Afrique centrale (CM, RDC)": [
+    "donnees_api",
+    "agence_automatisation",
+    "ia_verticale_tpe",
+    "affil_outil_interactif",
+    "communaute_payante",
+    "agence_export"
+   ]
+  },
+  "hourly_rate_reference": {
+   "agence_automatisation": {
+    "heures_24_mois": 2220,
+    "France": {
+     "esperance_eur_h": 6.15,
+     "succes_eur_h": 18.6
+    },
+    "Belgique": {
+     "esperance_eur_h": 6.55,
+     "succes_eur_h": 19.7
+    },
+    "Quebec": {
+     "esperance_eur_h": 6.3,
+     "succes_eur_h": 19.0
+    },
+    "Maroc": {
+     "esperance_eur_h": 1.24,
+     "succes_eur_h": 4.5
+    },
+    "UEMOA (SN, CI)": {
+     "esperance_eur_h": 0.19,
+     "succes_eur_h": 1.5
+    }
+   },
+   "agence_export": {
+    "heures_24_mois": 2220,
+    "France": {
+     "esperance_eur_h": 2.99,
+     "succes_eur_h": 13.6
+    },
+    "Belgique": {
+     "esperance_eur_h": 3.02,
+     "succes_eur_h": 13.7
+    },
+    "Quebec": {
+     "esperance_eur_h": 3.26,
+     "succes_eur_h": 14.7
+    },
+    "Maroc": {
+     "esperance_eur_h": 2.75,
+     "succes_eur_h": 12.6
+    },
+    "UEMOA (SN, CI)": {
+     "esperance_eur_h": 2.02,
+     "succes_eur_h": 9.7
+    }
+   },
+   "newsletter_media": {
+    "heures_24_mois": 1120,
+    "France": {
+     "esperance_eur_h": 0.1,
+     "succes_eur_h": 13.5
+    },
+    "Belgique": {
+     "esperance_eur_h": 0.16,
+     "succes_eur_h": 14.4
+    },
+    "Quebec": {
+     "esperance_eur_h": 0.12,
+     "succes_eur_h": 13.8
+    },
+    "Maroc": {
+     "esperance_eur_h": -0.92,
+     "succes_eur_h": 0.9
+    },
+    "UEMOA (SN, CI)": {
+     "esperance_eur_h": -0.94,
+     "succes_eur_h": 0.5
+    }
+   },
+   "seo_prog_annuaire": {
+    "heures_24_mois": 660,
+    "France": {
+     "esperance_eur_h": -1.45,
+     "succes_eur_h": 13.3
+    },
+    "Belgique": {
+     "esperance_eur_h": -1.37,
+     "succes_eur_h": 14.2
+    },
+    "Quebec": {
+     "esperance_eur_h": -1.42,
+     "succes_eur_h": 13.6
+    },
+    "Maroc": {
+     "esperance_eur_h": -2.39,
+     "succes_eur_h": 1.5
+    },
+    "UEMOA (SN, CI)": {
+     "esperance_eur_h": -2.59,
+     "succes_eur_h": -1.0
+    }
+   },
+   "tiktok_affiliation": {
+    "heures_24_mois": 1480,
+    "France": {
+     "esperance_eur_h": 0.27,
+     "succes_eur_h": 8.0
+    },
+    "Belgique": {
+     "esperance_eur_h": 0.24,
+     "succes_eur_h": 7.6
+    },
+    "Quebec": {
+     "esperance_eur_h": -0.06,
+     "succes_eur_h": 3.9
+    },
+    "Maroc": null,
+    "UEMOA (SN, CI)": null
+   },
+   "donnees_api": {
+    "heures_24_mois": 800,
+    "France": {
+     "esperance_eur_h": -1.21,
+     "succes_eur_h": 17.4
+    },
+    "Belgique": {
+     "esperance_eur_h": -1.19,
+     "succes_eur_h": 17.6
+    },
+    "Quebec": {
+     "esperance_eur_h": -1.01,
+     "succes_eur_h": 19.0
+    },
+    "Maroc": {
+     "esperance_eur_h": -1.38,
+     "succes_eur_h": 16.0
+    },
+    "UEMOA (SN, CI)": {
+     "esperance_eur_h": -1.9,
+     "succes_eur_h": 11.6
+    }
+   }
+  },
+  "grid_artefact": "ROI = (E24 - 2C)/(2C + temps) : quand E24 < 2C, un w plus élevé rend le ROI moins négatif ; utiliser aussi le taux horaire implicite."
+ },
+ "implications_for_tool": [
+  "Ajouter les rails amazon_affil, reseaux_affil, voyage_affil, saas_affil et local_affil dans rules/payments.yaml, avec URL et date de vérification.",
+  "Veille hebdomadaire des barèmes : pages publiques Amazon FR, BE, CA (nœud GRXPHT8U84RAYDXZ), fiches Awin des programmes suivis, FAQ Temu, pages Systeme.io et Hostinger ; tout changement relance le score.",
+  "Veille des rails qui s'ouvrent : liste des pays de YouTube Shopping, page anti-spam de Google (« Last updated »), programme Influenceurs Amazon.",
+  "Brancher l'autocomplétion Amazon (US, FR, BE, CA, DE, GB, AE, EG, SA) comme capteur de stade commercial, historisée chaque jour ; Maroc « non mesurable » côté Amazon.",
+  "Tester l'autocomplétion Google par pays sur des préfixes courts : les requêtes longues renvoient les mêmes suggestions quel que soit gl.",
+  "Compléter le ROI par le taux horaire implicite (espérance et succès) et faire varier w, tax et pay dans le Monte-Carlo.",
+  "Appliquer la porte des 25 h par mois dans le code, avant le score.",
+  "Modéliser l'affiliation aussi comme rail secondaire d'un actif (newsletter, outil, communauté).",
+  "Exclusions codées : paris, crypto non agréée, crédit et assurance (ORIAS), allégations santé (GLP-1), chirurgie esthétique, mode ultra-express en France dès 2027.",
+  "Check-list de conformité dans chaque kit : mention en français visible sans clic, mention Amazon, rubrique « comment nous classons » (L111-7), statut des notes, rel=sponsored, contrat écrit au-delà de 1 000 € HT, « Images virtuelles ».",
+  "Simulateur marocain : client unique au-delà de 80 000 DH, plafond de 200 000 DH, déclaration de revenus de source étrangère et compte en devises à 70 %.",
+  "Traiter l'affiliation comme une tendance décalée : suivre les sites d'affiliation américains depuis les résumés IA (mai 2024) comme indicateurs avancés pour la France (juillet 2026).",
+  "Générer des liens localisés par pays (amazon.fr, amazon.com.be, amazon.ca) selon le public de l'initiative."
+ ],
+ "open_questions": [
+  "Versement Amazon Partenaires vers une banque marocaine : possible ?",
+  "L'accord Amazon (droit luxembourgeois) vaut-il contrat écrit au sens du décret n° 2025-1137 au-delà de 1 000 € HT ? Sens de « même objectif promotionnel » pour l'affiliation multi-produits.",
+  "Date d'entrée de la France dans la liste officielle de YouTube Shopping.",
+  "Affiliation dans la liste des activités de l'auto-entrepreneur marocain ; retenue de 30 % face à un payeur étranger.",
+  "Couverture Payoneer du Maroc, du Sénégal et de la Côte d'Ivoire pour Awin.",
+  "Commissions réelles de Booking via CJ, d'Airalo, de Jumia KOL et de Temu au Maroc.",
+  "Distribution réelle des revenus des affiliés débutants.",
+  "Résumés IA au Maroc, en Belgique et au Québec : dates.",
+  "Contenu de la version 2026 du guide de l'influence commerciale sur les liens affiliés.",
+  "Classement fiscal français des commissions (BNC ou BIC).",
+  "Régime EEE de la politique de réputation de site et Suisse.",
+  "Temu dans le périmètre de l'interdiction de publicité de la mode ultra-express."
+ ],
+ "data_sources": [
+  {
+   "name": "Autocomplétion Amazon",
+   "access": "GET https://completion.amazon.<tld>/api/2017/suggestions?mid=<id>&alias=aps&prefix=<q>&limit=11&lop=<langue>",
+   "auth": "aucune",
+   "cost": "0 €",
+   "geo": "US, FR, CA, BE, GB, DE, AE, EG, SA (pas de MA ni d'Afrique subsaharienne)",
+   "tested": "2026-11-28, HTTP 200 sur les 9 places de marché",
+   "limits": "point non documenté, aucun historique"
+  },
+  {
+   "name": "Autocomplétion Google par pays",
+   "access": "GET https://suggestqueries.google.com/complete/search?client=firefox&hl=fr&gl=<pays>&q=<q>",
+   "auth": "aucune",
+   "cost": "0 €",
+   "geo": "MA, FR, SN, CI, BE, CA testés",
+   "tested": "2026-11-28, HTTP 200",
+   "limits": "requêtes longues identiques quel que soit gl"
+  },
+  {
+   "name": "Barèmes Amazon publics",
+   "access": "https://<site associates>/help/node/topic/GRXPHT8U84RAYDXZ",
+   "auth": "aucune",
+   "cost": "0 €",
+   "geo": "FR, BE, CA, US",
+   "tested": "2026-11-28, HTTP 200",
+   "limits": "barème personnalisé derrière connexion"
+  },
+  {
+   "name": "Fiches annonceurs Awin",
+   "access": "https://ui.awin.com/merchant-profile/<id>",
+   "auth": "aucune",
+   "cost": "0 €",
+   "geo": "programmes par pays",
+   "tested": "2026-11-28, HTTP 200 (GetYourGuide 18925, Viator 11018)",
+   "limits": "identifiants à connaître"
+  },
+  {
+   "name": "Politiques anti-spam Google",
+   "access": "https://developers.google.com/search/docs/essentials/spam-policies",
+   "auth": "aucune",
+   "cost": "0 €",
+   "geo": "mondial, régime EEE",
+   "tested": "2026-11-28, HTTP 200, Last updated 2026-11-23",
+   "limits": "aucune"
+  },
+  {
+   "name": "Page d'aide YouTube Shopping",
+   "access": "https://support.google.com/youtube/answer/13376398",
+   "auth": "aucune",
+   "cost": "0 €",
+   "geo": "18 pays listés",
+   "tested": "2026-11-28, HTTP 200",
+   "limits": "décalage possible avec les annonces"
+  }
+ ]
+}

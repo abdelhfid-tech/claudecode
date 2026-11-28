@@ -1,6 +1,6 @@
 # Étude préalable du radar de tendances
 
-Treize dossiers rédigés le 28 novembre 2026, chacun suivi d'une section « Contre-vérification » écrite par un agent indépendant. Le plan qui en découle est dans [../PLAN.md](../PLAN.md).
+Quinze dossiers rédigés le 28 novembre 2026, chacun suivi d'une section « Contre-vérification » écrite par un agent indépendant (en cours pour les deux études complémentaires, affiliation et KDP). Le plan qui en découle est dans [../PLAN.md](../PLAN.md).
 
 Les fichiers `.json` contiennent la sortie structurée de chaque dossier : constats clés, sources de données testées, tendances. Les dossiers marchés France et Maroc n'en ont pas.
 
@@ -18,6 +18,8 @@ Les fichiers `.json` contiennent la sortie structurée de chaque dossier : const
 | [trends-us-conso.md](trends-us-conso.md) | Tendances US par niche grand public et par lifestyle |
 | [trends-us-business.md](trends-us-business.md) | Tendances US argent, travail, tech et savoir |
 | [concurrence-positionnement.md](concurrence-positionnement.md) | Outils de veille existants, positionnement, prix |
+| [affiliation.md](affiliation.md) | Affiliation : programmes et réseaux (France, Maroc, Afrique), encaissement, cadre légal, effet des résumés IA, archétypes chiffrés |
+| [amazon-kdp-pod.md](amazon-kdp-pod.md) | Amazon KDP, impression à la demande, places de marché de contenus numériques (Etsy, Notion, Canva, Udemy, banques d'images), archétypes chiffrés |
 | [initiatives-economie.md](initiatives-economie.md) | Archétypes d'initiatives, taux de base, économie unitaire, grille de rendement |
 
 Les dossiers citent leurs sources et la date de lecture. Les chiffres marqués [HYPOTHÈSE] ou [ESTIMATION] ne doivent pas être utilisés sans vérification.
