@@ -41,17 +41,19 @@ def test_parse_v2_and_legacy():
     assert apple.parse_legacy(single)[0]["id"] == "333"
 
 
-def test_charts_fall_back_to_legacy_when_v2_fails(now, tmp_path):
+def test_charts_use_legacy_first_and_v2_as_fallback(now, tmp_path):
     client = FakeClient({
         "marketingtools.apple.com/api/v2/us": (502, ""),
         "marketingtools.apple.com/api/v2/ma": (200, json.dumps(V2)),
         "itunes.apple.com/us/rss/topfreeapplications": (200, json.dumps(LEGACY)),
         "itunes.apple.com/us/rss/topgrossingapplications": (200, json.dumps(LEGACY)),
+        "itunes.apple.com/ma/rss/topfreeapplications": (503, ""),
     })
     res = apple.AppleCharts().collect(ctx_for(client, now, tmp_path=tmp_path))
     assert res.units_total == 3 and res.units_ok == 3
     us_free = [r for r in res.records if r["zone"] == "US" and r["meta"]["chart"] == "top-free"]
     assert us_free[0]["meta"]["feed"] == "legacy" and us_free[0]["key"] == "ios:333"
+    assert not any("api/v2/us" in c for c in client.calls)  # le flux historique a suffi
     ma = [r for r in res.records if r["zone"] == "MA"]
     assert [r["value"] for r in ma] == [1, 2] and ma[0]["meta"]["feed"] == "v2"
 

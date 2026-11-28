@@ -1,0 +1,37 @@
+# Statuts, seuils et contrôle des changes. Valeurs datées, à relire après chaque loi de finances.
+
+[[regime]]
+id = "fr_micro"
+country = "FR"
+label = "Micro-entreprise (France)"
+as_of = 2026-11-28
+source = "service-public.fr, fiches F32353 (21/02/2026), F21746 et F36232 (01/01/2026)"
+evidence = "F"
+revenue_cap_eur = { services = 83_600, vente = 203_100 }
+vat_franchise_eur = { services = 37_500, vente = 85_000 }
+social_rate = { prestations_bic = 0.212, liberal_bnc = 0.256, vente = 0.123 }
+notes = "le seuil unique de franchise de TVA à 25 000 € a été abandonné ; à relire après la loi de finances 2027"
+
+[[regime]]
+id = "ma_auto_entrepreneur"
+country = "MA"
+label = "Auto-entrepreneur (Maroc)"
+as_of = 2026-11-28
+source = "Le Matin (19/08/2026), citant le guide DGI 2026 ; page DGI en 403"
+evidence = "F2"
+revenue_cap_mad = { services = 200_000, commerce = 500_000 }
+tax_rate_on_revenue = { services = 0.01, commerce = 0.005 }
+withholding = { rate = 0.30, threshold_mad_per_client = 80_000, rule = "art. 73 II-G-8° du CGI, opérée par le client" }
+notes = "statut perdu après deux années consécutives de dépassement ; seuil client de 100 000 DH annoncé par le PLF 2027, non confirmé ; client étranger : règle non tranchée"
+
+[[exchange]]
+id = "ma_igoc_2026"
+country = "MA"
+label = "Instruction générale des opérations de change 2026 (Office des Changes)"
+as_of = 2026-11-28
+source = "IGOC 2026, PDF de l'Office des Changes"
+evidence = "F"
+ecommerce_allowance_mad = { particulier = 20_000, societe_nouvelle_min = 50_000, startup_labellisee_add = 2_000_000 }
+services_export = { repatriation_days = 90, max_share_in_fx_account = 0.70 }
+fx_rate_source = "cours du jour de Bank Al-Maghrib (1 $ = 10,031 DH et 1 € = 10,995 DH le 27/11/2026)"
+notes = "la dotation du particulier couvre tous ses achats en ligne ; une pile d'outils avec Claude Pro y tient, avec Claude Max elle la dépasse d'environ 5 %"

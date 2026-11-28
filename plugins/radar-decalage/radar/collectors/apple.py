@@ -81,7 +81,23 @@ class AppleCharts(Collector):
         return res
 
     def _fetch(self, ctx: Context, cc: str, chart: str, limit: int):
+        """Flux historique d'abord (fiable, avec le genre), flux v2 en repli.
+
+        Mesure du 28/11/2026 : le flux v2 échoue environ une fois sur deux en rafale
+        (délais dépassés, erreurs 502), le flux historique répond en 0,2 à 1,5 s.
+        """
         errors = []
+        r = ctx.client.request(LEGACY.format(cc=cc, feed=LEGACY_FEEDS[chart], limit=limit))
+        if r.ok:
+            try:
+                rows = parse_legacy(r.json())
+                if rows:
+                    return rows, "legacy", None
+                errors.append("historique vide")
+            except (ValueError, KeyError, TypeError) as exc:
+                errors.append(f"historique illisible ({exc})")
+        else:
+            errors.append(f"historique {r.status or r.error}")
         if chart in ("top-free", "top-paid"):
             r = ctx.client.request(V2.format(cc=cc, chart=chart, limit=min(limit, 100)))
             if r.ok:
@@ -94,17 +110,6 @@ class AppleCharts(Collector):
                     errors.append(f"v2 illisible ({exc})")
             else:
                 errors.append(f"v2 {r.status or r.error}")
-        r = ctx.client.request(LEGACY.format(cc=cc, feed=LEGACY_FEEDS[chart], limit=limit))
-        if r.ok:
-            try:
-                rows = parse_legacy(r.json())
-                if rows:
-                    return rows, "legacy", None
-                errors.append("historique vide")
-            except (ValueError, KeyError, TypeError) as exc:
-                errors.append(f"historique illisible ({exc})")
-        else:
-            errors.append(f"historique {r.status or r.error}")
         return [], None, "; ".join(errors)
 
 

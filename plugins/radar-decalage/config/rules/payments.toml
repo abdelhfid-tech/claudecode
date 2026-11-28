@@ -1,0 +1,125 @@
+# Rails d'encaissement, côté vendeur sauf mention contraire.
+# Statuts : oui | non | partiel | non_verifie | ferme
+# evidence : F (source primaire lue), F2 (source secondaire), E (estimation), H (hypothèse)
+# Ces lignes périment vite : la veille des pages officielles les relit, et chaque ligne
+# porte la date de sa dernière vérification.
+# Zones : FR, BE, CH, CA-QC, MA, SN, CI, CM, CD (RDC), ML (Mali)
+
+[[rail]]
+id = "stripe"
+label = "Stripe (compte local)"
+kind = "psp"
+as_of = 2026-11-28
+source = "https://stripe.com/global"
+evidence = "F"
+status = { FR = "oui", BE = "oui", CH = "oui", "CA-QC" = "oui", MA = "non", SN = "non", CI = "partiel", CM = "non", CD = "non" }
+notes = { CI = "réseau étendu, via Paystack", MA = "le pays listé est celui du vendeur, pas de l'acheteur : un acheteur marocain avec une carte internationale peut payer un vendeur européen" }
+
+[[rail]]
+id = "shopify_payments"
+label = "Shopify Payments"
+kind = "psp"
+as_of = 2026-11-28
+source = "https://help.shopify.com/en/manual/payments/shopify-payments/supported-countries"
+evidence = "F"
+status = { FR = "oui", BE = "oui", CH = "oui", "CA-QC" = "oui", MA = "non", SN = "non", CI = "non", CM = "non", CD = "non" }
+notes = { MA = "prestataire tiers obligatoire, surcommission de 0,6 à 2 % ; alternative locale : YouCan" }
+
+[[rail]]
+id = "paddle"
+label = "Paddle (marchand officiel, logiciels et produits numériques)"
+kind = "mor"
+as_of = 2026-11-28
+source = "https://www.paddle.com/help/start/intro-to-paddle/which-countries-are-supported-by-paddle"
+evidence = "F"
+status = { FR = "oui", BE = "oui", CH = "oui", "CA-QC" = "oui", MA = "non_verifie", SN = "non_verifie", CI = "non_verifie", CM = "non_verifie", CD = "non", ML = "non" }
+notes = { MA = "non exclu de la liste, mais versement vers une banque marocaine non vérifié ; IGOC 2026 : contrat, rapatriement sous 90 jours, 70 % au plus en compte en devises", SN = "non exclu de la liste, versement non vérifié", CI = "non exclu de la liste, versement non vérifié", CM = "non exclu de la liste, versement non vérifié", CD = "exclu explicitement (vendeurs et acheteurs)", ML = "exclu explicitement" }
+
+[[rail]]
+id = "polar"
+label = "Polar (marchand officiel, versements via Stripe Connect Express)"
+kind = "mor"
+as_of = 2026-11-28
+source = "https://polar.sh/docs/merchant-of-record/supported-countries"
+evidence = "F"
+status = { FR = "oui", BE = "oui", CH = "oui", "CA-QC" = "oui", MA = "non", SN = "oui", CI = "oui", CM = "non", CD = "non_verifie" }
+
+[[rail]]
+id = "lemon_squeezy"
+label = "Lemon Squeezy"
+kind = "mor"
+as_of = 2026-11-28
+source = "https://www.lemonsqueezy.com/"
+evidence = "F"
+status = { FR = "ferme", BE = "ferme", CH = "ferme", "CA-QC" = "ferme", MA = "ferme", SN = "ferme", CI = "ferme", CM = "ferme", CD = "ferme" }
+notes = { FR = "plus d'inscriptions ; outil de migration le 2 décembre 2026 ; arrêt du traitement le 31 mars 2027" }
+
+[[rail]]
+id = "gumroad"
+label = "Gumroad (marchand officiel, TVA gérée)"
+kind = "mor"
+as_of = 2026-11-28
+source = "https://gumroad.com/pricing"
+evidence = "F"
+status = { FR = "oui", BE = "oui", CH = "oui", "CA-QC" = "oui", MA = "non_verifie", SN = "non_verifie", CI = "non_verifie", CM = "non_verifie", CD = "non_verifie" }
+notes = { FR = "10 % + 0,50 $ en vente directe, 30 % via Discover" }
+
+[[rail]]
+id = "paypal_reception"
+label = "PayPal en réception"
+kind = "wallet"
+as_of = 2026-11-28
+source = "docs/etude/market-maroc-maghreb.md"
+evidence = "F2"
+status = { FR = "oui", BE = "oui", CH = "oui", "CA-QC" = "oui", MA = "oui", SN = "non_verifie", CI = "non_verifie", CM = "non_verifie", CD = "non_verifie" }
+notes = { MA = "retrait vers banque, carte ou Cash Plus ; compte assimilé à un compte à l'étranger selon une source citée" }
+
+[[rail]]
+id = "youcan_pay"
+label = "YouCan Pay (cartes marocaines)"
+kind = "psp"
+as_of = 2026-11-28
+source = "https://youcanpay.com/"
+evidence = "F"
+status = { MA = "oui" }
+notes = { MA = "3,9 % + 2 MAD par transaction réussie" }
+
+[[rail]]
+id = "paiement_livraison"
+label = "Paiement à la livraison"
+kind = "cod"
+as_of = 2026-11-28
+source = "docs/etude/market-maroc-maghreb.md"
+evidence = "F2"
+status = { FR = "partiel", MA = "oui", SN = "oui", CI = "oui", CM = "oui", CD = "oui" }
+notes = { MA = "84,1 % des acheteurs en ligne ; 20 à 40 % de refus à la livraison" }
+
+[[rail]]
+id = "wave_business"
+label = "Wave Business"
+kind = "mobile_money"
+as_of = 2026-11-28
+source = "https://www.wave.com/fr/business/"
+evidence = "F"
+status = { SN = "oui", CI = "oui", CM = "oui" }
+notes = { SN = "gratuit jusqu'à 20 000 FCFA par jour, puis 1 %" }
+
+[[rail]]
+id = "flutterwave"
+label = "Flutterwave"
+kind = "psp"
+as_of = 2026-11-28
+source = "https://flutterwave.com/sn/pricing"
+evidence = "F"
+status = { SN = "oui", CI = "non_verifie", CM = "non_verifie" }
+notes = { SN = "mobile money 2 %, cartes 4,8 %, hors TVA" }
+
+[[rail]]
+id = "chariow"
+label = "Chariow (produits numériques, mobile money)"
+kind = "marketplace"
+as_of = 2026-11-28
+source = "https://chariow.com/"
+evidence = "F"
+status = { SN = "oui", CI = "oui", CM = "oui", MA = "non_verifie" }
+notes = { SN = "commission non affichée ; « +200 000 créateurs », déclaratif" }

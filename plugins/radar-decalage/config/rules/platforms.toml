@@ -1,0 +1,58 @@
+# Programmes et règles des plateformes, par pays.
+# Statuts : oui | non | partiel | non_verifie | interdit
+# À relire sur la page officielle à chaque veille : ces listes changent sans préavis.
+
+[[platform]]
+id = "tiktok_shop"
+label = "TikTok Shop (vendeurs et affiliés)"
+as_of = 2026-11-28
+source = "docs/etude/market-france-europe.md ; portail vendeurs TikTok Shop"
+evidence = "F2"
+status = { FR = "oui", BE = "oui", CH = "non", "CA-QC" = "non_verifie", MA = "non", DZ = "non", TN = "non", SN = "non", CI = "non", CM = "non", CD = "non" }
+since = { FR = 2025-03-31, BE = 2026-06-15 }
+notes = { MA = "aucun marché MENA sur la liste officielle : ne pas supposer une arrivée prochaine ; la diaspora y accède depuis la France, la Belgique, l'Espagne, l'Italie ou les Pays-Bas", BE = "date annoncée", FR = "date de source secondaire" }
+
+[[platform]]
+id = "youtube_partner"
+label = "Programme Partenaire YouTube"
+as_of = 2026-11-28
+source = "https://support.google.com/youtube/answer/7101720"
+evidence = "F"
+status = { FR = "oui", BE = "oui", CH = "oui", "CA-QC" = "oui", MA = "oui", DZ = "oui", TN = "oui", SN = "oui", CI = "non", CM = "non", CD = "non", BJ = "non", ML = "non", BF = "non", GA = "non" }
+
+[[platform]]
+id = "youtube_inauthentic_content"
+label = "YouTube : contenus génériques, répétitifs ou sur gabarit exclus de la monétisation"
+as_of = 2026-11-28
+source = "https://support.google.com/youtube/answer/1311392 ; clarification du 16/07/2026 (TechCrunch, 20/07/2026)"
+evidence = "F"
+status = { ALL = "interdit" }
+notes = { ALL = "règle renommée le 15/07/2025 (ces contenus étaient déjà exclus) ; clarifiée le 16/07/2026, vise notamment les personnages IA sur la finance, le droit et la santé" }
+
+[[platform]]
+id = "whatsapp_generalist_ai"
+label = "WhatsApp Business : assistants IA généralistes"
+as_of = 2026-11-28
+source = "conditions WhatsApp Business (15/01/2026) ; page AI Providers mise à jour le 15/10/2026"
+evidence = "F"
+status = { FR = "oui", BE = "oui", IT = "oui", CH = "interdit", "CA-QC" = "interdit", MA = "interdit", DZ = "interdit", TN = "interdit", SN = "interdit", CI = "interdit", CM = "interdit", CD = "interdit" }
+notes = { FR = "autorisés dans les 29 pays de l'UE et de l'EEE depuis le 11/03/2026, au Brésil, et en Turquie depuis le 15/10/2026 ; les agents propres à une entreprise restent permis partout", MA = "Maroc sorti de « Rest of Africa » le 01/10/2026, hausses sur le marketing, l'utilitaire et l'authentification" }
+
+[[platform]]
+id = "chatgpt_ads_self_service"
+label = "Publicités ChatGPT en libre-service"
+as_of = 2026-11-28
+source = "docs/etude/trends-us-business.md (contre-vérification)"
+evidence = "F2"
+status = { FR = "oui", BE = "oui", CH = "non_verifie", "CA-QC" = "non_verifie", MA = "oui", DZ = "oui", TN = "oui", SN = "non_verifie", CI = "non_verifie" }
+since = { FR = 2026-08-31, MA = 2026-08-31 }
+notes = { FR = "annoncées le 16/01/2026 ; libre-service en Europe et en Afrique du Nord le 31/08/2026" }
+
+[[platform]]
+id = "tiktok_commercial_content_api"
+label = "TikTok Commercial Content API (bibliothèque publicitaire)"
+as_of = 2026-11-28
+source = "https://developers.tiktok.com/doc/commercial-content-api-supported-countries"
+evidence = "F"
+status = { FR = "oui", BE = "oui", CH = "oui", "CA-QC" = "non", MA = "non", SN = "non", CI = "non" }
+notes = { FR = "32 pays : 27 UE, Norvège, Islande, Liechtenstein, Royaume-Uni, Suisse" }
