@@ -6,6 +6,7 @@
   watchlist état de la liste de suivi
   villes    tendances et métiers locaux, ville par ville
   produits  produits recherchés au Maroc : installés à Casablanca, pas encore à Fès
+  assortiment  familles d'un commerce de Fès : à mettre en avant, tester, vendre en ligne ou réduire
   incitations aides et freins : douane, fiscalité, aides, règles (Maroc, France)
   initiatives classement des modèles d'activité (--scenario solo, petit_ia, agence)
 """
@@ -250,6 +251,28 @@ def cmd_villes(args: argparse.Namespace) -> int:
     return 0
 
 
+def cmd_assortiment(args: argparse.Namespace) -> int:
+    from . import assortiment
+
+    store = RawStore(paths.data_dir())
+    rows = assortiment.table(store)
+    fams = assortiment.families(rows)
+    eco = assortiment.ecosystem(store)
+    if args.famille:
+        rows = [r for r in rows if r["famille"] == args.famille]
+    if args.json:
+        print(json.dumps({"concepts": rows, "familles": fams, "ecosysteme": eco}, ensure_ascii=False, indent=1))
+        return 0
+    if args.ecosysteme:
+        for e in eco:
+            print(f"{e['role'][:28]:28} {e['terme'][:22]:22} {e['statut']:>18}  {e['precisions'][:100]}")
+        if not eco:
+            print("Aucun relevé de l'écosystème : lancez « collect --only autocomplete_assortiment --cadence weekly ».")
+        return 0
+    print(assortiment.render(rows, fams, eco))
+    return 0
+
+
 def cmd_produits(args: argparse.Namespace) -> int:
     from . import produits
 
@@ -377,6 +400,11 @@ def build_parser() -> argparse.ArgumentParser:
     pr.add_argument("--fes", action="store_true", help="seulement les produits installés à Casablanca et pas encore à Fès")
     pr.add_argument("--json", action="store_true")
     pr.set_defaults(func=cmd_produits)
+    asr = sub.add_parser("assortiment", help="familles d'un commerce de Fès : en avant, à tester, en ligne ou à réduire")
+    asr.add_argument("--famille", help="identifiant de famille (enfants, cuisine, soin…)")
+    asr.add_argument("--ecosysteme", action="store_true", help="seulement l'écosystème local (clients, fournisseurs, relais)")
+    asr.add_argument("--json", action="store_true")
+    asr.set_defaults(func=cmd_assortiment)
     inc = sub.add_parser("incitations", help="aides et freins (douane, fiscalité, aides, règles) au Maroc et en France")
     inc.add_argument("--pays", help="MA, FR (FR inclut les règles européennes)")
     inc.add_argument("--pour", help="produit_importe, colis_ecommerce, service_numerique, concept_franchise, export_depuis_maroc, artisanat")

@@ -97,6 +97,14 @@ publishable = false
 tos = "autocomplétion Google au Maroc (« prix … », « ثمن … », puis « produit + ville ») : même point d'accès que l'autocomplétion (sans robots.txt, zone grise)"
 # Paramètres (préfixes, filtres, risques, villes comparées) : config/produits.toml
 
+[source.autocomplete_assortiment]
+family = "search"
+cadence = "weekly"
+enabled = true
+publishable = false
+tos = "autocomplétion Google au Maroc (« concept + fès », « concept + casablanca », « concept + maroc ») : même point d'accès que l'autocomplétion (sans robots.txt, zone grise)"
+# Familles, concepts et écosystème local : config/assortiment.toml
+
 [source.wikimedia_country]
 family = "attention"
 cadence = "daily"

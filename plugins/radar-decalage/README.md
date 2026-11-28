@@ -47,6 +47,7 @@ python -m radar collect --cadence weekly     relevé ville par ville (lundi)
 python -m radar gaps [--established] [--independants]   écarts de disponibilité des apps (petits éditeurs)
 python -m radar villes [--decalage casablanca:fes]      tendances et métiers locaux, ville par ville
 python -m radar produits [--fes]             produits cherchés au Maroc et à Dubaï, installés à Casablanca, pas encore à Fès
+python -m radar assortiment [--famille ID] [--ecosysteme]   familles d'un commerce de Fès : en avant, à tester, en ligne ou à réduire ; clients, fournisseurs et relais locaux
 python -m radar incitations --pays MA --pour colis_ecommerce   aides et freins : douane, fiscalité, aides, règles
 python -m radar initiatives --buyer FR --seller MA [--scenario petit_ia] [--strength F --window J]
 python -m radar initiatives --scenarios      scénarios : solo, petit_ia, petit_ia_fort, agence
