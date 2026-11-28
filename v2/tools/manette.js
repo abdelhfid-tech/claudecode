@@ -216,9 +216,9 @@ async function contraste([b64, sel]) {
     await p.evaluate(() => { const S = window.ISNAD.script; S.depth++; window.__fin = false; S.run([['say', 'khalid', 'Nous tiendrons la passe jusqu’à l’aube. Que chacun garde son rang.'], ['say', 'khalid', 'Et que personne ne quitte la crête avant le signal.']]).then(() => { S.depth--; S.hideDialog(); window.__fin = true; }); });
     await p.waitForTimeout(1600); await rien('un dialogue'); await shot('dialogue');
     await achever(A, 'un dialogue'); const d0 = await choisi('#dialog .text'); await A('un dialogue'); await p.waitForTimeout(1500); await achever(A, 'un dialogue'); const d1 = await choisi('#dialog .text');
-    dit(/garde son rang/.test(d0) && /quitte la crête/.test(d1), 'ÉCART', `${nom} · un dialogue : A passe à la réplique suivante`);
+    dit(/garde son rang/.test(d0) && /quitte la crête/.test(d1), 'ÉCART', `${nom} · un dialogue : A passe à la réplique suivante${/garde son rang/.test(d0) && /quitte la crête/.test(d1) ? '' : ` (${JSON.stringify({ d0, d1 })})`}`);
     await B('un dialogue'); await p.waitForTimeout(400); const d2 = await p.evaluate(() => ({ fini: window.__fin, cache: document.getElementById('dialog').hidden }));
-    dit(d2.fini && d2.cache, 'ÉCART', `${nom} · un dialogue : B passe la dernière réplique`);
+    dit(d2.fini && d2.cache, 'ÉCART', `${nom} · un dialogue : B passe la dernière réplique${d2.fini && d2.cache ? '' : ` (${JSON.stringify(d2)})`}`);
 
     /* 5. une liste de choix */
     await p.evaluate(() => { const S = window.ISNAD.script; S.depth++; window.__choix = null; S.menuPick('Que répondre à l’envoyé ?', [{ t: 'Lui rappeler la parole donnée la veille, devant les anciens du camp.' }, { t: 'Se taire, et attendre que la colère retombe.' }, { t: 'Lui proposer de partager l’eau du puits jusqu’au soir.' }, { t: 'Lui demander ce qu’il craint vraiment.' }]).then(i => { S.depth--; S.hideDialog(); window.__choix = i; }); });
