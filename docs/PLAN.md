@@ -349,6 +349,9 @@ Les commandes qui publient ou dépensent ne se déclenchent jamais seules.
 | Publicités et audiences TikTok | TikTok for Business | connexion incomplète | V2, à finaliser |
 | Skills déjà installés et réutilisés | frontend-design, anti-ai-writing, marketing:content-creation, small-business:social-content-engine, small-business:seo-ai-visibility, dataviz | disponibles | V1 |
 | Données payantes | DataForSEO, Apify ou ScrapeCreators, X, Exa ou Firecrawl, Similarweb, Ahrefs | non branchés | Quand le budget s'ouvre |
+| Publication et automatisation des réseaux, avec IA intégrée | Blotato (API et MCP inclus dans toutes les offres ; 29, 97 ou 197 $ par mois, sans offre gratuite, grille du 24/11/2026) | non branché | Seulement si une initiative validée paie l'abonnement ; Postiz, déjà connecté, couvre la V1 |
+| Automatisation de workflows | n8n (édition communautaire auto-hébergée gratuite ; licence d'usage interne, pas de revente comme service hébergé) ; connecteur n8n de l'annuaire Claude | connecteur non installé | Pour les initiatives (automatisations de clients, modèles), pas pour le radar : le code Python et GitHub Actions suffisent, et un serveur de plus coûterait sur l'heure de maintenance |
+| Modèles prêts à adapter | Bibliothèque gratuite de Sabrina Ramonov (plus de 1 000 modèles n8n et Make, reliés à Blotato) | gratuite | Points de départ pour les kits, à vérifier un par un : c'est aussi du marketing pour Blotato |
 
 ---
 
@@ -407,6 +410,7 @@ Ce sont des hypothèses issues de la recherche documentaire, à placer en liste 
 | Maroc vers France : services vendus en euros depuis le Maroc | En tête de la grille au Maroc | Classement fragile : à 25 €/h, l'agence export recule au 4e rang ; à recalculer avec votre profil |
 | Diaspora en France et en Belgique : services et commerce, y compris TikTok Shop | Seul accès à TikTok Shop pour ce public ; pouvoir d'achat européen | Cellule acheteur France, vendeur selon votre profil |
 | Micro-dramas en français et en darija | Matures aux USA, DramaWave n°13 au Maroc | Pas d'archétype chiffré, et la « chaîne sans visage » est dernière de la grille : à chiffrer ou à retirer |
+| Automatisation IA avec n8n, en français et en darija : modèles prêts à l'emploi, atelier pour TPE, service à prix fixe (une automatisation livrée, pas une agence) | Tendance US (bibliothèques de modèles, chaînes YouTube, agences d'automatisation) au stade de la découverte en France et au Maroc : l'autocomplétion du 28/11/2026 donne « n8n c'est quoi », « n8n academy », « automatisation ia formation », « pour pme », « freelance » | Le service à prix fixe est la version réduite de l'agence d'automatisation, écartée en entier par la limite de 25 h par mois ; paramètres à chiffrer |
 | Affiliation, Amazon KDP, impression à la demande, places de marché de contenus numériques | Archétypes adaptés à un solo à temps partiel, où l'automatisation par Claude pèse lourd | Étude complémentaire en cours, avec contre-vérification ; chaque archétype entrera dans la grille avec ses rails de paiement par pays |
 
 **Productisation, plus tard.** Si le journal de prédictions est crédible après 6 à 12 mois, pour les classes A et B : newsletter francophone gratuite, puis premium (9 à 12 € par mois), offre agence (149 à 399 € par mois), puis études pour les marques. Encaissement par une entité européenne ou Paddle, et en dirhams pour les clients marocains.

@@ -187,3 +187,25 @@ niche = "N01"
 en = ["korean skincare"]
 fr = ["skincare coréenne"]
 status = "seed"
+
+[[term]]
+id = "n8n"
+niche = "N15"
+en = ["n8n"]
+fr = ["n8n"]
+ary = ["n8n"]
+status = "seed"
+
+[[term]]
+id = "automatisation-ia"
+niche = "N15"
+en = ["ai automation agency"]
+fr = ["automatisation ia"]
+status = "seed"
+
+[[term]]
+id = "blotato"
+niche = "N15"
+en = ["blotato"]
+fr = ["blotato"]
+status = "seed"
