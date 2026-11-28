@@ -1,0 +1,373 @@
+# Archétypes d'initiatives et paramètres de pays (grille de rendement, dossier initiatives-economie, section 8).
+# Valeurs = hypothèses datées du 2026-11-28, ancrées sur les taux de base publiés ; à recalibrer avec le journal des initiatives.
+#
+# hrun : heures par mois d'exploitation (M7 à M24) ; p12 : probabilité d'atteindre 1 000 €/mois net à M12 ;
+# Rs : revenu mensuel médian des cas réussis à M12 (€) ; m : marge brute ; T1 : semaines jusqu'au premier revenu ;
+# C : capital sur 6 mois (€) ; h : heures de fondateur sur 6 mois ; L : levier de Claude Code (0-1) ;
+# D : défendabilité (0-5) ; Rp : risque de plateforme ou réglementaire ; orient : export ou local ;
+# rails : rails de paiement acceptables (config/rules/payments.toml) ; regime : statut fiscal.
+
+as_of = 2026-11-28
+source = "docs/etude/initiatives-economie.md, section 8 ; docs/etude/scripts/score_initiatives.py"
+retention_year2 = 0.85
+
+[archetype.micro_saas]
+p12 = 0.12
+Rs = 3000
+m = 0.85
+T1 = 8
+C = 1200
+h = 500
+hrun = 30
+L = 0.7
+D = 2.5
+Rp = 0.1
+orient = "export"
+regime = "bnc"
+rail_family = "b2b_export"
+rails = ["stripe", "paddle", "polar", "paypal_reception"]
+
+[archetype.clone_local]
+p12 = 0.1
+Rs = 3000
+m = 0.8
+T1 = 10
+C = 1500
+h = 500
+hrun = 40
+L = 0.75
+D = 2.0
+Rp = 0.15
+orient = "local"
+regime = "bnc"
+rail_family = "b2c_local"
+rails = ["stripe", "youcan_pay", "paiement_livraison", "wave_business"]
+
+[archetype.ia_verticale_tpe]
+p12 = 0.2
+Rs = 4000
+m = 0.75
+T1 = 4
+C = 1200
+h = 450
+hrun = 40
+L = 0.6
+D = 3.0
+Rp = 0.1
+orient = "local"
+regime = "bnc"
+rail_family = "b2b_local"
+rails = ["stripe", "paypal_reception", "youcan_pay"]
+
+[archetype.agent_whatsapp]
+p12 = 0.2
+Rs = 3500
+m = 0.6
+T1 = 4
+C = 1500
+h = 450
+hrun = 40
+L = 0.6
+D = 2.0
+Rp = 0.35
+orient = "local"
+regime = "bnc"
+rail_family = "b2b_local"
+rails = ["stripe", "paypal_reception", "youcan_pay"]
+
+[archetype.seo_prog_annuaire]
+p12 = 0.08
+Rs = 2000
+m = 0.9
+T1 = 16
+C = 900
+h = 300
+hrun = 20
+L = 0.8
+D = 1.0
+Rp = 0.45
+orient = "local"
+regime = "bnc"
+rail_family = "ads_affil"
+rails = ["paypal_reception"]
+
+[archetype.geo_visibilite]
+p12 = 0.3
+Rs = 5000
+m = 0.7
+T1 = 3
+C = 900
+h = 400
+hrun = 60
+L = 0.6
+D = 2.0
+Rp = 0.25
+orient = "local"
+regime = "bnc"
+rail_family = "b2b_local"
+rails = ["stripe", "paypal_reception", "youcan_pay"]
+
+[archetype.newsletter_media]
+p12 = 0.08
+Rs = 2000
+m = 0.85
+T1 = 16
+C = 600
+h = 400
+hrun = 40
+L = 0.5
+D = 3.5
+Rp = 0.1
+orient = "local"
+regime = "bnc"
+rail_family = "b2c_online"
+rails = ["stripe", "paddle", "gumroad", "polar", "chariow"]
+
+[archetype.chaine_sans_visage]
+p12 = 0.08
+Rs = 1500
+m = 0.85
+T1 = 30
+C = 900
+h = 400
+hrun = 40
+L = 0.6
+D = 1.0
+Rp = 0.45
+orient = "local"
+regime = "bnc"
+rail_family = "youtube"
+rails = ["paypal_reception"]
+platforms_seller = ["youtube_partner"]
+
+[archetype.produits_numeriques]
+p12 = 0.1
+Rs = 2000
+m = 0.9
+T1 = 3
+C = 300
+h = 200
+hrun = 20
+L = 0.5
+D = 1.5
+Rp = 0.15
+orient = "local"
+regime = "bic_vente"
+rail_family = "b2c_online"
+rails = ["stripe", "paddle", "gumroad", "polar", "chariow"]
+
+[archetype.shopify_marque]
+p12 = 0.1
+Rs = 8000
+m = 0.2
+T1 = 6
+C = 5000
+h = 500
+hrun = 60
+L = 0.4
+D = 2.5
+Rp = 0.2
+orient = "local"
+regime = "bic_vente"
+rail_family = "ecom_local"
+rails = ["shopify_payments", "stripe", "youcan_pay", "paiement_livraison"]
+
+[archetype.tiktok_affiliation]
+p12 = 0.08
+Rs = 2000
+m = 0.9
+T1 = 6
+C = 300
+h = 400
+hrun = 60
+L = 0.25
+D = 1.0
+Rp = 0.4
+orient = "local"
+regime = "bnc"
+rail_family = "tiktok_shop"
+rails = ["paypal_reception"]
+platforms_seller = ["tiktok_shop"]
+
+[archetype.extension_chrome]
+p12 = 0.07
+Rs = 1500
+m = 0.9
+T1 = 10
+C = 300
+h = 250
+hrun = 15
+L = 0.8
+D = 1.5
+Rp = 0.25
+orient = "export"
+regime = "bnc"
+rail_family = "b2b_export"
+rails = ["stripe", "paddle", "polar", "paypal_reception"]
+
+[archetype.app_mobile_virale]
+p12 = 0.1
+Rs = 2500
+m = 0.7
+T1 = 8
+C = 2500
+h = 400
+hrun = 30
+L = 0.6
+D = 1.5
+Rp = 0.25
+orient = "export"
+regime = "bnc"
+rail_family = "app_store"
+rails = ["paypal_reception"]
+
+[archetype.mcp_plugins_skills]
+p12 = 0.05
+Rs = 1500
+m = 0.8
+T1 = 10
+C = 600
+h = 250
+hrun = 15
+L = 0.9
+D = 1.5
+Rp = 0.3
+orient = "export"
+regime = "bnc"
+rail_family = "b2b_export"
+rails = ["stripe", "paddle", "polar", "paypal_reception"]
+
+[archetype.agence_automatisation]
+p12 = 0.35
+Rs = 8000
+m = 0.5
+T1 = 3
+C = 600
+h = 600
+hrun = 90
+L = 0.6
+D = 2.5
+Rp = 0.1
+orient = "local"
+regime = "bnc"
+rail_family = "b2b_local"
+rails = ["stripe", "paypal_reception", "youcan_pay"]
+
+[archetype.agence_export]
+p12 = 0.25
+Rs = 6000
+m = 0.5
+T1 = 5
+C = 600
+h = 600
+hrun = 90
+L = 0.6
+D = 2.0
+Rp = 0.1
+orient = "export"
+regime = "bnc"
+rail_family = "b2b_export"
+rails = ["stripe", "paddle", "polar", "paypal_reception"]
+
+[archetype.marketplace_niche]
+p12 = 0.05
+Rs = 3000
+m = 0.8
+T1 = 20
+C = 2500
+h = 600
+hrun = 50
+L = 0.5
+D = 4.0
+Rp = 0.15
+orient = "local"
+regime = "bnc"
+rail_family = "b2c_local"
+rails = ["stripe", "youcan_pay", "paiement_livraison", "wave_business"]
+
+[archetype.communaute_payante]
+p12 = 0.15
+Rs = 5000
+m = 0.85
+T1 = 6
+C = 400
+h = 400
+hrun = 40
+L = 0.3
+D = 3.5
+Rp = 0.15
+orient = "local"
+regime = "bnc"
+rail_family = "b2c_online"
+rails = ["stripe", "paddle", "gumroad", "polar", "chariow"]
+
+[archetype.donnees_api]
+p12 = 0.12
+Rs = 3000
+m = 0.7
+T1 = 6
+C = 1500
+h = 350
+hrun = 25
+L = 0.8
+D = 3.5
+Rp = 0.3
+orient = "export"
+regime = "bnc"
+rail_family = "b2b_export"
+rails = ["stripe", "paddle", "polar", "paypal_reception"]
+
+[country."FR"]
+label = "France"
+ppp = 1.0
+default_hourly_cost_eur = 25
+tax = { bnc = 0.256, bic_vente = 0.123 }
+
+[country."BE"]
+label = "Belgique"
+ppp = 1.05
+default_hourly_cost_eur = 25
+tax = { bnc = 0.25, bic_vente = 0.25 }
+
+[country."CH"]
+label = "Suisse"
+ppp = 1.6
+default_hourly_cost_eur = 45
+tax = { bnc = 0.15, bic_vente = 0.15 }
+
+[country."CA-QC"]
+label = "Quebec"
+ppp = 0.95
+default_hourly_cost_eur = 25
+tax = { bnc = 0.2, bic_vente = 0.2 }
+
+[country."MA"]
+label = "Maroc"
+ppp = 0.25
+default_hourly_cost_eur = 6
+tax = { bnc = 0.01, bic_vente = 0.005 }
+
+[country."SN"]
+label = "UEMOA (SN, CI)"
+ppp = 0.15
+default_hourly_cost_eur = 4
+tax = { bnc = 0.1, bic_vente = 0.1 }
+
+[country."CM"]
+label = "Afrique centrale (CM, RDC)"
+ppp = 0.12
+default_hourly_cost_eur = 3
+tax = { bnc = 0.1, bic_vente = 0.1 }
+
+# Ajustements (archétype, pays) de p12, avec justification dans le dossier.
+[fit]
+"agent_whatsapp@MA" = 1.3
+"agent_whatsapp@SN" = 1.2
+"agent_whatsapp@CM" = 1.1
+"clone_local@MA" = 1.2
+"clone_local@SN" = 1.2
+"clone_local@FR" = 0.8
+"geo_visibilite@MA" = 0.8
+"geo_visibilite@SN" = 0.6
+"geo_visibilite@CM" = 0.5
+"shopify_marque@MA" = 0.9
